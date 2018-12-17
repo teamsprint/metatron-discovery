@@ -14,18 +14,22 @@
 
 package app.metatron.discovery.domain.mdm.source;
 
+import app.metatron.discovery.common.GlobalObjectMapper;
+import app.metatron.discovery.domain.datasource.DataSource;
+import app.metatron.discovery.domain.datasource.DataSourceRepository;
+import app.metatron.discovery.domain.datasource.connection.DataConnectionRepository;
+import app.metatron.discovery.domain.datasource.ingestion.IngestionInfo;
+import app.metatron.discovery.domain.mdm.MetadataController;
+import app.metatron.discovery.domain.workbook.DashboardRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
-
-import app.metatron.discovery.domain.datasource.DataSourceRepository;
-import app.metatron.discovery.domain.datasource.connection.DataConnectionRepository;
-import app.metatron.discovery.domain.mdm.MetadataController;
-import app.metatron.discovery.domain.workbook.DashboardRepository;
+import java.util.Map;
 
 @Component
 @Transactional(readOnly = true)
@@ -68,5 +72,33 @@ public class MetaSourceService {
     }
 
     return null;
+  }
+
+  public Object getSourceInfo(MetadataSource source) {
+    LOGGER.debug("MetadataSourceType : {}", source.getType());
+    switch (source.getType()) {
+      case ENGINE:
+        DataSource ds = dataSourceRepository.findOne(source.getSourceId());
+        LOGGER.debug("DataSource srcType : {}", ds.getSrcType());
+        switch(ds.getSrcType()){
+          case JDBC:
+            Map jdbcMap = new HashMap();
+            jdbcMap.put("connection", ds.getConnection());
+            jdbcMap.put("source", ds.getIngestionInfo());
+            return jdbcMap;
+          default:
+            IngestionInfo info = ds.getIngestionInfo();
+            LOGGER.debug("IngestionInfo : {}", info.toString());
+            return info;
+        }
+      case JDBC: case STAGE:
+        Map sourceInfo = GlobalObjectMapper.readValue(source.getSourceInfo());
+        LOGGER.debug("Source Info : {}", sourceInfo);
+        return sourceInfo;
+      case DASHBOARD:
+        return dashboardRepository.findOne(source.getSourceId());
+    }
+
+    return new HashMap<>();
   }
 }

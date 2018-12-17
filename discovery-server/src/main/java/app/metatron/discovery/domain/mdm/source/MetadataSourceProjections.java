@@ -14,12 +14,11 @@
 
 package app.metatron.discovery.domain.mdm.source;
 
+import app.metatron.discovery.common.BaseProjections;
+import app.metatron.discovery.domain.user.UserProfile;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.rest.core.config.Projection;
-
-import app.metatron.discovery.common.BaseProjections;
-import app.metatron.discovery.domain.user.UserProfile;
 
 public class MetadataSourceProjections extends BaseProjections {
 
@@ -46,7 +45,7 @@ public class MetadataSourceProjections extends BaseProjections {
 
     //String getSourceId();
 
-    @Value("#{@metaSourceService.getSourcesBySourceId(target.type, target.sourceId)}")
+    @Value("#{@metaSourceService.getSourceInfo(target)}")
     Object getSource();
 
     @Value("#{@cachedUserService.findUserProfile(target.createdBy)}")
