@@ -437,7 +437,8 @@ export class FileCompleteComponent extends AbstractPopupComponent implements OnI
       format: this._getFileFormatParams(),
       removeFirstRow: !this.getFileData.createHeadColumnFl,
       path: this.getFileData.datasourceFile.filepath,
-      rollup: this.getIngestionData.selectedRollUpType.value
+      rollup: this.getIngestionData.selectedRollUpType.value,
+      originalFileName: this.getFileData.datasourceFile.filename
     };
     // advanced
     if (this.getIngestionData.tuningConfig.filter(item => StringUtil.isNotEmpty(item.key) && StringUtil.isNotEmpty(item.value)).length > 0) {
