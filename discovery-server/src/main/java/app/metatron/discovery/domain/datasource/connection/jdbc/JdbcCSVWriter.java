@@ -189,9 +189,14 @@ public class JdbcCSVWriter extends CsvResultSetWriter implements ICsvResultSetWr
         stmt.setMaxRows(maxRow);
       }
 
-      LOGGER.debug("Execute query : {} ", query);
+      String queryString = query;
+      while(StringUtils.endsWith(queryString.trim(), ";")){
+        queryString = StringUtils.substring(queryString, 0, StringUtils.lastIndexOf(queryString, ";"));
+      }
 
-      rs = stmt.executeQuery(query);
+      LOGGER.debug("Execute query : {} ", queryString);
+
+      rs = stmt.executeQuery(queryString);
 
 //      writeNoHeader(rs);
       write(rs, true);
