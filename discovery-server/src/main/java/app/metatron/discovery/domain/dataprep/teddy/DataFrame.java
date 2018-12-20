@@ -1061,7 +1061,7 @@ public class DataFrame implements Serializable, Transformable {
         resultColTypes.add(ColumnType.LONG);
         targetAggrColnos.add(-1);
       } else {
-        Pattern pattern = Pattern.compile("\\w+\\((\\w+)\\)");
+        Pattern pattern = Pattern.compile("\\w+\\((.*?)\\)");
         Matcher matcher = pattern.matcher(targetExprStr);
         if (matcher.find() == false) {
           throw new IllegalAggregationFunctionExpression("doAggregateInternal(): invalid aggregation function expression: " + targetExprStr.toString());
@@ -1080,6 +1080,10 @@ public class DataFrame implements Serializable, Transformable {
         }
 
         targetColName = matcher.group(1);
+        if(targetColName.startsWith("`") && targetColName.endsWith("`")) {
+          targetColName = targetColName.substring(1, targetColName.length() - 1);
+        }
+
         for (colno = 0; colno < prevDf.getColCnt(); colno++) {
           String colName = prevDf.getColName(colno);
           if (colName.equals(targetColName)) {
