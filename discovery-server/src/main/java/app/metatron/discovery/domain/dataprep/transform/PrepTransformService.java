@@ -1745,10 +1745,6 @@ public class PrepTransformService {
         Aggregate aggregate = (Aggregate)rule;
         Expression group = aggregate.getGroup();
         Expression value = aggregate.getValue();
-        if(null==group) {
-          LOGGER.error("confirmRuleStringForException(): aggregate group is null");
-          throw PrepException.create(PrepErrorCodes.PREP_TRANSFORM_ERROR_CODE, PrepMessageKey.MSG_DP_ALERT_TEDDY_PARSE_FAILED_BY_AGGREGATE_GROUP);
-        }
         if(null==value) {
           LOGGER.error("confirmRuleStringForException(): aggregate value is null");
           throw PrepException.create(PrepErrorCodes.PREP_TRANSFORM_ERROR_CODE, PrepMessageKey.MSG_DP_ALERT_TEDDY_PARSE_FAILED_BY_AGGREGATE_VALUE);

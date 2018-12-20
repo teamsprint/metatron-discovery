@@ -216,6 +216,7 @@ public class PrepTransformRuleService {
   private final String FMTSTR_REPLACES     = "Replace %s";                              // col
   private final String FMTSTR_MERGE        = "Concatenate %s separated by %s";          // col, with
   private final String FMTSTR_AGGREGATE    = "Aggregate with %s grouped by %s";         // value, group
+  private final String FMTSTR_AGGREGATE_NG = "Aggregate with %s";                       // value
   private final String FMTSTR_MOVE         = "Move %s %s";                              // col, before/after
   private final String FMTSTR_JOIN_UNION   = "%s with %s";                              // command, strDsNames
   private final String FMTSTR_PIVOT        = "Pivot %s and compute %s grouped by %s";   // col, value, group
@@ -337,8 +338,12 @@ public class PrepTransformRuleService {
         shortRuleString = String.format(FMTSTR_MERGE, shortenColumnList(col), mapRule.get("with"));
         break;
       case "aggregate":
-        group = ((Map) mapRule.get("group")).get("value");
-        shortRuleString = String.format(FMTSTR_AGGREGATE, nodeToString(mapRule.get("value")), shortenColumnList(group));
+        if(((Map) mapRule.get("group")) != null) {
+          group = ((Map) mapRule.get("group")).get("value");
+          shortRuleString = String.format(FMTSTR_AGGREGATE, nodeToString(mapRule.get("value")), shortenColumnList(group));
+        } else {
+          shortRuleString = String.format(FMTSTR_AGGREGATE_NG, nodeToString(mapRule.get("value")));
+        }
         break;
       case "move":
         col = ((Map) mapRule.get("col")).get("value");
