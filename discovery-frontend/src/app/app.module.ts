@@ -13,13 +13,14 @@
  */
 
 import * as moment from 'moment';
+import { APP_BASE_HREF } from '@angular/common';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import { RouterModule, Routes } from '@angular/router';
-import { TranslateModule, TranslateLoader, TranslateStaticLoader } from 'ng2-translate';
-import { Http } from '@angular/http';
-import { APP_BASE_HREF } from '@angular/common';
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { environment } from '../environments/environment';
 import { PopupService } from './common/service/popup.service';
 import { EventBroadcaster } from './common/event/event.broadcaster';
@@ -30,15 +31,17 @@ import { UserService } from './user/service/user.service';
 import { CookieService } from 'ng2-cookies';
 
 // 다국어 파일 경로 지정
-export function createTranslateLoader(http: Http) {
-  return new TranslateStaticLoader(http, './assets/i18n', '.json');
+export function createTranslateLoader(http: HttpClient) {
+  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
 
 // 다국어 모듈 생성
 export const appTranslateModule: ModuleWithProviders = TranslateModule.forRoot({
-  provide: TranslateLoader,
-  useFactory: (createTranslateLoader),
-  deps: [Http]
+  loader: {
+    provide: TranslateLoader,
+    useFactory: (createTranslateLoader),
+    deps: [HttpClient]
+  }
 });
 
 
@@ -60,7 +63,8 @@ const appRoutes: Routes = [
   imports: [
     BrowserModule,
     RouterModule.forRoot(appRoutes),
-    appTranslateModule
+    appTranslateModule,
+    HttpClientModule
   ],
   providers: [
     { provide: APP_BASE_HREF, useValue: environment.baseHref },
