@@ -83,5 +83,5 @@
     }
   };
 
-  // echarts_4_1.registerTheme('exntu', theme);
+  echarts_4_1.registerTheme('exntu', theme);
 }));
