@@ -47,38 +47,33 @@ export class InputComponent implements OnInit, OnDestroy {
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   | Public Variables
   |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
-  @Input()
-  public compType: 'default' | 'apply' | 'search' = 'default';  // 컴포넌트 타입
+  @Input() public compType: 'default' | 'apply' | 'search' = 'default';  // 컴포넌트 타입
 
-  @Input()
-  public value: number | string;  // 입력값
+  @Input() public value: number | string;  // 입력값
 
-  @Input()
-  public valueType: 'string' | 'number' = 'string'; // 입력값 형식
+  @Input() public valueType: 'string' | 'number' = 'string'; // 입력값 형식
 
-  @Input()
-  public placeHolder: string = '';
+  @Input() public maxLen:number = 1000;         // 최대 입력 길이
 
-  @Input()
-  public disabled: boolean = false;   // 입력 비활성 여부
+  @Input() public placeHolder: string = '';
 
-  @Input()
-  public immediately:boolean = false; // 즉시 값 적용 여부
+  @Input() public disabled: boolean = false;   // 입력 비활성 여부
 
-  @Input()
-  public showClear:boolean = true;    // Clear 버튼 표시 여부 ( 현재는 search 에서만 표시 )
+  @Input() public immediately:boolean = false; // 즉시 값 적용 여부
 
-  @Input()
-  public optionalClass:string = '';   // 추가적인 스타일 적용을 위한 클래스
+  @Input() public showClear:boolean = true;    // Clear 버튼 표시 여부 ( 현재는 search 에서만 표시 )
 
-  @Input()
-  public optionalStyle:string = '';   // 추가적인 스타일 적용을 위한 스타일
+  @Input() public inputClass:string = ''; // Input Element 클래스
 
-  @Output('changeValue')
-  public changeEvent: EventEmitter<number | string> = new EventEmitter();
+  @Input() public optionalClass:string = '';   // 추가적인 스타일 적용을 위한 클래스
 
-  @Output('pressEnter')
-  public pressEnterEvent: EventEmitter<boolean> = new EventEmitter();
+  @Input() public optionalStyle:string = '';   // 추가적인 스타일 적용을 위한 스타일
+
+  @Output('changeValue') public changeEvent: EventEmitter<number | string> = new EventEmitter();
+
+  @Output('pressEnter') public pressEnterEvent: EventEmitter<boolean> = new EventEmitter();
+
+  @Output('inputFocus') public inputFocusEvent: EventEmitter<boolean> = new EventEmitter();
 
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   | Constructor
@@ -121,11 +116,23 @@ export class InputComponent implements OnInit, OnDestroy {
    * 화면 초기화
    */
   public ngAfterViewInit() {
-    this._inputElm.nativeElement.disabled = this.disabled;
-    this._inputElm.nativeElement.value = this.value;
+    const inputNativeElm = this._inputElm.nativeElement;
+    inputNativeElm.disabled = this.disabled;
+    inputNativeElm.value = this.value;
+    inputNativeElm.maxlength = this.maxLen;
 
     if( '' !== this.optionalStyle ) {
       this._styleElm.nativeElement.style = this.optionalStyle;
+    }
+    if( '' === this.inputClass ) {
+      switch (this.compType) {
+        case 'apply' :
+          this.inputClass = 'ddp-input-txt';
+          break;
+        case 'default' :
+          this.inputClass = 'ddp-data-input';
+          break;
+      }
     }
   } // function - ngAfterViewInit
 
@@ -158,6 +165,13 @@ export class InputComponent implements OnInit, OnDestroy {
       this.resetValue();
     }
   } // function - keyupHandler
+
+  /**
+   * in
+   */
+  protected focusHandler() {
+    this.inputFocusEvent.emit();
+  } // function - focusHandler
 
   /**
    * 값 적용

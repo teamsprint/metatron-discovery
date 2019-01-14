@@ -55,8 +55,15 @@
       <!-- edit -->
       <div class="ddp-wrap-edit2" [class.ddp-error]="isInvalidName">
         <label class="ddp-label-type">{{'msg.comm.ui.name' | translate}}</label>
-        <input type="text" class="ddp-input-type" placeholder="{{'msg.comm.ui.create.name' | translate}}"
-               [(ngModel)]="dashboard.name" (focus)="isInvalidName=false" maxlength="50" />
+        <!--<input type="text" class="" placeholder="{{}}"-->
+               <!--[(ngModel)]="" (focus)="isInvalidName=false" maxlength="50" />-->
+        <component-input
+          [value]="dashboard.name"
+          [inputClass]="'ddp-input-type'"
+          [maxLen]="50"
+          [placeHolder]="'msg.comm.ui.create.name' | translate"
+          (inputFocus)="isInvalidName=false"
+          (changeValue)="dashboard.name = $event"></component-input>
         <!-- error -->
         <span class="ddp-ui-error">{{errMsgName}}</span>
         <!-- error -->
