@@ -330,12 +330,11 @@
 
       <!-- 사용자 정의 값 입력 영역 -->
       <div class="ddp-box-search">
-        <input #inputNewCandidateValue
-               (keypress)="addNewCandidateValuePressKey($event)"
-               (keyup.esc)="clearInputNewCandidateValue();"
-               (clickOutside)="clearInputNewCandidateValue();"
-               placeholder="{{'msg.board.ui.filter.defined-value.ph' | translate}}"
-               type="text" class="ddp-input-typebasic" >
+        <component-input
+          [value]="newCandidateName"
+          [inputClass]="'ddp-input-typebasic'"
+          [placeHolder]="'msg.board.ui.filter.defined-value.ph' | translate"
+          (changeValue)="newCandidateName = $event"></component-input>
         <a href="javascript:" class="ddp-btn-solid3" (click)="addNewCandidateValue()">{{'msg.board.btn.add' | translate}}</a>
       </div>
       <!-- // 사용자 정의 값 입력 영역 -->
