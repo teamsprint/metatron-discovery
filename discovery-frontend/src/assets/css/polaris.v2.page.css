@@ -1357,7 +1357,7 @@ ul.ddp-list-text li a .ddp-data-info span {display:block; color:#4b515b; font-si
 .ddp-pop-filter .ddp-wrap-tab-contents {height:100%;}
 .ddp-pop-filter .ddp-ui-tab-contents {position:relative;margin-top:-57px; padding:57px 28px 0 28px; height:100%; box-sizing:border-box;}
 .ddp-pop-filter .ddp-filter0 {position:absolute; top:67px; left:0; right:0; bottom:79px; padding:0 28px;}
-.ddp-pop-filter .ddp-filter0 .ddp-list-filter {position:absolute; top:50px; left:0; right:0; bottom:0; overflow:auto;}
+.ddp-pop-filter .ddp-filter0 .ddp-list-filter {position:absolute; top:0; left:0; right:0; bottom:0; overflow:auto;}
 .ddp-pop-filter .ddp-ui-buttons {position:absolute; bottom:0; left:0; right:0; padding:20px 0; text-align:center; border-top:1px solid #e7e7ea;}
 .ddp-pop-filter .ddp-top-filter {position:relative; float:left; width:100%; z-index:1;}
 .ddp-pop-filter .ddp-top-filter .ddp-ui-tooltip-info {position:absolute; top:100%; left:90px;}
@@ -1385,7 +1385,7 @@ ul.ddp-list-text li a .ddp-data-info span {display:block; color:#4b515b; font-si
 
 .ddp-pop-filter .ddp-top-filter .ddp-ui-label {overflow:hidden;}
 
-.ddp-add-filter {position:absolute; top:0; left:0; right:0; bottom:0; overflow:auto; }
+.ddp-add-filter {position:absolute; top:50px; left:0; right:0; bottom:0; overflow:auto; }
 .ddp-add-filter .ddp-data-filter {position:relative; padding:7px 50px 7px 25px; cursor:pointer; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; word-wrap:normal;}
 .ddp-add-filter .ddp-data-filter:hover,
 .ddp-add-filter li.ddp-selected .ddp-data-filter{background-color:#f6f6f7;}
