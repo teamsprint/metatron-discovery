@@ -292,32 +292,13 @@ export class ConfigureFiltersInclusionComponent extends AbstractFilterPopupCompo
   |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
   /**
-   * 검색어 리셋
+   * 후보값 목록 검색
+   * @param {string} searchText
    */
-  public resetSearchText(isClear: boolean) {
-    if (isClear) {
-      this._inputSearch.nativeElement.value = '';
-    } else {
-      // 검색어 설정
-      this._inputSearch.nativeElement.value = this.searchText;
-    }
-  } // function - resetSearchText
-
-  /**
-   * 검색 조회
-   */
-  public searchEvent() {
-    this.searchText = this._inputSearch.nativeElement.value;    // 검색어 설정
+  public searchCandidateList(searchText:string) {
+    this.searchText = searchText;    // 검색어 설정
     this.setCandidatePage(1, true);
-  } // function - searchEvent
-
-  /**
-   * 검색 조회 - 키보드 이벤트
-   * @param {KeyboardEvent} event
-   */
-  public searchEventPressKey(event: KeyboardEvent) {
-    (13 === event.keyCode) && (this.searchEvent());
-  } // function - searchEventPressKey
+  } // function - searchCandidateList
 
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   | Public Method - 필터링 관련
