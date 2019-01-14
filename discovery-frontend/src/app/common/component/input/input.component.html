@@ -15,14 +15,14 @@
 
 <ng-container *ngIf="'default' === compType" >
   <input #inputElm #styleElm placeholder="{{placeHolder}}"
-         (keyup)="keyupHandler($event)" (focus)="focusHandler()" (blur)="setValue()"
+         (keyup)="keyupHandler($event)" (focus)="focusHandler()" (blur)="blurHandler()"
          class="{{inputClass}} {{optionalClass}}" type="text" >
 </ng-container>
 
 <ng-container *ngIf="'apply' === compType" >
   <div #styleElm class="ddp-input-apply {{optionalClass}}" >
     <input #inputElm placeholder="{{placeHolder}}"
-           (keyup)="keyupHandler($event)" (focus)="focusHandler()" (blur)="setValue()"
+           (keyup)="keyupHandler($event)" (focus)="focusHandler()" (blur)="blurHandler()"
            class="{{inputClass}}" type="text" >
     <em (click)="setValue()" class="ddp-icon-apply" ></em>
     <em class="ddp-icon-apply-loading"></em>
@@ -33,7 +33,7 @@
   <div #styleElm class="ddp-form-search {{optionalClass}}" >
     <em class="ddp-icon-search"></em>
     <input #inputElm placeholder="{{placeHolder}}"
-           (keyup)="keyupHandler($event)" (focus)="focusHandler()" (blur)="setValue()"
+           (keyup)="keyupHandler($event)" (focus)="focusHandler()" (blur)="blurHandler()"
            type="text" >
     <em *ngIf="showClear && isNotEmptyInput()" (click)="clearValue()" class="ddp-btn-search-close" ></em>
   </div>
