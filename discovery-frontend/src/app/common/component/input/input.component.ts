@@ -23,7 +23,7 @@ import {
   SimpleChanges,
   ViewChild
 } from "@angular/core";
-import { isNullOrUndefined } from "util";
+import {isNullOrUndefined} from "util";
 
 @Component({
   selector: 'component-input',
@@ -53,27 +53,29 @@ export class InputComponent implements OnInit, OnDestroy {
 
   @Input() public valueType: 'string' | 'number' = 'string'; // 입력값 형식
 
-  @Input() public maxLen:number = 1000;         // 최대 입력 길이
+  @Input() public maxLen: number = 0;           // 최대 입력 길이
 
   @Input() public placeHolder: string = '';
 
   @Input() public disabled: boolean = false;   // 입력 비활성 여부
 
-  @Input() public immediately:boolean = false; // 즉시 값 적용 여부
+  @Input() public immediately: boolean = false; // 즉시 값 적용 여부
 
-  @Input() public showClear:boolean = true;    // Clear 버튼 표시 여부 ( 현재는 search 에서만 표시 )
+  @Input() public showClear: boolean = true;    // Clear 버튼 표시 여부 ( 현재는 search 에서만 표시 )
 
-  @Input() public inputClass:string = ''; // Input Element 클래스
+  @Input() public inputClass: string = ''; // Input Element 클래스
 
-  @Input() public optionalClass:string = '';   // 추가적인 스타일 적용을 위한 클래스
+  @Input() public optionalClass: string = '';   // 추가적인 스타일 적용을 위한 클래스
 
-  @Input() public optionalStyle:string = '';   // 추가적인 스타일 적용을 위한 스타일
+  @Input() public optionalStyle: string = '';   // 추가적인 스타일 적용을 위한 스타일
 
   @Output('changeValue') public changeEvent: EventEmitter<number | string> = new EventEmitter();
 
   @Output('pressEnter') public pressEnterEvent: EventEmitter<boolean> = new EventEmitter();
 
   @Output('inputFocus') public inputFocusEvent: EventEmitter<boolean> = new EventEmitter();
+
+  @Output('inputBlur') public inputBlurEvent: EventEmitter<boolean> = new EventEmitter();
 
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   | Constructor
@@ -100,13 +102,12 @@ export class InputComponent implements OnInit, OnDestroy {
   public ngOnChanges(changes: SimpleChanges) {
     const valueChanges: SimpleChange = changes.value;
     const disabledChanges: SimpleChange = changes.disabled;
-    if( this._inputElm ) {
-      if( valueChanges && !isNullOrUndefined( valueChanges.currentValue ) ) {
-        // this.valueModel = initialChanges.currentValue;
+    if (this._inputElm) {
+      if (valueChanges && !isNullOrUndefined(valueChanges.currentValue)) {
         this._inputElm.nativeElement.value = valueChanges.currentValue;
       }
 
-      if( disabledChanges && !isNullOrUndefined( disabledChanges.currentValue ) ) {
+      if (disabledChanges && !isNullOrUndefined(disabledChanges.currentValue)) {
         this._inputElm.nativeElement.disabled = disabledChanges.currentValue;
       }
     }
@@ -119,12 +120,18 @@ export class InputComponent implements OnInit, OnDestroy {
     const inputNativeElm = this._inputElm.nativeElement;
     inputNativeElm.disabled = this.disabled;
     inputNativeElm.value = this.value;
-    inputNativeElm.maxlength = this.maxLen;
+    if( 0 < this.maxLen ) {
+      inputNativeElm.maxLength = this.maxLen;
+    }
+    if (isNullOrUndefined(this.value)) {
+      inputNativeElm.value = '';
+    }
+    inputNativeElm.focus();
 
-    if( '' !== this.optionalStyle ) {
+    if ('' !== this.optionalStyle) {
       this._styleElm.nativeElement.style = this.optionalStyle;
     }
-    if( '' === this.inputClass ) {
+    if ('' === this.inputClass) {
       switch (this.compType) {
         case 'apply' :
           this.inputClass = 'ddp-input-txt';
@@ -157,21 +164,29 @@ export class InputComponent implements OnInit, OnDestroy {
     if (this.immediately || 13 === event.keyCode) {
       // 즉시 적용 및 Enter 적용
       this.setValue();
-      if( 13 === event.keyCode ) {
-        this.pressEnterEvent.emit( true );
+      if (13 === event.keyCode) {
+        this.pressEnterEvent.emit(true);
       }
-    } else if( 27 === event.keyCode ) {
+    } else if (27 === event.keyCode) {
       // ESC
       this.resetValue();
     }
   } // function - keyupHandler
 
   /**
-   * in
+   * input focus event handler
    */
   protected focusHandler() {
     this.inputFocusEvent.emit();
   } // function - focusHandler
+
+  /**
+   * input blur event handler
+   */
+  protected blurHandler() {
+    this.inputBlurEvent.emit();
+    this.setValue();
+  } // function - blurHandler
 
   /**
    * 값 적용
@@ -179,8 +194,8 @@ export class InputComponent implements OnInit, OnDestroy {
   protected setValue() {
     let inputValue = this._inputElm.nativeElement.value;
     inputValue = inputValue ? inputValue.trim() : '';
-    if( inputValue !== this.value ) {
-      if( 'string' === this.valueType || ( 'number' === this.valueType && /^[0-9]*$/gi.test(inputValue) ) ) {
+    if (inputValue !== this.value) {
+      if ('string' === this.valueType || ('number' === this.valueType && /^[0-9]*$/gi.test(inputValue))) {
         this.value = inputValue;
         this.changeEvent.emit(this.value);
       }
@@ -207,8 +222,8 @@ export class InputComponent implements OnInit, OnDestroy {
    * 값 입력 여부
    * @return {boolean}
    */
-  protected isNotEmptyInput():boolean {
-    if( this._inputElm ) {
+  protected isNotEmptyInput(): boolean {
+    if (this._inputElm) {
       return '' !== this._inputElm.nativeElement.value;
     } else {
       return false;
