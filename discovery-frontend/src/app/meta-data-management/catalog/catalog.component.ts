@@ -209,7 +209,7 @@ export class CatalogComponent extends AbstractComponent implements OnInit, OnDes
           Alert.error(error);
         })
       } else {
-        Alert.warning('Catalog already exists');
+        Alert.warning(this.translateService.instant('msg.catalog.alert.catalog.already.exists'));
         return;
       }
     } else {

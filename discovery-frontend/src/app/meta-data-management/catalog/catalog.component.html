@@ -80,7 +80,7 @@
             [ngClass]="{'ddp-selected':selectedCatalog && selectedCatalog.id === catalog.id && !catalog.editing, 'ddp-box-edit': catalog.editing, 'ddp-sub':catalog }"
             *ngFor="let catalog of catalogs; let index = index"
             (click)="catalogDetail(catalog)"
-            (clickOutside)=" cancelEditing(catalog)">
+            (clickOutside)="cancelEditing(catalog)">
           <a>
             <em class="ddp-icon-folder"></em>
             <div class="ddp-wrap-name">
