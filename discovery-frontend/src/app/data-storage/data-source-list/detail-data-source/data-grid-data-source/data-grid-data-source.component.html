@@ -22,12 +22,13 @@
         <!-- search -->
         <div class="ddp-form-search">
           <em class="ddp-icon-search"></em>
-          <input type="text" placeholder="{{'msg.storage.ui.search.data'| translate}}"
-                 (keyup)="onSearchText($event)"
-                 (keyup.esc)="initSearchText(true)"
-                 [ngModel]="searchText">
-          <em class="ddp-btn-search-close" *ngIf="searchText && searchText !== ''"
-              (click)="initSearchText(true)"></em>
+          <component-input
+            [value]="searchTextKeyword"
+            [placeHolder]="'msg.storage.ui.search.data' | translate"
+            (changeValue)="searchText($event)">
+          </component-input>
+          <em class="ddp-btn-search-close" *ngIf="searchTextKeyword && searchTextKeyword !== ''"
+              (click)="searchText('')"></em>
         </div>
         <!-- //search -->
       </div>

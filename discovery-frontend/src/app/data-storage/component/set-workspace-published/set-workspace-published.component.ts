@@ -429,21 +429,25 @@ export class SetWorkspacePublishedComponent extends AbstractComponent implements
   }
 
   /**
-   * 개인 워크스페이스 검색 이벤트
-   * @param {KeyboardEvent} event
-   * @param {boolean} initFl
+   * Changed personal search keyword
+   * @param keyword
    */
-  public searchPrivateSpace(event: KeyboardEvent, initFl: boolean = false) {
-    (event.keyCode === 13) && (this.searchText('PRIVATE', event, initFl));
+  public onChangedPersonalSearchKeyword(keyword: string): void {
+    // set search keyword
+    this.searchPersonal = keyword;
+    // search personal workspace
+    this.getWorkspaces('PRIVATE');
   }
 
   /**
-   * 공유 워크스페이스 검색 이벤트
-   * @param {KeyboardEvent} event
-   * @param {boolean} initFl
+   * Changed public search keyword
+   * @param keyword
    */
-  public searchSharedSpace(event: KeyboardEvent, initFl: boolean = false) {
-    (event.keyCode === 13) && (this.searchText('SHARED', event, initFl));
+  public onChangedPublicSearchKeyword(keyword: string): void {
+    // set search keyword
+    this.searchPublic = keyword;
+    // search public workspace
+    this.getWorkspaces('SHARED');
   }
 
   /**
