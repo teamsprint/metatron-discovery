@@ -13,6 +13,7 @@
  */
 
 import {
+  ChangeDetectorRef,
   Component,
   ElementRef,
   EventEmitter,
@@ -82,7 +83,8 @@ export class InputComponent implements OnInit, OnDestroy {
   |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
   // 생성자
-  constructor(protected elementRef: ElementRef) {
+  constructor(protected elementRef: ElementRef,
+              protected changeDetect:ChangeDetectorRef) {
   }
 
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
@@ -141,6 +143,7 @@ export class InputComponent implements OnInit, OnDestroy {
           break;
       }
     }
+    this._safelyDetectChanges();
   } // function - ngAfterViewInit
 
   /**
@@ -156,6 +159,7 @@ export class InputComponent implements OnInit, OnDestroy {
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   | Protected Method
   |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
+
   /**
    * 키 입력 핸들러
    * @param event
@@ -233,5 +237,16 @@ export class InputComponent implements OnInit, OnDestroy {
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   | Private Method
   |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
+
+  /**
+   * attempt to use a destroyed view detectchanges 오류를 발생하지 않기 위해
+   * 안전하게 변경사항을 체크하는 메서드
+   * (주의) 변경사항이 갱신되지 않을 수도 있다.
+   */
+  private _safelyDetectChanges() {
+    if (!this.changeDetect['destroyed']) {
+      this.changeDetect.detectChanges();
+    }
+  } // function - safelyDetectChanges
 
 }
