@@ -20,16 +20,13 @@
     <div class="ddp-ui-option ddp-clear">
       <div class="ddp-wrap-edit">
         <!-- search -->
-        <div class="ddp-form-search">
-          <em class="ddp-icon-search"></em>
-          <component-input
-            [value]="searchTextKeyword"
-            [placeHolder]="'msg.storage.ui.search.data' | translate"
-            (changeValue)="searchText($event)">
-          </component-input>
-          <em class="ddp-btn-search-close" *ngIf="searchTextKeyword && searchTextKeyword !== ''"
-              (click)="searchText('')"></em>
-        </div>
+        <component-input
+          [compType]="'search'"
+          [showClear]="true"
+          [value]="searchTextKeyword"
+          [placeHolder]="'msg.storage.ui.search.data' | translate"
+          (changeValue)="searchText($event)">
+        </component-input>
         <!-- //search -->
       </div>
       <!-- label -->
