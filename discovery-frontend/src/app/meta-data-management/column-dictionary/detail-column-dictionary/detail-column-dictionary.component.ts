@@ -403,7 +403,7 @@ export class DetailColumnDictionaryComponent extends AbstractComponent implement
     // edit flag
     this.descEditFl = false;
     // blur
-    this.descElement.nativeElement.blur();
+    // this.descElement.nativeElement.blur();
     // 컬럼 사전 업데이트
     this._updateColumnDictionary({description: this.reDesc.trim()});
   }
