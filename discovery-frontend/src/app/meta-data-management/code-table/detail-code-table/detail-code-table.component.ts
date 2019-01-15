@@ -301,7 +301,7 @@ export class DetailCodeTableComponent extends AbstractComponent implements OnIni
     // edit flag
     this.descEditFl = false;
     // blur
-    this.descElement.nativeElement.blur();
+    // this.descElement.nativeElement.blur();
     // 테이블 업데이트
     this._updateCodeTable({description: this.reDesc.trim()});
   }
