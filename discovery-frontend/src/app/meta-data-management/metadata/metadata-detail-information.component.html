@@ -133,7 +133,14 @@
               <a href="javascript:" class="ddp-btn-delete" (click)="deleteTag(tag)" *ngIf="'' !== tag.name"></a>
             </div>
             <div class="ddp-tag-default ddp-wrap-drop-search" [ngClass]="{'ddp-selected': filteredTagsList.length > 0}" (clickOutside)="tagClickOutsideEvent()">
-              <input id="tagInput" type="text" placeholder="{{'msg.metadata.ui.enter.tag' | translate}}" (keyup.enter)="addTag()" [(ngModel)]="tagValue">
+              <!--<input id="tagInput" type="text" placeholder="{{'msg.metadata.ui.enter.tag' | translate}}" (keyup.enter)="addTag()" [(ngModel)]="tagValue">-->
+
+              <component-input
+                [compType]="'default'"
+                [value]="tagValue"
+                [placeHolder]="'msg.metadata.ui.enter.tag' | translate"
+                (changeValue)="tagValue = $event; addTag();">
+              </component-input>
               <div class="ddp-ui-drop-search">
                 <ul class="ddp-list-selectbox2">
                   <li *ngFor="let tag of filteredTagsList" (click)="setTagValue(tag)">

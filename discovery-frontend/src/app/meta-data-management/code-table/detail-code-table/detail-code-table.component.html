@@ -109,11 +109,19 @@
 
               <!-- edit -->
               <div class="ddp-wrap-input">
-                <input #nameElement type="text" class="ddp-input-edit"
-                       [(ngModel)]="reName"
-                       [focus]="nameEditFl"
-                       (keyup.enter)="onClickUpdateName()"
-                       placeholder="{{'msg.comm.ui.create.name' | translate}}">
+                <!--<input #nameElement type="text" class="ddp-input-edit"-->
+                       <!--[(ngModel)]="reName"-->
+                       <!--[focus]="nameEditFl"-->
+                       <!--(keyup.enter)="onClickUpdateName()"-->
+                       <!--placeholder="{{'msg.comm.ui.create.name' | translate}}">-->
+                <!--<span class="ddp-btn-check" (click)="onClickUpdateName()"></span>-->
+
+                <component-input
+                  [compType]="'default'"
+                  [value]="reName"
+                  [placeHolder]="'msg.comm.ui.create.name' | translate"
+                  (changeValue)="reName = $event; onClickUpdateName();">
+                </component-input>
                 <span class="ddp-btn-check" (click)="onClickUpdateName()"></span>
               </div>
               <!-- //edit -->
