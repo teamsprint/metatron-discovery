@@ -58,7 +58,7 @@ export class DataConnectionComponent extends AbstractComponent implements OnInit
   public selectedConnection: Dataconnection = new Dataconnection();
 
   // search
-  public searchKeyword: string = '';
+  public searchKeyword: string;
 
   // connection filter list (for UI)
   public connectionFilterList: ListCriterion[] = [];

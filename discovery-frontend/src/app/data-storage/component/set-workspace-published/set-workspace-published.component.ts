@@ -407,28 +407,6 @@ export class SetWorkspacePublishedComponent extends AbstractComponent implements
   }
 
   /**
-   * 워크스페이스 검색
-   * @param {string} type
-   * @param {KeyboardEvent} event
-   * @param {boolean} initFl
-   */
-  public searchText(type: string, event: KeyboardEvent, initFl: boolean = false) {
-
-    // esc 일때
-    if (initFl) {
-      // 검색어 초기화
-      type === 'PRIVATE' ? this.searchPersonal = '' : this.searchPublic = '';
-    } else {
-      type === 'PRIVATE' ? this.searchPersonal = event.target['value'] : this.searchPublic = event.target['value'];
-    }
-
-    //  페이지 초기화
-    type === 'PRIVATE' ? this.personalWorkspaces.page.number = 0 : this.publicWorkspaces.page.number = 0;
-    // 재조회
-    this.getWorkspaces(type);
-  }
-
-  /**
    * Changed personal search keyword
    * @param keyword
    */
