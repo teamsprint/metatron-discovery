@@ -362,9 +362,10 @@ export class CatalogComponent extends AbstractComponent implements OnInit, OnDes
       this.currentRoot.id  !== 'ROOT' ? params['parentId'] = this.currentRoot.id : null;
       if (this.inProcess === false) {
         this.inProcess = true;
-        this.catalogService.createCatalog(params).then(() => {
+        this.catalogService.createCatalog(params).then((result) => {
           this.initView();
           this.inProcess = false;
+          Alert.success(this.translateService.instant('msg.catalog.alert.catalog.create.success',{value : result.name}));
         }).catch((error) => {
           if( error && error.message ) {
             Alert.warning(error.message);
