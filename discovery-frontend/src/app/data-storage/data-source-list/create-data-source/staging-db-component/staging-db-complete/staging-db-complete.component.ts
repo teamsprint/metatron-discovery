@@ -27,6 +27,7 @@ import { ConfirmModalComponent } from '../../../../../common/component/modal/con
 import { Modal } from '../../../../../common/domain/modal';
 import { CookieConstant } from '../../../../../common/constant/cookie.constant';
 import {CommonConstant} from "../../../../../common/constant/common.constant";
+import {GranularityService} from "../../../../service/granularity.service";
 declare let moment: any;
 
 /**
@@ -40,6 +41,9 @@ export class StagingDbCompleteComponent extends AbstractPopupComponent implement
 
   // datasource data
   private _sourceData: DatasourceInfo;
+
+  // partition key list
+  private _partitionKey: any = [];
 
   @ViewChild(ConfirmModalComponent)
   private _confirmModal: ConfirmModalComponent;
@@ -76,6 +80,7 @@ export class StagingDbCompleteComponent extends AbstractPopupComponent implement
 
   // Constructor
   constructor(private datasourceService: DatasourceService,
+              private _granularityService: GranularityService,
               protected element: ElementRef,
               protected injector: Injector) {
     super(element, injector);
@@ -88,6 +93,8 @@ export class StagingDbCompleteComponent extends AbstractPopupComponent implement
     super.ngOnInit();
     // ui init
     this._initView();
+    // set partition key
+    this._partitionKey = this.getIngestionData.selectedPartitionType.value === 'ENABLE' ? this._getPartitionParams() : [];
     // if createData is exist, load createData
     if (this._sourceData.hasOwnProperty('createData')) {
       this._loadData(this._sourceData.createData);
@@ -172,20 +179,27 @@ export class StagingDbCompleteComponent extends AbstractPopupComponent implement
   }
 
   /**
-   * Get data range time label
+   * partition keys label
    * @returns {string}
    */
-  public getDataRangeTimeLabel(): string {
-    return moment(this.getIngestionData.startDateTime).format('YYYY-MM-DD HH:mm')
-      + ' ~ ' + moment(this.getIngestionData.endDateTime).format('YYYY-MM-DD HH:mm');
-  }
-
-  /**
-   * Get partition key label
-   * @returns {string}
-   */
-  public getPartitionsEnabledLabel(): string {
-    return this.translateService.instant('msg.storage.ui.partition.enable.count.label', {value: this._getPartitionFields.length});
+  public getPartitionKeys(): string {
+    // if exist partition keys in ingestion data
+    if (this._partitionKey && this._partitionKey.length !== 0) {
+      return this._partitionKey.reduce((acc, partition) => {
+        acc += acc === ''
+          ? Object.keys(partition).reduce((line, key) => {
+            StringUtil.isNotEmpty(partition[key]) && (line += line === '' ? `${key}=${partition[key]}` : `/${key}=${partition[key]}`);
+            return line;
+          }, '')
+          : '<br>' + Object.keys(partition).reduce((line, key) => {
+          StringUtil.isNotEmpty(partition[key]) && (line += line === '' ? `${key}=${partition[key]}` : `/${key}=${partition[key]}`);
+          return line;
+        }, '');
+        return acc;
+      }, '');
+    } else { // if not exist partition keys
+      return this.translateService.instant('msg.storage.ui.set.false');
+    }
   }
 
 
@@ -303,6 +317,9 @@ export class StagingDbCompleteComponent extends AbstractPopupComponent implement
     // delete used UI
     delete column.isValidTimeFormat;
     delete column.isValidReplaceValue;
+    delete column.replaceValidMessage;
+    delete column.timeFormatValidMessage;
+    delete column.checked;
     // if not GEO types
     if (column.logicalType.indexOf('GEO_') === -1) {
       if (column.logicalType !== 'TIMESTAMP' && column.format) {
@@ -385,7 +402,7 @@ export class StagingDbCompleteComponent extends AbstractPopupComponent implement
     // timestamp enable
     const isCreateTimestamp = this.getSchemaData.selectedTimestampType === 'CURRENT';
     // fields param
-    let fields = _.cloneDeep(this.getSchemaData.fields);
+    let fields = _.cloneDeep(this.getSchemaData._originFieldList);
     // seq number
     let seq = 0;
     // field setting
@@ -397,9 +414,9 @@ export class StagingDbCompleteComponent extends AbstractPopupComponent implement
       // if you don't want to create a timestamp column
       if (!isCreateTimestamp) {
         // if specified as a timestamp column
-        if (column.name === this.getSchemaData.selectedTimestampColumn.name) {
+        if (column.name === this.getSchemaData.selectedTimestampField.name) {
           column.role = 'TIMESTAMP';
-        } else if (column.name !== this.getSchemaData.selectedTimestampColumn.name
+        } else if (column.name !== this.getSchemaData.selectedTimestampField.name
           && column.role === 'TIMESTAMP') {
           // this column is not timestamp column, but column role is timestamp, specified as Dimension
           column.role = 'DIMENSION';
@@ -477,16 +494,16 @@ export class StagingDbCompleteComponent extends AbstractPopupComponent implement
       partitions: this.getIngestionData.selectedPartitionType.value === 'ENABLE' ? this._getPartitionParams() : [],
       rollup: this.getIngestionData.selectedRollUpType.value
     };
-    // is enable data range
-    if (this.getIngestionData.selectedDataRangeType.value === 'ENABLE') {
-      ingestion['intervals'] = [this.getIngestionData.startDateTime + '/' + this.getIngestionData.endDateTime];
-    }
     // advanced setting
     if (this.getIngestionData.tuningConfig.filter(item => StringUtil.isNotEmpty(item.key) && StringUtil.isNotEmpty(item.value)).length > 0) {
       ingestion['tuningOptions'] = this._toObject(this.getIngestionData.tuningConfig.filter(item => StringUtil.isNotEmpty(item.key) && StringUtil.isNotEmpty(item.value)));
     }
     if (this.getIngestionData.jobProperties.filter(item => StringUtil.isNotEmpty(item.key) && StringUtil.isNotEmpty(item.value)).length > 0) {
       ingestion['jobProperties'] = this._toObject(this.getIngestionData.jobProperties.filter(item => StringUtil.isNotEmpty(item.key) && StringUtil.isNotEmpty(item.value)));
+    }
+    // if not used current_time TIMESTAMP, set intervals
+    if (this.getSchemaData.selectedTimestampType !== 'CURRENT') {
+      ingestion['intervals'] =  [this._granularityService.getIntervalUsedParam(this.getIngestionData.startIntervalText, this.getIngestionData.selectedSegmentGranularity) + '/' + this._granularityService.getIntervalUsedParam(this.getIngestionData.endIntervalText, this.getIngestionData.selectedSegmentGranularity)];
     }
     return ingestion;
   }

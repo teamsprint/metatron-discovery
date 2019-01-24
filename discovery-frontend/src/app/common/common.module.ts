@@ -57,11 +57,13 @@ import { ColorPickerComponent } from './component/color-picker/color.picker.comp
 import { GradationGeneratorComponent } from './component/gradation/gradation-generator.component';
 import { DashboardDatasourceComboComponent } from '../dashboard/component/dashboard-datasource-combo.component';
 import { ColorTemplateComponent } from './component/color-picker/color-template.component';
+import {SvgIconComponent} from "./component/icon/svg-icon.component";
 import {CommonConstant} from "./constant/common.constant";
 import {CookieConstant} from "./constant/cookie.constant";
 
 import {StompConfig, StompService} from '@stomp/ng2-stompjs';
 import * as SockJS from 'sockjs-client';
+
 
 export function socketProvider() {
   return new SockJS(CommonConstant.API_CONSTANT.URL + '/stomp');
@@ -119,7 +121,8 @@ const stompConfig: StompConfig = {
     ColorPickerComponent,
     GradationGeneratorComponent,
     DashboardDatasourceComboComponent,
-    ColorTemplateComponent
+    ColorTemplateComponent,
+    SvgIconComponent
   ],
   exports: [
     AngularCommonModule,
@@ -162,7 +165,8 @@ const stompConfig: StompConfig = {
     ColorPickerComponent,
     GradationGeneratorComponent,
     DashboardDatasourceComboComponent,
-    ColorTemplateComponent
+    ColorTemplateComponent,
+    SvgIconComponent
   ],
   providers: [
     {

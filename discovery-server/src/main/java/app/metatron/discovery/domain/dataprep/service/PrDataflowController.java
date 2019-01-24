@@ -92,7 +92,7 @@ public class PrDataflowController {
 
     @RequestMapping(value="", method = RequestMethod.POST)
     public @ResponseBody
-    PersistentEntityResource postDataset(
+    PersistentEntityResource postDataflow(
             @RequestBody Resource<PrDataflow> dataflowResource,
             PersistentEntityResourceAssembler resourceAssembler
     ) {
@@ -108,11 +108,44 @@ public class PrDataflowController {
 
             this.dataflowRepository.flush();
         } catch (Exception e) {
-            LOGGER.error("postDataset(): caught an exception: ", e);
-            throw PrepException.create(PrepErrorCodes.PREP_DATASET_ERROR_CODE, PrepMessageKey.MSG_DP_ALERT_DATASET_FAIL_TO_CREATE, e.getMessage());
+            LOGGER.error("postDataflow(): caught an exception: ", e);
+            throw PrepException.create(PrepErrorCodes.PREP_DATAFLOW_ERROR_CODE, PrepMessageKey.MSG_DP_ALERT_NO_DATAFLOW, e.getMessage());
         }
 
         return resourceAssembler.toResource(savedDataflow);
+    }
+
+    @RequestMapping(value = "/{dfId}", method = RequestMethod.PATCH)
+    @ResponseBody
+    public ResponseEntity<?> patchDataflow(
+            @PathVariable("dfId") String dfId,
+            @RequestBody Resource<PrDataflow> dataflowResource,
+            PersistentEntityResourceAssembler persistentEntityResourceAssembler
+    ) {
+
+        PrDataflow dataflow = null;
+        PrDataflow patchDataflow = null;
+        PrDataflow savedDataflow = null;
+        Resource<PrDataflowProjections.DefaultProjection> projectedDataflow = null;
+
+        try {
+            dataflow = this.dataflowRepository.findOne(dfId);
+            patchDataflow = dataflowResource.getContent();
+
+            this.dataflowService.patchAllowedOnly(dataflow, patchDataflow);
+
+            savedDataflow = dataflowRepository.save(dataflow);
+            LOGGER.debug(savedDataflow.toString());
+
+            this.dataflowRepository.flush();
+        } catch (Exception e) {
+            LOGGER.error("postDataflow(): caught an exception: ", e);
+            throw PrepException.create(PrepErrorCodes.PREP_DATAFLOW_ERROR_CODE, e);
+        }
+
+        PrDataflowProjections.DefaultProjection projection = projectionFactory.createProjection(PrDataflowProjections.DefaultProjection.class, savedDataflow);
+        projectedDataflow = new Resource<>(projection);
+        return ResponseEntity.status(HttpStatus.SC_OK).body(projectedDataflow);
     }
 
     @RequestMapping(value = "/{dfId}", method = RequestMethod.DELETE)
