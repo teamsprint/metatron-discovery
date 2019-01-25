@@ -29,6 +29,7 @@ import { CanDeactivateGuard } from './common/gaurd/can.deactivate.guard';
 import { SsoGuard } from './common/gaurd/sso.guard';
 import { UserService } from './user/service/user.service';
 import { CookieService } from 'ng2-cookies';
+import { ClipboardModule } from 'ngx-clipboard';
 
 // 다국어 파일 경로 지정
 export function createTranslateLoader(http: HttpClient) {
@@ -64,7 +65,8 @@ const appRoutes: Routes = [
     BrowserModule,
     RouterModule.forRoot(appRoutes),
     appTranslateModule,
-    HttpClientModule
+    HttpClientModule,
+    ClipboardModule
   ],
   providers: [
     { provide: APP_BASE_HREF, useValue: environment.baseHref },

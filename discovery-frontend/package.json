@@ -15,6 +15,11 @@
     "dummy-db": "json-server --watch dummy.json",
     "prebuild": "node prebuild.js"
   },
+  "browser": {
+    "fs": false,
+    "os": false,
+    "path": false
+  },
   "private": true,
   "dependencies": {
     "@angular/animations": "6.1.10",
@@ -28,7 +33,7 @@
     "@angular/router": "6.1.10",
     "@turf/turf": "5.1.6",
     "air-datepicker": "2.2.3",
-    "angular2-clipboard": "2.0.14",
+    "ngx-clipboard": "11.1.9",
     "angular2-moment": "1.9.0",
     "core-js": "2.6.1",
     "dragula": "3.7.2",
@@ -44,21 +49,21 @@
     "ng2-cookies": "1.0.12",
     "ng2-dnd": "4.2.0",
     "ng2-file-upload": "1.3.0",
-    "ng2-ion-range-slider": "1.0.3",
+    "ng2-ion-range-slider": "2.0.0",
     "ng2-split-pane": "1.4.0",
     "ngx-infinite-scroll": "0.9.0",
     "object-diff": "0.0.4",
-    "openlayers": "4.6.5",
+    "ol": "5.3.0",
     "rxjs": "6.3.3",
     "rxjs-compat": "6.3.3",
     "sql-formatter": "2.3.2",
     "string-pixel-width": "1.8.0",
     "zone.js": "0.8.26",
-    "@ngx-translate/core": "11.0.1",
-    "@ngx-translate/http-loader": "4.0.0",
-    "@stomp/ng2-stompjs": "7.1.0-beta.1",
+    "@ngx-translate/core": "10.0.2",
+    "@ngx-translate/http-loader": "3.0.1",
+    "@stomp/ng2-stompjs": "7.2.0",
     "sockjs-client": "1.3.0",
-    "antlr4": "^4.7.2"
+    "antlr4": "4.7.2"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "0.11.4",
@@ -70,7 +75,7 @@
     "@types/jasmine": "2.5.45",
     "@types/jquery": "3.3.29",
     "@types/lodash": "4.14.119",
-    "@types/node": "6.14.2",
+    "@types/node": "8.10.39",
     "codelyzer": "4.5.0",
     "jasmine-core": "2.99.1",
     "jasmine-spec-reporter": "4.2.1",
@@ -81,7 +86,7 @@
     "karma-jasmine": "1.1.2",
     "karma-jasmine-html-reporter": "1.4.0",
     "protractor": "5.4.2",
-    "ts-node": "4.1.0",
+    "ts-node": "8.0.1",
     "tslint": "5.12.0",
     "tslint-config-airbnb": "5.11.1",
     "typescript": "2.7.2"
