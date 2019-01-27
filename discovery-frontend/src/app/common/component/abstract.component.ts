@@ -685,7 +685,7 @@ export class AbstractComponent implements OnInit, AfterViewInit, OnDestroy, CanC
             this._webSocketReConnectCnt = 0;
             const temp: string = CommonConstant.stomp['stompClient']['_webSocket']['_transport']['url'];
             const tempArr = temp.split('/');
-            CommonConstant.websocketId = tempArr[tempArr.length - 1];
+            CommonConstant.websocketId = tempArr[5];
             resolve('CONNECTED');
           })
         );
