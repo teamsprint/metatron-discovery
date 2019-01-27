@@ -20,6 +20,9 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 
 import java.util.List;
 
+import app.metatron.discovery.domain.workbook.configurations.chart.properties.LineCurveStyle;
+import app.metatron.discovery.domain.workbook.configurations.chart.properties.LinePointStyle;
+import app.metatron.discovery.domain.workbook.configurations.chart.properties.LineProperties;
 import app.metatron.discovery.domain.workbook.configurations.format.FieldFormat;
 import app.metatron.discovery.util.EnumUtils;
 
@@ -37,7 +40,7 @@ public class LineChart extends Chart {
   /**
    * 라인/포인트 여부
    */
-  LineStyle lineStyle;
+  LinePointStyle lineStyle;
 
   /**
    * 라인 곡선 스타일
@@ -54,6 +57,11 @@ public class LineChart extends Chart {
    * 선 굵기
    */
   LineThickness lineThickness;
+
+  /**
+   * Style of line
+   */
+  LineProperties style;
 
   /**
    * X 축 설정
@@ -79,18 +87,25 @@ public class LineChart extends Chart {
                    @JsonProperty("toolTip") ChartToolTip toolTip,
                    @JsonProperty("limit") Integer limit,
                    @JsonProperty("mark") String mark,
+                   @JsonProperty("lineMode") String lineMode,
                    @JsonProperty("lineStyle") String lineStyle,
                    @JsonProperty("curveStyle") String curveStyle,
-                   @JsonProperty("lineMode") String lineMode,
                    @JsonProperty("lineThickness") String lineThickness,
+                   @JsonProperty("style") LineProperties style,
                    @JsonProperty("xAxis") ChartAxis xAxis,
                    @JsonProperty("yAxis") ChartAxis yAxis) {
     super(color, valueFormat, legend, chartZooms, fontSize, dataLabel, toolTip, limit);
     this.mark = EnumUtils.getUpperCaseEnum(MarkType.class, mark, MarkType.LINE);
-    this.lineStyle = EnumUtils.getUpperCaseEnum(LineStyle.class, lineStyle, LineStyle.POINT_LINE);
-    this.curveStyle = EnumUtils.getUpperCaseEnum(LineCurveStyle.class, curveStyle, LineCurveStyle.STRAIGHT);
     this.lineMode = EnumUtils.getUpperCaseEnum(LineMode.class, lineMode, LineMode.NORMAL);
+
+    // for backward compatibility, need to remove the 'lineStyle', 'curveStyle', 'lineThickness' properties later
+    this.lineStyle = EnumUtils.getUpperCaseEnum(LinePointStyle.class, lineStyle, LinePointStyle.POINT_LINE);
+    this.curveStyle = EnumUtils.getUpperCaseEnum(LineCurveStyle.class, curveStyle, LineCurveStyle.STRAIGHT);
     this.lineThickness = EnumUtils.getUpperCaseEnum(LineThickness.class, lineThickness, LineThickness.MEDIUM);
+    this.style = style;
+    if (this.style == null) {
+      this.style = new LineProperties(null, lineThickness, curveStyle, lineStyle);
+    }
     this.xAxis = xAxis;
     this.yAxis = yAxis;
   }
@@ -99,7 +114,7 @@ public class LineChart extends Chart {
     return mark;
   }
 
-  public LineStyle getLineStyle() {
+  public LinePointStyle getLineStyle() {
     return lineStyle;
   }
 
@@ -115,6 +130,10 @@ public class LineChart extends Chart {
     return lineThickness;
   }
 
+  public LineProperties getStyle() {
+    return style;
+  }
+
   public ChartAxis getxAxis() {
     return xAxis;
   }
@@ -127,38 +146,26 @@ public class LineChart extends Chart {
   public String toString() {
     return "LineChart{" +
         "mark=" + mark +
-        ", lineStyle=" + lineStyle +
-        ", curveStyle=" + curveStyle +
         ", lineMode=" + lineMode +
+        ", style=" + style +
         ", xAxis=" + xAxis +
         ", yAxis=" + yAxis +
         "} " + super.toString();
   }
 
   public enum MarkType {
-    LINE,       // 라인 표시
-    AREA        // 면적 표시
-  }
-
-  public enum LineStyle {
-    POINT_LINE,   // 포인트 라인 혼합
-    POINT,        // 포인트만 표시
-    LINE          // 라인만 표시
-  }
-
-  public enum LineCurveStyle {
-    STRAIGHT,             // Straight line
-    SMOOTH                // Bezier curves
+    LINE,       // display only line
+    AREA        // include area
   }
 
   public enum LineMode {
-    NORMAL,             // 기본
-    CUMULATIVE          // 누계
+    NORMAL,             // Normal mode
+    CUMULATIVE          // Cumulative mode
   }
 
   public enum LineThickness {
-    MEDIUM,                // 중간
-    THIN,                  // 얇게
-    THICK                  // 두껍게
+    MEDIUM,                // Normal
+    THIN,                  // Thin
+    THICK                  // Thick
   }
 }

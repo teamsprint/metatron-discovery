@@ -14,12 +14,14 @@
 
 package app.metatron.discovery.domain.workbook.configurations.chart;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
+
 import app.metatron.discovery.common.GlobalObjectMapper;
+import app.metatron.discovery.domain.workbook.configurations.chart.properties.LineCurveStyle;
+import app.metatron.discovery.domain.workbook.configurations.chart.properties.LinePointStyle;
 
 /**
  * Line chart spec. Test
@@ -31,10 +33,8 @@ public class LineChartTest extends ChartTest {
   }
 
   @Test
-  public void de_serialize() throws JsonProcessingException {
+  public void de_serialize() throws IOException {
 
-    // 범례
-    //
     ChartLegend legend = new ChartLegend();
 
     ChartAxis xAxis = new ChartAxis(true, "test", true, null, null, null);
@@ -43,10 +43,11 @@ public class LineChartTest extends ChartTest {
     LineChart chart = new LineChart(colorByMeasureForGradient(), null, legend, null, fontLargerSize(), null, null,
                                     500,
                                     LineChart.MarkType.LINE.name(),
-                                    LineChart.LineStyle.POINT_LINE.name(),
-                                    LineChart.LineCurveStyle.SMOOTH.name(),
+                                    LinePointStyle.POINT_LINE.name(),
+                                    LineCurveStyle.SMOOTH.name(),
                                     LineChart.LineMode.CUMULATIVE.name(),
                                     LineChart.LineThickness.THIN.name(),
+                                    null,
                                     xAxis, yAxis);
 
     System.out.println(chart.toString());
@@ -55,7 +56,7 @@ public class LineChartTest extends ChartTest {
 
     System.out.println(chartStr);
 
-    Chart deSerialized = GlobalObjectMapper.readValue(chartStr, Chart.class);
+    Chart deSerialized = GlobalObjectMapper.getDefaultMapper().readValue(chartStr, Chart.class);
 
     System.out.println("Result : " + deSerialized.toString());
 
