@@ -28,6 +28,12 @@ public class TimeUtils {
 
   public static final Pattern PATTERN_DURATION_FORMAT = Pattern.compile("^([+-]?)P([0-9]+)([WHMSD]{1})$");
 
+  public static final long SECOND_MS = 1 * 1000L;
+  public static final long MINUTE_MS = 60 * SECOND_MS;
+  public static final long HOUR_MS = 60 * MINUTE_MS;
+  public static final long DAY_MS = 24 * HOUR_MS;
+  public static final long WEEK_MS = 7 * DAY_MS;
+
   public static DateTime getDateTimeByDuration(DateTime dateTime, String durationExpr) {
 
     if(StringUtils.isEmpty(durationExpr)) {
