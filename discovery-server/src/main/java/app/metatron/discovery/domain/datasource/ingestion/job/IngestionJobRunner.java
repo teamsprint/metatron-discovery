@@ -28,25 +28,9 @@ import app.metatron.discovery.domain.engine.*;
 import app.metatron.discovery.domain.engine.model.IngestionStatusResponse;
 import app.metatron.discovery.domain.engine.model.SegmentMetaDataResponse;
 import app.metatron.discovery.domain.geo.GeoService;
-import app.metatron.discovery.domain.storage.StorageProperties;
-import app.metatron.discovery.util.PolarisUtils;
-import app.metatron.discovery.common.GlobalObjectMapper;
-import app.metatron.discovery.common.ProgressResponse;
-import app.metatron.discovery.common.fileloader.FileLoaderFactory;
-import app.metatron.discovery.domain.datasource.DataSource;
-import app.metatron.discovery.domain.datasource.DataSourceIngestionException;
-import app.metatron.discovery.domain.datasource.DataSourceService;
-import app.metatron.discovery.domain.datasource.DataSourceSummary;
-import app.metatron.discovery.domain.datasource.connection.jdbc.JdbcConnectionService;
-import app.metatron.discovery.domain.datasource.ingestion.*;
-import app.metatron.discovery.domain.datasource.ingestion.jdbc.JdbcIngestionInfo;
-import app.metatron.discovery.domain.engine.*;
-import app.metatron.discovery.domain.engine.model.IngestionStatusResponse;
-import app.metatron.discovery.domain.engine.model.SegmentMetaDataResponse;
-import app.metatron.discovery.domain.geo.GeoService;
 import app.metatron.discovery.util.PolarisUtils;
 import com.google.common.collect.Maps;
-import com.google.common.util.concurrent.ThreadFactoryBuilder;
+
 import net.jodah.failsafe.Failsafe;
 import net.jodah.failsafe.RetryPolicy;
 import org.apache.commons.lang3.BooleanUtils;
@@ -64,11 +48,10 @@ import org.springframework.web.client.ResourceAccessException;
 
 import javax.annotation.PostConstruct;
 import java.util.Map;
-import java.util.concurrent.*;
-
-import static app.metatron.discovery.domain.datasource.DataSourceErrorCodes.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
+
+import javax.annotation.PostConstruct;
 
 import static app.metatron.discovery.domain.datasource.DataSourceErrorCodes.*;
 import static app.metatron.discovery.domain.datasource.ingestion.IngestionHistory.IngestionStatus.FAILED;
