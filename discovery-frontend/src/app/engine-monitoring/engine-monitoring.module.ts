@@ -13,8 +13,8 @@ import {DruidClusterInformationComponent} from './component/druid-cluster-inform
     RouterModule.forChild([
       {
         path: '',
-        component: EngineMonitoringComponent,
-        data: {'type': 'overview'},
+        redirectTo: 'overview',
+        pathMatch: 'full',
       },
       {
         path: 'overview',
