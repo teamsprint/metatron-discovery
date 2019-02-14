@@ -3,8 +3,7 @@
 /**************************************************************
   Page : Layout
 **************************************************************/
-.ddp-layout-contents-type {padding:55px 0 0 0;height:100%; box-sizing:Border-box;}
-.ddp-layout-contents-type .ddp-ui-contents-in {position:Relative; height:100%;}
+.ddp-layout-contents .ddp-ui-contents-in {position:Relative; height:100%;}
 
 .ddp-layout-top-menu {background-color: #fff; /* layer fill content */
   -moz-box-shadow: 0 1px 3px rgba(0,0,0,.15); /* drop shadow */
