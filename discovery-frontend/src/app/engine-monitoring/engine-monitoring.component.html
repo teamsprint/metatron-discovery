@@ -12,6 +12,7 @@
   ~ limitations under the License.
   -->
 
+<!--suppress NsUnresolvedStyleClassReference -->
 <em class="ddp-bg-back"></em>
 <div class="ddp-ui-contents-in ddp-pad0">
   <!-- top -->
@@ -24,14 +25,14 @@
     <!-- menu -->
     <div class="ddp-top-menu">
       <ul class="ddp-list-top-menu">
-        <li [class.ddp-selected]="contentType === 'overview'">
-          <a href="javascript:" (click)="changeTab('overview')">Overview</a>
+        <li [class.ddp-selected]="isSelectedContent.isOverview()">
+          <a href="javascript:" (click)="changeTab(CONTENT_TYPE.OVERVIEW)">Overview</a>
         </li>
-        <li [class.ddp-selected]="contentType === 'ingestion'">
-          <a href="javascript:" (click)="changeTab('ingestion')">Ingestion</a>
+        <li [class.ddp-selected]="isSelectedContent.isIngestion()">
+          <a href="javascript:" (click)="changeTab(CONTENT_TYPE.INGESTION)">Ingestion</a>
         </li>
-        <li [class.ddp-selected]="contentType === 'query'">
-          <a href="javascript:" (click)="changeTab('query')">Query</a>
+        <li [class.ddp-selected]="isSelectedContent.isQuery()">
+          <a href="javascript:" (click)="changeTab(CONTENT_TYPE.QUERY)">Query</a>
         </li>
       </ul>
     </div>
@@ -69,13 +70,13 @@
   <!-- //top -->
 
   <!-- contents det -->
-  <ng-template [ngIf]="contentType === 'overview'">
+  <ng-template [ngIf]="isSelectedContent.isOverview()">
     <div overview></div>
   </ng-template>
-  <ng-template [ngIf]="contentType === 'ingestion'">
+  <ng-template [ngIf]="isSelectedContent.isIngestion()">
     <div ingestion></div>
   </ng-template>
-  <ng-template [ngIf]="contentType === 'query'">
+  <ng-template [ngIf]="isSelectedContent.isQuery()">
     <div query></div>
   </ng-template>
   <!-- //contents det -->

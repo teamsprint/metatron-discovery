@@ -16,6 +16,7 @@ import {Component, ElementRef, Injector, OnDestroy, OnInit, ViewChild} from '@an
 import {AbstractComponent} from '../common/component/abstract.component';
 import {DruidClusterInformationComponent} from './component/druid-cluster-information/druid-cluster-information.component';
 import {ActivatedRoute} from '@angular/router';
+import {Engine} from '../domain/engine-monitoring/engine';
 
 @Component({
   selector: 'engine-monitoring',
@@ -38,7 +39,9 @@ export class EngineMonitoringComponent extends AbstractComponent implements OnIn
   | Public Variables
   |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
-  public contentType = '';
+  public readonly CONTENT_TYPE = Engine.ContentType;
+
+  public isSelectedContent: Engine.Content;
 
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   | Constructor
@@ -58,10 +61,9 @@ export class EngineMonitoringComponent extends AbstractComponent implements OnIn
   public ngOnInit() {
     super.ngOnInit();
 
-    this.activatedRoute.data.subscribe(params => {
-      this.contentType = params['type'];
+    this.activatedRoute.data.subscribe((params: Engine.TypeParam) => {
+      this.isSelectedContent = new Engine.Content(params.type);
     });
-
   }
 
   public ngAfterViewInit() {
@@ -80,7 +82,7 @@ export class EngineMonitoringComponent extends AbstractComponent implements OnIn
     this._druidClusterInformationComponent.show();
   }
 
-  public changeTab(contentType: string) {
+  public changeTab(contentType: Engine.ContentType) {
     this.router.navigate([`management/engine-monitoring/${contentType}`]);
   }
 

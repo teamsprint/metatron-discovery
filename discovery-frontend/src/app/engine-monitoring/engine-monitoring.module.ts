@@ -20,32 +20,35 @@ import {EngineMonitoringComponent} from './engine-monitoring.component';
 import {CommonModule} from '../common/common.module';
 import {RouterModule} from '@angular/router';
 import {DruidClusterInformationComponent} from './component/druid-cluster-information/druid-cluster-information.component';
+import {Engine} from '../domain/engine-monitoring/engine';
+
+const _routes = [
+  {
+    path: '',
+    redirectTo: Engine.ContentType.OVERVIEW,
+    pathMatch: 'full',
+  },
+  {
+    path: Engine.ContentType.OVERVIEW,
+    component: EngineMonitoringComponent,
+    data: {'type': Engine.ContentType.OVERVIEW},
+  },
+  {
+    path: Engine.ContentType.INGESTION,
+    component: EngineMonitoringComponent,
+    data: {'type': Engine.ContentType.INGESTION},
+  },
+  {
+    path: Engine.ContentType.QUERY,
+    component: EngineMonitoringComponent,
+    data: {'type': Engine.ContentType.QUERY},
+  },
+];
 
 @NgModule({
   imports: [
     CommonModule,
-    RouterModule.forChild([
-      {
-        path: '',
-        redirectTo: 'overview',
-        pathMatch: 'full',
-      },
-      {
-        path: 'overview',
-        component: EngineMonitoringComponent,
-        data: {'type': 'overview'},
-      },
-      {
-        path: 'ingestion',
-        component: EngineMonitoringComponent,
-        data: {'type': 'ingestion'},
-      },
-      {
-        path: 'query',
-        component: EngineMonitoringComponent,
-        data: {'type': 'query'},
-      },
-    ]),
+    RouterModule.forChild(_routes),
   ],
   declarations: [
     OverviewComponent,
