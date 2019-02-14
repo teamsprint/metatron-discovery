@@ -7,9 +7,9 @@
 .ddp-layout-contents-type .ddp-ui-contents-in {position:Relative; height:100%;}
 
 .ddp-layout-top-menu {background-color: #fff; /* layer fill content */
-    -moz-box-shadow: 0 1px 3px rgba(0,0,0,.15); /* drop shadow */
-    -webkit-box-shadow: 0 1px 3px rgba(0,0,0,.15); /* drop shadow */
-    box-shadow: 0 1px 3px rgba(0,0,0,.15); /* drop shadow */}
+  -moz-box-shadow: 0 1px 3px rgba(0,0,0,.15); /* drop shadow */
+  -webkit-box-shadow: 0 1px 3px rgba(0,0,0,.15); /* drop shadow */
+  box-shadow: 0 1px 3px rgba(0,0,0,.15); /* drop shadow */}
 .ddp-layout-top-menu .ddp-top-label {float:left; padding:13px 57px 13px 20px; font-size:22px; color:#b6b9c2;}
 .ddp-layout-top-menu .ddp-top-menu {float:left; padding:9px 0 9px 0;}
 
