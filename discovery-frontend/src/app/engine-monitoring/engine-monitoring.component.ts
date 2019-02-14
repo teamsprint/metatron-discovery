@@ -1,6 +1,7 @@
 import {Component, ElementRef, Injector, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {AbstractComponent} from '../common/component/abstract.component';
 import {DruidClusterInformationComponent} from './component/druid-cluster-information/druid-cluster-information.component';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'engine-monitoring',
@@ -13,7 +14,7 @@ export class EngineMonitoringComponent extends AbstractComponent implements OnIn
   |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
   @ViewChild(DruidClusterInformationComponent)
-  private _druidClusterInformationComponent: DruidClusterInformationComponent;
+  private readonly _druidClusterInformationComponent: DruidClusterInformationComponent;
 
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   | Protected Variables
@@ -23,13 +24,16 @@ export class EngineMonitoringComponent extends AbstractComponent implements OnIn
   | Public Variables
   |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
+  public contentType = '';
+
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   | Constructor
   |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
   constructor(
     protected elementRef: ElementRef,
-    protected injector: Injector) {
+    protected injector: Injector,
+    private activatedRoute: ActivatedRoute) {
     super(elementRef, injector);
   }
 
@@ -39,6 +43,11 @@ export class EngineMonitoringComponent extends AbstractComponent implements OnIn
 
   public ngOnInit() {
     super.ngOnInit();
+
+    this.activatedRoute.data.subscribe(params => {
+      this.contentType = params['type'];
+    });
+
   }
 
   public ngAfterViewInit() {
@@ -55,6 +64,10 @@ export class EngineMonitoringComponent extends AbstractComponent implements OnIn
 
   public showDruidClusterInformationModal() {
     this._druidClusterInformationComponent.show();
+  }
+
+  public changeTab(contentType: string) {
+    this.router.navigate([`management/engine-monitoring/${contentType}`]);
   }
 
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=

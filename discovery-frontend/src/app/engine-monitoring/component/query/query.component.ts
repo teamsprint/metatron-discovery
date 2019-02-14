@@ -4,6 +4,7 @@ import {AbstractComponent} from '../../../common/component/abstract.component';
 @Component({
   selector: '[query]',
   templateUrl: './query.component.html',
+  host: {'[class.ddp-wrap-contents-det]': 'true'},
 })
 export class QueryComponent extends AbstractComponent implements OnInit, OnDestroy {
 

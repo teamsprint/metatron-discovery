@@ -4,6 +4,7 @@ import {AbstractComponent} from '../../../common/component/abstract.component';
 @Component({
   selector: '[ingestion]',
   templateUrl: './ingestion.component.html',
+  host: {'[class.ddp-wrap-contents-det]': 'true'},
 })
 export class IngestionComponent extends AbstractComponent implements OnInit, OnDestroy {
 

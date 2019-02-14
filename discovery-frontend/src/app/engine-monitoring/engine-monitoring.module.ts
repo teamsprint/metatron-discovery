@@ -5,14 +5,31 @@ import {QueryComponent} from './component/query/query.component';
 import {EngineMonitoringComponent} from './engine-monitoring.component';
 import {CommonModule} from '../common/common.module';
 import {RouterModule} from '@angular/router';
-import { DruidClusterInformationComponent } from './component/druid-cluster-information/druid-cluster-information.component';
+import {DruidClusterInformationComponent} from './component/druid-cluster-information/druid-cluster-information.component';
 
 @NgModule({
   imports: [
     CommonModule,
     RouterModule.forChild([
       {
-        path: '', component: EngineMonitoringComponent,
+        path: '',
+        component: EngineMonitoringComponent,
+        data: {'type': 'overview'},
+      },
+      {
+        path: 'overview',
+        component: EngineMonitoringComponent,
+        data: {'type': 'overview'},
+      },
+      {
+        path: 'ingestion',
+        component: EngineMonitoringComponent,
+        data: {'type': 'ingestion'},
+      },
+      {
+        path: 'query',
+        component: EngineMonitoringComponent,
+        data: {'type': 'query'},
       },
     ]),
   ],

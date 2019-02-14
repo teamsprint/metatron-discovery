@@ -4,6 +4,7 @@ import {AbstractComponent} from '../../../common/component/abstract.component';
 @Component({
   selector: '[overview]',
   templateUrl: './overview.component.html',
+  host: {'[class.ddp-wrap-contents-det]': 'true'},
 })
 export class OverviewComponent extends AbstractComponent implements OnInit, OnDestroy {
 
