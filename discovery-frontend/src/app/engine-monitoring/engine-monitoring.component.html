@@ -23,19 +23,7 @@
     </div>
     <!-- //label -->
     <!-- menu -->
-    <div class="ddp-top-menu">
-      <ul class="ddp-list-top-menu">
-        <li [class.ddp-selected]="isSelectedContent.isOverview()">
-          <a href="javascript:" (click)="changeTab(CONTENT_TYPE.OVERVIEW)">Overview</a>
-        </li>
-        <li [class.ddp-selected]="isSelectedContent.isIngestion()">
-          <a href="javascript:" (click)="changeTab(CONTENT_TYPE.INGESTION)">Ingestion</a>
-        </li>
-        <li [class.ddp-selected]="isSelectedContent.isQuery()">
-          <a href="javascript:" (click)="changeTab(CONTENT_TYPE.QUERY)">Query</a>
-        </li>
-      </ul>
-    </div>
+    <div menu [content]="isSelectedContent"></div>
     <!-- menu -->
     <!-- option -->
     <div class="ddp-ui-header-option">

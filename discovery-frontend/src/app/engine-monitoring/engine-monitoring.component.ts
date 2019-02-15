@@ -39,8 +39,6 @@ export class EngineMonitoringComponent extends AbstractComponent implements OnIn
   | Public Variables
   |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
-  public readonly CONTENT_TYPE = Engine.ContentType;
-
   public isSelectedContent: Engine.Content;
 
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
@@ -61,7 +59,7 @@ export class EngineMonitoringComponent extends AbstractComponent implements OnIn
   public ngOnInit() {
     super.ngOnInit();
 
-    this.activatedRoute.data.subscribe((params: Engine.TypeParam) => {
+    this.activatedRoute.data.subscribe((params: Engine.MonitoringRouterParams) => {
       this.isSelectedContent = new Engine.Content(params.type);
     });
   }
@@ -80,10 +78,6 @@ export class EngineMonitoringComponent extends AbstractComponent implements OnIn
 
   public showDruidClusterInformationModal() {
     this._druidClusterInformationComponent.show();
-  }
-
-  public changeTab(contentType: Engine.ContentType) {
-    this.router.navigate([`management/engine-monitoring/${contentType}`]);
   }
 
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=

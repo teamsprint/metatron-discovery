@@ -14,13 +14,17 @@
 
 export namespace Engine {
 
+  export class Constant {
+    public static readonly ROUTE_PREFIX = 'management/engine-monitoring/';
+  }
+
   export enum ContentType {
     OVERVIEW = 'overview',
     INGESTION = 'ingestion',
     QUERY = 'query'
   }
 
-  export type TypeParam = { 'type': Engine.ContentType };
+  export type MonitoringRouterParams = { 'type': Engine.ContentType };
 
   export class Content {
 
@@ -31,9 +35,9 @@ export namespace Engine {
       return this.value;
     }
 
-    static overview = new Content(ContentType.OVERVIEW);
-    static ingestion = new Content(ContentType.INGESTION);
-    static query = new Content(ContentType.QUERY);
+    private static readonly overview = new Content(ContentType.OVERVIEW);
+    private static readonly ingestion = new Content(ContentType.INGESTION);
+    private static readonly query = new Content(ContentType.QUERY);
 
     public isOverview() {
       return this.value === Content.overview.toString();

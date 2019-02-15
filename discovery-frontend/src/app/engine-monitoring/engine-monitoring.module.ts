@@ -21,6 +21,7 @@ import {CommonModule} from '../common/common.module';
 import {RouterModule} from '@angular/router';
 import {DruidClusterInformationComponent} from './component/druid-cluster-information/druid-cluster-information.component';
 import {Engine} from '../domain/engine-monitoring/engine';
+import {MenuComponent} from './component/menu/menu.component';
 
 const _routes = [
   {
@@ -56,6 +57,7 @@ const _routes = [
     QueryComponent,
     EngineMonitoringComponent,
     DruidClusterInformationComponent,
+    MenuComponent,
   ],
 })
 export class EngineMonitoringModule {

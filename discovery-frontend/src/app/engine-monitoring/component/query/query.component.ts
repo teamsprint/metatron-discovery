@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-import {Component, ElementRef, Injector, OnDestroy, OnInit} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, Injector, OnDestroy, OnInit} from '@angular/core';
 import {AbstractComponent} from '../../../common/component/abstract.component';
 
 @Component({
@@ -20,7 +20,7 @@ import {AbstractComponent} from '../../../common/component/abstract.component';
   templateUrl: './query.component.html',
   host: {'[class.ddp-wrap-contents-det]': 'true'},
 })
-export class QueryComponent extends AbstractComponent implements OnInit, OnDestroy {
+export class QueryComponent extends AbstractComponent implements OnInit, OnDestroy, AfterViewInit {
 
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   | Private Variables

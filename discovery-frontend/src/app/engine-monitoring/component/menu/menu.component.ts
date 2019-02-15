@@ -12,14 +12,16 @@
  * limitations under the License.
  */
 
-import {AfterViewInit, Component, ElementRef, Injector, OnDestroy, OnInit} from '@angular/core';
-import {AbstractPopupComponent} from '../../../common/component/abstract-popup.component';
+import {AfterViewInit, Component, ElementRef, Injector, Input, OnDestroy, OnInit} from '@angular/core';
+import {AbstractComponent} from '../../../common/component/abstract.component';
+import {Engine} from '../../../domain/engine-monitoring/engine';
 
 @Component({
-  selector: 'druid-cluster-information',
-  templateUrl: './druid-cluster-information.component.html',
+  selector: '[menu]',
+  templateUrl: './menu.component.html',
+  host: {'[class.ddp-top-menu]': 'true'},
 })
-export class DruidClusterInformationComponent extends AbstractPopupComponent implements OnInit, OnDestroy, AfterViewInit {
+export class MenuComponent extends AbstractComponent implements OnInit, OnDestroy, AfterViewInit {
 
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   | Private Variables
@@ -33,7 +35,10 @@ export class DruidClusterInformationComponent extends AbstractPopupComponent imp
   | Public Variables
   |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
-  public isShow: boolean;
+  @Input()
+  public readonly content: Engine.Content;
+
+  public readonly CONTENT_TYPE = Engine.ContentType;
 
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   | Constructor
@@ -65,12 +70,8 @@ export class DruidClusterInformationComponent extends AbstractPopupComponent imp
   | Public Method
   |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
-  public show() {
-    this._selfShow();
-  }
-
-  public selfHide() {
-    this.isShow = false;
+  public changeTab(contentType: Engine.ContentType) {
+    this.router.navigate([`${Engine.Constant.ROUTE_PREFIX}${contentType}`]);
   }
 
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
@@ -81,7 +82,4 @@ export class DruidClusterInformationComponent extends AbstractPopupComponent imp
   | Private Method
   |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
-  private _selfShow() {
-    this.isShow = true;
-  }
 }
