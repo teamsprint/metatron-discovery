@@ -72,6 +72,8 @@ export class LNBComponent extends AbstractComponent implements OnInit, OnDestroy
     management: false,
     managementDatasource: false,
     managementMetadata: false,
+    // TODO: 추후에 엔진 모니터링 메뉴에 대한 권한이 있는지 검사하는 로직 추가 필요 ( 임시 작업 )
+    managementEngineMonitoring: true,
     userAdmin: false,
     workspaceAdmin: false
   };
@@ -101,7 +103,8 @@ export class LNBComponent extends AbstractComponent implements OnInit, OnDestroy
       dataStorage: { fold: true },
       dataPreparation: { fold: true },
       dataMonitoring: { fold: true },
-      modelManager: { fold: true }
+      modelManager: { fold: true },
+      engineMonitoring: { fold: true }
     },
     // 어드민
     administration: {
@@ -283,6 +286,7 @@ export class LNBComponent extends AbstractComponent implements OnInit, OnDestroy
         this.lnbManager.workspace.fold = true;
         this.lnbManager.management.fold = false;
         this.lnbManager.administration.fold = true;
+        this.lnbManager.management.engineMonitoring.fold = true;
         this.mgmtMenuClickListener('DATASTORAGE');
         break;
       case 'ADMINISTRATION' :
@@ -304,6 +308,7 @@ export class LNBComponent extends AbstractComponent implements OnInit, OnDestroy
     this.lnbManager.management.dataPreparation.fold = true;
     this.lnbManager.management.dataMonitoring.fold = true;
     this.lnbManager.management.modelManager.fold = true;
+    this.lnbManager.management.engineMonitoring.fold = true;
     this.getManagementExtensions.forEach( item => {
       this.lnbManager.management[item.name]['fold']  = true;
     });
@@ -323,6 +328,9 @@ export class LNBComponent extends AbstractComponent implements OnInit, OnDestroy
         break;
       case 'MODELMANAGER' :
         this.lnbManager.management.modelManager.fold = false;
+        break;
+      case 'ENGINE_MONITORING' :
+        this.lnbManager.management.engineMonitoring.fold = false;
         break;
       default :
         if( this.lnbManager.management[menuName] ) {
