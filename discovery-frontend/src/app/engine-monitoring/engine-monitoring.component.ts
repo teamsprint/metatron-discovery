@@ -59,9 +59,11 @@ export class EngineMonitoringComponent extends AbstractComponent implements OnIn
   public ngOnInit() {
     super.ngOnInit();
 
-    this.activatedRoute.data.subscribe((params: Engine.MonitoringRouterParams) => {
-      this.isSelectedContent = new Engine.Content(params.type);
-    });
+    this.subscriptions.push(
+      this.activatedRoute.data.subscribe((params: Engine.MonitoringRouterParams) => {
+        this.isSelectedContent = new Engine.Content(params.type);
+      }),
+    );
   }
 
   public ngAfterViewInit() {
