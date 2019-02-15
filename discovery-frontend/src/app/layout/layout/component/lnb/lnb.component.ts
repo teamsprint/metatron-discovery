@@ -183,6 +183,12 @@ export class LNBComponent extends AbstractComponent implements OnInit, OnDestroy
             this.depth1Menu1ClickListener('MANAGEMENT');
             this.mgmtMenuClickListener('DATAMONITORING');
             break;
+          case '/management/engine-monitoring/overview' :
+          case '/management/engine-monitoring/ingestion' :
+          case '/management/engine-monitoring/query' :
+            this.depth1Menu1ClickListener('MANAGEMENT');
+            this.mgmtMenuClickListener('ENGINE_MONITORING');
+            break;
           case '/admin/user/members' :
           case '/admin/user/groups' :
           case '/admin/workspaces/shared':
