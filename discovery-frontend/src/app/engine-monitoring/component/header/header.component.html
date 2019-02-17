@@ -12,24 +12,15 @@
   ~ limitations under the License.
   -->
 
+<!-- label -->
 <!--suppress NsUnresolvedStyleClassReference -->
-<em class="ddp-bg-back"></em>
-<div class="ddp-ui-contents-in ddp-pad0">
-
-  <!-- top -->
-  <div header [content]="isSelectedContent"></div>
-  <!-- //top -->
-
-  <!-- contents det -->
-  <ng-template [ngIf]="isSelectedContent.isOverview()">
-    <div overview></div>
-  </ng-template>
-  <ng-template [ngIf]="isSelectedContent.isIngestion()">
-    <div ingestion></div>
-  </ng-template>
-  <ng-template [ngIf]="isSelectedContent.isQuery()">
-    <div query></div>
-  </ng-template>
-  <!-- //contents det -->
-
+<div class="ddp-top-label">
+  {{ 'msg.engine.monotoring.title' | translate }}
 </div>
+<!-- //label -->
+<!-- menu -->
+<div header-menu [content]="content"></div>
+<!-- menu -->
+<!-- option -->
+<div header-option></div>
+<!-- //option -->

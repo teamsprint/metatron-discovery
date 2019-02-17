@@ -23,6 +23,7 @@ import {DruidClusterInformationComponent} from './component/druid-cluster-inform
 import {Engine} from '../domain/engine-monitoring/engine';
 import {HeaderOptionComponent} from './component/header-option/header-option.component';
 import {HeaderMenuComponent} from './component/header-menu/header-menu.component';
+import {HeaderComponent} from './component/header/header.component';
 
 const _routes = [
   {
@@ -58,6 +59,7 @@ const _routes = [
     QueryComponent,
     EngineMonitoringComponent,
     DruidClusterInformationComponent,
+    HeaderComponent,
     HeaderMenuComponent,
     HeaderOptionComponent,
   ],

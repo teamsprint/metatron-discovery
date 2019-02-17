@@ -12,23 +12,27 @@
  * limitations under the License.
  */
 
-import {AfterViewInit, Component, ElementRef, Injector, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, Injector, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Engine} from '../../../domain/engine-monitoring/engine';
 import {AbstractComponent} from '../../../common/component/abstract.component';
-import {DruidClusterInformationComponent} from '../druid-cluster-information/druid-cluster-information.component';
+import {HeaderOptionComponent} from '../header-option/header-option.component';
 
 @Component({
-  selector: '[header-option]',
-  templateUrl: './header-option.component.html',
-  host: {'[class.ddp-ui-header-option]': 'true'},
+  selector: '[header]',
+  templateUrl: './header.component.html',
+  host: {
+    '[class.ddp-layout-top-menu]': 'true',
+    '[class.ddp-clear]': 'true',
+  },
 })
-export class HeaderOptionComponent extends AbstractComponent implements OnInit, OnDestroy, AfterViewInit {
+export class HeaderComponent extends AbstractComponent implements OnInit, OnDestroy, AfterViewInit {
 
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   | Private Variables
   |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
-  @ViewChild(DruidClusterInformationComponent)
-  private readonly _druidClusterInformationComponent: DruidClusterInformationComponent;
+  @ViewChild(HeaderOptionComponent)
+  private _headerOptionComponent: HeaderOptionComponent;
 
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   | Protected Variables
@@ -38,7 +42,8 @@ export class HeaderOptionComponent extends AbstractComponent implements OnInit, 
   | Public Variables
   |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
-  public isShowOptionLayer: boolean;
+  @Input()
+  public readonly content: Engine.Content;
 
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   | Constructor
@@ -70,24 +75,8 @@ export class HeaderOptionComponent extends AbstractComponent implements OnInit, 
   | Public Method
   |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
-  public showDruidClusterInformationModal() {
-    this._druidClusterInformationComponent.show();
-  }
-
-  public toggleOptionLayer() {
-    this.isShowOptionLayer = !this.isShowOptionLayer;
-  }
-
-  public hide() {
-    this._selfHide();
-  }
-
-  public clickSetDruidCluster() {
-    this._selfHide();
-  }
-
-  public clickDruidGuide() {
-    this._selfHide();
+  public hideHeaderOption() {
+    this._headerOptionComponent.hide();
   }
 
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
@@ -98,7 +87,4 @@ export class HeaderOptionComponent extends AbstractComponent implements OnInit, 
   | Private Method
   |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
-  private _selfHide() {
-    this.isShowOptionLayer = false;
-  }
 }
