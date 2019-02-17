@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-import {Component, ElementRef, Injector, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, Injector, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {AbstractComponent} from '../common/component/abstract.component';
 import {DruidClusterInformationComponent} from './component/druid-cluster-information/druid-cluster-information.component';
 import {ActivatedRoute} from '@angular/router';
@@ -22,7 +22,7 @@ import {Engine} from '../domain/engine-monitoring/engine';
   selector: 'engine-monitoring',
   templateUrl: './engine-monitoring.component.html',
 })
-export class EngineMonitoringComponent extends AbstractComponent implements OnInit, OnDestroy {
+export class EngineMonitoringComponent extends AbstractComponent implements OnInit, OnDestroy, AfterViewInit {
 
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   | Private Variables
