@@ -12,20 +12,23 @@
  * limitations under the License.
  */
 
-import {AfterViewInit, Component, ElementRef, Injector, OnDestroy, OnInit} from '@angular/core';
-import {AbstractComponent} from '../common/component/abstract.component';
-import {ActivatedRoute} from '@angular/router';
-import {Engine} from '../domain/engine-monitoring/engine';
+import {AfterViewInit, Component, ElementRef, Injector, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AbstractComponent} from '../../../common/component/abstract.component';
+import {DruidClusterInformationComponent} from '../druid-cluster-information/druid-cluster-information.component';
 
 @Component({
-  selector: 'engine-monitoring',
-  templateUrl: './engine-monitoring.component.html',
+  selector: '[header-option]',
+  templateUrl: './header-option.component.html',
+  host: {'[class.ddp-ui-header-option]': 'true'},
 })
-export class EngineMonitoringComponent extends AbstractComponent implements OnInit, OnDestroy, AfterViewInit {
+export class HeaderOptionComponent extends AbstractComponent implements OnInit, OnDestroy, AfterViewInit {
 
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   | Private Variables
   |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
+
+  @ViewChild(DruidClusterInformationComponent)
+  private readonly _druidClusterInformationComponent: DruidClusterInformationComponent;
 
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   | Protected Variables
@@ -35,7 +38,7 @@ export class EngineMonitoringComponent extends AbstractComponent implements OnIn
   | Public Variables
   |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
-  public isSelectedContent: Engine.Content;
+  public isShowOptionLayer: boolean;
 
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   | Constructor
@@ -43,8 +46,7 @@ export class EngineMonitoringComponent extends AbstractComponent implements OnIn
 
   constructor(
     protected elementRef: ElementRef,
-    protected injector: Injector,
-    private activatedRoute: ActivatedRoute) {
+    protected injector: Injector) {
     super(elementRef, injector);
   }
 
@@ -54,14 +56,6 @@ export class EngineMonitoringComponent extends AbstractComponent implements OnIn
 
   public ngOnInit() {
     super.ngOnInit();
-
-    this.loadingHide();
-
-    this.subscriptions.push(
-      this.activatedRoute.data.subscribe((params: Engine.MonitoringRouterParams) => {
-        this.isSelectedContent = new Engine.Content(params.type);
-      }),
-    );
   }
 
   public ngAfterViewInit() {
@@ -75,6 +69,22 @@ export class EngineMonitoringComponent extends AbstractComponent implements OnIn
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   | Public Method
   |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
+
+  public showDruidClusterInformationModal() {
+    this._druidClusterInformationComponent.show();
+  }
+
+  public toggleOptionLayer() {
+    this.isShowOptionLayer = !this.isShowOptionLayer;
+  }
+
+  public clickSetDruidCluster() {
+    this.toggleOptionLayer();
+  }
+
+  public clickDruidGuide() {
+    this.toggleOptionLayer();
+  }
 
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   | Protected Method

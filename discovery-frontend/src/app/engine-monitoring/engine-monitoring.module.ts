@@ -22,6 +22,7 @@ import {RouterModule} from '@angular/router';
 import {DruidClusterInformationComponent} from './component/druid-cluster-information/druid-cluster-information.component';
 import {Engine} from '../domain/engine-monitoring/engine';
 import {MenuComponent} from './component/menu/menu.component';
+import { HeaderOptionComponent } from './component/header-option/header-option.component';
 
 const _routes = [
   {
@@ -58,6 +59,7 @@ const _routes = [
     EngineMonitoringComponent,
     DruidClusterInformationComponent,
     MenuComponent,
+    HeaderOptionComponent,
   ],
 })
 export class EngineMonitoringModule {
