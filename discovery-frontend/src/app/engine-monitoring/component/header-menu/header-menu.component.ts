@@ -17,11 +17,11 @@ import {AbstractComponent} from '../../../common/component/abstract.component';
 import {Engine} from '../../../domain/engine-monitoring/engine';
 
 @Component({
-  selector: '[menu]',
-  templateUrl: './menu.component.html',
+  selector: '[header-menu]',
+  templateUrl: './header-menu.component.html',
   host: {'[class.ddp-top-menu]': 'true'},
 })
-export class MenuComponent extends AbstractComponent implements OnInit, OnDestroy, AfterViewInit {
+export class HeaderMenuComponent extends AbstractComponent implements OnInit, OnDestroy, AfterViewInit {
 
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   | Private Variables
