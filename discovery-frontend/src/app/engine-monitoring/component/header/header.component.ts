@@ -32,7 +32,7 @@ export class HeaderComponent extends AbstractComponent implements OnInit, OnDest
   |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
   @ViewChild(HeaderOptionComponent)
-  private _headerOptionComponent: HeaderOptionComponent;
+  private readonly _headerOptionComponent: HeaderOptionComponent;
 
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   | Protected Variables
