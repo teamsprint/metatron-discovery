@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-import {AfterViewInit, Component, ElementRef, Injector, OnDestroy, OnInit} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, EventEmitter, Injector, OnDestroy, OnInit, Output} from '@angular/core';
 import {AbstractComponent} from '../../../common/component/abstract.component';
 
 @Component({
@@ -25,6 +25,9 @@ export class OverviewComponent extends AbstractComponent implements OnInit, OnDe
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   | Private Variables
   |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
+
+  @Output('completeLoad')
+  private readonly _completeLoad = new EventEmitter();
 
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   | Protected Variables
@@ -50,6 +53,7 @@ export class OverviewComponent extends AbstractComponent implements OnInit, OnDe
 
   public ngOnInit() {
     super.ngOnInit();
+    this._completeLoad.emit();
   }
 
   public ngAfterViewInit() {

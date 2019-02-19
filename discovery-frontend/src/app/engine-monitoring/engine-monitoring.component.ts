@@ -55,8 +55,6 @@ export class EngineMonitoringComponent extends AbstractComponent implements OnIn
   public ngOnInit() {
     super.ngOnInit();
 
-    this.loadingHide();
-
     this.subscriptions.push(
       this.activatedRoute.data.subscribe((params: Engine.MonitoringRouterParams) => {
         this.isSelectedContent = new Engine.Content(params.type);
@@ -75,6 +73,10 @@ export class EngineMonitoringComponent extends AbstractComponent implements OnIn
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   | Public Method
   |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
+
+  public completeContentLoad() {
+    this.loadingHide();
+  }
 
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   | Protected Method
