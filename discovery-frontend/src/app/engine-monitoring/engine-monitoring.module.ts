@@ -24,6 +24,7 @@ import {Engine} from '../domain/engine-monitoring/engine';
 import {HeaderOptionComponent} from './component/header-option/header-option.component';
 import {HeaderMenuComponent} from './component/header-menu/header-menu.component';
 import {HeaderComponent} from './component/header/header.component';
+import {EngineServiceModule} from './service/engine-service.module';
 
 const _routes = [
   {
@@ -51,6 +52,7 @@ const _routes = [
 @NgModule({
   imports: [
     CommonModule,
+    EngineServiceModule,
     RouterModule.forChild(_routes),
   ],
   declarations: [

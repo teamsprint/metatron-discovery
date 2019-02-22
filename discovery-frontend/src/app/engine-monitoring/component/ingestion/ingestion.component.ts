@@ -14,6 +14,8 @@
 
 import {AfterViewInit, Component, ElementRef, EventEmitter, Injector, OnDestroy, OnInit, Output} from '@angular/core';
 import {AbstractComponent} from '../../../common/component/abstract.component';
+import {StateService} from '../../service/state.service';
+import {EngineService} from '../../service/engine.service';
 
 @Component({
   selector: '[ingestion]',
@@ -41,9 +43,12 @@ export class IngestionComponent extends AbstractComponent implements OnInit, OnD
   | Constructor
   |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
+  // noinspection JSUnusedLocalSymbols
   constructor(
     protected elementRef: ElementRef,
-    protected injector: Injector) {
+    protected injector: Injector,
+    private stateService: StateService,
+    private engineService: EngineService) {
     super(elementRef, injector);
   }
 
