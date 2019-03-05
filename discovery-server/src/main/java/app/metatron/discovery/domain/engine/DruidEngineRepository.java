@@ -20,6 +20,7 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.stereotype.Component;
@@ -36,6 +37,8 @@ import app.metatron.discovery.domain.datasource.data.QueryTimeExcetpion;
 
 import static app.metatron.discovery.domain.engine.EngineProperties.BULK_LOAD;
 import static app.metatron.discovery.domain.engine.EngineProperties.GET_DATASOURCE_LIST;
+import static app.metatron.discovery.domain.engine.EngineProperties.GET_HISTORICAL_NODE;
+import static app.metatron.discovery.domain.engine.EngineProperties.GET_MIDDLEMGMT_NODE;
 import static app.metatron.discovery.domain.engine.EngineProperties.INGESTION_DATASOUCE;
 import static app.metatron.discovery.domain.engine.EngineProperties.SEARCH_QUERY;
 import static app.metatron.discovery.domain.engine.EngineProperties.SUPERVISOR_INGESTION;
@@ -47,6 +50,9 @@ import static app.metatron.discovery.domain.engine.EngineProperties.SUPERVISOR_I
 public class DruidEngineRepository extends AbstractEngineRepository {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(DruidEngineRepository.class);
+
+  private static final String HEALTH_CHECK = "/status/health";
+  private static final String PROPERTIES_CHECK = "/status/properties";
 
   @Value("${polaris.engine.timeout.query:1200000}")
   Integer timeout;
@@ -79,25 +85,21 @@ public class DruidEngineRepository extends AbstractEngineRepository {
     return call(SEARCH_QUERY, Maps.newHashMap(), spec, clazz);
   }
 
-//  public <T> Optional<T> query(String queryStr, Class<T> clazz) {
-//
-//    // Request 정보 작성
-//    HttpHeaders headers = new HttpHeaders();
-//    headers.setContentType(MediaType.APPLICATION_JSON);
-//    HttpEntity<String> entity = new HttpEntity<>(queryStr, headers);
-//
-//    // HTTP  호출
-//    ResponseEntity<T> result;
-//    try {
-//      result = restTemplate.exchange(queryUrl, HttpMethod.POST, entity, clazz);
-//    } catch (ResourceAccessException e) {
-//      LOGGER.error("Fail to access Engine : {}", e.getMessage());
-//      throw new EngineException(e.getMessage());
-//    }
-//
-//    return Optional.ofNullable(result.getBody());
-//
-//  }
+  public <T> Optional<T> health(String url, Class<T> clazz) {
+    return callByUrl(url + HEALTH_CHECK, HttpMethod.GET, Maps.newHashMap(), null, clazz);
+  }
+
+  public <T> Optional<T> properties(String url, Class<T> clazz) {
+    return callByUrl(url + PROPERTIES_CHECK, HttpMethod.GET, Maps.newHashMap(), null, clazz);
+  }
+
+  public Optional<List> getHistoricalNodes(){
+    return call(GET_HISTORICAL_NODE, Maps.newHashMap(), List.class);
+  }
+
+  public Optional<List> getMiddleManagerNodes(){
+    return call(GET_MIDDLEMGMT_NODE, Maps.newHashMap(), List.class);
+  }
 
   private class QueryResponseErrorHandler implements ResponseErrorHandler {
 

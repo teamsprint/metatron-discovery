@@ -68,6 +68,8 @@ public class EngineProperties {
   public final static String GET_DATASOURCE_STATUS = "datasourceStatus";
   public final static String DISABLE_DATASOURCE = "datasourceDisable";
   public final static String PURGE_DATASOURCE = "datasourcePurge";
+  public final static String GET_HISTORICAL_NODE = "getHistoricalNode";
+  public final static String GET_MIDDLEMGMT_NODE = "getMiddleMgmtNode";
 
   public final static String TEMP_CSV_PREFIX = "temp_ds_";
 
