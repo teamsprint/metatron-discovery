@@ -89,7 +89,9 @@ public class SchedulingConfig {
                                        calculatePopularityJob().getObject(),
                                        notebookKillKernelJob().getObject(),
                                        tempCSVFileCleanJob().getObject(),
-                                       timeoutWorkbenchConnectionCloseJob().getObject());
+                                       timeoutWorkbenchConnectionCloseJob().getObject(),
+                                       engineMonitoringJob().getObject(),
+                                       engineMonitoringSetter().getObject());
     schedulerFactoryBean.setTriggers(dataSourceCheckTrigger().getObject(),
                                      dataSourceIngestionCheckTrigger().getObject(),
                                      dataSourceSizeCheckTrigger().getObject(),
@@ -97,7 +99,9 @@ public class SchedulingConfig {
                                      calculatePopularityTrigger().getObject(),
                                      notebookKillKernelTrigger().getObject(),
                                      tempCSVFileCleanTrigger().getObject(),
-                                     timeoutWorkbenchConnectionCloseTrigger().getObject());
+                                     timeoutWorkbenchConnectionCloseTrigger().getObject(),
+                                     engineMonitoringTrigger().getObject(),
+                                     engineMonitoringSetterTrigger().getObject());
 
     return schedulerFactoryBean;
   }
@@ -373,7 +377,7 @@ public class SchedulingConfig {
     triggerFactory.setStartDelay(10000);
     triggerFactory.setName("engine-monitoring-trigger");
     triggerFactory.setGroup(JOB_GROUP_ENGINE_MON);
-    triggerFactory.setCronExpression("0 0/1 * 1/1 * ? *");
+    triggerFactory.setCronExpression("0 0/10 * 1/1 * ? *");
     return triggerFactory;
   }
 
