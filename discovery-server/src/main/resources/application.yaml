@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: local,mysql-default-db,logging-console-debug,scheduling #, initial #, bcrypt-encoder, encode-password-initial, datasource-filter-sample
+    active: local,h2-default-db,logging-console-debug,scheduling #, initial #, bcrypt-encoder, encode-password-initial, datasource-filter-sample
   application:
     name: ${METATRON_NAME:metatron}
   datasource:
@@ -11,7 +11,7 @@ spring:
       max-request-size: 300Mb
   mvc:
     favicon:
-        enabled: false
+      enabled: false
   boot:
     admin:
       client:
@@ -40,53 +40,53 @@ polaris:
   title: metatron
   common:
     manualLinks:
-     ko: file://${METATRON_HOME:/metatron}/doc/metatronDiscovery.user.manual.ko.pdf
-     en: file://${METATRON_HOME:/metatron}/doc/metatronDiscovery.user.manual.en.pdf
+      ko: file://${METATRON_HOME:/metatron}/doc/metatronDiscovery.user.manual.ko.pdf
+      en: file://${METATRON_HOME:/metatron}/doc/metatronDiscovery.user.manual.en.pdf
   widget:
     mapView:
       defaultBaseMap: Light
       overrideBaseMap: false
   oauth2:
     permitAll:
-      -
-        method: POST
-        api: /api/users/signup
-      -
-        method: POST
-        api: /api/users/password/reset
-      -
-        method: GET
-        api: /api/common/manual/download
-      -
-        method: GET
-        api: /api/users/**/duplicated
-      -
-        method: GET
-        api: /api/jobs/**
-      -
-        method: POST
-        api: /api/datasources/*/data
-      -
-        method: POST
-        api: /api/dashboards/*/data
-      -
-        method: POST
-        api: /api/widgets/*/data
-      -
-        method: POST
-        api: /api/auth/**
-      -
-        method: GET
-        api: /api/auth/**
-      -
-        method: POST
-        api: /api/admin/reindex
-      -
-        method: GET
-        api: /api/admin/**
-      -
-        method: POST
-        api: /api/images/**
+    -
+      method: POST
+      api: /api/users/signup
+    -
+      method: POST
+      api: /api/users/password/reset
+    -
+      method: GET
+      api: /api/common/manual/download
+    -
+      method: GET
+      api: /api/users/**/duplicated
+    -
+      method: GET
+      api: /api/jobs/**
+    -
+      method: POST
+      api: /api/datasources/*/data
+    -
+      method: POST
+      api: /api/dashboards/*/data
+    -
+      method: POST
+      api: /api/widgets/*/data
+    -
+      method: POST
+      api: /api/auth/**
+    -
+      method: GET
+      api: /api/auth/**
+    -
+      method: POST
+      api: /api/admin/reindex
+    -
+      method: GET
+      api: /api/admin/**
+    -
+      method: POST
+      api: /api/images/**
   datasource:
     connections:
       ORACLE: ["ENGINE", "LIVE"]
@@ -211,8 +211,8 @@ spring:
 polaris:
   format:
     datetimes:
-      - 'yy-MM-dd'
-      - 'dd/MM/yyyy'
+    - 'yy-MM-dd'
+    - 'dd/MM/yyyy'
   chart:
     profile: default
   datasource:
@@ -223,9 +223,9 @@ polaris:
         maxDuration : 3600
   engine:
     hostname:
-      broker: http://exntu.kr:28082
-      overlord: http://exntu.kr:29090
-      coordinator: http://exntu.kr:29081
+      broker: http://localhost:8082
+      overlord: http://localhost:8090
+      coordinator: http://localhost:8081
     ingestion:
       loader:
         remoteType: LOCAL
@@ -257,14 +257,12 @@ polaris:
       port: 10000
       username: hive
       password: hive
-      metastore: thrift://localhost:9083
+      metastoreUri: thrift://localhost:9083
   dataprep:
     localBaseDir: ${user.home}/dataprep
 #    hadoopConfDir: /etc/hadoop
 #    stagingBaseDir: hdfs://localhost:9000/user/hive/dataprep
-#    hive:
-#      hostname: localhost
-#   sampling:
+#    sampling:
 #      timeout: 20
 #    etl:
 #      timeout: 36000
@@ -420,16 +418,16 @@ spring:
 polaris:
   datasource:
     default-filters:
-      - criterionKey: CREATOR
-        filterKey: createdBy
-        filterValue: me
-      - criterionKey: PUBLISH
-        filterKey: published
-        filterValue: true
-        filterName: msg.storage.ui.criterion.open-data
+    - criterionKey: CREATOR
+      filterKey: createdBy
+      filterValue: me
+    - criterionKey: PUBLISH
+      filterKey: published
+      filterValue: true
+      filterName: msg.storage.ui.criterion.open-data
   connections:
     default-filters:
-      - criterionKey: PUBLISH
-        filterKey: published
-        filterValue: true
-        filterName: msg.storage.ui.criterion.open-data
+    - criterionKey: PUBLISH
+      filterKey: published
+      filterValue: true
+      filterName: msg.storage.ui.criterion.open-data
