@@ -257,12 +257,14 @@ polaris:
       port: 10000
       username: hive
       password: hive
-      metastoreUri: thrift://localhost:9083
+      metastore: thrift://localhost:9083
   dataprep:
     localBaseDir: ${user.home}/dataprep
 #    hadoopConfDir: /etc/hadoop
 #    stagingBaseDir: hdfs://localhost:9000/user/hive/dataprep
-#    sampling:
+#    hive:
+#      hostname: localhost
+#   sampling:
 #      timeout: 20
 #    etl:
 #      timeout: 36000
