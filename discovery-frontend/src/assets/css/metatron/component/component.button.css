@@ -11,8 +11,8 @@ a.ddp-btn-type.ddp-bg-orange:hover {border:1px solid #f28400; background-color:#
 a.ddp-btn-type.ddp-btn-disabled,
 a.ddp-btn-type.ddp-btn-disabled:hover {background-color:#fff; color:#707070; border:1px solid #afb3b7; cursor:no-drop;}
 
-a.ddp-btn-buttons2 {display:inline-block; padding:7px 0; width:115px; border-radius:2px; background-color:#f3f3f5; border:1px solid #8086bd; color:#666eb2; font-weight:bold; font-size:12px; text-align:center;}
-a.ddp-btn-buttons2:hover {background-color:#707cc4; border:1px solid #707cc4; color:#fff;}
+a.ddp-btn-buttons2 {display:inline-block; padding:7px 0; width:115px; border-radius:2px; background-color:#2dccff; border:1px solid #2dccff; color:#fff; font-weight:bold; font-size:12px; text-align:center;}
+a.ddp-btn-buttons2:hover {background-color:#4a90e2; border:1px solid #4a90e2; color:#fff;}
 a.ddp-btn-buttons2:hover em.ddp-icon-btndone {background-position:-16px -163px;}
 
 a.ddp-btn-buttons3 {display:inline-block; padding:7px 0; width:115px; border-radius:2px; border:1px solid #b8bdc4; color:#4b525b; font-weight:bold; font-size:12px; text-align:center;}
@@ -58,10 +58,10 @@ a.ddp-btn-buttons4 .ddp-icon-edit {display:inline-block; width:13px; height:13px
 .ddp-btn-pop.ddp-bg-gray.ddp-disabled,
 .ddp-btn-pop.ddp-bg-gray.ddp-disabled:hover {background-color:#d0d1d8; border:1px solid #d0d1d8; color:#fff; cursor: no-drop;}
 
-a.ddp-btn-type-popup {position:relative; display:inline-block; padding:9px 10px; min-width:206px; font-size:14px; text-align:center; border-radius:3px; border:1px solid #d0d1d7; color:#90969f;}
-a.ddp-btn-type-popup:hover {color:#707070; border:1px solid #b7b9c1;}
-a.ddp-btn-type-popup.ddp-bg-black {background-color:#4c515a; border:1px solid #4c515a; color:#fff;}
-a.ddp-btn-type-popup.ddp-bg-black:hover {background-color:#36393e; border:1px solid #36393e; color:#fff;}
+a.ddp-btn-type-popup {position:relative; display:inline-block; padding:9px 10px; min-width:206px; font-size:14px; text-align:center; border-radius:3px; border:1px solid #2dccff; color:#2dccff;}
+a.ddp-btn-type-popup:hover {color:#1d93ff; border:1px solid #1d93ff;background-color: rgba(29, 147, 255, 0.1);}
+a.ddp-btn-type-popup.ddp-bg-black {background-color:#2dccff; /*border:1px solid #4c515a;*/ color:#fff;}
+a.ddp-btn-type-popup.ddp-bg-black:hover {background-color:#1d93ff; border:1px solid #1d93ff; color:#fff;}
 a.ddp-btn-type-popup.ddp-bg-black.ddp-disabled,
 a.ddp-btn-type-popup.ddp-bg-black.ddp-disabled:hover {background-color:#d0d1d8; border:1px solid #d0d1d8; cursor:no-drop;}
 a.ddp-btn-type-popup .ddp-icon-add {display:inline-block; margin-right:7px; background-position-x:-28px;}
@@ -173,10 +173,10 @@ a.ddp-btn-solid.ddp-full {width:100%; box-sizing:border-box;}
 a.ddp-btn-solid.ddp-bg-black {border:1px solid #4b515b;background-color:#4b515b;}
 a.ddp-btn-solid.ddp-bg-black:hover {border:1px solid #35393f;background-color:#35393f;}
 
-.ddp-btn-solid2 {display:inline-block; min-width:110px; padding:6px 10px; border:1px solid #8f949d; background-color:#8f949d; border-radius:2px; color:#fff; font-size:13px; text-align:center; box-sizing:border-box;}
+.ddp-btn-solid2 {display:inline-block; min-width:110px; padding:6px 10px; /*border:1px solid #8f949d; background-color:#8f949d;*/border-radius:2px; color:#fff; font-size:13px; text-align:center; box-sizing:border-box;}
 .ddp-btn-solid2:hover {background-color:#4b525b; color:#fff;}
-.ddp-btn-solid2.ddp-dark {border:1px solid #4b515b; background-color:#4b515b;}
-.ddp-btn-solid2.ddp-dark:hover {border:1px solid #35393f; background-color:#35393f;}
+.ddp-btn-solid2.ddp-dark {/*border:1px solid #4b515b;*/ background-color:#00d4b1;}
+.ddp-btn-solid2.ddp-dark:hover {/*border:1px solid #35393f;*/background-color:#00bb9c;}
 
 a.ddp-btn-solid2.ddp-disabled,
 a.ddp-btn-solid2.ddp-disabled:hover {border:1px solid #d0d1d8; background-color:#d0d1d8; cursor:no-drop;}
@@ -202,12 +202,14 @@ a.ddp-btn-popup-close:hover {background-position:left -17px;}
 .ddp-list-buttons li.ddp-disabled { opacity:0.5; cursor:no-drop;}
 .ddp-list-buttons li.ddp-disabled:hover {cursor:no-drop; background:#e7e7ea;}
 
+
 .ddp-list-buttons.ddp-table {display:table;margin-bottom:6px;}
 .ddp-list-buttons.ddp-table li {display:table-cell; float:inherit; padding:0 10px; height:30px; vertical-align:middle; max-width:112px; box-sizing:Border-box;}
 .ddp-list-buttons.ddp-table li:before {display:none;}
 .ddp-list-buttons.ddp-table li .ddp-txt-check {display:inline-block; position:relative; font-size:12px; white-space:normal;}
 .ddp-list-buttons.ddp-table li.ddp-selected .ddp-txt-check {padding-left:20px;}
 .ddp-list-buttons.ddp-table li.ddp-selected .ddp-txt-check:before  {position:absolute; top:50%; left:0; display:inline-block; width:14px; height:10px; margin:-5px 0 0 0; background:url(../../../images/icon_select2.png) no-repeat; vertical-align: middle; content:'';}
+
 
 /**************************************************************
     link
@@ -276,8 +278,8 @@ ul.ddp-ui-tab.ddp-type2 li a {border-top:1px solid #d7d8dd;}
 ul.ddp-list-tab2 {overflow:hidden;}
 ul.ddp-list-tab2 li {float:left; width:50%;}
 ul.ddp-list-tab2 li a {display:block; position:relative; padding:18px 0 18px 0; text-align:center; color:#d0d1d8; font-size:12px; font-weight:bold;}
-ul.ddp-list-tab2 li.ddp-selected a {color:#666eb2;}
-ul.ddp-list-tab2 li a:before {display:inline-block; position:absolute; top:50%; left:0; height:14px; margin-top:-7px; border-left:1px solid #eaebed; content:'';}
+ul.ddp-list-tab2 li.ddp-selected a {color:#2dccff;}
+ul.ddp-list-tab2 li a:before {display:inline-block; position:absolute; top:50%; left:0; height:14px; margin-top:-7px; border-left:1px solid #273147; content:'';}
 ul.ddp-list-tab2 li:first-of-type a:before {display:none;}
 
 
@@ -382,11 +384,11 @@ ul.ddp-list-tab-button.ddp-disabled:after {display:inline-block; content:''; pos
 .ddp-list-buttons.ddp-dark li {width:50%; color:rgba(231,231,231,0.4); border:1px solid #4b515b; background-color:#24282e;}
 .ddp-list-buttons.ddp-dark li.ddp-selected {color:#fff; background-color:#4b515b;}
 
-.ddp-list-buttons.ddp-part4 li {width:25%;}
+.ddp-list-buttons.ddp-part4 li {width:25%; min-width:auto;}
 .ddp-list-buttons.ddp-part5 {width:100%;}
-.ddp-list-buttons.ddp-part5 li {width:20%;}
+.ddp-list-buttons.ddp-part5 li {width:20%; min-width:auto;}
 .ddp-list-buttons.ddp-part2 {width:100%;}
-.ddp-list-buttons.ddp-part2 li {width:50%;}
+.ddp-list-buttons.ddp-part2 li {width:50%; min-width:auto;}
 
 /**************************************************************
     tab button

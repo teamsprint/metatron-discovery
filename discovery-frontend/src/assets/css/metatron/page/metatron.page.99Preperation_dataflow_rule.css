@@ -18,9 +18,10 @@
 .page-prep-dataflow ul.ddp-list-snapshot li > .ddp-txt-snapshot {border-bottom:none;}
 .page-prep-dataflow ul.ddp-list-snapshot li {border-bottom:1px solid #eaeaec}
 .page-prep-dataflow .ddp-input-selectbox {position:relative;}
-.page-prep-dataflow .ddp-input-selectbox .ddp-wrap-popup2 {display:none; position:absolute; bottom:100%; left:0; right:inherit; min-width:100%; max-height:150px; box-sizing:Border-box; overflow:auto;}
+.page-prep-dataflow .ddp-input-selectbox .ddp-wrap-popup2 {display:none; position:absolute; left:0; right:inherit; bottom:100%; margin-bottom:3px; min-width:100%; max-height:150px; box-sizing:Border-box; overflow:auto;}
+.page-prep-dataflow .ddp-input-selectbox .ddp-wrap-popup2.ddp-fix {position:fixed; bottom:inherit; min-width:auto; margin-bottom:0;}
 .page-prep-dataflow .ddp-input-selectbox.ddp-selected .ddp-wrap-popup2 {display:block;}
-
+.page-prep-dataflow .ddp-type-selectbox ul.ddp-list-selectbox.ddp-fix {position:fixed; bottom:inherit;}
 
 .page-prep-dataflow .ddp-box-contents .ddp-box-part .ddp-box-title span.ddp-box-title-in {padding-right:19px;}
 .page-prep-dataflow .ddp-box-contents .ddp-box-part .ddp-box-title a.ddp-btn-plus {display:inline-block; width:13px; height:13px; top:0; background:url(../../../images/icon_add.png) no-repeat; background-position:-84px -22px; border:none;}
@@ -45,7 +46,7 @@
 .page-prep-dataflow .ddp-wrap-warning  {display:table-cell; padding-left:6px; vertical-align:middle;}
 .page-prep-dataflow .ddp-wrap-warning  {display:table-cell; padding-left:6px; vertical-align:middle;}
 .page-prep-dataflow .ddp-wrap-warning .ddp-box-warning {margin:0;}
-/*.page-prep-dataflow .ddp-wrap-warning .ddp-box-warning {margin-top:-6px; width:auto;}*/
+    /*.page-prep-dataflow .ddp-wrap-warning .ddp-box-warning {margin-top:-6px; width:auto;}*/
 
 .page-prep-dataflow .ddp-box-warning {position:relative; float:left; margin-top:14px; margin-left:6px; width:25px; height:25px; border:1px solid #f7d375; border-radius:2px; background-color:#fdf1d5; box-sizing:border-box; cursor:pointer;}
 .page-prep-dataflow .ddp-box-warning .ddp-icon-warning {display:inline-block; position:absolute; top:50%; left:50%; margin:-7px 0 0 -7px; width:15px; height:14px; background:url(../../../images/icon_error.png) no-repeat; background-position:left -16px;}
@@ -55,5 +56,4 @@
 
 .page-prep-dataflow .slick-headerrow-column.ui-state-default {border-right:1px solid #ebebed;}
 .page-prep-dataflow .slick-headerrow.ui-state-default {border-top:1px solid #ebebed;}
-
 

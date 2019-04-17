@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: local,h2-default-db,logging-console-debug,scheduling #, initial #, bcrypt-encoder, encode-password-initial, datasource-filter-sample
+    active: local,mysql-default-db,logging-console-debug,scheduling #, initial #, bcrypt-encoder, encode-password-initial, datasource-filter-sample
   application:
     name: ${METATRON_NAME:metatron}
   datasource:
@@ -223,9 +223,9 @@ polaris:
         maxDuration : 3600
   engine:
     hostname:
-      broker: http://localhost:8082
-      overlord: http://localhost:8090
-      coordinator: http://localhost:8081
+      broker: http://exntu.kr:28082
+      overlord: http://exntu.kr:29090
+      coordinator: http://exntu.kr:29081
     ingestion:
       loader:
         remoteType: LOCAL

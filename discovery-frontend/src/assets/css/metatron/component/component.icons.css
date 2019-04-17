@@ -566,7 +566,9 @@ a.ddp-icon-board-edit:hover:before {background-position:-21px -19px;}
 .ddp-icon-drop-generate,
 .ddp-icon-drop-detail,
 .ddp-icon-drop-re,
-.ddp-icon-drop-clean {display:inline-block; position:absolute; top:50%; left:13px; margin-top:-7px; width:13px; height:12px; background:url(../../../images/icon_drop.png) no-repeat;}
+.ddp-icon-drop-clean,
+.ddp-icon-drop-cluster,
+.ddp-icon-drop-guide {display:inline-block; position:absolute; top:50%; left:13px; margin-top:-7px; width:13px; height:12px; background:url(../../../images/icon_drop.png) no-repeat;}
 .ddp-icon-drop-re {width:13px; height:12px; background-position:-205px top;}
 .ddp-icon-drop-monitoring {width:13px; height:12px;}
 .ddp-icon-drop-editmodify {width:12px; height:12px; background-position:-14px top;}
@@ -585,6 +587,8 @@ a.ddp-icon-board-edit:hover:before {background-position:-21px -19px;}
 .ddp-icon-drop-detail  {width:12px; height:13px; margin-top:-7px; background-position:-192px top;}
 .ddp-icon-drop-clean {width:15px; height:13px; margin-top:-7px; background-position:-237px top;}
 
+.ddp-icon-drop-cluster {width:13px; height:12px; background-position:-251px top;}
+.ddp-icon-drop-guide {width:11px; height:13px; background-position:-265px top;}
 a.ddp-icon-more {position:relative; display:inline-block; padding:8px 4px; cursor:pointer; font-size:0px;}
 
 a.ddp-icon-more:before {display:inline-block; content:''; width:15px; height:3px; background:url(../../../images/icon_more.png) no-repeat; transform:rotate(90deg);}
@@ -848,7 +852,8 @@ em.ddp-icon-menu-secondary,
 em.ddp-icon-menu-parameters,
 em.ddp-icon-menu-mapview1,
 em.ddp-icon-menu-mapview2,
-em.ddp-icon-menu-mapview3 {display:inline-block; background:url(../../../images/icon_sidemenu.png) no-repeat;}
+em.ddp-icon-menu-mapview3,
+em.ddp-icon-menu-analysis {display:inline-block; background:url(../../../images/icon_sidemenu.png) no-repeat;}
 
 em.ddp-icon-menu-calculated {width:18px; height:22px; margin:-9px 0 0 -11px; background-position:left -337px;}
 em.ddp-icon-menu-general {width:22px; height:19px; margin:-9px 0 0 -11px; background-position:left -297px;}
@@ -873,13 +878,13 @@ em.ddp-icon-menu-parameters { width:20px; height:18px; margin:-9px 0 0 -10px; ba
 em.ddp-icon-menu-mapview1 {width:21px; height:20px; margin:-10px 0 0 -10px; background-position:left -396px;}
 em.ddp-icon-menu-mapview2 {width:21px; height:20px; margin:-10px 0 0 -10px;background-position:left -417px;}
 em.ddp-icon-menu-mapview3 {width:21px; height:20px; margin:-10px 0 0 -10px;background-position:left -438px;}
-/*상태 아이콘*/
+em.ddp-icon-menu-analysis{width:22px; height:16px; margin:-8px 0 0 -11px;background-position:left -459px;}
+    /*상태 아이콘*/
 em.ddp-icon-status-success,
 em.ddp-icon-status-error,
 em.ddp-icon-status-inprogress,
-em.ddp-icon-status-inprogress2 {display:inline-block; position:relative; width:20px; height:20px; background:url(../../../images/icon_snapshot_status.png) no-repeat;}
+em.ddp-icon-status-warning {display:inline-block; position:relative; width:20px; height:20px; background:url(../../../images/icon_snapshot_status.png) no-repeat;}
 em.ddp-icon-status-error {background-position:left -21px;}
 em.ddp-icon-status-inprogress {background-position:left -42px;}
-em.ddp-icon-status-inprogress2 {background-position:left -63px;}
-em.ddp-icon-status-inprogress:hover .ddp-ui-tooltip-info,
-em.ddp-icon-status-inprogress2:hover .ddp-ui-tooltip-info{display:block; left:100%; top:-2px; margin-left:5px;}
+em.ddp-icon-status-warning {width:20px; heihgt:18px; background-position:left -63px;}
+em.ddp-icon-status-inprogress:hover .ddp-ui-tooltip-info{display:block; left:100%; top:-2px; margin-left:5px;}

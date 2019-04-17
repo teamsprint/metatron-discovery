@@ -55,7 +55,7 @@ table.ddp-table-form tbody tr td .ddp-txt-long.ddp-global.ddp-new {padding-right
 table.ddp-table-form tbody tr td .ddp-txt-long.ddp-global.ddp-new em.ddp-tag-global {right:40px;}
 table.ddp-table-form tbody tr td .ddp-txt-long.ddp-global.ddp-en-connection {padding-right:100px;}
 table.ddp-table-form tbody tr td .ddp-txt-long.ddp-global.ddp-en-connection .ddp-tag-global {width:auto;}
-table.ddp-table-form tbody tr td .ddp-txt-long em.ddp-tag-global {position:absolute; top:0; right:0; height:20px; width:60px; padding:2px 2px 3px 2px; color:#666eb2; font-size:11px; text-align:center; border:1px solid #666eb2; border-radius:2px; background:#eff0f7; box-sizing:border-box;}
+table.ddp-table-form tbody tr td .ddp-txt-long em.ddp-tag-global {position:absolute; top:0; right:0; height:20px; width:60px; padding:2px 2px 3px 2px; color:#fff; font-size:11px; text-align:center; border:1px solid #2dccff; border-radius:2px; background:#2dccff; box-sizing:border-box;}
 
 table.ddp-table-form tbody tr td .ddp-txt-long.ddp-global .ddp-icon-global {display:block;}
 table.ddp-table-form tr td .ddp-wrap-long .ddp-box-tag {position:relative; top:3px; margin-right:13px;}
@@ -195,19 +195,19 @@ table.ddp-table-type3 tbody tr td .ddp-link {text-decoration: underline; color:#
 **************************************************************/
 table.ddp-table-select tbody tr td {position:relative; cursor:pointer;}
 table.ddp-table-select tbody tr:hover td {background-color:#f1f1f1; cursor:pointer;}
-table.ddp-table-select tbody tr.ddp-selected td {background-color:#f2f1f8;}
+table.ddp-table-select tbody tr.ddp-selected td {background-color:#edfbff;}
 /*table.ddp-table-select tbody tr.ddp-selected td:before {position:absolute; top:0; left:0; right:0; bottom:0; border:1px solid Red; border-left:none; border-right:none; content:'';}*/
-table.ddp-table-select tbody tr.ddp-selected td {border-top:1px solid #666eb2; border-bottom:1px solid #666eb2;;}
-table.ddp-table-select tbody tr.ddp-selected td:first-of-type {border-left:1px solid #666eb2;}
-table.ddp-table-select tbody tr.ddp-selected td:last-of-type {border-right:1px solid #666eb2;}
+table.ddp-table-select tbody tr.ddp-selected td {border-top:2px solid #2dccff; border-bottom:2px solid #2dccff;}
+table.ddp-table-select tbody tr.ddp-selected td:first-of-type {border-left:2px solid #2dccff;}
+table.ddp-table-select tbody tr.ddp-selected td:last-of-type {border-right:2px solid #2dccff;}
 table.ddp-table-select tbody tr td .ddp-box-tag {position:relative; top:2px;}
 table.ddp-table-type2.ddp-table-select tbody tr.ddp-selected > td {padding:12px 10px 13px 10px}
 table.ddp-table-type2.ddp-table-select tbody tr.ddp-selected > td:first-of-type {padding-left:9px;}
 table.ddp-table-select tbody tr td:last-of-type {padding-right:29px !important;}
 
 table.ddp-table-select tr td:last-of-type {padding-right:35px;}
-table.ddp-table-select tbody tr.ddp-selected td:first-child:before {border-left:1px solid #666eb2;}
-table.ddp-table-select tbody tr.ddp-selected td:last-child:before {border-right:1px solid #666eb2; }
+table.ddp-table-select tbody tr.ddp-selected td:first-child:before {border-left:1px solid #2dccff;}
+table.ddp-table-select tbody tr.ddp-selected td:last-child:before {border-right:1px solid #2dccff; }
 table.ddp-table-select tbody tr.ddp-selected td:last-of-type:after {display:inline-block; position:absolute; top:50%; right:10px; width:11px; height:8px; margin-top:-6px; background:url(../../../images/icon_select2.png) no-repeat; background-position:-15px top; content:'';}
 
 table.ddp-table-select tbody tr.ddp-selected td .ddp-box-tag {position:relative; top:2px;}

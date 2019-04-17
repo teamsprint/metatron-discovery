@@ -56,31 +56,31 @@
 .popup-prep-snapshot .ddp-layout-pop-right.ddp-detail {z-index:56;}
 .popup-prep-snapshot .ddp-layout-pop-right.ddp-detail .ddp-view-title {padding:20px 10px 0 15px; height:85px; background-color:#fff; box-sizing:border-box;}
 .popup-prep-snapshot .ddp-layout-pop-right.ddp-detail .ddp-view-title span {display:block; font-size:16px; font-weight:bold;color:#35393f; line-height:22px; letter-spacing:-1px; box-sizing:border-box;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 2; /* 라인수 */
-  /* autoprefixer: off */
-  -webkit-box-orient: vertical;
-  /* autoprefixer: on */
-  word-wrap:break-word;}
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* 라인수 */
+    /* autoprefixer: off */
+    -webkit-box-orient: vertical;
+    /* autoprefixer: on */
+    word-wrap:break-word;}
 .popup-prep-snapshot .ddp-layout-pop-right .ddp-view-detail dl.ddp-dl-detail dd { overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 2; /* 라인수 */
-  /* autoprefixer: off */
-  -webkit-box-orient: vertical;
-  /* autoprefixer: on */
-  word-wrap:break-word;}
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* 라인수 */
+    /* autoprefixer: off */
+    -webkit-box-orient: vertical;
+    /* autoprefixer: on */
+    word-wrap:break-word;}
 .popup-prep-snapshot .ddp-layout-pop-right.ddp-detail .ddp-view-title.type-edit span.ddp-txt-title {position:relative; padding-right:23px; font-size:16px; font-weight:bold;color:#35393f; line-height:22px; letter-spacing:-1px; box-sizing:border-box;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 2; /* 라인수 */
-  /* autoprefixer: off */
-  -webkit-box-orient: vertical;
-  /* autoprefixer: on */
-  word-wrap:break-word; cursor:pointer;}
+overflow: hidden;
+text-overflow: ellipsis;
+display: -webkit-box;
+-webkit-line-clamp: 2; /* 라인수 */
+/* autoprefixer: off */
+-webkit-box-orient: vertical;
+/* autoprefixer: on */
+    word-wrap:break-word; cursor:pointer;}
 .popup-prep-snapshot .ddp-layout-pop-right.ddp-detail .ddp-view-title.type-edit span.ddp-txt-title .ddp-link-edit {display:none;position:absolute; bottom:2px; right:5px;}
 .popup-prep-snapshot .ddp-layout-pop-right.ddp-detail .ddp-view-title.type-edit span.ddp-txt-title:hover .ddp-link-edit {display:block;}
 .popup-prep-snapshot .ddp-layout-pop-right.ddp-detail .ddp-view-title.type-edit.ddp-selected .ddp-txt-title {display:none;}
@@ -91,18 +91,12 @@
 .popup-prep-snapshot .ddp-layout-pop-right.ddp-detail .ddp-view-title .ddp-ui-input .ddp-btn-check {display:inline-block; position:absolute; top:2px; bottom:2px; right:2px; width:23px; height:inherit; border-radius:3px; background-color:#d0d1d8; cursor: pointer;}
 .popup-prep-snapshot .ddp-layout-pop-right.ddp-detail .ddp-view-title .ddp-ui-input .ddp-btn-check:hover {background-color:#9ca2cc;}
 
-
-
-
-
 .popup-prep-snapshot .ddp-layout-pop-right.ddp-detail .ddp-view-contents-scroll {position:absolute; top:83px; left:0; right:0; bottom:70px; overflow-y:auto;}
 
 .popup-prep-snapshot .ddp-layout-pop-right.ddp-detail .ddp-view-contents-scroll  .ddp-view-detail {padding-top:0;}
 .popup-prep-snapshot .ddp-layout-pop-right.ddp-detail .ddp-view-buttons {position:absolute; bottom:0; left:0; right:0; padding:20px;  background-color:#fff;}
 .popup-prep-snapshot .ddp-layout-pop-right.ddp-detail .ddp-view-buttons a.ddp-btn-pop {width:100%;}
 .popup-prep-snapshot .ddp-layout-pop-right.ddp-detail .ddp-box-info dl.ddp-dl-detail2 {padding-bottom:20px;}
-
-
 
 /**************************************************************
     popup : 99_데이터프리퍼레이션_02데이터셋_01생성_file1_popup
@@ -116,7 +110,16 @@
 .popup-prep-create .ddp-box-popupcontents.type-info {padding-bottom:40px;box-sizing:border-box;}
 .popup-prep-create .ddp-box-popupcontents.type-info .ddp-box-synch {position:absolute; bottom:0; left:0; right:0;}
 
-.popup-prep-create .ddp-box-file-create .ddp-box-file-progress {position:absolute; top:0; left:0; right:0; bottom:0; background-color:#fff; overflow:auto; z-index:10;}
+.popup-prep-create .ddp-box-file-create .ddp-box-file-progress {position:absolute; top:0; left:0; right:0; bottom:0; background-color:#fff; z-index:10;}
+
+.ddp-box-file-progress .ddp-import-file {position:absolute; left:-1px; right:-1px; bottom:-1px; padding:27px 0 0 30px; height:100px; border:1px solid #d0d1d8; background-color:#f6f6f7; box-sizing:border-box;}
+.ddp-box-file-progress .ddp-import-file .ddp-txt-file-info {padding-bottom:5px;}
+.ddp-box-file-progress .ddp-import-file .ddp-wrap-edit3 {position:absolute; top:34px; right:30px; width:auto;}
+.ddp-box-file-progress .ddp-import-file .ddp-wrap-edit3.ddp-type .ddp-label-type {font-size:13px; width:auto; padding-right:22px;}
+
+
+.ddp-box-file-progress .ddp-file-progress {height:100%; padding-bottom:100px; box-sizing:border-box;}
+.ddp-box-file-progress .ddp-list-file-progress {height:100%; overflow:auto;}
 .ddp-box-file-progress .ddp-list-file-progress li {position:relative; float:left; width:100%; padding-right:360px; border-bottom:1px solid #e6e6e9; box-sizing:border-box;}
 .ddp-box-file-progress .ddp-list-file-progress li.ddp-disabled:before {position:absolute; top:0; left:0; right:0; bottom:0; background-color:rgba(255,255,255,0.7); content:''; z-index:1;}
 .ddp-box-file-progress .ddp-list-file-progress li .ddp-file-name {position:relative; width:100%; padding:27px 0 20px 66px; box-sizing:border-box;}
@@ -162,7 +165,6 @@
 
 .ddp-ui-create-file .ddp-list-file-name .ddp-wrap-checkbox .ddp-label-checkbox .ddp-icon-checkbox {left:14px;}
 
-.ddp-ui-create-file .ddp-list-file-name li .ddp-label-checkbox i.ddp-icon-checkbox { left:-19px;}
 .ddp-ui-create-file .ddp-list-file-name li span.ddp-txt-checkbox {display:inline-block; max-width:100%; font-size:13px; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
 .ddp-ui-create-file .ddp-list-file-name li span.ddp-txt-checkbox .ddp-txt-subname {float:right; font-size:13px;}
 .ddp-ui-create-file .ddp-list-file-name li .ddp-label-checkbox .ddp-txt-filename {display:block; overflow:hidden; white-space:nowrap; text-overflow:ellipsis;}
@@ -182,6 +184,8 @@
 .ddp-ui-create-file .ddp-ui-create-detail .ddp-wrap-column-option  .ddp-wrap-edit3.ddp-type .ddp-label-type {font-size:13px;}
 .ddp-ui-create-file .ddp-ui-create-detail .ddp-wrap-column-option  .ddp-wrap-edit3.ddp-type .ddp-txt-error {margin-left:5px;}
 .popup-prep-create-complete table.ddp-table-sheet tr td [class*="ddp-icon-flow-"] {margin-right:5px;}
+
+
 
 
 

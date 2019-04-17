@@ -32,7 +32,7 @@
 
 .ddp-form-error .ddp-data-error {color:#e70000; font-size:12px; font-style:italic;}
 .ddp-form-error .ddp-data-error:before {display:inline-block; width:13px; height:13px; background:url(../../../images/icon_info.png) no-repeat; background-position:-28px top;
-  vertical-align:middle; content:'';}
+    vertical-align:middle; content:'';}
 
 /**************************************************************
     edit
@@ -260,7 +260,7 @@
 .ddp-edit-setting .ddp-edit-sub .ddp-ui-message {margin-top:6px;}
 .ddp-edit-setting .ddp-edit-sub .ddp-ui-message .ddp-data-ok,
 .ddp-edit-setting .ddp-edit-sub .ddp-ui-message .ddp-data-error {margin-left:12px;}
-
+.ddp-ui-dbconnect .ddp-edit-setting.ddp-type:first-of-type {padding:0; margin:0; border-top:none;}
 .ddp-edit-setting.ddp-type {margin-top:30px; padding-top:30px; border-top:1px dotted #ccc; }
 .ddp-edit-setting .ddp-fold-link {display:inline-block; padding-bottom:20px; color:#4c515a; font-size:13px; text-decoration:underline;}
 .ddp-edit-setting .ddp-fold-link:after {display:inline-block; width:7px; height:4px; margin-left:10px; background:url(../../../images/icon_select.png) no-repeat; background-position:-16px top; vertical-align:middle; content:'';}
@@ -322,9 +322,9 @@ ul.ddp-list-value li.ddp-data-none {background:none; color:#b7b9c3;}
     popup form
 **************************************************************/
 .ddp-box-layout4 {position:relative; width:211px; border-radius:2px; border:1px solid #ddd; background-color:#fff; z-index:1; box-sizing:border-box;
-  -moz-box-shadow: 0 1px 3px rgba(0,0,0,.3); /* drop shadow */
-  -webkit-box-shadow: 0 1px 3px rgba(0,0,0,.3); /* drop shadow */
-  box-shadow: 0 1px 3px rgba(0,0,0,.3); /* drop shadow */
+    -moz-box-shadow: 0 1px 3px rgba(0,0,0,.3); /* drop shadow */
+    -webkit-box-shadow: 0 1px 3px rgba(0,0,0,.3); /* drop shadow */
+    box-shadow: 0 1px 3px rgba(0,0,0,.3); /* drop shadow */
 }
 
 .ddp-box-layout4 .ddp-data-title {padding:15px 14px 15px 14px; color:#4b515b; font-size:12px; font-weight:bold;}
