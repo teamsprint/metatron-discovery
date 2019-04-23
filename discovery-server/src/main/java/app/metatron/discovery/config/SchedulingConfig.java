@@ -375,7 +375,7 @@ public class SchedulingConfig {
     CronTriggerFactoryBean triggerFactory = new CronTriggerFactoryBean();
     triggerFactory.setJobDetail(engineMonitoringSetter().getObject());
     triggerFactory.setStartDelay(10000);
-    triggerFactory.setName("engine-monitoring-trigger");
+    triggerFactory.setName("engine-monitoring-setter-trigger");
     triggerFactory.setGroup(JOB_GROUP_ENGINE_MON);
     triggerFactory.setCronExpression("0 0/10 * 1/1 * ? *");
     return triggerFactory;
