@@ -12,17 +12,19 @@
  * limitations under the License.
  */
 
-import { AbstractHistoryEntity } from '../common/abstract-history-entity';
-import { GranularityType } from '../workbook/configurations/field/timestamp-field';
-import { Dataconnection } from '../dataconnection/dataconnection';
-import { MetadataColumn } from '../meta-data-management/metadata-column';
-import { CodeTable } from '../meta-data-management/code-table';
+import {AbstractHistoryEntity} from '../common/abstract-history-entity';
+import {GranularityType} from '../workbook/configurations/field/timestamp-field';
+import {Dataconnection} from '../dataconnection/dataconnection';
+import {MetadataColumn} from '../meta-data-management/metadata-column';
 import {
+  CreateConnectionData,
   CreateSnapShotData,
   CreateSourceCompleteData,
   CreateSourceConfigureData
 } from "../../data-storage/service/data-source-create.service";
 import {PrDataSnapshot} from "../data-preparation/pr-snapshot";
+import {isNullOrUndefined} from "util";
+import {TimezoneService} from "../../data-storage/service/timezone.service";
 
 export class Datasource extends AbstractHistoryEntity {
   id: string;             // ID
@@ -40,7 +42,7 @@ export class Datasource extends AbstractHistoryEntity {
   status: Status;
   published: boolean;         // 전체 공개 여부 true일 경우 전체 공개
   linkedWorkspaces: number;   // 연결된 workspaces 개수
-  ingestion: any;             // 데이터 소스 적재 정보
+  ingestion;             // 데이터 소스 적재 정보
   fields: Field[];            // 데이터 소스 필드 정보
   snapshot?: PrDataSnapshot;
   // workspaces
@@ -57,6 +59,10 @@ export class Datasource extends AbstractHistoryEntity {
   num?: number;
   temporary?: TemporaryDatasource;
   uiMetaData?: { name: string, id: string, description: string, columns: MetadataColumn[] };
+
+  public static getConnection(datasource: Datasource) {
+    return datasource.connection || datasource.ingestion.connection;
+  }
 }
 
 export class DataSourceSummary {
@@ -113,63 +119,55 @@ export class DatasourceHive {
 
 // package com.metatron.discovery.domain.datasource.Field
 export class Field {
-
-  // Field 별칭
-  alias: string;
-
-  // BI 타입
-  biType: BIType;
-
   // 필드 아이디
   id: string;
-
-  // logical type
-  logicalType: LogicalType;
-
   // Field 명
   name: string;
+  // logical name
+  logicalName?: string;
+  // description
+  description: string;
 
-  // 필드 타입
-  role: FieldRole;
-
-  seq: number;
-
-  // 데이터 타입
+  // Physical data type on engine
   type: string;
-
+  // logical type
+  // TODO type.Logical 변경 필요
+  logicalType: LogicalType;
+  // 필드 타입
+  // TODO type.Role 변경 필요
+  role: FieldRole;
   // Partition 대상 필드 인지 여부
   partitioned: boolean;
 
   // 필수적으로 필터링을 수행해야하는 필드인지 여부
   filtering: boolean;
-
   // 필수 필터링 순서 지정
   filteringSeq: number;
-
   // 필터링 옵션
   filteringOptions: any;
+
+  // is create field (optional)
+  derived?: boolean;
+  // Whether to exclude what to load to engine
+  unloaded?: boolean;
+  // derivationRule
+  derivationRule?: DerivationRule;
+  // IngestionRule
+  ingestionRule: IngestionRule;
 
   // 기존 물리적인 필드를 매핑하여 신규 필드를 구성할 경우 관련 필드 정보
   mappedField: Field[];
 
-  // IngestionRule
-  ingestionRule: IngestionRule;
-
-  // derivationRule
-  derivationRule?: DerivationRule;
-
   // format
   // TODO 추후 FieldFormat으로 변환
   // format: FieldFormat;
-  format: any;
+  format: any | FieldFormat;
 
-  // is create field (optional)
-  derived?: boolean;
-
-  // description
-  description: string;
+  // Field 별칭
+  alias: string;
 
   // for UI
+  seq: number;
   useFilter: boolean = false;
   useChartFilter: boolean = false;
   useChart: boolean = false;
@@ -184,15 +182,21 @@ export class Field {
   segGranularity?: GranularityType;  // segGranularity
 
   // [UI] for Create Datasource
+  isValidType?: boolean;
   isValidTimeFormat?: boolean;
   isValidReplaceValue?: boolean;
+  typeValidMessage?: string;
   replaceValidMessage?: string;
   timeFormatValidMessage?: string;
-  unloaded?: boolean;
   checked?: boolean;
 
+  // [UI] valid layer popup
+  isShowTypeList?: boolean;
+
+
+
   // [UI] for Alias
-  dsId?:string;                   // 데이터소스 아이디
+  dsId?: string;                   // 데이터소스 아이디
   dataSource?: string;            // 데이터소스 engine Name
   boardId?: string;               // 대시보드 아이디
   nameAlias?: FieldNameAlias;     // 데이터소스 필드 이름 별칭 정보
@@ -200,6 +204,14 @@ export class Field {
 
   // for MetaData
   uiMetaData?: MetadataColumn;
+
+  // for Datasource detail
+  op?: 'replace';
+
+  removeUIproperties?() {
+    delete this.isShowTypeList;
+    delete this.isValidType;
+  }
 
   /**
    * 차원값의 타입 아이콘 클래스 반환
@@ -273,7 +285,7 @@ export class DatasourceInfo {
   public fieldData: any;
 
   // 1step 커넥션 정보
-  public connectionData: any;
+  public connectionData: CreateConnectionData;
 
   // 2step 데이터베이스 정보
   public databaseData: any;
@@ -305,6 +317,7 @@ export class IngestionRule {
   public type: IngestionRuleType;
   // value
   public value: string;
+
   // constructor
   constructor() {
     this.type = IngestionRuleType.DEFAULT;
@@ -374,12 +387,6 @@ export enum SourceType {
   NONE = <any>'NONE'
 }
 
-export enum BIType {
-  DIMENSION = <any>'DIMENSION',
-  MEASURE = <any>'MEASURE',
-  TIMESTAMP = <any>'TIMESTAMP'
-}
-
 export enum Status {
   ENABLED = <any>'ENABLED',
   PREPARING = <any>'PREPARING',
@@ -407,7 +414,7 @@ export enum LogicalType {
   GEO_POINT = <any>'GEO_POINT',
   GEO_LINE = <any>'GEO_LINE',
   GEO_POLYGON = <any>'GEO_POLYGON',
-  USER_DEFINED = <any>'user_defined',
+  USER_DEFINED = <any>'user_defined'
 }
 
 export enum FieldRole {
@@ -463,29 +470,100 @@ export enum TempDsStatus {
 }
 
 export class FieldFormat {
-  format: string;
   // default FieldFormatType.DATE_TIME
   type: FieldFormatType;
-  // default FieldFormatUnit.MILLISECOND
-  unit: FieldFormatUnit;
-  // timezone (default browser) TODO 추후 서비스 로직에서 default 설정
-  timeZone: string;
-  locale: string;
-  constructor() {
+  unit?: FieldFormatUnit;  // ONLY USE UNIX
+  format?: string; // ONLY USE TIME
+  timeZone?: string; // ONLY USE TIME (default browser) TODO 추후 서비스 로직에서 default 설정
+  locale?: string; // ONLY USE TIME
+  originalSrsName?: string; // ONLY GEO
+  ////////////////////////////////////////////////////////////////////////////
+  // Value to be used only on View
+  ////////////////////////////////////////////////////////////////////////////
+  isValidTimeFormat?: boolean;
+  timeFormatValidMessage?: string;
+  // TODO 아래로 통일
+  isValidFormat?: boolean;
+  formatValidMessage?: string;
+  isShowTimestampValidPopup?: boolean;
+
+  formatInitialize() {
+    this.format = 'yyyy-MM-dd';
+  }
+
+  geoCoordinateInitialize() {
+    this.originalSrsName = 'EPSG:4326';
+  }
+
+  unitInitialize() {
     this.unit = FieldFormatUnit.MILLISECOND;
+  }
+
+  disableTimezone() {
+    this.timeZone = TimezoneService.DISABLE_TIMEZONE_KEY;
+  }
+
+  removeDateTypeProperties() {
+    delete this.format;
+    delete this.locale;
+  }
+
+  removeUnixTypeProperties() {
+    delete this.unit;
+  }
+
+  removeUIProperties() {
+    delete this.isValidFormat;
+    delete this.formatValidMessage;
+    delete this.isShowTimestampValidPopup;
+  }
+
+  constructor() {
     this.type = FieldFormatType.DATE_TIME;
+    // TODO 타임스탬프 개선시 제거
+    this.unit = FieldFormatUnit.MILLISECOND;
+  }
+
+  public static of(fieldFormat: FieldFormat) {
+    let resultFieldFormat = new FieldFormat();
+    resultFieldFormat.type = fieldFormat.type;
+    // if not undefined properties
+    if (!isNullOrUndefined(fieldFormat.unit)) {
+      resultFieldFormat.unit = fieldFormat.unit;
+    }
+    if (!isNullOrUndefined(fieldFormat.timeZone)) {
+      resultFieldFormat.timeZone = fieldFormat.timeZone;
+    }
+    if (!isNullOrUndefined(fieldFormat.format)) {
+      resultFieldFormat.format = fieldFormat.format;
+    }
+    if (!isNullOrUndefined(fieldFormat.locale)) {
+      resultFieldFormat.locale = fieldFormat.locale;
+    }
+    if (!isNullOrUndefined(fieldFormat.originalSrsName)) {
+      resultFieldFormat.originalSrsName = fieldFormat.originalSrsName;
+    }
+    if (!isNullOrUndefined(fieldFormat.isValidFormat)) {
+      resultFieldFormat.isValidFormat = fieldFormat.isValidFormat;
+    }
+    return resultFieldFormat;
   }
 }
 
 export enum FieldFormatType {
+  // TIMESTAMP
   DATE_TIME = <any>'time_format',
   UNIX_TIME = <any>'time_unix',
   TEMPORARY_TIME = <any>'time_temporary',
+  // GEO type
+  GEO_POINT = <any>'geo_point',
+  GEO_LINE = <any>'geo_line',
+  GEO_POLYGON = <any>'geo_polygon',
 }
 
 export enum FieldFormatUnit {
-  SECOND = <any>'second',
-  MILLISECOND = <any>'millisecond'
+  SECOND = 'SECOND',
+  MILLISECOND = 'MILLISECOND'
 }
 
 export enum IngestionRuleType {

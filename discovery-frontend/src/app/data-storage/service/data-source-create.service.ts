@@ -19,6 +19,7 @@ import {GranularityObject, GranularityService} from "./granularity.service";
 import {HiveFileFormat, PrDataSnapshot, SsType} from "../../domain/data-preparation/pr-snapshot";
 import * as _ from "lodash";
 import {CommonConstant} from "../../common/constant/common.constant";
+import {ConnectionParam} from "./data-connection-create.service";
 
 @Injectable()
 export class DataSourceCreateService {
@@ -184,14 +185,14 @@ export class DataSourceCreateService {
         value: LogicalType.GEO_POINT
       },
       {
-        label: this._translateService.instant('msg.storage.ui.list.geo.line'),
-        icon: 'ddp-icon-type-line',
-        value: LogicalType.GEO_LINE
-      },
-      {
         label: this._translateService.instant('msg.storage.ui.list.geo.polygon'),
         icon: 'ddp-icon-type-polygon',
         value: LogicalType.GEO_POLYGON
+      },
+      {
+        label: this._translateService.instant('msg.storage.ui.list.geo.line'),
+        icon: 'ddp-icon-type-line',
+        value: LogicalType.GEO_LINE
       },
       {
         label: this._translateService.instant('msg.storage.ui.list.expression'),
@@ -219,9 +220,13 @@ export class DataSourceCreateService {
       ingestion: this.getIngestionParams(sourceInfo)
     };
     // if snapshot type
-    sourceInfo.type === SourceType.SNAPSHOT && (result.snapshot = `/api/preparationsnapshots/${sourceInfo.snapshotData.selectedSnapshot.ssId}`);
+    if (sourceInfo.type === SourceType.SNAPSHOT) {
+      result.snapshot = `/api/preparationsnapshots/${sourceInfo.snapshotData.selectedSnapshot.ssId}`;
+    }
     // if db type, is enable connection preset
-    sourceInfo.type === SourceType.JDBC && sourceInfo.connectionData.isUsedConnectionPreset && (result.connection = `/api/connections/${sourceInfo.connectionData.selectedConnectionPreset.id}`);
+    if (sourceInfo.type === SourceType.JDBC && !sourceInfo.connectionData.selectedConnectionPreset.default) {
+      result.connection = `/api/connections/${sourceInfo.connectionData.selectedConnectionPreset.id}`;
+    }
     return result;
   }
 
@@ -238,7 +243,7 @@ export class DataSourceCreateService {
     // if exist tuning options
     sourceInfo.ingestionData.tuningConfig.some(item => StringUtil.isNotEmpty(item.key) && StringUtil.isNotEmpty(item.value)) && (result.tuningOptions = this._toObject(sourceInfo.ingestionData.tuningConfig.filter(item => StringUtil.isNotEmpty(item.key) && StringUtil.isNotEmpty(item.value))));
     // if not used current_time TIMESTAMP, set intervals
-    if (sourceInfo.schemaData.selectedTimestampType !== ConfigureTimestampType.CURRENT) {
+    if (sourceInfo.schemaData.selectedTimestampType !== ConfigureTimestampType.CURRENT_TIME) {
       result.intervals =  [this._granularityService.getIntervalUsedParam(sourceInfo.ingestionData.startIntervalText, sourceInfo.ingestionData.selectedSegmentGranularity) + '/' + this._granularityService.getIntervalUsedParam(sourceInfo.ingestionData.endIntervalText, sourceInfo.ingestionData.selectedSegmentGranularity)];
     }
     // DB
@@ -346,7 +351,7 @@ export class DataSourceCreateService {
    */
   private _getFieldParams(schemaData: any): Field[] {
     // timestamp enable
-    const isCreateTimestamp = schemaData.selectedTimestampType === ConfigureTimestampType.CURRENT;
+    const isCreateTimestamp = schemaData.selectedTimestampType === ConfigureTimestampType.CURRENT_TIME;
     // fields param clone
     let fields = _.cloneDeep(schemaData._originFieldList);
     // seq number
@@ -395,7 +400,7 @@ export class DataSourceCreateService {
    * @private
    */
   private _removeUnnecessaryPropertyInField(field: Field) {
-    delete field.biType;
+    delete field['biType'];
     // delete used UI
     delete field.isValidTimeFormat;
     delete field.isValidReplaceValue;
@@ -449,8 +454,8 @@ export class DataSourceCreateService {
 }
 
 export enum ConfigureTimestampType {
-  FIELD = <any>'FIELD',
-  CURRENT = <any>'CURRENT',
+  CURRENT_TIME = 'CURRENT',
+  TIMESTAMP_FIELD = 'FIELD'
 }
 
 // 타입 셀렉트 필터
@@ -548,6 +553,14 @@ export interface CreateSourceIngestionParams {
   partitions?: any[];
   paths?: string[];
   format?: {type: string, delimiter?: string, lineSeparator?: string, sheetIndex?: number};
+}
+
+export interface CreateConnectionData {
+  connectionPresetList;
+  selectedConnectionPreset;
+  selectedIngestionType;
+  pageResult?: PageResult;
+  connection: ConnectionParam;
 }
 
 // create data source stagingDB select step data

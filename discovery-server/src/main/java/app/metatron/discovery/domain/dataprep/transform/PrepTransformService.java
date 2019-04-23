@@ -23,8 +23,10 @@ import static app.metatron.discovery.domain.dataprep.entity.PrDataset.DS_TYPE.IM
 import static app.metatron.discovery.domain.dataprep.entity.PrDataset.DS_TYPE.WRANGLED;
 
 import app.metatron.discovery.common.GlobalObjectMapper;
+import app.metatron.discovery.domain.dataconnection.DataConnection;
+import app.metatron.discovery.domain.dataconnection.DataConnectionHelper;
+import app.metatron.discovery.domain.dataconnection.DataConnectionRepository;
 import app.metatron.discovery.domain.dataprep.PrepDatasetFileService;
-import app.metatron.discovery.domain.dataprep.PrepHdfsService;
 import app.metatron.discovery.domain.dataprep.PrepPreviewLineService;
 import app.metatron.discovery.domain.dataprep.PrepProperties;
 import app.metatron.discovery.domain.dataprep.PrepSnapshotRequestPost;
@@ -33,6 +35,7 @@ import app.metatron.discovery.domain.dataprep.entity.PrDataflow;
 import app.metatron.discovery.domain.dataprep.entity.PrDataset;
 import app.metatron.discovery.domain.dataprep.entity.PrSnapshot;
 import app.metatron.discovery.domain.dataprep.entity.PrTransformRule;
+import app.metatron.discovery.domain.dataprep.etl.TeddyExecutor;
 import app.metatron.discovery.domain.dataprep.exceptions.PrepErrorCodes;
 import app.metatron.discovery.domain.dataprep.exceptions.PrepException;
 import app.metatron.discovery.domain.dataprep.exceptions.PrepMessageKey;
@@ -45,14 +48,10 @@ import app.metatron.discovery.domain.dataprep.rule.ExprFunctionCategory;
 import app.metatron.discovery.domain.dataprep.service.PrSnapshotService;
 import app.metatron.discovery.domain.dataprep.teddy.DataFrame;
 import app.metatron.discovery.domain.dataprep.teddy.DataFrameService;
-import app.metatron.discovery.domain.dataprep.teddy.Histogram;
 import app.metatron.discovery.domain.dataprep.teddy.Row;
-import app.metatron.discovery.domain.dataprep.teddy.TeddyExecutor;
 import app.metatron.discovery.domain.dataprep.teddy.exceptions.CannotSerializeIntoJsonException;
 import app.metatron.discovery.domain.dataprep.teddy.exceptions.IllegalColumnNameForHiveException;
 import app.metatron.discovery.domain.dataprep.teddy.exceptions.TeddyException;
-import app.metatron.discovery.domain.datasource.connection.DataConnection;
-import app.metatron.discovery.domain.datasource.connection.DataConnectionRepository;
 import app.metatron.discovery.domain.storage.StorageProperties;
 import app.metatron.discovery.domain.storage.StorageProperties.StageDBConnection;
 import app.metatron.discovery.prep.parser.exceptions.RuleException;
@@ -145,8 +144,8 @@ public class PrepTransformService {
   @Autowired PrepDatasetFileService datasetFileService;
   @Autowired
   PrSnapshotRepository snapshotRepository;
-  @Autowired DataConnectionRepository connectionRepository;
-  @Autowired PrepHdfsService hdfsService;
+  @Autowired
+  DataConnectionRepository connectionRepository;
   @Autowired
   PrSnapshotService snapshotService;
   @Autowired DataFrameService dataFrameService;
@@ -212,11 +211,13 @@ public class PrepTransformService {
 
     Map<String, Object> mapEveryForEtl = prepProperties.getEveryForEtl();
     StageDBConnection stageDB = storageProperties.getStagedb();
-    mapEveryForEtl.put(STAGEDB_HOSTNAME, stageDB.getHostname());
-    mapEveryForEtl.put(STAGEDB_PORT,     stageDB.getPort());
-    mapEveryForEtl.put(STAGEDB_USERNAME, stageDB.getUsername());
-    mapEveryForEtl.put(STAGEDB_PASSWORD, stageDB.getPassword());
-    mapEveryForEtl.put(STAGEDB_URL,      stageDB.getUrl());
+    if(stageDB!=null) { // if the value is null, that means storage.stagedb is not in a yaml. NOT using STAGING_DB
+      mapEveryForEtl.put(STAGEDB_HOSTNAME, stageDB.getHostname());
+      mapEveryForEtl.put(STAGEDB_PORT, stageDB.getPort());
+      mapEveryForEtl.put(STAGEDB_USERNAME, stageDB.getUsername());
+      mapEveryForEtl.put(STAGEDB_PASSWORD, stageDB.getPassword());
+      mapEveryForEtl.put(STAGEDB_URL, stageDB.getUrl());
+    }
 
     return GlobalObjectMapper.getDefaultMapper().writeValueAsString(mapEveryForEtl);
   }
@@ -296,14 +297,14 @@ public class PrepTransformService {
 
   // create stage0 (POST)
   @Transactional(rollbackFor = Exception.class)
-  public PrepTransformResponse create(String importedDsId, String dfId, boolean needAutoTyping) throws Exception {
+  public PrepTransformResponse create(String importedDsId, String dfId, String cloningDsName) throws Exception {
     LOGGER.trace("create(): start");
 
     PrDataset importedDataset = datasetRepository.findRealOne(datasetRepository.findOne(importedDsId));
     PrDataflow dataflow = dataflowRepository.findOne(dfId);
     assert importedDataset.getDsType() == IMPORTED : importedDataset.getDsType();
 
-    PrDataset wrangledDataset = makeWrangledDataset(importedDataset, dataflow, dfId);
+    PrDataset wrangledDataset = makeWrangledDataset(importedDataset, dataflow, dfId, cloningDsName);
     datasetRepository.save(wrangledDataset);
 
     // We need to save into the repository to get an ID.
@@ -328,8 +329,8 @@ public class PrepTransformService {
     response.setWrangledDsId(wrangledDsId);
     this.putAddedInfo(response, wrangledDataset);
 
-    // Auto type detection and conversion
-    if (needAutoTyping && prepProperties.isAutoTypingEnabled()) {
+    // Auto type detection and conversion (except cloning case)
+    if (cloningDsName == null && prepProperties.isAutoTypingEnabled()) {
       switch (importedDataset.getImportType()) {
         case UPLOAD:
         case URI:
@@ -361,7 +362,7 @@ public class PrepTransformService {
     PrDataset wrangledDataset = datasetRepository.findRealOne(datasetRepository.findOne(wrangledDsId));
     String upstreamDsId = getFirstUpstreamDsId(wrangledDsId);
 
-    PrepTransformResponse response = create(upstreamDsId, wrangledDataset.getCreatorDfId(), false);
+    PrepTransformResponse response = create(upstreamDsId, wrangledDataset.getCreatorDfId(), wrangledDataset.getDsName());
     String cloneDsId = response.getWrangledDsId();
 
     List<PrTransformRule> transformRules = getRulesInOrder(wrangledDsId);
@@ -899,8 +900,10 @@ public class PrepTransformService {
         datasetInfo.put("importType", upstreamDataset.getImportType().name());
         switch (upstreamDataset.getImportType()) {
           case UPLOAD:
+          case URI:
             datasetInfo.put("storedUri", upstreamDataset.getStoredUri());
             datasetInfo.put("delimiter", upstreamDataset.getDelimiter());
+            datasetInfo.put("manualColumnCount", upstreamDataset.getManualColumnCount());
             break;
 
           case DATABASE:
@@ -908,8 +911,9 @@ public class PrepTransformService {
             String dcId = upstreamDataset.getDcId();
             datasetInfo.put("dcId", dcId);
             DataConnection dataConnection = this.connectionRepository.getOne(dcId);
+
             datasetInfo.put("implementor", dataConnection.getImplementor() );
-            datasetInfo.put("connectUri", dataConnection.getConnectUrl() );
+            datasetInfo.put("connectUri", DataConnectionHelper.getConnectionUrl(dataConnection) );
             datasetInfo.put("username", dataConnection.getUsername() );
             datasetInfo.put("password", dataConnection.getPassword() );
             break;
@@ -918,7 +922,6 @@ public class PrepTransformService {
             datasetInfo.put("sourceQuery", upstreamDataset.getQueryStmt());
             break;
 
-          case URI:
           case DRUID:
             assert false : upstreamDataset.getImportType();
         }
@@ -942,7 +945,7 @@ public class PrepTransformService {
     // put upstreamDatasetInfos
     datasetInfo.put("upstreamDatasetInfos", upstreamDatasetInfos);
 
-    LOGGER.info("runTransformer(): datasetInfo: " + GlobalObjectMapper.getDefaultMapper().writeValueAsString(datasetInfo));
+    LOGGER.info("buildDatasetInfoRecursive(): " + GlobalObjectMapper.getDefaultMapper().writeValueAsString(datasetInfo));
     return datasetInfo;
   }
 
@@ -1193,14 +1196,34 @@ public class PrepTransformService {
     return response;
   }
 
-  private static PrDataset makeWrangledDataset(PrDataset importedDataset, PrDataflow dataflow, String dfId) {
+  private static String getNewDsName(PrDataset importedDataset, PrDataflow dataflow, String dfId, String cloningDsName) {
+    if (cloningDsName == null) {
+      return importedDataset.getDsName().replaceFirst(" \\((EXCEL|CSV|JSON|STAGING|MYSQL|ORACLE|TIBERO|HIVE|POSTGRESQL|MSSQL|PRESTO)\\)$","");
+    }
+
+    List<String> dsNames = new ArrayList();
+    for (PrDataset dataset : dataflow.getDatasets()) {
+      dsNames.add(dataset.getDsName());
+    }
+
+    for (int i = 1; /* NOP */; i++) {
+      String newDsName = String.format("%s (%d)", cloningDsName, i);
+
+      if (!dsNames.contains(newDsName)) {
+        return newDsName;
+      }
+
+      assert i < 100000 : String.format("Too much duplication: cloningDsName=%s" + cloningDsName);
+    }
+  }
+
+  private static PrDataset makeWrangledDataset(PrDataset importedDataset, PrDataflow dataflow, String dfId, String cloningDsName) {
     PrDataset wrangledDataset = new PrDataset();
 
-    //wrangledDataset.setDsName(importedDataset.getDsName() + " [W]");
-    String dsName = importedDataset.getDsName();
-    String newDsName = dsName.replaceFirst(" \\((EXCEL|CSV|JSON|STAGING|MYSQL|ORACLE|TIBERO|HIVE|POSTGRESQL|MSSQL|PRESTO)\\)$","");
+    String newDsName = getNewDsName(importedDataset, dataflow, dfId, cloningDsName);
     wrangledDataset.setDsName(newDsName);
     wrangledDataset.setDsType(WRANGLED);
+    wrangledDataset.setManualColumnCount(importedDataset.getManualColumnCount());
     wrangledDataset.setCreatorDfId(dfId);
     wrangledDataset.setCreatorDfName(dataflow.getDfName());
     wrangledDataset.setCreatedTime(DateTime.now());
@@ -1256,13 +1279,15 @@ public class PrepTransformService {
 
     switch (importedDataset.getImportType()) {
       case UPLOAD:
+      case URI:
         String storedUri = importedDataset.getStoredUri();
         LOGGER.debug(wrangledDsId + " storedUri=[" + storedUri + "]");
 
         if (importedDataset.getFileFormat() == PrDataset.FILE_FORMAT.CSV ||
             importedDataset.getFileFormat() == PrDataset.FILE_FORMAT.EXCEL ||
             importedDataset.getFileFormat() == PrDataset.FILE_FORMAT.JSON) {
-          gridResponse = teddyImpl.loadFileDataset(wrangledDsId, storedUri, importedDataset.getDelimiter(), wrangledDataset.getDsName());
+          Integer columnCount = importedDataset.getManualColumnCount();
+          gridResponse = teddyImpl.loadFileDataset(wrangledDsId, storedUri, importedDataset.getDelimiter(), columnCount, wrangledDataset.getDsName());
         } else {
           throw PrepException.create(PrepErrorCodes.PREP_DATASET_ERROR_CODE, PrepMessageKey.MSG_DP_ALERT_FILE_FORMAT_WRONG,
                   "invalid flie type: createWrangledDataset\nimportedDataset: " + importedDataset.toString());

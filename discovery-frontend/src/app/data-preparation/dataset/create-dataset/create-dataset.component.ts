@@ -39,11 +39,14 @@ export class CreateDatasetComponent extends AbstractComponent implements  OnInit
   public step: string;
 
   public datasetFile: PrDatasetFile;
+  public datasetFiles: any;
   public datasetHive: PrDatasetHive;
   public datasetJdbc: PrDatasetJdbc;
 
   public type: string; // File or staging db
 
+  @Input()
+  public isFromDatasetList: boolean = true; // 데이터셋 리스트 화면에서 진입했는지 여부
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
    | Constructor
    |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
@@ -52,10 +55,8 @@ export class CreateDatasetComponent extends AbstractComponent implements  OnInit
               protected injector: Injector) {
     super(elementRef, injector);
 
-    //this.datasetFile = new DatasetFile();
-    //this.datasetHive = new DatasetHive();
-    //this.datasetJdbc = new DatasetJdbc();
     this.datasetFile = new PrDatasetFile();
+    this.datasetFiles = [];
     this.datasetHive = new PrDatasetHive();
     this.datasetJdbc = new PrDatasetJdbc();
   }
@@ -87,10 +88,8 @@ export class CreateDatasetComponent extends AbstractComponent implements  OnInit
 
   // 팝업끼리 관리하는 모델들 초기화
   public init() {
-    //this.datasetFile = new DatasetFile();
-    //this.datasetHive = new DatasetHive();
-    //this.datasetJdbc = new DatasetJdbc();
     this.datasetFile = new PrDatasetFile();
+    this.datasetFiles = [];
     this.datasetHive = new PrDatasetHive();
     this.datasetJdbc = new PrDatasetJdbc();
   }

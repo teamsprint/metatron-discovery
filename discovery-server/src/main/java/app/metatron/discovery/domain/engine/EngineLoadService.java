@@ -18,9 +18,11 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
+import net.jodah.failsafe.Failsafe;
+import net.jodah.failsafe.RetryPolicy;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,9 +30,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.ResourceAccessException;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import app.metatron.discovery.common.GlobalObjectMapper;
@@ -39,18 +45,18 @@ import app.metatron.discovery.common.datasource.DataType;
 import app.metatron.discovery.common.datasource.LogicalType;
 import app.metatron.discovery.common.fileloader.FileLoaderFactory;
 import app.metatron.discovery.common.fileloader.FileLoaderProperties;
+import app.metatron.discovery.domain.dataconnection.DataConnection;
 import app.metatron.discovery.domain.datasource.DataSource;
 import app.metatron.discovery.domain.datasource.DataSourceIngestionException;
 import app.metatron.discovery.domain.datasource.DataSourceRepository;
 import app.metatron.discovery.domain.datasource.DataSourceTemporary;
 import app.metatron.discovery.domain.datasource.DataSourceTemporaryRepository;
 import app.metatron.discovery.domain.datasource.Field;
-import app.metatron.discovery.domain.datasource.connection.DataConnection;
 import app.metatron.discovery.domain.datasource.connection.jdbc.JdbcConnectionService;
-import app.metatron.discovery.domain.datasource.connection.jdbc.JdbcDataConnection;
 import app.metatron.discovery.domain.datasource.ingestion.IngestionInfo;
 import app.metatron.discovery.domain.datasource.ingestion.LocalFileIngestionInfo;
 import app.metatron.discovery.domain.datasource.ingestion.jdbc.LinkIngestionInfo;
+import app.metatron.discovery.domain.engine.model.SegmentMetaDataResponse;
 import app.metatron.discovery.domain.workbook.configurations.filter.Filter;
 import app.metatron.discovery.domain.workbook.configurations.format.TemporaryTimeFormat;
 import app.metatron.discovery.spec.druid.ingestion.BulkLoadSpec;
@@ -73,6 +79,9 @@ public class EngineLoadService {
   DruidEngineMetaRepository engineMetaRepository;
 
   @Autowired
+  EngineQueryService queryService;
+
+  @Autowired
   DruidEngineRepository engineRepository;
 
   @Autowired
@@ -92,6 +101,15 @@ public class EngineLoadService {
 
   @Autowired
   FileLoaderFactory fileLoaderFactory;
+
+  @Value("${polaris.datasource.ingestion.retries.delay:3}")
+  private Long delay;
+
+  @Value("${polaris.datasource.ingestion.retries.maxDelay:60}")
+  private Long maxDelay;
+
+  @Value("${polaris.datasource.ingestion.retries.maxDuration:3600}")
+  private Long maxDuration;
 
   /**
    * 엔진내 BulkLoad Timeout 시간, 기본값 10 분
@@ -128,6 +146,28 @@ public class EngineLoadService {
     }
 
     String sendTopicUri = String.format(TOPIC_LOAD_PROGRESS, temporaryId);
+
+    //if reserved field name...add postfix
+    if(Field.RESERVED_FIELDS.length > 0){
+      for(Field field : dataSource.getFields()){
+        final String compareFieldName = field.getName();
+        boolean reservedFieldMatched = Arrays.stream(Field.RESERVED_FIELDS)
+                                             .anyMatch(reserved -> reserved.equals(compareFieldName));
+
+        if(reservedFieldMatched){
+          String newFieldName = compareFieldName;
+          boolean fieldNameDuplicated = true;
+          while(fieldNameDuplicated){
+            newFieldName = newFieldName + "_";
+            final String compareField = newFieldName;
+            fieldNameDuplicated = dataSource.getFields()
+                                            .stream()
+                                            .anyMatch(legacyField -> legacyField.getName().equals(compareField));
+          }
+          field.setName(newFieldName);
+        }
+      }
+    }
 
     boolean isVoatile = false;
 
@@ -185,7 +225,7 @@ public class EngineLoadService {
       sendTopic(sendTopicUri, new ProgressResponse(5, "PROGRESS_GET_DATA_FROM_LINK_DATASOURCE"));
       try {
         tempResultFile = jdbcConnectionService
-                .selectQueryToCsv((JdbcDataConnection) connection,
+                .selectQueryToCsv(connection,
                         (LinkIngestionInfo) info,
                         engineProperties.getQuery().getLocalBaseDir(),
                         engineName,
@@ -245,43 +285,16 @@ public class EngineLoadService {
     }
 
     temporaryRepository.saveAndFlush(temporary);
-    long checkPeriod = Math.round(timeout / 50) * 1000L;
-    if (async) { // Send message to complete loading temporary datasource
 
-      boolean succeed = false;
-      int count = 1;
-      while (true) {
-        // 50 회 loop 이면 종료
-        if (count == 90) {
-          break;
-        } else {
-          sendTopic(sendTopicUri, new ProgressResponse(count + 10, "PROGRESS_LOAD_TEMP_DATASOURCE"));
-        }
+    SegmentMetaDataResponse segmentMetaDataResponse = checkExistLoadDataSource(engineName);
 
-        // timeout 값에 따른 checkPeriod 에 따른 상태 체크
-        try {
-          Thread.sleep(checkPeriod);
-        } catch (InterruptedException e) {
-        }
-
-        LOGGER.debug("Check temporary datasource [{}] : {}", count, temporaryId);
-        if (checkExistLoadDataSource(engineName)) {
-          succeed = true;
-          break;
-        }
-        count++;
-      }
-
-      if (succeed) {
-        temporary.setStatus(ENABLE);
-      } else {
-        // 이시점에서 실패하면 어쩌지?
-        temporary.setStatus(FAIL);
-        sendTopic(sendTopicUri, new ProgressResponse(-1, "TIMEOUT_LOAD_TEMP_DATASOURCE"));
-      }
-    } else {
-      temporary.setStatus(ENABLE);
+    if (segmentMetaDataResponse == null) {
+      temporary.setStatus(FAIL);
+      sendTopic(sendTopicUri, new ProgressResponse(-1, "TIMEOUT_LOAD_TEMP_DATASOURCE"));
+      throw new DataSourceIngestionException("An error occurred while registering the temporary data source");
     }
+
+    temporary.setStatus(ENABLE);
 
     // 적재가 완료된 순간 이후 부터 reset
     temporary.reloadExpiredTime();
@@ -338,13 +351,32 @@ public class EngineLoadService {
                       .collect(Collectors.toList());
   }
 
-  public boolean checkExistLoadDataSource(String dataSourceName) {
+  public SegmentMetaDataResponse checkExistLoadDataSource(String dataSourceName) {
+    // @formatter:off
+    RetryPolicy retryPolicy = new RetryPolicy()
+        .retryOn(ResourceAccessException.class)
+        .retryOn(Exception.class)
+        .retryIf(segmentResult -> segmentResult == null)
+        .withBackoff(delay, maxDelay, TimeUnit.SECONDS)
+        .withMaxDuration(maxDuration, TimeUnit.SECONDS);
+		// @formatter:on
 
-    Map<String, Object> resultMap = engineMetaRepository.getSegmentMetaData(dataSourceName);
+    Callable<SegmentMetaDataResponse> callable = () -> queryService.segmentMetadata(dataSourceName);
 
-    LOGGER.debug("load Datasource info : {}", resultMap);
+    // @formatter:off
+    SegmentMetaDataResponse segmentMetaDataResponse = Failsafe.with(retryPolicy)
+            .onRetriesExceeded((o, throwable) -> {
+              throw new DataSourceIngestionException("Retries exceed for checking temporary datasource : " + dataSourceName);
+            })
+            .onComplete((o, throwable, ctx) -> {
+              if(ctx != null) {
+                LOGGER.debug("Completed checking temporary datasource({}). {} tries. Take time {} seconds.", dataSourceName, ctx.getExecutions(), ctx.getElapsedTime().toSeconds());
+              }
+            })
+            .get(callable);
+    // @formatter:on
 
-    return (resultMap == null || resultMap.isEmpty()) ? false : true;
+    return segmentMetaDataResponse;
   }
 
   /**

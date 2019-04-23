@@ -99,6 +99,8 @@ public class SelectQueryBuilder extends AbstractQueryBuilder {
 
   private Boolean descending = false;
 
+  private Boolean streaming = false;
+
   public SelectQueryBuilder(DataSource dataSource) {
     super(dataSource);
   }
@@ -186,6 +188,11 @@ public class SelectQueryBuilder extends AbstractQueryBuilder {
               TimeFieldFormat originalTimeFormat = (TimeFieldFormat) originalFormat;
               TimeFieldFormat timeFormat = (TimeFieldFormat) format;
 
+              if (datasourceField.backwardTime()) {
+                originalTimeFormat.setUTC();
+                timeFormat.setUTC();
+              }
+
               TimeFormatFunc timeFormatFunc = createTimeFormatFunc(fieldName, originalTimeFormat, timeFormat);
 
               dimensions.add(new ExpressionDimension(aliasName, timeFormatFunc.toExpression()));
@@ -207,12 +214,6 @@ public class SelectQueryBuilder extends AbstractQueryBuilder {
           metrics.add(fieldName);
         }
 
-        // TODO: Alias 지원 필요시 아래 Virtual Column 형태로 구성 : String 형태로 전달되는 이슈 있음
-        //        String vcName = "vc." + fieldName;
-        //        ExprVirtualColumn exprVirtualColumn = new ExprVirtualColumn(fieldName, vcName);
-        //        virtualColumns.put(vcName, exprVirtualColumn);
-        //        dimensions.add(new DefaultDimension(vcName, aliasName));
-
       } else if (reqField instanceof TimestampField) {
 
         if (!this.metaFieldMap.containsKey(fieldName)) {
@@ -226,6 +227,10 @@ public class SelectQueryBuilder extends AbstractQueryBuilder {
         TimeFieldFormat timeFormat = (TimeFieldFormat) timestampField.getFormat();
         if (timeFormat == null) {
           timeFormat = originalTimeFormat;
+        }
+
+        if (datasourceField.backwardTime()) {
+          timeFormat.setUTC();
         }
 
         TimeFormatFunc timeFormatFunc = new TimeFormatFunc(timestampField.getPredefinedColumn(dataSource instanceof MappingDataSource),
@@ -273,6 +278,12 @@ public class SelectQueryBuilder extends AbstractQueryBuilder {
   public SelectQueryBuilder forward(ResultForward resultForward) {
 
     setForwardContext(resultForward);
+
+    return this;
+  }
+
+  public SelectQueryBuilder streaming() {
+    this.streaming = true;
 
     return this;
   }

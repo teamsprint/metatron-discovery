@@ -43,6 +43,13 @@
             </includes>
             <outputDirectory>conf</outputDirectory>
         </fileSet>
+        <fileSet>
+            <directory>./extensions</directory>
+            <includes>
+                <include>*.*</include>
+            </includes>
+            <outputDirectory>extensions</outputDirectory>
+        </fileSet>
     </fileSets>
 
     <dependencySets>

@@ -23,7 +23,7 @@ import {
   UIChartColor,
   UIChartColorByDimension,
   UIChartColorBySeries,
-  UIChartColorByValue,
+  UIChartColorByValue, UIChartColorGradationByValue,
   UIChartZoom,
   UIOption
 } from './option/ui-option';
@@ -40,12 +40,14 @@ import {
   ChartPivotType,
   ChartSelectMode,
   ChartType,
+  ColorCustomMode,
   ColorRangeType,
   DataZoomRangeType,
   EventType,
   SeriesType,
   ShelveFieldType,
-  ShelveType, UIChartDataLabelDisplayType
+  ShelveType,
+  UIChartDataLabelDisplayType
 } from './option/define/common';
 import {Field as AbstractField, Field} from '../../../domain/workbook/configurations/field/field';
 
@@ -61,14 +63,15 @@ import {CommonOptionConverter} from './option/converter/common-option-converter'
 import {ToolOptionConverter} from './option/converter/tool-option-converter';
 import {LegendOptionConverter} from './option/converter/legend-option-converter';
 import {analysis} from '../../../page/component/value/analysis';
-import {ColorRange, UIChartColorGradationByValue} from './option/ui-option/ui-color';
+import {ColorRange} from './option/ui-option/ui-color';
 import {UIScatterChart} from './option/ui-option/ui-scatter-chart';
-import UI = OptionGenerator.UI;
 import {UIChartAxisGrid} from "./option/ui-option/ui-axis";
 import {TooltipOptionConverter} from './option/converter/tooltip-option-converter';
 import {Shelf} from '../../../domain/workbook/configurations/shelf/shelf';
 import {fromEvent} from 'rxjs';
-import {map, debounceTime} from 'rxjs/operators';
+import {debounceTime, map} from 'rxjs/operators';
+import UI = OptionGenerator.UI;
+import {isNullOrUndefined} from "util";
 
 declare let echarts: any;
 
@@ -1402,7 +1405,6 @@ export abstract class BaseChart extends AbstractComponent implements OnInit, OnD
     // Apply!
     // chart.setOption(option, notMerge, lazyUpdate);
     this.chart.setOption(this.chartOption, false, false);
-    console.info(this.chartOption);
   }
 
   ////////////////////////////////////////////////////////
@@ -1411,39 +1413,42 @@ export abstract class BaseChart extends AbstractComponent implements OnInit, OnD
 
   protected convertDataZoom(isKeepRange?: boolean): BaseOption {
 
-    ////////////////////////////////////////////////////////
-    // 데이터줌 설정
-    ////////////////////////////////////////////////////////
+    if (this.uiOption.chartZooms && this.uiOption.chartZooms[0].auto) {
+      ////////////////////////////////////////////////////////
+      // 데이터줌 설정
+      ////////////////////////////////////////////////////////
 
-    // 차트가 이미 그려진 상태 & 현재 스크롤 위치를 기억해야 하는경우
-    if (!_.isEmpty(this.chart._chartsViews) && isKeepRange) {
-      this.chart.getOption().dataZoom.map((obj, idx) => {
-        this.chartOption.dataZoom[idx].start = obj.start;
-        this.chartOption.dataZoom[idx].end = obj.end;
-        this.chartOption.dataZoom[idx].startValue = obj.startValue;
-        this.chartOption.dataZoom[idx].endValue = obj.endValue;
-      });
+      // 차트가 이미 그려진 상태 & 현재 스크롤 위치를 기억해야 하는경우
+      if (!_.isEmpty(this.chart._chartsViews) && isKeepRange) {
+        this.chart.getOption().dataZoom.map((obj, idx) => {
+          this.chartOption.dataZoom[idx].start = obj.start;
+          this.chartOption.dataZoom[idx].end = obj.end;
+          this.chartOption.dataZoom[idx].startValue = obj.startValue;
+          this.chartOption.dataZoom[idx].endValue = obj.endValue;
+        });
+      }
+
+      // dataZoom start / end 설정
+      this.chartOption = this.convertDataZoomRange(this.chartOption, this.uiOption);
+
+      ////////////////////////////////////////////////////////
+      // 데이터줌 show/hide, 축변환 (가로/세로) 설정
+      ////////////////////////////////////////////////////////
+      this.chartOption = ToolOptionConverter.convertDataZoom(this.chartOption, this.uiOption);
+
+      ////////////////////////////////////////////////////////
+      // 차트별 추가사항
+      ////////////////////////////////////////////////////////
+
+      // 차트별 추가사항 반영
+      this.chartOption = this.additionalDataZoom();
+
+    } else {
+      delete this.chartOption.dataZoom;
     }
-
-    // dataZoom start / end 설정
-    this.chartOption = this.convertDataZoomRange(this.chartOption, this.uiOption);
-
-    ////////////////////////////////////////////////////////
-    // 데이터줌 show/hide, 축변환 (가로/세로) 설정
-    ////////////////////////////////////////////////////////
-
-    this.chartOption = ToolOptionConverter.convertDataZoom(this.chartOption, this.uiOption);
-
-    ////////////////////////////////////////////////////////
-    // 차트별 추가사항
-    ////////////////////////////////////////////////////////
-
-    // 차트별 추가사항 반영
-    this.chartOption = this.additionalDataZoom();
 
     // 차트옵션 반환
     return this.chartOption;
-
   }
 
   /**
@@ -1867,21 +1872,78 @@ export abstract class BaseChart extends AbstractComponent implements OnInit, OnD
     // 색상지정 기준 필드리스트 설정(measure list)
     this.uiOption = this.setMeasureList();
 
-    // color by measure일때 eventType이 있는경우 (min / max가 바뀌는경우) 색상 설정값 초기화
-    if (!_.isEmpty(this.drawByType) && this.uiOption.color && ChartColorType.MEASURE == this.uiOption.color.type) {
-      delete (<UIChartColorByValue>this.uiOption.color).ranges;
-      delete (<UIChartColorGradationByValue>this.uiOption.color).visualGradations;
-      delete (<UIChartColorByValue>this.uiOption.color).customMode;
+    /*
+        // color by measure일때 eventType이 있는경우 (min / max가 바뀌는경우) 색상 설정값 초기화
+        if (!_.isEmpty(this.drawByType) && this.uiOption.color && ChartColorType.MEASURE == this.uiOption.color.type) {
+          delete (<UIChartColorByValue>this.uiOption.color).ranges;
+          delete (<UIChartColorGradationByValue>this.uiOption.color).visualGradations;
+          delete (<UIChartColorByValue>this.uiOption.color).customMode;
 
+          const colorList = <any>ChartColorList[this.uiOption.color['schema']];
 
-      const colorList = <any>ChartColorList[this.uiOption.color['schema']];
+          // ranges가 초기화
+          this.uiOption.color['ranges'] = ColorOptionConverter.setMeasureColorRange(this.uiOption, this.data, colorList);
+        }
+    */
 
-      // ranges가 초기화
-      this.uiOption.color['ranges'] = ColorOptionConverter.setMeasureColorRange(this.uiOption, this.data, colorList);
+    if (!_.isEmpty(this.drawByType) && this.uiOption.color && (<UIChartColorByValue>this.uiOption.color).customMode) {
+      let colorList = [];
+      const colrObj: UIChartColorByValue = <UIChartColorByValue>this.uiOption.color;
+      switch (colrObj.customMode) {
+        case ColorCustomMode.SECTION:
+          colorList = colrObj.ranges.map(item => item.color).reverse();
+          this.uiOption.color['ranges'] = ColorOptionConverter.setMeasureColorRange(this.uiOption, this.data, colorList);
+          break;
+        case ColorCustomMode.GRADIENT :
+          const prevMaxVal: number = colrObj.ranges[colrObj.ranges.length - 1]['value'];
+          const currMaxVal: number = this.uiOption.maxValue;
+          const resetRange: Function = (item) => {
+            if (item['value']) {
+              if (item['value'] < prevMaxVal) {
+                item['value'] = Math.round(currMaxVal * (item['value'] / prevMaxVal));
+              } else {
+                item['value'] = currMaxVal;
+              }
+            }
+            return item;
+          };
+          this.uiOption.color['ranges'] = colrObj['ranges'].map(item => resetRange(item));
+          this.uiOption.color['visualGradations'] = colrObj['visualGradations'].map(item => resetRange(item));
+          break;
+        default:
+          // ranges 초기화
+          delete (<UIChartColorByValue>this.uiOption.color).ranges;
+          delete (<UIChartColorGradationByValue>this.uiOption.color).visualGradations;
+          delete (<UIChartColorByValue>this.uiOption.color).customMode;
+          colorList = <any>ChartColorList[this.uiOption.color['schema']];
+          this.uiOption.color['ranges'] = ColorOptionConverter.setMeasureColorRange(this.uiOption, this.data, colorList);
+      }
     }
 
-    // color mapping값 설정
+    // color mapping값 설정 - S
+    // 이전값 임시 저장
+    let prevMappingList: { alias: string, color: string }[] = [];
+    if (this.uiOption.color && this.uiOption.color && this.uiOption.color['mappingArray']) {
+      prevMappingList = this.uiOption.color['mappingArray'];
+    }
+    // 매핑값 초기화
     this.uiOption.color = this.setMapping();
+    // 이전값 재적용
+    if (0 < prevMappingList.length) {
+      const currColorMapObj = this.uiOption.color['mapping'];
+      const currColorMapList = this.uiOption.color['mappingArray'];
+      prevMappingList.forEach(prev => {
+        currColorMapList.some(curr => {
+          if (curr.alias === prev.alias) {
+            curr.color = prev.color;
+            return true;
+          }
+          return false;
+        });
+        (currColorMapObj[prev.alias]) && (currColorMapObj[prev.alias] = prev.color);
+      });
+    }
+    // color mapping값 설정 - E
   }
 
   /**
@@ -1907,10 +1969,14 @@ export abstract class BaseChart extends AbstractComponent implements OnInit, OnD
       obj.data = _.cloneDeep(obj.originData);
 
       // 불투명도를 1로 변경
-      if (!_.isUndefined(obj.itemStyle) && !_.isUndefined(obj.itemStyle.normal)) obj.itemStyle.normal.opacity = 1;
+      if (!_.isUndefined(obj.itemStyle) && !_.isUndefined(obj.itemStyle.normal)) {
+        delete obj.itemStyle.normal.opacity;
+      }
 
       // 라인이 존재한다면 라인의 불투명도 1로 변경
-      if (!_.isUndefined(obj.lineStyle) && !_.isUndefined(obj.lineStyle.normal)) obj.lineStyle.normal.opacity = 1;
+      if (!_.isUndefined(obj.lineStyle) && !_.isUndefined(obj.lineStyle.normal)) {
+        delete obj.lineStyle.normal.opacity;
+      }
 
       // 현재 시리즈의 선택 여부 변경
       obj.existSelectData = false;
@@ -1947,9 +2013,10 @@ export abstract class BaseChart extends AbstractComponent implements OnInit, OnD
     }
 
     // 선택한 데이터 선택효과 처리
-    const setSeriesValue = ((series: Series, data: any, color: string, opacity: number = 1): any => {
+    const setSeriesValue = ((series: Series, dataIndex: number, data: any, color: string, opacity: number = 1): any => {
       return {
-        name: series.name,
+        // name: series.name,
+        name: series.uiData.seriesName[dataIndex],
         value: !_.isUndefined(data.value) ? data.value : data,
         itemStyle: {
           normal: {
@@ -1985,7 +2052,7 @@ export abstract class BaseChart extends AbstractComponent implements OnInit, OnD
         let opacity = 1;
 
         // 수치로 되어있는 데이터는 개별 itemStyle 을 지정하여 오브젝트로 재구성
-        selectedSeriesData[params.dataIndex] = setSeriesValue(selectedSeries, selectedData, params.color, opacity);
+        selectedSeriesData[params.dataIndex] = setSeriesValue(selectedSeries, params.dataIndex, selectedData, params.color, opacity);
       }
 
       // 라인 존재하는 경우 심볼 크기 변경
@@ -2001,7 +2068,7 @@ export abstract class BaseChart extends AbstractComponent implements OnInit, OnD
         // 선택한 시리즈의 데이터 리스트
         const selectedSeriesData = selectedSeries.data;
         // 선택한 series data index값
-        const selectedDataList = obj.dataIndex;
+        const selectedDataIndexList = obj.dataIndex;
 
         // 선택한 데이터 선택효과 처리
         if (selectedSeries.lineStyle && obj.dataIndex && obj.dataIndex.length > 0) {
@@ -2010,21 +2077,28 @@ export abstract class BaseChart extends AbstractComponent implements OnInit, OnD
         }
 
         // 시리즈 선택 처리
-        if (!_.isEmpty(selectedDataList)) {
+        if (!_.isEmpty(selectedDataIndexList)) {
 
-          // dataIndex 리스트 개수만큼 설정
-          selectedDataList.map((index) => {
-
-            // data.value가 있는지 없는지 데이터 형태에 따라 로직 설정
-            if (!_.isUndefined(selectedSeriesData[index].value)) {
-              // 오브젝트로 구성된 데이터는 opacity 만 조정
-              selectedSeriesData[index].itemStyle = OptionGenerator.ItemStyle.auto();
-              selectedSeriesData[index].itemStyle.normal.opacity = 1;
+          selectedSeriesData.forEach((dataItem, index) => {
+            if (-1 < selectedDataIndexList.indexOf(index)) {
+              // 선택된 경우
+              // data.value가 있는지 없는지 데이터 형태에 따라 로직 설정
+              if (_.isUndefined(selectedSeriesData[index].value)) {
+                // 수치로 되어있는 데이터는 개별 itemStyle 을 지정하여 오브젝트로 재구성
+                selectedSeriesData[index] = setSeriesValue(selectedSeries, index, dataItem, params.color);
+                (selectedSeries.lineStyle) && (dataItem.symbolSize = 10);
+              } else {
+                // 오브젝트로 구성된 데이터는 opacity 만 조정
+                dataItem.itemStyle = OptionGenerator.ItemStyle.auto();
+                dataItem.itemStyle.normal.opacity = 1;
+              }
             } else {
-              // 수치로 되어있는 데이터는 개별 itemStyle 을 지정하여 오브젝트로 재구성
-              selectedSeriesData[index] = setSeriesValue(selectedSeries, selectedSeriesData[index], params.color);
-              if (selectedSeries.lineStyle) selectedSeriesData[index].symbolSize = 10;
-
+              // 선택되지 않은 경우
+              if (!_.isUndefined(selectedSeriesData[index].value)) {
+                // 오브젝트로 구성된 데이터는 opacity 만 조정
+                (dataItem.itemStyle) || (dataItem.itemStyle = OptionGenerator.ItemStyle.auto());
+                dataItem.itemStyle.normal.opacity = 0.2;
+              }
             }
           });
 
@@ -2473,6 +2547,7 @@ export abstract class BaseChart extends AbstractComponent implements OnInit, OnD
       this.lastDrawSeries = _.cloneDeep(this.chartOption['series']);
 
       // 이벤트 데이터 전송
+      this.params['selectType'] = 'SINGLE';
       this.chartSelectInfo.emit(new ChartSelectInfo(selectMode, selectData, this.params));
     });
   }
@@ -2510,28 +2585,25 @@ export abstract class BaseChart extends AbstractComponent implements OnInit, OnD
       // 교차선반 데이터 요소 ( scatter )
       const aggs = this.pivotInfo.aggs;
 
-      const setData = ((colIdxList, data: Field[], shelveData: string[], dataAlter?: Field[], shelveAlterData?: string[]) => {
+      const setData = ((colIdxList, fields: Field[], shelveData: string[], dataAlter?: Field[], shelveAlterData?: string[]) => {
 
         let returnList = [];
 
-        colIdxList.map((colIdx) => {
+        colIdxList.forEach((colIdx) => {
           const dataName = !_.isEmpty(shelveData) ? shelveData[colIdx] : shelveAlterData[colIdx];
           _.split(dataName, CHART_STRING_DELIMITER).map((name, idx) => {
 
             // filter관련 데이터 변경
-            const shelveData = !_.isEmpty(data) ? data[idx] : dataAlter[idx];
+            const fieldItem = !_.isEmpty(fields) ? fields[idx] : dataAlter[idx];
 
-            // selectDataList에 해당 name의 값이 없을때
-            if (-1 === _.findIndex(returnList, (obj) => {
-              return obj.name === shelveData.name
-            })) {
-
-              // selectDataList에 추가
-              returnList.push(shelveData);
+            // selectDataList에 해당 name의 값이 없을때 selectDataList에 추가
+            if (-1 === returnList.findIndex(obj => obj.name === fieldItem.name)) {
+              const resultItem = _.cloneDeep(fieldItem);
+              resultItem['data'] = [];
+              returnList.push(resultItem);
             }
 
             // 기존데이터에 신규데이터 추가
-            // returnList[idx].data = _.union(returnList[idx].data, [name]);
             returnList[idx].data = _.union(returnList[idx].data, [name]);
           });
         });
@@ -2540,7 +2612,7 @@ export abstract class BaseChart extends AbstractComponent implements OnInit, OnD
       });
 
       // UI에 전송할 선택정보 설정
-      selectedBrushData.map((selected) => {
+      selectedBrushData.forEach((selected) => {
         // 해당 시리즈의 선택한 데이터 인덱스 모음
         const colIdxList = selected.dataIndex;
 
@@ -2554,13 +2626,14 @@ export abstract class BaseChart extends AbstractComponent implements OnInit, OnD
       });
 
       // 차트에서 선택한 데이터 존재 여부 설정
-      this.isSelected = selectDataList && selectDataList.length > 0 ? true : false;
+      this.isSelected = ( selectDataList && selectDataList.length > 0 );
 
       // 차트에 적용
       this.apply(false);
       this.lastDrawSeries = _.cloneDeep(this.chartOption['series']);
 
       // 이벤트 데이터 전송
+      this.params['selectType'] = 'MULTI';
       this.chartSelectInfo.emit(new ChartSelectInfo(ChartSelectMode.ADD, selectDataList, this.params));
     });
   }
@@ -2683,7 +2756,7 @@ export abstract class BaseChart extends AbstractComponent implements OnInit, OnD
 
     if (_.isUndefined(chartZooms)) return this.chartOption;
 
-    chartZooms.map((zoom, idx) => {
+    chartZooms.forEach((zoom, idx) => {
       if (!_.isUndefined(zoom.start) && !_.isUndefined(zoom.end)) {
 
         option = this.convertDataZoomRangeByType(option, DataZoomRangeType.PERCENT, zoom.start, zoom.end, idx);

@@ -52,12 +52,20 @@ import {DatasourceService} from "../../../datasource/service/datasource.service"
 import {TimezoneService} from "../../service/timezone.service";
 import {DataSnapshotService} from "../../../data-preparation/data-snapshot/service/data-snapshot.service";
 import {DataconnectionService} from "../../../dataconnection/service/dataconnection.service";
+import {SchemaConfigDataPreviewComponent} from "../../component/schema-config/schema-config-data-preview.component";
+import {DataflowModelService} from "../../../data-preparation/dataflow/service/dataflow.model.service";
+import {DataStorageCommonModule} from "../../data-storage-common.module";
+import {DataStorageShareModule} from "../../data-storage-share.module";
+import {FieldConfigService} from "../../service/field-config.service";
+
 
 @NgModule({
   imports: [
     CommonModule,
     WorkbenchEditorModule,
     FileModule,
+    DataStorageCommonModule,
+    DataStorageShareModule,
   ],
   declarations: [
     TimeComponent,
@@ -69,6 +77,7 @@ import {DataconnectionService} from "../../../dataconnection/service/dataconnect
     SchemaConfigDetailComponent,
     // schema config action bar component
     SchemaConfigActionBarComponent,
+    SchemaConfigDataPreviewComponent,
     // data source - create
     CreateDataSourceComponent,
     SelectTypeComponent,
@@ -157,7 +166,9 @@ import {DataconnectionService} from "../../../dataconnection/service/dataconnect
     DataconnectionService,
     GranularityService,
     TimezoneService,
-    DataSnapshotService
+    DataSnapshotService,
+    DataflowModelService,
+    FieldConfigService
   ]
 })
 export class DataSourceCreateModule {

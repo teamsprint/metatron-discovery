@@ -15,6 +15,7 @@
 package app.metatron.discovery.domain.mdm;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonRawValue;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
@@ -83,7 +84,22 @@ public class MetadataColumn implements MetatronDomain<Long>  {
    * The description of column
    */
   @Column(name = "column_desc", length = 1000)
-  String description;
+  private String description;
+
+  /**
+   * Reference field of datasource
+   */
+  @Column(name = "column_field_ref")
+  private Long fieldRef;
+
+  @Column(name = "column_field_role")
+  private Field.FieldRole role;
+
+  /**
+   * Sequence for column alignment
+   */
+  @Column(name = "column_seq")
+  private Long seq;
 
   /**
    * Linked Column Dictionary
@@ -109,6 +125,7 @@ public class MetadataColumn implements MetatronDomain<Long>  {
    */
   @ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.MERGE })
   @JoinColumn(name = "meta_id")
+  @JsonBackReference("column_metadata")
   private Metadata metadata;
 
   /**
@@ -123,18 +140,29 @@ public class MetadataColumn implements MetatronDomain<Long>  {
   public MetadataColumn() {
   }
 
-  public MetadataColumn(Field field) {
+  public MetadataColumn(Field field, Metadata metadata) {
     this.physicalName = field.getName();
     this.physicalType = field.getType().name();
-    this.name = field.getName();
+    this.name = field.getLogicalName();
+    this.type = field.getLogicalType();
+    this.description = field.getDescription();
+    this.format = field.getFormat();
+    this.fieldRef = field.getId();
+    this.role = field.getRole();
+    this.seq = field.getSeq();
+    this.metadata = metadata;
   }
 
   public MetadataColumn(CollectionPatch patch, DefaultFormattingConversionService defaultConversionService) {
     if(patch.hasProperty("physicalType")) this.physicalType = patch.getValue("physicalType");
     if(patch.hasProperty("physicalName")) this.physicalName = patch.getValue("physicalName");
     if(patch.hasProperty("name")) this.name = patch.getValue("name");
+    if (patch.hasProperty("seq")) this.seq = patch.getLongValue("seq");
     if(patch.hasProperty("type")) {
       this.type = SearchParamValidator.enumUpperValue(LogicalType.class, patch.getValue("type"), "type");
+    }
+    if (patch.hasProperty("role")) {
+      this.role = SearchParamValidator.enumUpperValue(Field.FieldRole.class, patch.getValue("role"), "role");
     }
     if(patch.hasProperty("description")) this.description = patch.getValue("description");
     if(patch.hasProperty("format")) {
@@ -159,8 +187,12 @@ public class MetadataColumn implements MetatronDomain<Long>  {
     if(patch.hasProperty("physicalType")) this.physicalType = patch.getValue("physicalType");
     if(patch.hasProperty("physicalName")) this.physicalName = patch.getValue("physicalName");
     if(patch.hasProperty("name")) this.name = patch.getValue("name");
+    if (patch.hasProperty("seq")) this.seq = patch.getLongValue("seq");
     if(patch.hasProperty("type")) {
       this.type = SearchParamValidator.enumUpperValue(LogicalType.class, patch.getValue("type"), "type");
+    }
+    if (patch.hasProperty("role")) {
+      this.role = SearchParamValidator.enumUpperValue(Field.FieldRole.class, patch.getValue("role"), "role");
     }
     if(patch.hasProperty("description")) this.description = patch.getValue("description");
     if(patch.hasProperty("format")) {
@@ -194,6 +226,14 @@ public class MetadataColumn implements MetatronDomain<Long>  {
         this.codeTable = null;
       }
     }
+  }
+
+  public void updateColumn(Field field) {
+    this.name = field.getLogicalName();
+    this.type = field.getLogicalType();
+    this.format = field.getFormat();
+    this.description = field.getDescription();
+    this.seq = field.getSeq();
   }
 
   @Override
@@ -245,6 +285,30 @@ public class MetadataColumn implements MetatronDomain<Long>  {
     this.physicalName = physicalName;
   }
 
+  public Long getFieldRef() {
+    return fieldRef;
+  }
+
+  public void setFieldRef(Long fieldRef) {
+    this.fieldRef = fieldRef;
+  }
+
+  public Field.FieldRole getRole() {
+    return role;
+  }
+
+  public void setRole(Field.FieldRole role) {
+    this.role = role;
+  }
+
+  public Long getSeq() {
+    return seq;
+  }
+
+  public void setSeq(Long seq) {
+    this.seq = seq;
+  }
+
   public ColumnDictionary getDictionary() {
     return dictionary;
   }
@@ -275,6 +339,14 @@ public class MetadataColumn implements MetatronDomain<Long>  {
 
   public void setMetadata(Metadata metadata) {
     this.metadata = metadata;
+  }
+
+  @JsonIgnore
+  public FieldFormat getFieldFormat() {
+    if(StringUtils.isNotEmpty(format)){
+      return GlobalObjectMapper.readValue(format, FieldFormat.class);
+    }
+    return null;
   }
 
   @Override

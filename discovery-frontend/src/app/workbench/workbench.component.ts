@@ -43,8 +43,7 @@ import {DatasourceService} from '../datasource/service/datasource.service';
 import {PageWidget} from '../domain/dashboard/widget/page-widget';
 import {Dashboard, BoardDataSource, BoardConfiguration} from '../domain/dashboard/dashboard';
 import {
-  BIType, ConnectionType, Datasource, Field, IngestionRuleType,
-  LogicalType
+  ConnectionType, Datasource, Field, IngestionRuleType
 } from '../domain/datasource/datasource';
 import {Workbook} from '../domain/workbook/workbook';
 import {DataconnectionService} from '../dataconnection/service/dataconnection.service';
@@ -58,7 +57,7 @@ import {CodemirrorComponent} from './component/editor-workbench/codemirror.compo
 import {SaveAsHiveTableComponent} from "./component/save-as-hive-table/save-as-hive-table.component";
 import {DetailWorkbenchDatabase} from "./component/detail-workbench/detail-workbench-database/detail-workbench-database";
 import {Message} from '@stomp/stompjs';
-import {ConnectionType as DataConnectionType} from "../domain/dataconnection/dataconnection";
+import {AuthenticationType, Dataconnection, InputMandatory, InputSpec} from "../domain/dataconnection/dataconnection";
 
 declare let moment: any;
 declare let Split;
@@ -76,6 +75,8 @@ export class WorkbenchComponent extends AbstractComponent implements OnInit, OnD
 
   // 에디터 행수
   private MAX_LINES: number = 20;
+
+  private _gridScrollEvtSub: any;
 
   // 그리드
   @ViewChild('main')
@@ -347,7 +348,9 @@ export class WorkbenchComponent extends AbstractComponent implements OnInit, OnD
   public saveAsLayer: boolean = false;
   public supportSaveAsHiveTable: boolean = false;
 
-  public connTargetType:string = '';    // 커넥션 대상 타입
+  public connTargetImgUrl: string = '';
+
+  public hideResultButtons: boolean = false;
 
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
    | Constructor
@@ -439,9 +442,16 @@ export class WorkbenchComponent extends AbstractComponent implements OnInit, OnD
   public ngOnDestroy() {
     super.ngOnDestroy();
 
-    this._splitVertical.destroy();
-    this._splitVertical = undefined;
+    if( this._splitVertical ) {
+      this._splitVertical.destroy();
+      this._splitVertical = undefined;
+    }
     this._deactiveHorizontalSlider();
+
+    if (this._gridScrollEvtSub) {
+      this._gridScrollEvtSub.unsubscribe();
+      this._gridScrollEvtSub = undefined;
+    }
 
     // this.webSocketCheck(() => {});
     (this._subscription) && (this._subscription.unsubscribe());     // Socket 응답 해제
@@ -815,7 +825,9 @@ export class WorkbenchComponent extends AbstractComponent implements OnInit, OnD
 
     currentEditorResultTabs = this._getCurrentEditorResultTabs();
     if (currentEditorResultTabs.length > 0) {
-      let showTabInfo: ResultTab = currentEditorResultTabs[removeIdx - 1];
+      let targetIdx: number = removeIdx - 1;
+      (0 > targetIdx) && (targetIdx = 0);
+      let showTabInfo: ResultTab = currentEditorResultTabs[targetIdx];
       this.changeResultTabHandler(showTabInfo.id);
     }
   } // function - closeResultTab
@@ -953,6 +965,8 @@ export class WorkbenchComponent extends AbstractComponent implements OnInit, OnD
    * @param {string} selectedTabId
    */
   public changeResultTabHandler(selectedTabId: string) {
+
+    this.hideResultButtons = false;
 
     let selectedTab: ResultTab = null;
     const currentEditorResultTabs: ResultTab[] = this._getCurrentEditorResultTabs();
@@ -1303,6 +1317,7 @@ export class WorkbenchComponent extends AbstractComponent implements OnInit, OnD
   /**
    * run query
    * @param {string} resultTabId
+   * @param {boolean} retry
    */
   public runQueries(resultTabId: string, retry: boolean = false) {
     const resultTab: ResultTab = this._getResultTab(resultTabId);
@@ -1315,7 +1330,7 @@ export class WorkbenchComponent extends AbstractComponent implements OnInit, OnD
     resultTab.initialize();
     resultTab.executeTimer();
     this.runningResultTabId = resultTab.id;
-
+    this.hideResultButtons = false;
 
     this.workbenchService.runSingleQueryWithInvalidQuery(resultTab.queryEditor, additionalParams)
       .then((result) => {
@@ -2194,11 +2209,13 @@ export class WorkbenchComponent extends AbstractComponent implements OnInit, OnD
    * @param {Function} callback
    */
   private createWebSocket(callback?: Function): void {
+    const dataConn: Dataconnection = this.workbenchTemp.dataConnection;
     this.workbench = this.workbenchTemp;
     // connection database 정보
-    this.workbench.dataConnection.connectionDatabase = this.workbenchTemp.dataConnection.database;
+    this.workbench.dataConnection.connectionDatabase = dataConn.database;
     this.websocketId = CommonConstant.websocketId;
-    this.connTargetType = this._getConnectionTargetType();
+    this.connTargetImgUrl
+      = this.getConnImplementorWhiteImgUrl(dataConn.connectionInformation.implementor, dataConn.connectionInformation.iconResource2);
     try {
       console.info('this.websocketId', this.websocketId);
       const headers: any = {
@@ -2259,7 +2276,7 @@ export class WorkbenchComponent extends AbstractComponent implements OnInit, OnD
 
         if (data['connected'] === true) {
           this.databaseParam = {
-            dataconnection: this.workbenchTemp.dataConnection,
+            dataconnection: dataConn,
             workbenchId: this.workbenchId,
             webSocketId: CommonConstant.websocketId
           };
@@ -2278,7 +2295,7 @@ export class WorkbenchComponent extends AbstractComponent implements OnInit, OnD
       };
       CommonConstant.stomp.publish(
         {
-          destination: '/message/workbench/' + this.workbenchId + '/dataconnections/' + this.workbenchTemp.dataConnection.id + '/connect',
+          destination: '/message/workbench/' + this.workbenchId + '/dataconnections/' + dataConn.id + '/connect',
           headers: headers,
           body: JSON.stringify(params)
         }
@@ -2477,6 +2494,21 @@ export class WorkbenchComponent extends AbstractComponent implements OnInit, OnD
         .RowSelectionActivate(true)
         .build()
       );
+      if (this._gridScrollEvtSub) {
+        this._gridScrollEvtSub.unsubscribe();
+        this._gridScrollEvtSub = undefined;
+      }
+      const $gridViewport = $('.slick-viewport');
+      const $gridCanvas = $('.grid-canvas');
+      this._gridScrollEvtSub
+        = this.gridComponent.grid.onScroll.subscribe((data1, data2) => {
+        if ( 0 < data2.scrollTop ) {
+          this.hideResultButtons = (data2.scrollTop > ($gridCanvas.height() - $gridViewport.height() - 10 ));
+          this.safelyDetectChanges();
+        } else if( 0 === data2.scrollTop ) {
+          this.hideResultButtons = false;
+        }
+      });
     }
 
     if (this.searchText !== '') {
@@ -2659,31 +2691,27 @@ export class WorkbenchComponent extends AbstractComponent implements OnInit, OnD
     this.connectionService.getDataconnectionDetail(this.workbench.dataConnection.id)
       .then((connection) => {
         const selectedSecurityType = [
-          {label: this.translateService.instant('msg.storage.li.connect.always'), value: 'MANUAL'},
-          {label: this.translateService.instant('msg.storage.li.connect.account'), value: 'USERINFO'},
-          {label: this.translateService.instant('msg.storage.li.connect.id'), value: 'DIALOG'}
+          {label: this.translateService.instant('msg.storage.li.connect.always'), value: AuthenticationType.MANUAL},
+          {label: this.translateService.instant('msg.storage.li.connect.account'), value: AuthenticationType.USERINFO},
+          {label: this.translateService.instant('msg.storage.li.connect.id'), value: AuthenticationType.DIALOG}
         ].find(type => type.value === this.workbench.dataConnection.authenticationType) || {
           label: this.translateService.instant('msg.storage.li.connect.always'),
           value: 'MANUAL'
         };
         this.mainViewShow = false;
         this.mode = 'db-configure-schema';
+        // TODO
         this.setDatasource = {
           connectionData: {
-            connectionId: this.workbench.dataConnection.id,
-            hostname: this.workbench.dataConnection.hostname,
-            port: this.workbench.dataConnection.port,
-            url: this.workbench.dataConnection.url,
-            username: selectedSecurityType.value === 'DIALOG' ? this.webSocketLoginId : connection.username,
-            password: selectedSecurityType.value === 'DIALOG' ? this.webSocketLoginPw : connection.password,
-            selectedDbType: this.getEnabledConnectionTypes(true)
-              .find(type => type.value === this.workbench.dataConnection.implementor.toString()),
-            selectedSecurityType: selectedSecurityType,
+            selectedConnectionPreset: {id: this.workbench.dataConnection.id},
             selectedIngestionType: {
               label: this.translateService.instant('msg.storage.ui.list.ingested.data'),
               value: ConnectionType.ENGINE
             },
-            isUsedConnectionPreset: true
+            connection: {
+              authenticationType: selectedSecurityType.value,
+              implementor: this.workbench.dataConnection.implementor
+            }
           },
           databaseData: {
             selectedTab: 'QUERY',
@@ -2698,6 +2726,35 @@ export class WorkbenchComponent extends AbstractComponent implements OnInit, OnD
           fieldList: currentResultTab.result.fields,
           fieldData: currentResultTab.result.data
         };
+
+        if( StringUtil.isNotEmpty(this.workbench.dataConnection.hostname) ) {
+          this.setDatasource.connectionData.connection.hostname = this.workbench.dataConnection.hostname;
+        }
+        if( 0 < this.workbench.dataConnection.port ) {
+          this.setDatasource.connectionData.connection.port = this.workbench.dataConnection.port;
+        }
+        if( StringUtil.isNotEmpty(this.workbench.dataConnection.url) ) {
+          this.setDatasource.connectionData.connection.url = this.workbench.dataConnection.url;
+        }
+
+        const inputSpec:InputSpec = this.workbench.dataConnection.connectionInformation.inputSpec;
+        if( InputMandatory.NONE !== inputSpec.catalog && StringUtil.isNotEmpty(this.workbench.dataConnection.catalog) ) {
+          this.setDatasource.connectionData.connection.catalog = this.workbench.dataConnection.catalog;
+        }
+        if( InputMandatory.NONE !== inputSpec.sid && StringUtil.isNotEmpty(this.workbench.dataConnection.sid) ) {
+          this.setDatasource.connectionData.connection.sid = this.workbench.dataConnection.sid;
+        }
+        if( InputMandatory.NONE !== inputSpec.database && StringUtil.isNotEmpty(this.workbench.dataConnection.database) ) {
+          this.setDatasource.connectionData.connection.database = this.workbench.dataConnection.database;
+        }
+        if( InputMandatory.NONE !== inputSpec.username ) {
+          this.setDatasource.connectionData.connection.username
+            = selectedSecurityType.value === AuthenticationType.DIALOG ? this.webSocketLoginId : connection.username;
+        }
+        if( InputMandatory.NONE !== inputSpec.password ) {
+          this.setDatasource.connectionData.connection.password
+            = selectedSecurityType.value === AuthenticationType.DIALOG ? this.webSocketLoginPw : connection.password;
+        }
 
         // 로딩 hide
         this.loadingHide();
@@ -2813,9 +2870,11 @@ export class WorkbenchComponent extends AbstractComponent implements OnInit, OnD
     };
 
     this.loadingShow();
-    this.datasourceService.createDatasourceTemporary(param).then((tempDsInfo) => {
-      this.setPageWidget(tempDsInfo);
-      setTimeout(() => this.loadingHide(), 500);
+    this.datasourceService.createDatasourceTemporary(param).then((createInfo) => {
+      this.datasourceService.getDatasourceDetail(createInfo.id).then((tempDsInfo) => {
+        this.setPageWidget(tempDsInfo);
+        setTimeout(() => this.loadingHide(), 500);
+      });
     }).catch((error) => {
       this.loadingHide();
       // 로딩 hide
@@ -2827,18 +2886,18 @@ export class WorkbenchComponent extends AbstractComponent implements OnInit, OnD
 
   /**
    * 차트 미리보기를 위한 페이지 위젯 정보 구성
-   * @param {Object} temporary
+   * @param {Datasource} tempDsInfo
    */
-  public setPageWidget(temporary: Object) {
+  public setPageWidget(tempDsInfo: Datasource) {
     const tempWidget = new PageWidget();
 
     // 데이터소스 구성
     const boardDataSource: BoardDataSource = new BoardDataSource();
     {
-      boardDataSource.id = temporary['dataSourceId'];
+      boardDataSource.id = tempDsInfo.temporary.dataSourceId;
       boardDataSource.type = 'default';
-      boardDataSource.name = temporary['name']; // this.pageEngineName;
-      boardDataSource.engineName = temporary['name']; // this.pageEngineName;
+      boardDataSource.name = tempDsInfo.temporary.name; // this.pageEngineName;
+      boardDataSource.engineName = tempDsInfo.temporary.name; // this.pageEngineName;
       boardDataSource.connType = 'LINK';
       boardDataSource.temporary = true;
       // boardDataSource.fields = this._totalResultTabList[this.selectedGridTabNum]['data']['fields'];
@@ -2858,15 +2917,14 @@ export class WorkbenchComponent extends AbstractComponent implements OnInit, OnD
       dashboard.workBook = workbook;
 
       // 대시보드 필드 정보 설정
-      const currentEditorResultTabs: ResultTab[] = this._getCurrentEditorResultTabs();
-      const currentResultTab: ResultTab = currentEditorResultTabs.find(item => item.selected);
-      let fields = currentResultTab.result.fields;
+      let fields = tempDsInfo.fields.filter(item => '__ctime' !== item.name);
 
-      const currentDateTimeField: Field = new Field();
-      currentDateTimeField.name = CommonConstant.COL_NAME_CURRENT_DATETIME;
-      currentDateTimeField.biType = BIType.TIMESTAMP;
-      currentDateTimeField.logicalType = LogicalType.TIMESTAMP;
-      currentDateTimeField.dataSource = boardDataSource.engineName;
+      // const currentDateTimeField: Field = new Field();
+      // currentDateTimeField.name = CommonConstant.COL_NAME_CURRENT_DATETIME;
+      // currentDateTimeField.role = FieldRole.TIMESTAMP;
+      // currentDateTimeField.type = 'TIMESTAMP';
+      // currentDateTimeField.logicalType = LogicalType.TIMESTAMP;
+      // currentDateTimeField.dataSource = boardDataSource.engineName;
       // fields = [currentDateTimeField].concat( fields );
       fields.forEach(item => item.dataSource = boardDataSource.engineName);
       dashboard.configuration.fields = fields;
@@ -2881,8 +2939,8 @@ export class WorkbenchComponent extends AbstractComponent implements OnInit, OnD
         const datasource: Datasource = new Datasource();
         datasource.id = boardDataSource.id;
         datasource.fields = fields;
-        datasource.name = temporary['name'];
-        datasource.engineName = temporary['name'];
+        datasource.name = tempDsInfo.temporary.name;
+        datasource.engineName = tempDsInfo.temporary.name;
         dashboard.dataSources = [datasource];
       }
 
@@ -3158,36 +3216,6 @@ export class WorkbenchComponent extends AbstractComponent implements OnInit, OnD
     const visibleTab: ResultTab = this._getCurrentResultTab();
     return visibleTab && runningTab && runningTab.id === visibleTab.id;
   } // function - _isEqualRunningVisibleTab
-
-  /**
-   * get connection target type
-   * @returns {string}
-   */
-  private _getConnectionTargetType():string {
-    let strType: string = '';
-    if( this.workbench.dataConnection.implementor ) {
-      switch (this.workbench.dataConnection.implementor) {
-        case DataConnectionType.HIVE :
-          strType = 'HIVE';
-          break;
-        case DataConnectionType.MYSQL :
-          strType = 'MYSQL';
-          break;
-        case DataConnectionType.POSTGRESQL :
-          strType = 'POSTGRESQL';
-          break;
-        case DataConnectionType.PRESTO :
-          strType = 'PRESTO';
-          break;
-        case DataConnectionType.DRUID :
-          strType = 'DRUID';
-          break;
-        default :
-          strType = 'CUSTOM';
-      }
-    }
-    return strType;
-  } // function - _getConnectionTargetType
 
   /**
    * tableParam 사용자 정보 체크

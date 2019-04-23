@@ -13,21 +13,29 @@
  */
 
 import {
-  Component, ElementRef, EventEmitter, Injector, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Injector,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+  SimpleChanges,
   ViewChild
 } from '@angular/core';
-import { PageWidget, PageWidgetConfiguration } from '../../../domain/dashboard/widget/page-widget';
-import { AnalysisPredictionComponent } from './prediction/analysis-prediction.component';
-import { TrendLineComponent } from './trend.line/trend.line.component';
-import { Observable } from 'rxjs/Observable';
-import { AbstractComponent } from '../../../common/component/abstract.component';
+import {PageWidgetConfiguration} from '../../../domain/dashboard/widget/page-widget';
+import {AnalysisPredictionComponent} from './prediction/analysis-prediction.component';
+import {TrendLineComponent} from './trend.line/trend.line.component';
+import {AbstractComponent} from '../../../common/component/abstract.component';
 import * as _ from 'lodash';
-import { UIOption } from '../../../common/component/chart/option/ui-option';
-import { EventType } from '../../../common/component/chart/option/define/common';
-import { HyperParameter } from '../value/analysis';
-import { LineChartComponent } from '../../../common/component/chart/type/line-chart/line-chart.component';
-import { AnalysisPredictionService } from './service/analysis.prediction.service';
+import {UIOption} from '../../../common/component/chart/option/ui-option';
+import {EventType} from '../../../common/component/chart/option/define/common';
+import {AnalysisPredictionService} from './service/analysis.prediction.service';
 import {fromEvent} from "rxjs";
+import {MapSpatialComponent} from "./map-spatial/map-spatial.component";
+import {Shelf} from "../../../domain/workbook/configurations/shelf/shelf";
 
 @Component({
   selector: 'analysis-component',
@@ -57,6 +65,9 @@ export class AnalysisComponent extends AbstractComponent implements OnInit, OnDe
   @ViewChild(TrendLineComponent)
   private trendLineComponent: TrendLineComponent;
 
+  @ViewChild('MapSpatialComponent')
+  private mapSpatialComponent: MapSpatialComponent;
+
   // ---------------------------------------
   // @Output
   // ---------------------------------------
@@ -73,6 +84,9 @@ export class AnalysisComponent extends AbstractComponent implements OnInit, OnDe
   @Output('changeConfidenceNoti')
   private changeConfidence = new EventEmitter();
 
+  @Output('changeAnalysisNoti')
+  private changeAnalysis = new EventEmitter();
+
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   | Protected Variables
   |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
@@ -80,6 +94,8 @@ export class AnalysisComponent extends AbstractComponent implements OnInit, OnDe
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   | Public Variables
   |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
+
+  public whatKindOfChart: string = '';
 
   public dataSubLayerKey: string = '';
 
@@ -98,6 +114,12 @@ export class AnalysisComponent extends AbstractComponent implements OnInit, OnDe
 
   @Input('dataLayerKey')
   public dataLayerKey: string;
+
+  @Input('uiOption')
+  public uiOption: UIOption;
+
+  @Input('shelf')
+  public shelf: Shelf;
 
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   | Constructor
@@ -119,6 +141,9 @@ export class AnalysisComponent extends AbstractComponent implements OnInit, OnDe
       if (changes['dataLayerKey'].currentValue !== 'analysis') {
         this.dataSubLayerKey = '';
       }
+    }
+    if (!_.isUndefined(changes['selectChart'])) {
+      this.selectChart = changes['selectChart']['currentValue'];
     }
   }
 
@@ -170,8 +195,15 @@ export class AnalysisComponent extends AbstractComponent implements OnInit, OnDe
     return this.analysisPredictionComponent.isValid();
   }
 
-  public changePredictionLineDisabled() : void {
+  public changePredictionLineDisabled(): void {
     this.analysisPredictionComponent.changePredictionLineDisabled();
+  }
+
+  public mapSpatialChanges(uiOption, shelf) {
+    if (_.isUndefined(this.mapSpatialComponent)) {
+      return;
+    }
+    this.mapSpatialComponent.mapSpatialChanges(uiOption, shelf);
   }
 
   // ------------------------------------
@@ -192,6 +224,10 @@ export class AnalysisComponent extends AbstractComponent implements OnInit, OnDe
 
   public clickDataPanel(dataLayerKey: string): void {
     this.clickDataPanelNoti.emit(dataLayerKey);
+  }
+
+  public changeAnalysisNoti(value) {
+    this.changeAnalysis.emit(value);
   }
 
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=

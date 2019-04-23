@@ -18,7 +18,6 @@ import {
   ViewChildren
 } from '@angular/core';
 import { Stats } from '../../../../domain/datasource/stats';
-import { Alert } from '../../../../common/util/alert.util';
 import { DatasourceService } from '../../../../datasource/service/datasource.service';
 import * as _ from 'lodash';
 import { Covariance } from '../../../../domain/datasource/covariance';
@@ -27,17 +26,17 @@ import {
   Datasource,
   Field,
   FieldFormat,
-  FieldFormatType, LogicalType
+  FieldFormatType, FieldRole, LogicalType
 } from '../../../../domain/datasource/datasource';
 import { Metadata } from '../../../../domain/meta-data-management/metadata';
 import { MetadataColumn } from '../../../../domain/meta-data-management/metadata-column';
 import { isUndefined } from 'util';
 import { AbstractComponent } from '../../../../common/component/abstract.component';
 import { EditFilterDataSourceComponent } from '../edit-filter-data-source.component';
-import { FilteringOptions, FilteringOptionType } from '../../../../domain/workbook/configurations/filter/filter';
-import { EditConfigSchemaComponent } from './edit-config-schema/edit-config-schema.component';
+import { EditConfigSchemaComponent } from './edit-config-schema.component';
 import {TimezoneService} from "../../../service/timezone.service";
-import {FormatType} from "../../../../common/component/chart/option/define/common";
+import {StringUtil} from "../../../../common/util/string.util";
+import {DataSourceCreateService, TypeFilterObject} from "../../../service/data-source-create.service";
 
 declare let echarts: any;
 
@@ -74,24 +73,22 @@ export class ColumnDetailDataSourceComponent extends AbstractComponent implement
   @Input()
   public metaData: Metadata;
 
+  // enum
+  public readonly FIELD_ROLE: any = FieldRole;
+  public readonly LOGICAL_TYPE: any = LogicalType;
+
   // filtered column list
   public filteredColumnList: any[];
 
   // role type filter list
-  public roleTypeFilterList: any[];
+  public roleTypeFilterList: TypeFilterObject[] = this.datasourceCreateService.getRoleTypeFilterList();
   // selected role type filter
-  public selectedRoleTypeFilter: any;
+  public selectedRoleTypeFilter: TypeFilterObject;
 
-  // type filter list
-  public typeFilterList: any[];
-  // selected type filter
-  public selectedTypeFilter: any;
-  // type filter show | hide flag
-  public isShowTypeFilterList: boolean = false;
-  // enabled physical type list
-  public physicalTypeList: any[];
-  // enabled physical type list show / hide flag
-  public isShowPhysicalTypeFl: boolean = false;
+  // logical type filter list
+  public logicalTypeFilterList: TypeFilterObject[] = this.datasourceCreateService.getLogicalTypeFilterList().filter(type => type.value !== LogicalType.USER_DEFINED);
+  // selected logical type filter
+  public selectedLogicalTypeFilter: TypeFilterObject;
 
   // selected field
   public selectedField: any;
@@ -102,7 +99,7 @@ export class ColumnDetailDataSourceComponent extends AbstractComponent implement
   public statsData: any = {};
 
   // search text keyword
-  public searchTextKeyword: string = '';
+  public searchTextKeyword: string;
 
   @Output()
   public changeDatasource: EventEmitter<any> = new EventEmitter();
@@ -110,6 +107,7 @@ export class ColumnDetailDataSourceComponent extends AbstractComponent implement
 
   // constructor
   constructor(private datasourceService: DatasourceService,
+              private datasourceCreateService: DataSourceCreateService,
               private _timezoneService: TimezoneService,
               protected element: ElementRef,
               protected injector: Injector) {
@@ -216,15 +214,6 @@ export class ColumnDetailDataSourceComponent extends AbstractComponent implement
   }
 
   /**
-   * Is derived column
-   * @param {Field} column
-   * @returns {boolean}
-   */
-  public isDerivedColumn(column: Field): boolean {
-    return column.derived;
-  }
-
-  /**
    * Is time type field
    * @param {Field} field
    * @return {boolean}
@@ -233,24 +222,6 @@ export class ColumnDetailDataSourceComponent extends AbstractComponent implement
     return field.format && (field.format.type === FieldFormatType.UNIX_TIME || this._timezoneService.isEnableTimezoneInDateFormat(field.format));
   }
 
-  /**
-   * Is tooltip class changed
-   * @param columnList
-   * @param {number} index
-   * @returns {boolean}
-   */
-  // public isChangeTooltipClass(columnList: any, index: number): boolean {
-  //   return index > (columnList.length / 2 - 1) ? true : false;
-  // }
-
-  /**
-   * Get enable change physical type list
-   * @returns {any}
-   */
-  public getEnableChangePhysicalTypeList(): any {
-    return this.physicalTypeList.filter(type => !type.derived);
-  }
-  
   /**
    * Get timezone label
    * @param {FieldFormat} format
@@ -267,11 +238,10 @@ export class ColumnDetailDataSourceComponent extends AbstractComponent implement
   /**
    * Get column type label
    * @param {string} type
-   * @param typeList
    * @returns {string}
    */
-  public getColumnTypeLabel(type:string, typeList: any): string {
-    return typeList[_.findIndex(typeList, item => item['value'] === type)].label;
+  public getColumnTypeLabel(type: string): string {
+    return this.logicalTypeFilterList.find(filter => filter.value === type).label;
   }
 
   /**
@@ -355,10 +325,10 @@ export class ColumnDetailDataSourceComponent extends AbstractComponent implement
    * Role type filter change event
    * @param type
    */
-  public onChangeRoleTypeFilter(type: any): void {
-    if (this.selectedRoleTypeFilter !== type) {
+  public onChangeRoleTypeFilter(filter: TypeFilterObject): void {
+    if (this.selectedRoleTypeFilter.value !== filter.value) {
       // 롤 타입 필터링 변경
-      this.selectedRoleTypeFilter = type;
+      this.selectedRoleTypeFilter = filter;
       // 컬럼 목록 갱신
       this._updateFilteredColumnList();
     }
@@ -368,61 +338,12 @@ export class ColumnDetailDataSourceComponent extends AbstractComponent implement
    * Type filter change event
    * @param type
    */
-  public onChangeTypeFilter(type: any): void {
-    if (this.selectedTypeFilter !== type) {
+  public onChangeLogicalTypeFilter(filter: TypeFilterObject): void {
+    if (this.selectedLogicalTypeFilter.value !== filter.value) {
       // 타입 필털이 변경
-      this.selectedTypeFilter = type;
+      this.selectedLogicalTypeFilter = filter;
       // 컬럼 목록 갱신
       this._updateFilteredColumnList();
-    }
-  }
-
-  /**
-   * Physical type in selected column change event
-   * @param column
-   * @param type
-   */
-  public onChangeFieldPhysicalType(column: any, type: any): void {
-    // if different logicalType
-    if (column.logicalType !== type.value) {
-      // copy column data
-      const result = _.cloneDeep(column);
-      // change logicalType
-      result['logicalType'] = type.value;
-      result['op'] = 'replace';
-      // if logicalType is TIMESTAMP or type is TIMESTAMP
-      if (column.logicalType === 'TIMESTAMP' || type.value === 'TIMESTAMP') {
-        // if logical type is TIMESTAMP, delete format in column
-        if (column.logicalType === 'TIMESTAMP') {
-          delete result.format;
-        } else if (type.value === LogicalType.TIMESTAMP) {
-          // set default format
-          result['format'] = {
-            format: 'yyyy-MM-dd HH:mm:ss',
-            timeZone: this._timezoneService.browserTimezone.momentName,
-            locale: this._timezoneService.browserLocal,
-            type: FieldFormatType.DATE_TIME
-          };
-        }
-        // if exist filtering and filteringOptions in column
-        if (column.filtering && column.filteringOptions) {
-          // new filteringOptions
-          result.filteringOptions = new FilteringOptions();
-          // if type is TIMESTAMP, add TIME filteringOptions
-          if (type.value === 'TIMESTAMP') {
-            result.filteringOptions.type = FilteringOptionType.TIME;
-            result.filteringOptions.defaultSelector = 'RANGE';
-            result.filteringOptions.allowSelectors = ['RANGE'];
-          } else {
-            // if type is not TIMESTAMP, add INCLUSION filteringOptions
-            result.filteringOptions.type = FilteringOptionType.INCLUSION;
-            result.filteringOptions.defaultSelector = 'SINGLE_LIST';
-            result.filteringOptions.allowSelectors = ['SINGLE_LIST'];
-          }
-        }
-      }
-      // update field
-      this._updateField([result]);
     }
   }
 
@@ -431,11 +352,11 @@ export class ColumnDetailDataSourceComponent extends AbstractComponent implement
    */
   public onClickResetFilter(): void {
     // init search text keyword
-    this.searchTextKeyword = '';
+    this.searchTextKeyword = undefined;
     // init selected role type filter
     this.selectedRoleTypeFilter = this.roleTypeFilterList[0];
     // init selected type fliter
-    this.selectedTypeFilter = this.typeFilterList[0];
+    this.selectedLogicalTypeFilter = this.logicalTypeFilterList[0];
     // update filtered column list
     this._updateFilteredColumnList();
   }
@@ -448,8 +369,6 @@ export class ColumnDetailDataSourceComponent extends AbstractComponent implement
   public onSelectedField(field: any, source: Datasource): void {
     // set selected field
     this.selectedField = field;
-    // update enabled physical type list
-    this._updatePhysicalTypeList(field);
     // detect changes
     this.changeDetect.detectChanges();
     // set engineName
@@ -459,8 +378,8 @@ export class ColumnDetailDataSourceComponent extends AbstractComponent implement
     if (!this.isLinkedTypeSource(source) && !this.isGeoType(field)) {
       // if role is TIMESTAMP and __time variable not exist in statsData,
       // else if role is not TIMESTAMP and field name not existed in statsData
-      if ((this.selectedField.role === 'TIMESTAMP' && !this.statsData.hasOwnProperty('__time'))
-        || (this.selectedField.role !== 'TIMESTAMP' && !this.statsData.hasOwnProperty(field.name))) {
+      if ((this.selectedField.role === FieldRole.TIMESTAMP && !this.statsData.hasOwnProperty('__time'))
+        || (this.selectedField.role !== FieldRole.TIMESTAMP && !this.statsData.hasOwnProperty(field.name))) {
         // loading show
         this.loadingShow();
         // get stats data
@@ -485,7 +404,7 @@ export class ColumnDetailDataSourceComponent extends AbstractComponent implement
       }
 
       // if role is MEASURE and field name not existed in covarianceData
-      if (field.role === 'MEASURE' && !this.covarianceData.hasOwnProperty(field.name)) {
+      if (field.role === FieldRole.MEASURE && !this.covarianceData.hasOwnProperty(field.name)) {
         // loading show
         this.loadingShow();
         // get covariance data
@@ -499,7 +418,7 @@ export class ColumnDetailDataSourceComponent extends AbstractComponent implement
             this._updateCovarianceChart(engineName);
           })
           .catch(error => this.commonExceptionHandler(error));
-      } else if (field.role === 'MEASURE' && this.covarianceData.hasOwnProperty(field.name)) {
+      } else if (field.role === FieldRole.MEASURE && this.covarianceData.hasOwnProperty(field.name)) {
         // update covariance chart
         this._updateCovarianceChart(engineName);
       }
@@ -519,7 +438,7 @@ export class ColumnDetailDataSourceComponent extends AbstractComponent implement
    * Configure schema click event
    */
   public onClickConfigureSchema(): void {
-    this._editConfigSchemaComp.init(this.datasource.id, this.datasource.fields);
+    this._editConfigSchemaComp.init(this.datasource.id, this.datasource.fields, this.datasource);
     // change markup position
     $('#edit-config-schema').appendTo($('#layout-contents'));
   }
@@ -529,28 +448,8 @@ export class ColumnDetailDataSourceComponent extends AbstractComponent implement
    * @private
    */
   private _initView(): void {
-    this.typeFilterList = [
-      { label: this.translateService.instant('msg.comm.ui.list.all'), value: 'ALL' },
-      { label: this.translateService.instant('msg.storage.ui.list.string'), value: 'STRING' },
-      { label: this.translateService.instant('msg.storage.ui.list.boolean'), value: 'BOOLEAN' },
-      { label: this.translateService.instant('msg.storage.ui.list.integer'), value: 'INTEGER', measure: true },
-      { label: this.translateService.instant('msg.storage.ui.list.double'), value: 'DOUBLE', measure: true  },
-      { label: this.translateService.instant('msg.storage.ui.list.date'), value: 'TIMESTAMP' },
-      { label: this.translateService.instant('msg.storage.ui.list.lnt'), value: 'LNT' },
-      { label: this.translateService.instant('msg.storage.ui.list.lng'), value: 'LNG' },
-      { label: this.translateService.instant('msg.storage.ui.list.geo.point'), value: 'GEO_POINT', derived: true },
-      { label: this.translateService.instant('msg.storage.ui.list.geo.polygon'), value: 'GEO_POLYGON', derived: true },
-      { label: this.translateService.instant('msg.storage.ui.list.geo.line'), value: 'GEO_LINE', derived: true },
-    ];
-    this.selectedTypeFilter = this.typeFilterList[0];
-    this.roleTypeFilterList = [
-      { label: this.translateService.instant('msg.comm.ui.list.all'), value: 'ALL' },
-      { label: this.translateService.instant('msg.comm.name.dim'), value: 'DIMENSION' },
-      { label: this.translateService.instant('msg.comm.name.mea'), value: 'MEASURE' },
-    ];
+    this.selectedLogicalTypeFilter = this.logicalTypeFilterList[0];
     this.selectedRoleTypeFilter = this.roleTypeFilterList[0];
-    // search
-    this.searchTextKeyword = '';
     // init data
     this.statsData = {};
     this.covarianceData = {};
@@ -644,54 +543,10 @@ export class ColumnDetailDataSourceComponent extends AbstractComponent implement
    */
   private _setMetaDataField(field: Field): void {
     const fieldMetaData: MetadataColumn = _.find(this.metaData.columns, {'physicalName': field.name});
-    // logical name
-    field['logicalName'] = fieldMetaData.name;
     // code table
     field['codeTable'] = fieldMetaData.codeTable;
     // dictionary
     field['dictionary'] = fieldMetaData.dictionary;
-    // type
-    if (fieldMetaData.type) {
-      field['metaType'] = fieldMetaData.type;
-    }
-    // description
-    if (fieldMetaData.description) {
-      field['description'] = fieldMetaData.description;
-    }
-    // format
-    if (fieldMetaData.format) {
-      field['format'] = fieldMetaData.format;
-    }
-  }
-
-  /**
-   * Update field
-   * @param params
-   * @private
-   */
-  private _updateField(params: any): void {
-    // loading show
-    this.loadingShow();
-    //update field
-    this.datasourceService.updateDatasourceFields(this.datasource.id, params)
-      .then((result) => {
-        // alert
-        Alert.success(this.translateService.instant('msg.comm.alert.save.success'));
-        // loading hide
-        this.loadingHide();
-        // complete update schema
-        this.completeUpdatedSchema();
-      })
-      .catch(error => this.commonExceptionHandler(error));
-  }
-
-  /**
-   * Update physical type list of selected column
-   * @param column
-   * @private
-   */
-  private _updatePhysicalTypeList(column: any): void {
-    this.physicalTypeList = _.filter(this.typeFilterList, type => column.role === 'MEASURE' ? type.value !== 'ALL' && type.measure : type.value !== 'ALL');
   }
 
   /**
@@ -699,20 +554,9 @@ export class ColumnDetailDataSourceComponent extends AbstractComponent implement
    * @private
    */
   private _updateFilteredColumnList(): void {
-    // set filtered column list
-    this.filteredColumnList = this.datasource.fields;
-    // if selected role type filter is not ALL
-    if (this.selectedRoleTypeFilter.value !== 'ALL') {
-      this.filteredColumnList = _.filter(this.filteredColumnList, column => 'DIMENSION' === this.selectedRoleTypeFilter.value && 'TIMESTAMP' === column.role ? column : this.selectedRoleTypeFilter.value === column.role);
-    }
-    // if selected type filter is not ALL
-    if (this.selectedTypeFilter.value !== 'ALL') {
-      this.filteredColumnList = _.filter(this.filteredColumnList, column => this.selectedTypeFilter.value === column.logicalType);
-    }
-    // if exist search text keyword
-    if (this.searchTextKeyword !== '') {
-      this.filteredColumnList = _.filter(this.filteredColumnList, column => column.name.toUpperCase().includes(this.searchTextKeyword.toUpperCase().trim()));
-    }
+    this.filteredColumnList =  this.datasource.fields.filter(field => (this.selectedRoleTypeFilter.value === 'ALL' ? true : (FieldRole.DIMENSION === this.selectedRoleTypeFilter.value && FieldRole.TIMESTAMP === field.role ? field : this.selectedRoleTypeFilter.value === field.role))
+      && (this.selectedLogicalTypeFilter.value === 'ALL' ? true : (this.selectedLogicalTypeFilter.value === LogicalType.USER_DEFINED && field.logicalType === LogicalType.STRING ? true : this.selectedLogicalTypeFilter.value === field.logicalType))
+      && (StringUtil.isEmpty(this.searchTextKeyword) ? true : field.name.toUpperCase().includes(this.searchTextKeyword.toUpperCase().trim())));
   }
 
   /**
@@ -794,7 +638,7 @@ export class ColumnDetailDataSourceComponent extends AbstractComponent implement
     if (this.selectedField.role !== 'TIMESTAMP' && this.statsData.hasOwnProperty(this.selectedField.name)) {
       return this.statsData[this.selectedField.name];
     } else if (this.selectedField.role === 'TIMESTAMP' && this.statsData.hasOwnProperty('__time')) {
-    // If the selected field is a TIMESTAMP
+      // If the selected field is a TIMESTAMP
       return this.statsData['__time'];
     } else {
       return new Stats();

@@ -14,13 +14,21 @@
 
 package app.metatron.discovery.domain.workbook.configurations.widget.shelf;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.List;
+import org.apache.commons.collections4.CollectionUtils;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import app.metatron.discovery.common.GlobalObjectMapper;
 import app.metatron.discovery.domain.workbook.configurations.field.Field;
 
 public class GeoShelf implements Shelf {
@@ -28,21 +36,59 @@ public class GeoShelf implements Shelf {
   /**
    * GEO Layers
    */
-  List<List<Field>> layers;
+  List<MapViewLayer> layers;
 
   @JsonCreator
-  public GeoShelf(@JsonProperty("layers") List<List<Field>> layers) {
-    this.layers = layers;
+  public GeoShelf(@JsonProperty("layers") List<Object> layers) {
+
+    // for backward compatibility ex) {"type":"geo","layers":[[]]}
+    if (CollectionUtils.isEmpty(layers)) {
+      return;
+    }
+
+    Object firstObject = layers.get(0);
+    if (firstObject instanceof MapViewLayer
+        || firstObject instanceof Map) {
+      this.layers = layers.stream()
+                          .map(o -> GlobalObjectMapper.getDefaultMapper().convertValue(o, MapViewLayer.class))
+                          .collect(Collectors.toList());
+    } else if (firstObject instanceof List) { // for backward compatibility
+      List<Object> firstLayer = (List<Object>) firstObject;
+      if (CollectionUtils.isEmpty(firstLayer)) {
+        return;
+      }
+      List<Field> fields = firstLayer.stream()
+                                     .map(o -> GlobalObjectMapper.getDefaultMapper().convertValue(o, Field.class))
+                                     .collect(Collectors.toList());
+      this.layers = Lists.newArrayList(new MapViewLayer("Layer1", null, fields, null));
+    } else {
+      throw new IllegalArgumentException("Not support layer type : " + firstObject);
+    }
+  }
+
+  /**
+   * find datasource by name (in multiple datasource)
+   */
+  @JsonIgnore
+  public Optional<MapViewLayer> getLayerByName(String name) {
+    Preconditions.checkNotNull(name, "Name of layer is required.");
+
+    for (MapViewLayer mapViewLayer : layers) {
+      if (name.equals(mapViewLayer.getName())) {
+        return Optional.of(mapViewLayer);
+      }
+    }
+    return Optional.empty();
   }
 
   @Override
   public List<Field> getFields() {
     List<Field> collectedFields = Lists.newArrayList();
-    layers.forEach(fields -> collectedFields.addAll(fields));
+    layers.forEach(layer -> collectedFields.addAll(layer.getFields()));
     return collectedFields;
   }
 
-  public List<List<Field>> getLayers() {
+  public List<MapViewLayer> getLayers() {
     return layers;
   }
 
@@ -52,4 +98,5 @@ public class GeoShelf implements Shelf {
         "layers=" + layers +
         '}';
   }
+
 }

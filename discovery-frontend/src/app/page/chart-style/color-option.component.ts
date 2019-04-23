@@ -162,6 +162,8 @@ export class ColorOptionComponent extends BaseOptionComponent implements OnInit,
   // range list for view
   public rangesViewList = [];
 
+  public resultData: Object;
+
   // constructor
   constructor(protected elementRef: ElementRef,
               protected injector: Injector,
@@ -189,7 +191,16 @@ export class ColorOptionComponent extends BaseOptionComponent implements OnInit,
   public pivot: Pivot;
 
   @Input('resultData')
-  public resultData: Object;
+  public set setResultData(resultData: Object) {
+    this.resultData = resultData;
+    if (resultData && resultData['data'] && resultData['data']['info'] && this.uiOption) {
+      const tmpInfo = resultData['data']['info'];
+      const tmpValFormat = this.uiOption.valueFormat;
+      const minValue = this.checkMinZero(tmpInfo['minValue'], tmpInfo['minValue']);
+      this.minValue = FormatOptionConverter.getDecimalValue(minValue, tmpValFormat.decimal, tmpValFormat.useThousandsSep);
+      this.maxValue = FormatOptionConverter.getDecimalValue(tmpInfo['maxValue'], tmpValFormat.decimal, tmpValFormat.useThousandsSep);
+    }
+  }
 
   @Input('uiOption')
   public set setUiOption(uiOption: UIOption) {
@@ -487,8 +498,24 @@ export class ColorOptionComponent extends BaseOptionComponent implements OnInit,
    * 사용자 색상설정 show
    */
   public showUserColorSet() {
+    const colorObj:UIChartColorBySeries = <UIChartColorBySeries>this.uiOption.color;
     // color setting show / hide 값 반대로 설정
-    (<UIChartColorBySeries>this.uiOption.color).settingUseFl = !(<UIChartColorBySeries>this.uiOption.color).settingUseFl;
+    colorObj.settingUseFl = !colorObj.settingUseFl;
+    // if( !colorObj.settingUseFl ) {
+    //   const colorList = ChartColorList[colorObj.schema];
+    //
+    //   // 기존 컬러 리스트로 초기화
+    //   const currColorMapObj = colorObj.mapping;
+    //   const currColorMapList = colorObj.mappingArray;
+    //   currColorMapList.forEach((item,idx) => {
+    //     item['color'] = colorList[idx];
+    //     (currColorMapObj[item['alias']]) && (currColorMapObj[item['alias']] = colorList[idx]);
+    //   });
+    //
+    //   // 차트 업데이트
+    //   this.uiOption.color = colorObj;
+    //   this.update();
+    // }
   }
 
   /**
@@ -570,10 +597,10 @@ export class ColorOptionComponent extends BaseOptionComponent implements OnInit,
       // color by measure일때
     } else if (this.uiOption.color.type == ChartColorType.MEASURE) {
 
-      const index = this.rangesViewList.indexOf(item);
+      const index = this.rangesViewList.findIndex( rangeItem => rangeItem.color === item.color );
+
       // 선택된 색상으로 설정
       (<UIChartColorByValue>this.uiOption.color).ranges[index].color = colorCode;
-
 
       // 그리드라면
       if( _.eq(this.uiOption.type, ChartType.GRID) ) {
@@ -605,6 +632,8 @@ export class ColorOptionComponent extends BaseOptionComponent implements OnInit,
    * 새로운 색상범위 추가버튼클릭시
    */
   public addNewRange(index: number) {
+
+    this.removeInputRangeStatus();
 
     // 색상 범위리스트
     const rangeList = (<UIChartColorByValue>this.uiOption.color).ranges;
@@ -820,10 +849,13 @@ export class ColorOptionComponent extends BaseOptionComponent implements OnInit,
    */
   public changeRangeMinInput(range: any, index: number): void {
 
+    // number format regex
+    let isNumber = this.isNumberRegex(range.gt);
+
     // 색상 범위리스트
     let rangeList = (<UIChartColorByValue>this.uiOption.color).ranges;
 
-    if (!range.gt || isNaN(FormatOptionConverter.getNumberValue(range.gt))) {
+    if (!range.gt || isNaN(FormatOptionConverter.getNumberValue(range.gt)) || isNumber == false) {
       // set original value
       range.gt = _.cloneDeep(FormatOptionConverter.getDecimalValue(rangeList[index].fixMin, this.uiOption.valueFormat.decimal, this.uiOption.valueFormat.useThousandsSep));
       return;
@@ -883,10 +915,13 @@ export class ColorOptionComponent extends BaseOptionComponent implements OnInit,
    */
   public changeRangeMaxInput(range: any, index: number): void {
 
+    // number format regex
+    let isNumber = this.isNumberRegex(range.lte);
+
     // 색상 범위리스트
     let rangeList = (<UIChartColorByValue>this.uiOption.color).ranges;
 
-    if (!range.lte || isNaN(FormatOptionConverter.getNumberValue(range.lte))) {
+    if (!range.lte || isNaN(FormatOptionConverter.getNumberValue(range.lte)) || isNumber == false ) {
 
       // set original value
       range.lte = _.cloneDeep(FormatOptionConverter.getDecimalValue(rangeList[index].fixMax, this.uiOption.valueFormat.decimal, this.uiOption.valueFormat.useThousandsSep));
@@ -1245,15 +1280,11 @@ export class ColorOptionComponent extends BaseOptionComponent implements OnInit,
     event.stopPropagation();
 
     // hide other range preview
-    _.each(this.rangesViewList, (item) => {
-      if (item['minInputShow']) delete item['minInputShow'];
-      if (item['maxInputShow']) delete item['maxInputShow'];
-    });
+    this.removeInputRangeStatus();
 
-    item.minInputShow = inputShow;
+    item['minInputShow'] = inputShow;
 
     if (undefined !== index) {
-
       // show input box
       this.changeDetect.detectChanges();
       this.availableRange(item, index);
@@ -1269,15 +1300,11 @@ export class ColorOptionComponent extends BaseOptionComponent implements OnInit,
     event.stopPropagation();
 
     // hide other range preview
-    _.each(this.rangesViewList, (item) => {
-      if (item['minInputShow']) delete item['minInputShow'];
-      if (item['maxInputShow']) delete item['maxInputShow'];
-    });
+    this.removeInputRangeStatus();
 
-    item.maxInputShow = inputShow;
+    item['maxInputShow'] = inputShow;
 
     if (undefined !== index) {
-
       // show input box
       this.changeDetect.detectChanges();
       this.availableRange(item, index);
@@ -1465,4 +1492,34 @@ export class ColorOptionComponent extends BaseOptionComponent implements OnInit,
 
     return returnValue;
   }
+
+  /**
+   * number validation regex
+   * @param value
+   */
+  private isNumberRegex(value: any): boolean {
+    // 숫자 정규식 (범위는 : -000.000 ~ 000.000)
+    const regex: RegExp = /^(?!-0?(\.0+)?$)-?(0|[1-9]\d*)?(\.\d+)?(?<=\d)$/;
+    // comma 빼기
+    if( value.indexOf(',') != -1) {
+      value = value.replace(/,/g, '');
+    }
+    const isValueNumber: boolean = regex.test(value);
+    return isValueNumber;
+  }
+
+  private removeInputRangeStatus() {
+    // hide other range preview
+    _.each(this.rangesViewList, (rangeVal) => {
+      if (rangeVal['minInputShow']) delete rangeVal['minInputShow'];
+      if (rangeVal['maxInputShow']) delete rangeVal['maxInputShow'];
+    });
+    if(!_.isUndefined(this.uiOption.color['ranges']) && this.uiOption.color['ranges'].length > 0) {
+      _.each(this.uiOption.color['ranges'], (uiRangeVal) => {
+        if (uiRangeVal['minInputShow']) delete uiRangeVal['minInputShow'];
+        if (uiRangeVal['maxInputShow']) delete uiRangeVal['maxInputShow'];
+      });
+    }
+  }
+
 }

@@ -28,35 +28,16 @@
 
 package app.metatron.discovery.domain.datasource;
 
-import app.metatron.discovery.common.CustomCollectors;
-import app.metatron.discovery.common.GlobalObjectMapper;
-import app.metatron.discovery.common.KeepAsJsonDeserialzier;
-import app.metatron.discovery.common.entity.Spec;
-import app.metatron.discovery.common.exception.MetatronException;
-import app.metatron.discovery.domain.AbstractHistoryEntity;
-import app.metatron.discovery.domain.MetatronDomain;
-import app.metatron.discovery.domain.context.ContextEntity;
-import app.metatron.discovery.domain.dataprep.entity.PrSnapshot;
-import app.metatron.discovery.domain.datasource.connection.DataConnection;
-import app.metatron.discovery.domain.datasource.ingestion.*;
-import app.metatron.discovery.domain.datasource.ingestion.jdbc.BatchIngestionInfo;
-import app.metatron.discovery.domain.datasource.ingestion.jdbc.JdbcIngestionInfo;
-import app.metatron.discovery.domain.datasource.ingestion.jdbc.SingleIngestionInfo;
-import app.metatron.discovery.domain.workbook.DashBoard;
-import app.metatron.discovery.domain.workbook.configurations.field.DimensionField;
-import app.metatron.discovery.domain.workbook.configurations.field.MeasureField;
-import app.metatron.discovery.domain.workbook.configurations.field.TimestampField;
-import app.metatron.discovery.domain.workspace.Workspace;
-import app.metatron.discovery.util.AuthUtils;
-import app.metatron.discovery.util.PolarisUtils;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonRawValue;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonRawValue;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -64,7 +45,13 @@ import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
-import org.hibernate.search.annotations.*;
+import org.hibernate.search.annotations.Analyze;
+import org.hibernate.search.annotations.FieldBridge;
+import org.hibernate.search.annotations.Fields;
+import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.IndexedEmbedded;
+import org.hibernate.search.annotations.SortableField;
+import org.hibernate.search.annotations.Store;
 import org.hibernate.search.bridge.builtin.BooleanBridge;
 import org.hibernate.search.bridge.builtin.EnumBridge;
 import org.hibernate.validator.constraints.NotBlank;
@@ -73,15 +60,53 @@ import org.joda.time.Interval;
 import org.joda.time.Period;
 import org.springframework.data.rest.core.annotation.RestResource;
 
-import javax.persistence.*;
-import javax.persistence.Index;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.io.IOException;
-import java.util.*;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
-import static app.metatron.discovery.domain.datasource.DataSource.SourceType.*;
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import app.metatron.discovery.common.CustomCollectors;
+import app.metatron.discovery.common.GlobalObjectMapper;
+import app.metatron.discovery.common.KeepAsJsonDeserialzier;
+import app.metatron.discovery.common.entity.Spec;
+import app.metatron.discovery.common.exception.MetatronException;
+import app.metatron.discovery.domain.AbstractHistoryEntity;
+import app.metatron.discovery.domain.MetatronDomain;
+import app.metatron.discovery.domain.context.ContextEntity;
+import app.metatron.discovery.domain.dataconnection.DataConnection;
+import app.metatron.discovery.domain.dataprep.entity.PrSnapshot;
+import app.metatron.discovery.domain.datasource.ingestion.HdfsIngestionInfo;
+import app.metatron.discovery.domain.datasource.ingestion.HiveIngestionInfo;
+import app.metatron.discovery.domain.datasource.ingestion.IngestionHistory;
+import app.metatron.discovery.domain.datasource.ingestion.IngestionInfo;
+import app.metatron.discovery.domain.datasource.ingestion.LocalFileIngestionInfo;
+import app.metatron.discovery.domain.datasource.ingestion.RealtimeIngestionInfo;
+import app.metatron.discovery.domain.datasource.ingestion.jdbc.BatchIngestionInfo;
+import app.metatron.discovery.domain.datasource.ingestion.jdbc.JdbcIngestionInfo;
+import app.metatron.discovery.domain.datasource.ingestion.jdbc.SingleIngestionInfo;
+import app.metatron.discovery.domain.mdm.Metadata;
+import app.metatron.discovery.domain.mdm.MetadataColumn;
+import app.metatron.discovery.domain.workbook.DashBoard;
+import app.metatron.discovery.domain.workbook.configurations.field.DimensionField;
+import app.metatron.discovery.domain.workbook.configurations.field.MeasureField;
+import app.metatron.discovery.domain.workbook.configurations.field.TimestampField;
+import app.metatron.discovery.domain.workspace.Workspace;
+import app.metatron.discovery.util.AuthUtils;
+import app.metatron.discovery.util.PolarisUtils;
+
+import static app.metatron.discovery.domain.datasource.DataSource.SourceType.FILE;
+import static app.metatron.discovery.domain.datasource.DataSource.SourceType.HDFS;
+import static app.metatron.discovery.domain.datasource.DataSource.SourceType.HIVE;
+import static app.metatron.discovery.domain.datasource.DataSource.SourceType.JDBC;
+import static app.metatron.discovery.domain.datasource.DataSource.SourceType.REALTIME;
+import static app.metatron.discovery.domain.datasource.DataSource.SourceType.SNAPSHOT;
 import static app.metatron.discovery.domain.workbook.configurations.field.Field.FIELD_NAMESPACE_SEP;
 import static org.hibernate.search.annotations.Index.NO;
 
@@ -257,7 +282,7 @@ public class DataSource extends AbstractHistoryEntity implements MetatronDomain<
    */
   @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "ss_id",
-      foreignKey = @javax.persistence.ForeignKey(name="none", value = ConstraintMode.NO_CONSTRAINT))
+      foreignKey = @javax.persistence.ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT))
   @NotFound(action = NotFoundAction.IGNORE)
   PrSnapshot snapshot;
 
@@ -336,6 +361,32 @@ public class DataSource extends AbstractHistoryEntity implements MetatronDomain<
     this.dashBoards.add(dashBoard);
   }
 
+  public void updateFromMetadata(Metadata metadata, boolean includeColumns) {
+
+    this.name = metadata.getName();
+    this.description = metadata.getDescription();
+
+    if (includeColumns) {
+      updateFieldFromColumn(metadata);
+    }
+
+  }
+
+  public void updateFieldFromColumn(Metadata metadata) {
+    Map<Long, MetadataColumn> columnMap = metadata.getFieldRefMap();
+
+    for (Field field : this.fields) {
+      Long fieldId = field.getId();
+      if (!columnMap.containsKey(field.getId())) {
+        continue;
+      }
+
+      MetadataColumn metadataColumn = columnMap.get(fieldId);
+      field.updateFromMetaColumn(metadataColumn);
+    }
+
+  }
+
   public void excludeUnloadedField() {
     if (CollectionUtils.isEmpty(this.fields)) {
       return;
@@ -410,6 +461,14 @@ public class DataSource extends AbstractHistoryEntity implements MetatronDomain<
                                    .count();
 
     return timeFieldCnt > 0;
+  }
+
+  @JsonIgnore
+  public List<Field> getGeoFields() {
+    return getFields().stream()
+                      .filter(field -> field.isGeoType())
+                      .collect(Collectors.toList());
+
   }
 
   /**
@@ -571,7 +630,7 @@ public class DataSource extends AbstractHistoryEntity implements MetatronDomain<
     }
 
     if (!checkMatchedSrcTypeAndIngetsionInfo(ingestionInfo)) {
-      throw new IllegalArgumentException("Invalid ingestion infomation : srcType not match");
+      throw new IllegalArgumentException("Invalid ingestion information : srcType not match");
     }
 
     return (T) ingestionInfo;
@@ -582,8 +641,9 @@ public class DataSource extends AbstractHistoryEntity implements MetatronDomain<
 
     JdbcIngestionInfo jdbcInfo = this.getIngestionInfoByType();
 
-    DataConnection jdbcConnection = Preconditions.checkNotNull(this.getConnection() == null ?
-                                                                   jdbcInfo.getConnection() : this.getConnection(),
+    DataConnection jdbcConnection = Preconditions.checkNotNull(this.getConnection() == null
+                                                                   ? jdbcInfo.getConnection()
+                                                                   : this.getConnection(),
                                                                "Required connection info.");
 
     if (jdbcConnection.getAuthenticationType() == DataConnection.AuthenticationType.USERINFO) {
@@ -617,7 +677,7 @@ public class DataSource extends AbstractHistoryEntity implements MetatronDomain<
       return true;
     } else if (info instanceof RealtimeIngestionInfo && srcType == REALTIME) {
       return true;
-    //SrcType SNAPSHOT supports 3 ingestion types
+      //SrcType SNAPSHOT supports 3 ingestion types
     } else if (info instanceof HiveIngestionInfo && srcType == SNAPSHOT) {
       return true;
     } else if (info instanceof LocalFileIngestionInfo && srcType == SNAPSHOT) {
@@ -1107,7 +1167,7 @@ public class DataSource extends AbstractHistoryEntity implements MetatronDomain<
     }
 
     public static GranularityType fromPeriod(Period period) {
-      int [] vals = period.getValues();
+      int[] vals = period.getValues();
       int index = -1;
       for (int i = 0; i < vals.length; i++) {
         if (vals[i] != 0) {
@@ -1162,12 +1222,10 @@ public class DataSource extends AbstractHistoryEntity implements MetatronDomain<
       throw new MetatronException("Granularity is not supported : " + period);
     }
 
-    public static GranularityType fromInterval(Interval interval)
-    {
+    public static GranularityType fromInterval(Interval interval) {
       try {
         return fromPeriod(new Period(interval.getStart(), interval.getEnd()));
-      }
-      catch (Exception e) {
+      } catch (Exception e) {
         return null;
       }
     }

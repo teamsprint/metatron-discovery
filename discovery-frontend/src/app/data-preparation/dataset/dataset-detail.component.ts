@@ -12,28 +12,29 @@
  * limitations under the License.
  */
 
-import { Component, ElementRef, Injector, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { AbstractComponent } from '../../common/component/abstract.component';
-import { PrDataset, DsType, Field, ImportType, RsType } from '../../domain/data-preparation/pr-dataset';
-import { GridComponent } from '../../common/component/grid/grid.component';
-import { DeleteModalComponent } from '../../common/component/modal/delete/delete.component';
-import { Alert } from '../../common/util/alert.util';
-import { GridOption } from '../../common/component/grid/grid.option';
-import { Modal } from '../../common/domain/modal';
-import { PreparationAlert } from '../util/preparation-alert.util';
-import { header, SlickGridHeader } from '../../common/component/grid/grid.header';
-import { DatasetService } from './service/dataset.service';
-import { DataflowService } from '../dataflow/service/dataflow.service';
-import { StringUtil } from '../../common/util/string.util';
-import { ActivatedRoute } from '@angular/router';
-import { PrDataflow } from '../../domain/data-preparation/pr-dataflow';
-import { CreateSnapshotPopup } from '../component/create-snapshot-popup.component';
-import { SnapshotLoadingComponent } from '../component/snapshot-loading.component';
-import { PreparationCommonUtil } from "../util/preparation-common.util";
+import {Component, ElementRef, Injector, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AbstractComponent} from '../../common/component/abstract.component';
+import {DsType, Field, ImportType, PrDataset, RsType} from '../../domain/data-preparation/pr-dataset';
+import {GridComponent} from '../../common/component/grid/grid.component';
+import {DeleteModalComponent} from '../../common/component/modal/delete/delete.component';
+import {Alert} from '../../common/util/alert.util';
+import {GridOption} from '../../common/component/grid/grid.option';
+import {Modal} from '../../common/domain/modal';
+import {PreparationAlert} from '../util/preparation-alert.util';
+import {header, SlickGridHeader} from '../../common/component/grid/grid.header';
+import {DatasetService} from './service/dataset.service';
+import {DataflowService} from '../dataflow/service/dataflow.service';
+import {StringUtil} from '../../common/util/string.util';
+import {ActivatedRoute} from '@angular/router';
+import {PrDataflow} from '../../domain/data-preparation/pr-dataflow';
+import {CreateSnapshotPopup} from '../component/create-snapshot-popup.component';
+import {SnapshotLoadingComponent} from '../component/snapshot-loading.component';
+import {PreparationCommonUtil} from "../util/preparation-common.util";
 
-import { isNull, isNullOrUndefined } from "util";
+import {isNull, isNullOrUndefined} from "util";
 import * as pixelWidth from 'string-pixel-width';
-import { saveAs } from 'file-saver';
+import {saveAs} from 'file-saver';
+import {DataflowModelService} from "../dataflow/service/dataflow.model.service";
 
 declare let moment: any;
 
@@ -107,11 +108,13 @@ export class DatasetDetailComponent extends AbstractComponent implements OnInit,
   public ruleList: Command[];
   public commandList: Command[];
   public isRequested: boolean = false;
+  public ImportType = ImportType;
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
    | Constructor
    |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
   constructor(private datasetService: DatasetService,
               private dataflowService: DataflowService,
+              private dataflowModelService: DataflowModelService,
               private activatedRoute: ActivatedRoute,
               protected elementRef: ElementRef,
               protected injector: Injector) {
@@ -242,7 +245,7 @@ export class DatasetDetailComponent extends AbstractComponent implements OnInit,
     }
 
     // 이름 validation
-    if (this.datasetName.length > 50) {
+    if (this.datasetName.length > 150) {
       Alert.warning(this.translateService.instant('msg.dp.alert.name.error.description'));
       return;
     }
@@ -471,11 +474,15 @@ export class DatasetDetailComponent extends AbstractComponent implements OnInit,
         ]
       // FILE
     }  else if (dataset.importType === ImportType.UPLOAD || dataset.importType === ImportType.URI) {
-      let filepath : string = dataset.importType === ImportType.UPLOAD? dataset.filenameBeforeUpload : dataset.storedUri;
+      let filepath : string = dataset.filenameBeforeUpload;
 
-      this.datasetInformationList = [{ name : this.translateService.instant('msg.comm.th.type') , value : `${this.prepCommonUtil.getImportType(dataset.importType)} (${this._getFileType(dataset.importType, filepath)})`},
-        //{name : this.translateService.instant('msg.dp.th.file'), value : `${filepath}` },
-        {name : this.translateService.instant('msg.dp.th.file'), value : `${filepath}` },
+      this.datasetInformationList = [
+        { name : this.translateService.instant('msg.comm.th.type') ,
+          value : PreparationCommonUtil.getDatasetType(dataset)
+        },
+        {name : this.translateService.instant('msg.dp.th.file'),
+          value : `${filepath}`
+        },
       ];
 
       // EXCEL
@@ -494,7 +501,8 @@ export class DatasetDetailComponent extends AbstractComponent implements OnInit,
     } else if (dataset.importType === 'STAGING_DB' || dataset.importType === 'DATABASE') {
 
       this.datasetInformationList = [
-        { name : this.translateService.instant('msg.comm.th.type') , value : dataset.importType === 'STAGING_DB' ? 'STAGING_DB' : 'DB' }];
+        { name : this.translateService.instant('msg.comm.th.type') ,
+          value : PreparationCommonUtil.getDatasetType(dataset) }];
 
       if (!isNullOrUndefined(this.getDatabase)) {
         this.datasetInformationList.push({ name : `${this.translateService.instant('msg.dp.th.database')}`, value : `${this.getDatabase}` });
@@ -565,7 +573,7 @@ export class DatasetDetailComponent extends AbstractComponent implements OnInit,
    * Create snapshot (only wrangled)
    */
   public createSnapshot() {
-    this.createSnapshotPopup.init({id : this.dataset.dsId , name : this.dataset.dsName, fields : this.fields});
+    this.createSnapshotPopup.init({id : this.dataset.dsId , name : this.dataset.dsName});
   }
 
 
@@ -576,7 +584,9 @@ export class DatasetDetailComponent extends AbstractComponent implements OnInit,
     let fileFormat: string;
     let downloadFileName: string;
 
-    if (this.dataset.dsType === DsType.IMPORTED && this.dataset.importType === ImportType.UPLOAD) {
+    if ((this.dataset.dsType === DsType.IMPORTED && this.dataset.importType === ImportType.UPLOAD) ||
+      (this.dataset.dsType === DsType.IMPORTED && this.dataset.importType === ImportType.URI)
+    ) {
 
       if (this.dataset.fileFormat.toString().toLowerCase() === 'excel') {
         fileFormat = 'csv';
@@ -599,8 +609,8 @@ export class DatasetDetailComponent extends AbstractComponent implements OnInit,
    * 데이터셋 아이디 저장
    */
   private _savePrevRouterUrl(): void {
-    this.cookieService.set('SELECTED_DATASET_ID', this.dataset.dsId);
-    this.cookieService.set('SELECTED_DATASET_TYPE', this.dataset.dsType.toString());
+    this.dataflowModelService.setSelectedDsId(this.dataset.dsId);
+    this.dataflowModelService.setSelectedDsType(this.dataset.dsType);
   }
 
 

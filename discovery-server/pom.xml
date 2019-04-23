@@ -18,7 +18,7 @@
     <parent>
         <artifactId>metatron-discovery</artifactId>
         <groupId>app.metatron.discovery</groupId>
-        <version>3.2.0-rc3</version>
+        <version>3.2.1</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -137,6 +137,12 @@
         <dependency>
             <groupId>app.metatron.discovery</groupId>
             <artifactId>discovery-frontend</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>app.metatron.discovery</groupId>
+            <artifactId>discovery-common</artifactId>
             <version>${project.version}</version>
         </dependency>
 
@@ -903,6 +909,17 @@
             <version>2.3.0</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.locationtech.jts</groupId>
+            <artifactId>jts-core</artifactId>
+            <version>1.16.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.locationtech.spatial4j</groupId>
+            <artifactId>spatial4j</artifactId>
+            <version>0.7</version>
+        </dependency>
+
         <!-- Test 관련 Library -->
 
         <dependency>
@@ -1058,6 +1075,24 @@
             <artifactId>spring-security-saml2-core</artifactId>
             <version>1.0.3.RELEASE </version>
             <scope>compile</scope>
+        </dependency>
+
+        <!-- PF4J -->
+        <dependency>
+            <groupId>org.pf4j</groupId>
+            <artifactId>pf4j-spring</artifactId>
+            <version>${pf4j.spring.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.pf4j</groupId>
+                    <artifactId>pf4j</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.pf4j</groupId>
+            <artifactId>pf4j</artifactId>
+            <version>${pf4j.version}</version>
         </dependency>
 
     </dependencies>

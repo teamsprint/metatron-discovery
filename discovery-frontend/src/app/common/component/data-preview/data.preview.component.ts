@@ -27,11 +27,13 @@ import {
 import {BoardDataSource, Dashboard, JoinMapping, QueryParam} from '../../../domain/dashboard/dashboard';
 import {DatasourceService} from 'app/datasource/service/datasource.service';
 import {
+  ConnectionType,
   Datasource,
   DataSourceSummary,
   Field,
   FieldFormat,
   FieldFormatType,
+  FieldRole,
   LogicalType
 } from '../../../domain/datasource/datasource';
 import {SlickGridHeader} from 'app/common/component/grid/grid.header';
@@ -47,12 +49,14 @@ import {CommonUtil} from '../../util/common.util';
 import {DataDownloadComponent, PreviewResult} from '../data-download/data.download.component';
 import {MetadataColumn} from '../../../domain/meta-data-management/metadata-column';
 import {DashboardUtil} from '../../../dashboard/util/dashboard.util';
-import {ConnectionType, Dataconnection} from '../../../domain/dataconnection/dataconnection';
+import {ImplementorType, Dataconnection, AuthenticationType} from '../../../domain/dataconnection/dataconnection';
 import {PeriodData} from "../../value/period.data.value";
 import {TimeRangeFilter} from "../../../domain/workbook/configurations/filter/time-range-filter";
 import {Filter} from "../../../domain/workbook/configurations/filter/filter";
 import {DIRECTION, Sort} from "../../../domain/workbook/configurations/sort";
 import {TimezoneService} from "../../../data-storage/service/timezone.service";
+import {StringUtil} from "../../util/string.util";
+import {StorageService} from "../../../data-storage/service/storage.service";
 
 declare let echarts: any;
 
@@ -97,6 +101,8 @@ export class DataPreviewComponent extends AbstractPopupComponent implements OnIn
   private _filters: Filter[] = [];
 
   private _queryParams = new QueryParam();
+
+  private _isGridDataDown:boolean = true;
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
    | Protected Variables
    |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
@@ -111,9 +117,13 @@ export class DataPreviewComponent extends AbstractPopupComponent implements OnIn
   // 필드 디테일 single data
   @Input()
   public singleTab: boolean = false;
+
   // sigle 일때 넘겨받은 필드
   @Input()
   public field: any;
+
+  @Input()
+  public initial:Datasource;
 
   public isDashboard: boolean = false;    // 입력 소스가 대시보드인지 여부
 
@@ -174,6 +184,9 @@ export class DataPreviewComponent extends AbstractPopupComponent implements OnIn
 
   public downloadPreview: PreviewResult;
 
+  // is exist derived column
+  public isExistDerivedField: boolean;
+
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
    | Constructor
    |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
@@ -182,6 +195,7 @@ export class DataPreviewComponent extends AbstractPopupComponent implements OnIn
   constructor(private datasourceService: DatasourceService,
               private connectionService: DataconnectionService,
               private timezoneService: TimezoneService,
+              private storageService: StorageService,
               protected elementRef: ElementRef,
               protected injector: Injector) {
     super(elementRef, injector);
@@ -225,7 +239,8 @@ export class DataPreviewComponent extends AbstractPopupComponent implements OnIn
         }
       });
     });
-    this.selectDataSource(this.datasources[0]);
+
+    this.selectDataSource( ( this.initial ) ? this.datasources.find( item => item.id === this.initial.id ) : this.datasources[0] );
 
   } // function - ngOnInit
 
@@ -326,32 +341,11 @@ export class DataPreviewComponent extends AbstractPopupComponent implements OnIn
   private queryData(source: Datasource): Promise<any> {
     return new Promise<any>((res, rej) => {
 
-      const params = new QueryParam();
-      params.limits.limit = (this.rowNum < 1) ? 100 : this.rowNum;
+      let params = new QueryParam();
+      params.limits.limit = this.rowNum < 1 ? 100 : this.rowNum;
       if (this.isDashboard) {
         // 대시보드인 경우
-
-        if (this.timestampField) {
-          const sortInfo: Sort = new Sort();
-          sortInfo.field = this.timestampField.name;
-          sortInfo.direction = DIRECTION.DESC;
-          params.limits.sort.push(sortInfo);
-        }
-
-        let boardDs: BoardDataSource = (<Dashboard>this.source).configuration.dataSource;
-        if ('multi' === boardDs.type) {
-          boardDs = boardDs.dataSources.find(item => DashboardUtil.isSameDataSource(item, source));
-        }
-
-        params.dataSource = _.cloneDeep(boardDs);
-        params.dataSource.name = boardDs.engineName;
-        const joins = boardDs.joins;
-        if (joins && joins.length > 0) {
-          this.isJoin = true;
-          this.joinMappings = joins;
-          params.dataSource.type = 'mapping';
-          params.dataSource['joins'] = joins;
-        }
+        params = this._getDashboardQueryParam( source, (<Dashboard>this.source), params );
       } else {
         // 데이터소스인 경우
         const dsInfo = _.cloneDeep(<Datasource>source);
@@ -390,26 +384,59 @@ export class DataPreviewComponent extends AbstractPopupComponent implements OnIn
   } // function - queryData
 
   /**
-   * 그리드 갱신
-   * @param data
-   * @param {Field[]} fields
+   * Get filtered field list
+   * @param {Field[]} field
+   * @return {Field[]}
+   * @private
    */
-  private updateGrid(data?: any, fields?: Field[]) {
+  private _getFilteredFieldList(field: Field[]): Field[] {
+    return field.filter(field => (this.selectedFieldRole === FieldRoleType.ALL ? true : (FieldRoleType.DIMENSION === this.selectedFieldRole && FieldRole.TIMESTAMP === field.role ? field : this.selectedFieldRole.toString() === field.role.toString()))
+      && (this.selectedLogicalType.value === 'all' ? true : this.selectedLogicalType.value === field.logicalType));
+  }
 
-    // 헤더정보 생성
-    const headers: header[]
-      = ((fields) ? fields : this.columns)
-      .filter((item: Field) => {
-        // role
-        let isValidRole: boolean = (FieldRoleType.ALL === this.selectedFieldRole)
-          ? true
-          : (item.role.toString() === 'TIMESTAMP' ? this.selectedFieldRole.toString() === 'DIMENSION' : item.role.toString() === this.selectedFieldRole.toString());
-        // type
-        let isValidType: boolean = ('all' === this.selectedLogicalType.value) ? true : (item.logicalType === this.selectedLogicalType.value);
-        return (isValidRole && isValidType);
-      })
-      .map((field: Field) => {
-        const headerName: string = field.headerKey ? field.headerKey : field.name;
+  /**
+   * 그리드 header 리스트 생성
+   * @param {Field[]} fields
+   * @returns {header[]}
+   * @private
+   */
+  private _getGridHeader(fields: Field[]): header[] {
+    const derivedFieldList = fields ? fields.filter(field => field.derived) : [];
+    // if exist derived field list
+    if (derivedFieldList.length > 0) {
+      // Style
+      const defaultStyle: string = 'line-height:30px;';
+      const nullStyle: string = 'color:#b6b9c1;';
+      const noPreviewGuideMessage: string = this.translateService.instant('msg.dp.ui.no.preview');
+
+      return fields.map((field: Field) => {
+        const headerName: string = field.headerKey || field.name;
+        return new SlickGridHeader()
+          .Id(headerName)
+          .Name(this._getGridHeaderName(field, headerName))
+          .Field(headerName)
+          .Behavior('select')
+          .Selectable(false)
+          .CssClass('cell-selection')
+          .Width(10 * (headerName.length) + 20)
+          .MinWidth(100)
+          .CannotTriggerInsert(true)
+          .Resizable(true)
+          .Unselectable(true)
+          .Sortable(true)
+          .Formatter((row, cell, value) => {
+            // if derived expression type or LINK geo type
+            if (field.derived && (field.logicalType === LogicalType.STRING || this.mainDatasource.connType === ConnectionType.LINK)) {
+              return '<div  style="' + defaultStyle + nullStyle + '">' + noPreviewGuideMessage + '</div>';
+            } else {
+              return value;
+            }
+          })
+          .build();
+      });
+    } else {
+      return fields.map((field: Field) => {
+        const headerName: string = field.headerKey || field.name;
         return new SlickGridHeader()
           .Id(headerName)
           .Name(this._getGridHeaderName(field, headerName))
@@ -425,7 +452,17 @@ export class DataPreviewComponent extends AbstractPopupComponent implements OnIn
           .Sortable(true)
           .build();
       });
+    }
+  }
 
+  /**
+   * 그리드 갱신
+   * @param data
+   * @param {Field[]} fields
+   */
+  private updateGrid(data?: any, fields?: Field[]) {
+    // 헤더정보 생성
+    const headers: header[] = this._getGridHeader(this._getFilteredFieldList(fields || this.columns));
     let rows: any[] = data || this.gridData;
     // row and headers가 있을 경우에만 그리드 생성
     if (rows && 0 < headers.length) {
@@ -491,18 +528,63 @@ export class DataPreviewComponent extends AbstractPopupComponent implements OnIn
     // 프리셋을 생성한 연결형 : source.connection 사용
     // 커넥션 정보로 생성한 연결형 : source.ingestion.connection 사용
     const connection: Dataconnection = source.connection || source.ingestion.connection;
-    const params = source.ingestion && connection
+    const params:any = source.ingestion && connection
       ? this._getConnectionParams(source.ingestion, connection)
       : {};
-    this.connectionService.getTableDetailWitoutId(params, connection.implementor === ConnectionType.HIVE)
-      .then((data) => {
-        this.gridData = data['data'];
+
+    if( !this._isGridDataDown ) {
+      // 다운로드 파라메터 설정 -> Linked Data Source 데이터를 Druid에서 받아서 다운로드 할 경우에는 아래의 코드가 필요
+      const downloadParams = this._getDashboardQueryParam( source, (<Dashboard>this.source) );
+      downloadParams.limits.limit = 10000000;
+      this._queryParams = _.cloneDeep(downloadParams);
+    }
+
+    this.connectionService.getTableDetailWitoutId(params, connection.implementor === ImplementorType.HIVE, this.rowNum < 1 ? 100 : this.rowNum)
+      .then((result: {data: any, fields: Field[], totalRows: number}) => {
+        // grid data
+        this.gridData = result.data;
+        // if row num different data length
+        (this.rowNum !== result.data.length) && (this.rowNum = result.data.length);
         this.updateGrid(this.gridData, this.columns);
         // loading hide
         this.loadingHide();
       })
       .catch(error => this.commonExceptionHandler(error));
   }
+
+  /**
+   * 대시보드 타입에 대한 데이터 조회 파라메터 생성
+   * @param {Datasource} dataSource
+   * @param {Dashboard} board
+   * @param {QueryParam} params
+   * @return {QueryParam}
+   * @private
+   */
+  private _getDashboardQueryParam(dataSource:Datasource, board:Dashboard, params?:QueryParam):QueryParam {
+    ( params ) || ( params = new QueryParam() );
+    if (this.timestampField) {
+      const sortInfo: Sort = new Sort();
+      sortInfo.field = this.timestampField.name;
+      sortInfo.direction = DIRECTION.DESC;
+      params.limits.sort.push(sortInfo);
+    }
+
+    let boardDs: BoardDataSource = board.configuration.dataSource;
+    if ('multi' === boardDs.type) {
+      boardDs = boardDs.dataSources.find(item => DashboardUtil.isSameDataSource(item, dataSource));
+    }
+
+    params.dataSource = _.cloneDeep(boardDs);
+    params.dataSource.name = boardDs.engineName;
+    const joins = boardDs.joins;
+    if (joins && joins.length > 0) {
+      this.isJoin = true;
+      this.joinMappings = joins;
+      params.dataSource.type = 'mapping';
+      params.dataSource['joins'] = joins;
+    }
+    return params;
+  } // function - _getDashboardQueryParam
 
   // noinspection JSMethodCanBeStatic
   /**
@@ -512,28 +594,36 @@ export class DataPreviewComponent extends AbstractPopupComponent implements OnIn
    * @return {{connection: {hostname: any,port: any,username: any,password: any,implementor: any},database: any,type: any, query: any}}
    * @private
    */
-  private _getConnectionParams(ingestion: any, connection: any) {
+  private _getConnectionParams(ingestion: any, connection: Dataconnection) {
+    const connectionType = this.storageService.findConnectionType(connection.implementor);
     const params = {
       connection: {
-        hostname: connection.hostname,
-        port: connection.port,
         implementor: connection.implementor,
-        authenticationType: connection.authenticationType || 'MANUAL'
+        authenticationType: connection.authenticationType || AuthenticationType.MANUAL
       },
       database: ingestion.database,
       type: ingestion.dataType,
       query: ingestion.query
     };
+    // if not used URL
+    if (StringUtil.isEmpty(connection.url)) {
+      params.connection['hostname'] = connection.hostname;
+      params.connection['port'] = connection.port;
+      if (this.storageService.isRequireCatalog(connectionType)) {
+        params.connection['catalog'] = connection.catalog;
+      } else if (this.storageService.isRequireDatabase(connectionType)) {
+        params.connection['database'] = connection.database;
+      } else if (this.storageService.isRequireSid(connectionType)) {
+        params.connection['sid'] = connection.sid;
+      }
+    } else {  // if used URL
+      params.connection['url'] = connection.url;
+    }
     // if security type is not USERINFO, add password and username
-    if (connection.authenticationType !== 'USERINFO') {
-      params['connection']['username'] = connection.authenticationType === 'DIALOG' ? ingestion.connectionUsername : connection.username;
-      params['connection']['password'] = connection.authenticationType === 'DIALOG' ? ingestion.connectionPassword : connection.password;
+    if (connection.authenticationType !== AuthenticationType.USERINFO) {
+      params.connection['username'] = connection.authenticationType === AuthenticationType.DIALOG ? ingestion.connectionUsername : connection.username;
+      params.connection['password'] = connection.authenticationType === AuthenticationType.DIALOG ? ingestion.connectionPassword : connection.password;
     }
-    // 데이터 베이스가 있는경우
-    if (ingestion.connection && ingestion.connection.hasOwnProperty('database')) {
-      params['connection']['database'] = ingestion.connection.database;
-    }
-
     return params;
   }
 
@@ -1015,24 +1105,10 @@ export class DataPreviewComponent extends AbstractPopupComponent implements OnIn
     // 메타데이터가 존재한다면
     if (this.isExistMetaData(source)) {
       const fieldMetaData: MetadataColumn = _.find(source.uiMetaData.columns, {'physicalName': field.name});
-      // logical name
-      field['logicalName'] = fieldMetaData.name;
       // code table
       field['codeTable'] = fieldMetaData.codeTable;
       // dictionary
       field['dictionary'] = fieldMetaData.dictionary;
-      // type
-      if (fieldMetaData.type) {
-        field['metaType'] = fieldMetaData.type;
-      }
-      // description
-      if (fieldMetaData.description) {
-        field['description'] = fieldMetaData.description;
-      }
-      // format
-      if (fieldMetaData.format) {
-        field['format'] = fieldMetaData.format;
-      }
     }
   }
 
@@ -1090,6 +1166,7 @@ export class DataPreviewComponent extends AbstractPopupComponent implements OnIn
     // initialize data
     this.mainDatasource = dataSource;
     this.rowNum = 100;
+    this.isExistDerivedField = dataSource.fields.some(field => field.derived);
     // seletedfield init
     this.selectedField = null;
     this.timestampField = null;
@@ -1237,8 +1314,7 @@ export class DataPreviewComponent extends AbstractPopupComponent implements OnIn
    */
   public createMetaDataHeader(args: any): void {
     // TODO 추후 그리드 자체에서 생성하도록 변경하기
-    $('<div class="slick-data">' + (_.find(this.columns, {'name': args.column.id}).logicalName || '') + '</div>')
-      .appendTo(args.node);
+    $('<div class="slick-data">' + (_.find(this.columns, {'name': args.column.id}).logicalName || '') + '</div>').appendTo(args.node);
   }
 
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
@@ -1376,13 +1452,19 @@ export class DataPreviewComponent extends AbstractPopupComponent implements OnIn
       if (this.downloadPreview && this.rowNum > this.downloadPreview.count) {
         this.rowNum = this.downloadPreview.count;
       }
-      // Query Data
-      this.queryData(this.mainDatasource).then(data => {
-        this.gridData = data;
-        this.updateGrid(data, this.columns);
-      }).catch((error) => {
-        console.log(error);
-      });
+
+      // if Linked datasource
+      if (this.mainDatasource.connType === ConnectionType.LINK) {
+        this._getQueryDataInLinked(this.mainDatasource);
+      } else {
+        // Query Data
+        this.queryData(this.mainDatasource).then(data => {
+          this.gridData = data;
+          this.updateGrid(data, this.columns);
+        }).catch((error) => {
+          console.log(error);
+        });
+      }
     }
   } // function - changeRowNum
 
@@ -1439,14 +1521,18 @@ export class DataPreviewComponent extends AbstractPopupComponent implements OnIn
     event.preventDefault();
     event.stopPropagation();
 
-    this.loadingShow();
-    this.datasourceService.getDatasourceQuery(this._queryParams).then(downData => {
-      this._dataDownComp.openDataDown(event, this.columns, downData, this.downloadPreview);
-      this.loadingHide();
-    }).catch((err) => {
+    if (this.connType === 'LINK' && this._isGridDataDown) {
+      this._dataDownComp.openDataDown(event, this.columns, this.gridData, this.downloadPreview);
+    } else {
+      this.loadingShow();
+      this.datasourceService.getDatasourceQuery(this._queryParams).then(downData => {
+        this._dataDownComp.openDataDown(event, this.columns, downData, this.downloadPreview);
+        this.loadingHide();
+      }).catch(() => {
+        this.loadingHide();
+      });
+    }
 
-      this.loadingHide();
-    });
   } // function - downloadData
 
   /**

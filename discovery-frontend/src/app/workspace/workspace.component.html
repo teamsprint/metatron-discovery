@@ -316,6 +316,15 @@
         </div>
         <!-- //box contents -->
 
+        <!-- connection -->
+        <div class="ddp-type-connection" *ngIf="book.type == 'workbench'">
+          <em class="ddp-icon-type">
+            <img src="{{getWorkbenchConnTypeIcon(book)}}">
+          </em>
+          {{ getConnName(book) }}
+        </div>
+        <!-- //connection -->
+
         <!-- box botom -->
         <!-- workbook -->
         <div class="ddp-box-bottom" *ngIf="book.type == 'workbook'" >

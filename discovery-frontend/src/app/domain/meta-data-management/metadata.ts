@@ -12,25 +12,41 @@
  * limitations under the License.
  */
 
-import { AbstractHistoryEntity } from '../common/abstract-history-entity';
-import { MetadataSource } from './metadata-source';
-import { MetadataColumn } from './metadata-column';
+import {AbstractHistoryEntity} from '../common/abstract-history-entity';
+import {MetadataSource} from './metadata-source';
+import {MetadataColumn} from './metadata-column';
+import * as _ from 'lodash';
 
 export class Metadata extends AbstractHistoryEntity {
+
   public id: string;
-  public description : string;
-  public name : string;
-  public sourceType : SourceType;
-  public source : MetadataSource;
-  public catalogs : any;
-  public tags : any;
-  public popularity : number;
-  // 컬럼 목록
+  public description: string;
+  public name: string;
+  public sourceType: SourceType;
+  public source: MetadataSource;
+  public catalogs: any;
+  public tags: any;
+  public popularity: number;
   public columns: MetadataColumn[];
+
+  public static isSourceTypeIsEngine(sourceType: SourceType) {
+    return _.negate(_.isNil)(sourceType)
+      && sourceType === SourceType.ENGINE;
+  }
+
+  public static isSourceTypeIsStaging(sourceType: SourceType) {
+    return _.negate(_.isNil)(sourceType)
+      && sourceType === SourceType.STAGING;
+  }
+
+  public static isSourceTypeIsJdbc(sourceType: SourceType) {
+    return _.negate(_.isNil)(sourceType)
+      && sourceType === SourceType.JDBC;
+  }
 }
 
 export enum SourceType {
   ENGINE = <any>'ENGINE',
-  STAGING = <any>'STAGING',
+  STAGING = <any>'STAGEDB',
   JDBC = <any>'JDBC'
 }

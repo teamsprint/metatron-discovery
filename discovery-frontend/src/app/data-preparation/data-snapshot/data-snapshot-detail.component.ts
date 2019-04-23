@@ -28,7 +28,7 @@ import {DataSnapshotService} from './service/data-snapshot.service';
 import {PopupService} from '../../common/service/popup.service';
 import {GridComponent} from '../../common/component/grid/grid.component';
 import {header, SlickGridHeader} from '../../common/component/grid/grid.header';
-import {Field} from '../../domain/data-preparation/pr-dataset';
+import {DsType, Field} from '../../domain/data-preparation/pr-dataset';
 import {GridOption} from '../../common/component/grid/grid.option';
 import {Alert} from '../../common/util/alert.util';
 import {PreparationAlert} from '../util/preparation-alert.util';
@@ -47,6 +47,7 @@ import {
   SourceType
 } from "../../domain/datasource/datasource";
 import {CreateSnapShotData} from "../../data-storage/service/data-source-create.service";
+import {DataflowModelService} from "../dataflow/service/dataflow.model.service";
 
 declare let moment: any;
 
@@ -136,7 +137,6 @@ export class DataSnapshotDetailComponent extends AbstractComponent implements On
   public valid:string= '100%';
   public mismatched:string = '0%';
 
-  public interval : any;
   public currentTab : number = 0;
 
   public ruleList : any = [];
@@ -158,6 +158,7 @@ export class DataSnapshotDetailComponent extends AbstractComponent implements On
    | Constructor
    |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
   constructor(protected datasnapshotservice: DataSnapshotService,
+              protected dataflowModelService: DataflowModelService,
               protected popupService: PopupService,
               protected elementRef: ElementRef,
               protected injector: Injector) {
@@ -177,8 +178,6 @@ export class DataSnapshotDetailComponent extends AbstractComponent implements On
   // Destroy
   public ngOnDestroy() {
     super.ngOnDestroy();
-
-    this._clearSnapshotInterval();
     $('body').removeClass('body-hidden');
 
   }
@@ -206,9 +205,6 @@ export class DataSnapshotDetailComponent extends AbstractComponent implements On
     this.isEnableCreateDatasource = isEnableCreateDatasource;
 
     $('body').removeClass('body-hidden').addClass('body-hidden');
-
-    this._clearSnapshotInterval();
-    this.interval =  setInterval(() => this.getSnapshot(), 3000);
     this.getSnapshot(true);
   }
 
@@ -217,7 +213,6 @@ export class DataSnapshotDetailComponent extends AbstractComponent implements On
    * Close snapshot popup
    */
   public close() {
-    this._clearSnapshotInterval();
     this.isShow = false;
     $('body').removeClass('body-hidden');
     this.snapshotDetailCloseEvent.emit();
@@ -332,8 +327,8 @@ export class DataSnapshotDetailComponent extends AbstractComponent implements On
    * 데이터셋 아이디 저장
    */
   private _savePrevRouterUrl(): void {
-    this.cookieService.set('SELECTED_DATASET_ID', this.dsId);
-    this.cookieService.set('SELECTED_DATASET_TYPE', 'WRANGLED');
+    this.dataflowModelService.setSelectedDsId(this.dsId);
+    this.dataflowModelService.setSelectedDsType(DsType.WRANGLED);
   }
 
   /**
@@ -410,8 +405,6 @@ export class DataSnapshotDetailComponent extends AbstractComponent implements On
    * @param param
    */
   public cancelClick(param:boolean){
-    clearInterval(this.interval);
-    this.interval = undefined;
     let elm = $('.ddp-wrap-progress');
     if (param) {
       if(this.selectedDataSnapshot.ruleCntDone == this.selectedDataSnapshot.ruleCntTotal) {
@@ -424,7 +417,6 @@ export class DataSnapshotDetailComponent extends AbstractComponent implements On
     } else {
       elm[0].style.display = "";
       elm[1].style.display = "none";
-      this.interval =  setInterval(() => this.getSnapshot(), 1000);
     }
   }
 
@@ -486,10 +478,6 @@ export class DataSnapshotDetailComponent extends AbstractComponent implements On
         // set Only success enable create datasource
         this.isEnableCreateDatasource !== false && (this.isEnableCreateDatasource = snapshot.status === Status.SUCCEEDED);
 
-        // clear interval
-        this._clearSnapshotInterval();
-
-
         // set file format
         if (this.selectedDataSnapshot.ssType ===  SsType.URI){
           this.snapshotUriFileFormat = this.selectedDataSnapshot.storedUri.slice((this.selectedDataSnapshot.storedUri.lastIndexOf(".") - 1 >>> 0) + 2).toLowerCase();
@@ -536,6 +524,11 @@ export class DataSnapshotDetailComponent extends AbstractComponent implements On
           } else {
             this.progressbarWidth = '100%';
           }
+          // Whenever received response at the status of preparing, it requests snapshot data
+          setTimeout(() => {
+            this.getSnapshot();
+          }, 2000)
+
         }
 
         if (this.selectedDataSnapshot.displayStatus === 'FAIL') {
@@ -713,7 +706,7 @@ export class DataSnapshotDetailComponent extends AbstractComponent implements On
     let rows: any[];
 
     this.uiOffset = 1;
-    rows = data.data.slice(0, (data.data.length > this.uiOffset*this.uiSize? this.uiOffset*this.uiSize -1 : data.data.length -1) );
+    rows = data.data.slice(0, (data.data.length > this.uiOffset*this.uiSize? this.uiOffset*this.uiSize : data.data.length) );
 
     // Row 생성 및 컬럼별 최대 길이 측정
     if (rows.length > 0 && !rows[0].hasOwnProperty('id')) {
@@ -784,7 +777,7 @@ export class DataSnapshotDetailComponent extends AbstractComponent implements On
       let lastIdx = (this.selectedDataSnapshot.gridData.data.length > this.uiOffset*this.uiSize? this.uiOffset*this.uiSize: this.selectedDataSnapshot.gridData.data.length);
       if ( this.gridComponent.grid.getViewport().bottom === lastIdx && this.selectedDataSnapshot.gridData.data.length > this.uiOffset*this.uiSize ){
         this.uiOffset += 1;
-        this.gridComponent.grid.setData(data.data.slice(0,(data.data.length < this.uiOffset*this.uiSize? data.data.length -1: this.uiOffset*this.uiSize -1) ));
+        this.gridComponent.grid.setData(data.data.slice(0,(data.data.length < this.uiOffset*this.uiSize? data.data.length : this.uiOffset*this.uiSize ) ));
         this.gridComponent.grid.updateRowCount();
         this.gridComponent.grid.render();
       }
@@ -838,18 +831,6 @@ export class DataSnapshotDetailComponent extends AbstractComponent implements On
     this.sSInformationList.push(
       {label: this.translateService.instant('msg.dp.th.et'), value : this.getElapsedTime(snapshot)},
       {label: this.translateService.instant('msg.comm.th.created'), value : moment(snapshot.createdTime).format('YYYY-MM-DD HH:mm')});
-  }
-
-
-  /**
-   * Clears exisiting snapshot interval
-   * @private
-   */
-  private _clearSnapshotInterval() {
-    if (!isNullOrUndefined(this.interval)) {
-      clearInterval(this.interval);
-      this.interval = undefined;
-    }
   }
 
 

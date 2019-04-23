@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.rest.core.config.Projection;
 
 import app.metatron.discovery.common.BaseProjections;
+import app.metatron.discovery.domain.mdm.Metadata;
 import app.metatron.discovery.domain.user.UserProfile;
 
 public class MetadataSourceProjections extends BaseProjections {
@@ -30,7 +31,7 @@ public class MetadataSourceProjections extends BaseProjections {
 
     String getName();
 
-    MetadataSource.MetadataSourceType getType();
+    Metadata.SourceType getType();
 
     String getSourceId();
   }
@@ -42,12 +43,16 @@ public class MetadataSourceProjections extends BaseProjections {
 
     String getName();
 
-    MetadataSource.MetadataSourceType getType();
+    Metadata.SourceType getType();
 
     //String getSourceId();
 
     @Value("#{@metaSourceService.getSourcesBySourceId(target.type, target.sourceId)}")
     Object getSource();
+
+    String getSchema();
+
+    String getTable();
 
     @Value("#{@cachedUserService.findUserProfile(target.createdBy)}")
     UserProfile getCreatedBy();

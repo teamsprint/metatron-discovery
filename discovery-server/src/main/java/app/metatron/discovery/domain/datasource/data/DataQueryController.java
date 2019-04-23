@@ -56,7 +56,6 @@ import app.metatron.discovery.domain.datasource.connection.jdbc.JdbcConnectionSe
 import app.metatron.discovery.domain.datasource.data.result.ChartResultFormat;
 import app.metatron.discovery.domain.engine.DruidEngineMetaRepository;
 import app.metatron.discovery.domain.engine.EngineQueryService;
-import app.metatron.discovery.domain.geo.GeoService;
 import app.metatron.discovery.domain.workbook.configurations.Limit;
 import app.metatron.discovery.domain.workbook.configurations.datasource.DataSource;
 import app.metatron.discovery.domain.workbook.configurations.field.ExpressionField;
@@ -86,9 +85,6 @@ public class DataQueryController {
   EngineQueryService engineQueryService;
 
   @Autowired
-  GeoService geoService;
-
-  @Autowired
   DruidEngineMetaRepository engineMetaRepository;
 
   @Autowired
@@ -113,14 +109,6 @@ public class DataQueryController {
 
     //TODO: need to validation check about datasource granularity and query granularity
     dataSourceValidator.validateQuery(queryRequest);
-
-    if (queryRequest.getResultFormat() instanceof ChartResultFormat
-        && "map".equals(((ChartResultFormat) queryRequest.getResultFormat()).getMode())) {
-
-      String result = geoService.search(queryRequest);
-
-      return ResponseEntity.ok(new RawJsonString(result));
-    }
 
     Object result = engineQueryService.search(queryRequest);
     if (result instanceof MatrixResponse && queryRequest.getResultFormat() instanceof ChartResultFormat) {
@@ -209,7 +197,7 @@ public class DataQueryController {
   @RequestMapping(value = "/datasources/stats", method = RequestMethod.POST)
   public ResponseEntity<?> getDataSourceFieldStats(@RequestBody SummaryQueryRequest request) {
 
-    dataSourceValidator.validateQuery(request.getDataSource());
+    dataSourceValidator.validateQuery(request.getDataSource(), request);
 
     return ResponseEntity.ok(new RawJsonString((String) engineQueryService.summary(request)));
   }
@@ -217,7 +205,7 @@ public class DataQueryController {
   @RequestMapping(value = "/datasources/covariance", method = RequestMethod.POST)
   public ResponseEntity<?> getDataSourceFieldCovariance(@RequestBody CovarianceQueryRequest request) {
 
-    dataSourceValidator.validateQuery(request.getDataSource());
+    dataSourceValidator.validateQuery(request.getDataSource(), request);
 
     return ResponseEntity.ok(new RawJsonString((String) engineQueryService.covariance(request)));
   }

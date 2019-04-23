@@ -49,6 +49,7 @@ em.ddp-icon-dataset {display:inline-block; position:relative; top:-3px; width:19
 .ddp-btn-reset3 {background-position:-16px -20px;}
 .ddp-btn-reset3:hover {background-position:-15px -34px;}
 
+.ddp-icon-reset2 {display:inline-block; width:14px; height:13px; background:url(../../../images/icon_reset.png) no-repeat; background-position:-31px -20px;}
 
 .ddp-icon-database-s,
 .ddp-icon-database-s2,
@@ -157,6 +158,7 @@ em.ddp-icon-use {display:inline-block; position:absolute; top:50%; left:8px; wid
 .ddp-icon-edit2 {display:inline-block; width:10px; height:10px; background:url(../../../images/icon_edit2.png) no-repeat; vertical-align: middle;}
 .ddp-icon-edit2:hover {background-position:-11px top;}
 
+em.ddp-icon-svg {display:inline-block; width:24px; height:24px; margin-right:5px; vertical-align:middle;}
 em.ddp-icon-sinfo2,
 em.ddp-icon-error2,
 em.ddp-icon-error-s,

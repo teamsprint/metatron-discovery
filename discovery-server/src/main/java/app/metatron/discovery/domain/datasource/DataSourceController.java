@@ -3,20 +3,6 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specic language governing permissions and
- * limitations under the License.
- */
-
-/*
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
  *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
@@ -28,45 +14,26 @@
 
 package app.metatron.discovery.domain.datasource;
 
-import app.metatron.discovery.common.CommonLocalVariable;
-import app.metatron.discovery.common.criteria.ListCriterion;
-import app.metatron.discovery.common.criteria.ListFilter;
-import app.metatron.discovery.common.datasource.DataType;
-import app.metatron.discovery.common.entity.SearchParamValidator;
-import app.metatron.discovery.common.exception.BadRequestException;
-import app.metatron.discovery.common.exception.MetatronException;
-import app.metatron.discovery.common.exception.ResourceNotFoundException;
-import app.metatron.discovery.domain.CollectionPatch;
-import app.metatron.discovery.domain.datasource.connection.DataConnectionRepository;
-import app.metatron.discovery.domain.datasource.connection.jdbc.JdbcConnectionService;
-import app.metatron.discovery.domain.datasource.data.DataSourceValidator;
-import app.metatron.discovery.domain.datasource.data.SearchQueryRequest;
-import app.metatron.discovery.domain.datasource.data.result.ObjectResultFormat;
-import app.metatron.discovery.domain.datasource.format.DateTimeFormatChecker;
-import app.metatron.discovery.domain.datasource.ingestion.*;
-import app.metatron.discovery.domain.datasource.ingestion.job.IngestionJobRunner;
-import app.metatron.discovery.domain.engine.EngineIngestionService;
-import app.metatron.discovery.domain.engine.EngineLoadService;
-import app.metatron.discovery.domain.engine.EngineQueryService;
-import app.metatron.discovery.domain.engine.model.SegmentMetaDataResponse;
-import app.metatron.discovery.domain.workbench.WorkbenchProperties;
-import app.metatron.discovery.domain.workbook.configurations.Limit;
-import app.metatron.discovery.domain.workbook.configurations.datasource.DefaultDataSource;
-import app.metatron.discovery.domain.workbook.configurations.filter.Filter;
-import app.metatron.discovery.util.CsvProcessor;
-import app.metatron.discovery.util.ExcelProcessor;
-import app.metatron.discovery.util.PolarisUtils;
-import app.metatron.discovery.util.ProjectionUtils;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+
+import com.univocity.parsers.common.TextParsingException;
+
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.geom.LineString;
+import org.locationtech.jts.geom.MultiLineString;
+import org.locationtech.jts.geom.MultiPolygon;
+import org.locationtech.jts.geom.Point;
+import org.locationtech.jts.geom.Polygon;
+import org.locationtech.jts.io.WKTReader;
 import org.quartz.CronExpression;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -82,18 +49,68 @@ import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.text.ParseException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.stream.Collectors;
+
+import app.metatron.discovery.common.CommonLocalVariable;
+import app.metatron.discovery.common.MetatronProperties;
+import app.metatron.discovery.common.criteria.ListCriterion;
+import app.metatron.discovery.common.criteria.ListFilter;
+import app.metatron.discovery.common.datasource.DataType;
+import app.metatron.discovery.common.datasource.LogicalType;
+import app.metatron.discovery.common.entity.SearchParamValidator;
+import app.metatron.discovery.common.exception.BadRequestException;
+import app.metatron.discovery.common.exception.MetatronException;
+import app.metatron.discovery.common.exception.ResourceNotFoundException;
+import app.metatron.discovery.domain.CollectionPatch;
+import app.metatron.discovery.domain.dataconnection.DataConnectionRepository;
+import app.metatron.discovery.domain.datasource.connection.jdbc.JdbcConnectionService;
+import app.metatron.discovery.domain.datasource.data.DataSourceValidator;
+import app.metatron.discovery.domain.datasource.data.SearchQueryRequest;
+import app.metatron.discovery.domain.datasource.data.result.ObjectResultFormat;
+import app.metatron.discovery.domain.datasource.format.DateTimeFormatChecker;
+import app.metatron.discovery.domain.datasource.ingestion.IngestionDataResultResponse;
+import app.metatron.discovery.domain.datasource.ingestion.IngestionHistory;
+import app.metatron.discovery.domain.datasource.ingestion.IngestionHistoryRepository;
+import app.metatron.discovery.domain.datasource.ingestion.IngestionInfo;
+import app.metatron.discovery.domain.datasource.ingestion.IngestionOption;
+import app.metatron.discovery.domain.datasource.ingestion.IngestionOptionProjections;
+import app.metatron.discovery.domain.datasource.ingestion.IngestionOptionService;
+import app.metatron.discovery.domain.datasource.ingestion.LocalFileIngestionInfo;
+import app.metatron.discovery.domain.datasource.ingestion.job.IngestionJobRunner;
+import app.metatron.discovery.domain.engine.EngineIngestionService;
+import app.metatron.discovery.domain.engine.EngineLoadService;
+import app.metatron.discovery.domain.engine.EngineQueryService;
+import app.metatron.discovery.domain.engine.model.SegmentMetaDataResponse;
+import app.metatron.discovery.domain.mdm.MetadataService;
+import app.metatron.discovery.domain.workbench.WorkbenchProperties;
+import app.metatron.discovery.domain.workbook.configurations.Limit;
+import app.metatron.discovery.domain.workbook.configurations.datasource.DefaultDataSource;
+import app.metatron.discovery.domain.workbook.configurations.filter.Filter;
+import app.metatron.discovery.util.CommonsCsvProcessor;
+import app.metatron.discovery.util.ExcelProcessor;
+import app.metatron.discovery.util.PolarisUtils;
+import app.metatron.discovery.util.ProjectionUtils;
 
 import static app.metatron.discovery.domain.datasource.DataSourceErrorCodes.INGESTION_COMMON_ERROR;
 import static app.metatron.discovery.domain.datasource.DataSourceErrorCodes.INGESTION_ENGINE_GET_TASK_LOG_ERROR;
@@ -108,16 +125,34 @@ public class DataSourceController {
   private static Logger LOGGER = LoggerFactory.getLogger(DataSourceController.class);
 
   @Autowired
-  IngestionHistoryRepository ingestionHistoryRepository;
+  DataSourceService dataSourceService;
 
   @Autowired
-  DataSourceValidator dataSourceValidator;
+  MetadataService metadataService;
+
+  @Autowired
+  JdbcConnectionService jdbcConnectionService;
+
+  @Autowired
+  EngineLoadService engineLoadService;
+
+  @Autowired
+  EngineIngestionService engineIngestionService;
 
   @Autowired
   EngineQueryService engineQueryService;
 
   @Autowired
-  EngineIngestionService engineIngestionService;
+  IngestionOptionService ingestionOptionService;
+
+  @Autowired
+  DataSourceValidator dataSourceValidator;
+
+  @Autowired
+  IngestionJobRunner jobRunner;
+
+  @Autowired
+  IngestionHistoryRepository ingestionHistoryRepository;
 
   @Autowired
   DataSourceRepository dataSourceRepository;
@@ -127,21 +162,6 @@ public class DataSourceController {
 
   @Autowired
   DataConnectionRepository dataConnectionRepository;
-
-  @Autowired
-  DataSourceService dataSourceService;
-
-  @Autowired
-  JdbcConnectionService jdbcConnectionService;
-
-  @Autowired
-  EngineLoadService engineLoadService;
-
-  @Autowired
-  IngestionJobRunner jobRunner;
-
-  @Autowired
-  IngestionOptionService ingestionOptionService;
 
   @Autowired
   PagedResourcesAssembler pagedResourcesAssembler;
@@ -154,6 +174,9 @@ public class DataSourceController {
 
   @Autowired
   WorkbenchProperties workbenchProperties;
+
+  @Autowired
+  MetatronProperties metatronProperties;
 
   DataSourceProjections dataSourceProjections = new DataSourceProjections();
 
@@ -426,6 +449,10 @@ public class DataSourceController {
     }
     request.setDataSource(defaultDataSource);
 
+    if (CollectionUtils.isEmpty(request.getProjections())) {
+      request.setProjections(new ArrayList<>());
+    }
+
     // 데이터 Limit 처리 최대 백만건까지 확인 가능함
     if (request.getLimits() == null) {
       if (limit == null) {
@@ -513,7 +540,8 @@ public class DataSourceController {
       }
     }
 
-    dataSourceRepository.save(dataSource);
+    dataSourceRepository.saveAndFlush(dataSource);
+    metadataService.updateFromDataSource(dataSource, true);
 
     return ResponseEntity.noContent().build();
   }
@@ -548,7 +576,6 @@ public class DataSourceController {
 
                               Field field = new Field();
                               field.setName(entry.getKey());
-                              field.setAlias(entry.getKey());
                               field.setType(value.getType().startsWith("dimension.") ? DataType.STRING : DataType.INTEGER);
                               field.setRole(value.getType().startsWith("dimension.") ? Field.FieldRole.DIMENSION : Field.FieldRole.MEASURE);
 
@@ -804,6 +831,73 @@ public class DataSourceController {
     return ResponseEntity.ok(new CronValidationResponse(true, afterTimes));
   }
 
+  /**
+   * Cron 표현식의 유효성을 체크합니다
+   */
+  @RequestMapping(value = "/datasources/validation/wkt", method = RequestMethod.POST)
+  public ResponseEntity<?> checkWktType(@RequestBody WktCheckRequest wktCheckRequest) {
+
+    LogicalType type = wktCheckRequest.getGeoType();
+
+    WKTReader wktReader = new WKTReader();
+    Geometry geometry = null;
+
+    boolean valid = true;
+    String message = null;
+    LogicalType suggestType = null;
+    for (String value : wktCheckRequest.getValues()) {
+      try {
+        geometry = wktReader.read(value);
+
+        LogicalType parsedType = findGeoType(geometry).orElseThrow(
+            () -> new RuntimeException("ERROR_NOT_SUPPORT_WKT_TYPE")
+        );
+
+        if (type != parsedType) {
+          suggestType = parsedType;
+          throw new RuntimeException("ERROR_NOT_MATCHED_WKT_TYPE");
+        }
+
+      } catch (org.locationtech.jts.io.ParseException e) {
+        LOGGER.debug("WKT Parse error ({}), Invalid WKT String : {}", e.getMessage(), value);
+        valid = false;
+        message = "ERROR_PARSE_WKT";
+        break;
+      } catch (Exception ex) {
+        LOGGER.debug("WKT validation error ({}), Invalid WKT String : {}", ex.getMessage(), value);
+        valid = false;
+        message = ex.getMessage();
+        break;
+      }
+    }
+
+    Map<String, Object> resultResponse = Maps.newLinkedHashMap();
+    resultResponse.put("valid", valid);
+    resultResponse.put("suggestType", suggestType);
+    resultResponse.put("message", message);
+
+    return ResponseEntity.ok(resultResponse);
+  }
+
+  private Optional<LogicalType> findGeoType(Geometry geometry) {
+
+    Class<? extends Geometry> c = geometry.getClass();
+    LogicalType logicalType = null;
+    if (c.equals(Point.class)) {
+      logicalType = LogicalType.GEO_POINT;
+    } else if (c.equals(LineString.class)) {
+      logicalType = LogicalType.GEO_LINE;
+    } else if (c.equals(Polygon.class)) {
+      logicalType = LogicalType.GEO_POLYGON;
+    } else if (c.equals(MultiLineString.class)) {
+      logicalType = LogicalType.GEO_LINE;
+    } else if (c.equals(MultiPolygon.class)) {
+      logicalType = LogicalType.GEO_POLYGON;
+    }
+
+    return Optional.ofNullable(logicalType);
+  }
+
   @RequestMapping(value = "/datasources/duration/{duration}", method = RequestMethod.GET, produces = "application/json")
   public ResponseEntity<?> test(@PathVariable("duration") Long duration) {
 
@@ -869,7 +963,7 @@ public class DataSourceController {
   ResponseEntity<?> getPreviewFromFile(@PathVariable(value = "fileKey") String fileKey,
                                        @RequestParam(value = "sheet", required = false) String sheetName,
                                        @RequestParam(value = "lineSep", required = false, defaultValue = "\n") String lineSep,
-                                       @RequestParam(value = "columnSeq", required = false, defaultValue = ",") String delimiter,
+                                       @RequestParam(value = "delimiter", required = false, defaultValue = ",") String delimiter,
                                        @RequestParam(value = "limit", required = false, defaultValue = "100") int limit,
                                        @RequestParam(value = "firstHeaderRow", required = false, defaultValue = "true") boolean firstHeaderRow) {
 
@@ -889,11 +983,28 @@ public class DataSourceController {
       if ("xlsx".equals(extensionType) || "xls".equals(extensionType)) {
         resultResponse = new ExcelProcessor(tempFile).getSheetData(sheetName, limit, firstHeaderRow);
       } else if ("csv".equals(extensionType)) {
-        resultResponse = new CsvProcessor(tempFile).getData(lineSep, delimiter, limit, firstHeaderRow);
+        CommonsCsvProcessor commonsCsvProcessor = new CommonsCsvProcessor("file://" + tempFile)
+            .totalCount()
+            .maxRowCount(Integer.valueOf(limit).longValue())
+            .withHeader(firstHeaderRow)
+            .parse(delimiter);
+
+        resultResponse = commonsCsvProcessor.ingestionDataResultResponse();
+
+        //        CsvProcessor csvProcessor = new CsvProcessor(tempFile);
+        //        csvProcessor.setCsvMaxCharsPerColumn(metatronProperties.getCsvMaxCharsPerColumn());
+        //        resultResponse = csvProcessor.getData(lineSep, delimiter, limit, firstHeaderRow);
       } else {
         throw new BadRequestException("Invalid temporary file.");
       }
 
+    } catch (TextParsingException e) {
+      LOGGER.error("Failed to parse csv file ({}) : {}", fileKey, e.getMessage());
+      throw new DataSourceIngestionException("Fail to parse csv file. \n" +
+                                                 "Line Index : " + e.getLineIndex() + ",\n" +
+                                                 "Column Index : " + e.getColumnIndex() + ",\n" +
+                                                 "Char Index : " + e.getCharIndex()
+          , e.getCause());
     } catch (Exception e) {
       LOGGER.error("Failed to parse file ({}) : {}", fileKey, e.getMessage());
       throw new DataSourceIngestionException("Fail to parse file.", e.getCause());
@@ -903,9 +1014,10 @@ public class DataSourceController {
   }
 
   @RequestMapping(value = "/datasources/filter", method = RequestMethod.POST)
-  public @ResponseBody ResponseEntity<?> filterDataSources(@RequestBody DataSourceFilterRequest request,
-                                                           Pageable pageable,
-                                                           PersistentEntityResourceAssembler resourceAssembler) {
+  public @ResponseBody
+  ResponseEntity<?> filterDataSources(@RequestBody DataSourceFilterRequest request,
+                                      Pageable pageable,
+                                      PersistentEntityResourceAssembler resourceAssembler) {
 
     List<String> statuses = request == null ? null : request.getStatus();
     List<String> workspaces = request == null ? null : request.getWorkspace();
@@ -938,19 +1050,19 @@ public class DataSourceController {
 
     // Validate status
     List<DataSource.Status> statusEnumList
-            = request.getEnumList(statuses, DataSource.Status.class, "status");
+        = request.getEnumList(statuses, DataSource.Status.class, "status");
 
     // Validate DataSourceType
     List<DataSource.DataSourceType> dataSourceTypeEnumList
-            = request.getEnumList(dataSourceTypes, DataSource.DataSourceType.class, "dataSourceType");
+        = request.getEnumList(dataSourceTypes, DataSource.DataSourceType.class, "dataSourceType");
 
     // Validate ConnectionType
     List<DataSource.ConnectionType> connectionTypeEnumList
-            = request.getEnumList(connectionTypes, DataSource.ConnectionType.class, "connectionType");
+        = request.getEnumList(connectionTypes, DataSource.ConnectionType.class, "connectionType");
 
     // Validate SourceType
     List<DataSource.SourceType> sourceTypeEnumList
-            = request.getEnumList(sourceTypes, DataSource.SourceType.class, "sourceType");
+        = request.getEnumList(sourceTypes, DataSource.SourceType.class, "sourceType");
 
     // Validate createdTimeFrom, createdTimeTo
     SearchParamValidator.range(null, createdTimeFrom, createdTimeTo);
@@ -961,12 +1073,12 @@ public class DataSourceController {
     // 기본 정렬 조건 셋팅
     if (pageable.getSort() == null || !pageable.getSort().iterator().hasNext()) {
       pageable = new PageRequest(pageable.getPageNumber(), pageable.getPageSize(),
-              new Sort(Sort.Direction.DESC, "createdTime", "name"));
+                                 new Sort(Sort.Direction.DESC, "createdTime", "name"));
     }
 
     Page<DataSource> dataSources = dataSourceService.findDataSourceListByFilter(
-            statusEnumList, workspaces, createdBys, userGroups, createdTimeFrom, createdTimeTo, modifiedTimeFrom,
-            modifiedTimeTo, containsText, dataSourceTypeEnumList, sourceTypeEnumList, connectionTypeEnumList, published, pageable
+        statusEnumList, workspaces, createdBys, userGroups, createdTimeFrom, createdTimeTo, modifiedTimeFrom,
+        modifiedTimeTo, containsText, dataSourceTypeEnumList, sourceTypeEnumList, connectionTypeEnumList, published, pageable
     );
 
     return ResponseEntity.ok(this.pagedResourcesAssembler.toResource(dataSources, resourceAssembler));
@@ -989,7 +1101,7 @@ public class DataSourceController {
 
     DataSourceListCriterionKey criterionKeyEnum = DataSourceListCriterionKey.valueOf(criterionKey);
 
-    if(criterionKeyEnum == null){
+    if (criterionKeyEnum == null) {
       throw new ResourceNotFoundException("Criterion(" + criterionKey + ") is not founded.");
     }
 

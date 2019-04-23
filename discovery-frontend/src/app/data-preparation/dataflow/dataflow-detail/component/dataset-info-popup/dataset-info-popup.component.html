@@ -17,15 +17,19 @@
   <div class="ddp-data-filename"
        [class.ddp-selected]="isDatasetNameEdit"
        (clickOutside)="isDatasetNameEdit ? setDatasetName(): null;">
-    <em class="{{ prepCommonUtil.getIconClass(selectedDataSet.dsType === DsType.WRANGLED ? 'dataset' : 'hive') }}"></em>
+    <em class="ddp-icon-file-svg">
+      <svg-icon-component [name]="prepCommonUtil.getNameForSvgWithDataset(selectedDataSet)" [isBlackAndWhite]="false"></svg-icon-component>
+    </em>
     <div class="ddp-ui-input">
-      <input type="text" #dsName maxlength="50"
+      <input type="text" #dsName maxlength="150"
              placeholder="{{'msg.comm.ui.create.name' | translate}}"
              (keyup.enter)="isDatasetNameEdit ? updateDataset() : null;"
              [(ngModel)]="datasetName" />
       <span class="ddp-btn-check" (click)="$event.stopPropagation(); updateDataset();"></span>
     </div>
-    <span class="ddp-txt-filename">{{selectedDataSet.dsName}}
+    <span class="ddp-txt-filename"
+          title="{{selectedDataSet.dsName}}">
+      {{selectedDataSet.dsName}}
       <a href="javascript:" class="ddp-link-edit"
          (click)="!isDatasetNameEdit ? onDatasetNameEdit($event):$event.stopPropagation();">
         <em class="ddp-icon-edit2"></em>
@@ -43,12 +47,18 @@
     </div>
 
     <span class="ddp-txt-explain">
+      <span *ngIf="selectedDataSet.dsDesc; else notMaxLength"
+            title="{{selectedDataSet.dsDesc}}"
+            [innerHTML]="getDescriptionWithBR(selectedDataSet.dsDesc)">
+      </span>
+      <ng-template #notMaxLength>
         <span  [innerHTML]="getDescriptionWithBR(selectedDataSet.dsDesc)"></span>
+      </ng-template>
         <a href="javascript:" class="ddp-link-edit"
            (click)="!isDatasetDescEdit ? onDatasetDescEdit($event):$event.stopPropagation();">
         <em class="ddp-icon-edit2"></em>
       </a>
-      </span>
+    </span>
 
   </div>
 

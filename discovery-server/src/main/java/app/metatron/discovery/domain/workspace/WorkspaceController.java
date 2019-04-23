@@ -59,14 +59,14 @@ import app.metatron.discovery.common.entity.SearchParamValidator;
 import app.metatron.discovery.common.exception.BadRequestException;
 import app.metatron.discovery.common.exception.ResourceNotFoundException;
 import app.metatron.discovery.domain.CollectionPatch;
+import app.metatron.discovery.domain.dataconnection.DataConnection;
+import app.metatron.discovery.domain.dataconnection.DataConnectionPredicate;
+import app.metatron.discovery.domain.dataconnection.DataConnectionRepository;
 import app.metatron.discovery.domain.datasource.DataSource;
 import app.metatron.discovery.domain.datasource.DataSource.ConnectionType;
 import app.metatron.discovery.domain.datasource.DataSource.DataSourceType;
 import app.metatron.discovery.domain.datasource.DataSourcePredicate;
 import app.metatron.discovery.domain.datasource.DataSourceRepository;
-import app.metatron.discovery.domain.datasource.connection.DataConnection;
-import app.metatron.discovery.domain.datasource.connection.DataConnectionPredicate;
-import app.metatron.discovery.domain.datasource.connection.DataConnectionRepository;
 import app.metatron.discovery.domain.notebook.NoteBookConnectorPredicate;
 import app.metatron.discovery.domain.notebook.NotebookConnector;
 import app.metatron.discovery.domain.notebook.NotebookConnectorRepository;
@@ -416,25 +416,15 @@ public class WorkspaceController {
   public @ResponseBody
   ResponseEntity<?> findConnectionsInWorkspace(@PathVariable("id") String id,
                                                @RequestParam(value = "name", required = false) String name,
-                                               @RequestParam(value = "type", required = false) String type,
                                                @RequestParam(value = "implementor", required = false) String implementor,
                                                @RequestParam(value = "authenticationType", required = false) String authenticationType,
-                                               Pageable pageable,
-                                               PersistentEntityResourceAssembler resourceAssembler) {
+                                               Pageable pageable) {
 
     LOGGER.debug("name = {}", name);
     LOGGER.debug("implementor = {}", implementor);
     LOGGER.debug("authenticationType = {}", authenticationType);
     LOGGER.debug("workspaceId = {}", id);
     LOGGER.debug("pageable = {}", pageable);
-
-    // Validate SourceType
-    DataConnection.SourceType sourceType = SearchParamValidator
-        .enumUpperValue(DataConnection.SourceType.class, type, "type");
-
-    // Validate Implementor
-    DataConnection.Implementor implementorType = SearchParamValidator
-        .enumUpperValue(DataConnection.Implementor.class, implementor, "implementor");
 
     DataConnection.AuthenticationType authenticationTypeValue = null;
     if (StringUtils.isNotEmpty(authenticationType)) {
@@ -444,7 +434,7 @@ public class WorkspaceController {
 
     // Get Predicate
     Predicate searchPredicated = DataConnectionPredicate
-        .searchListForWorkspace(name, sourceType, implementorType, authenticationTypeValue, id);
+        .searchListForWorkspace(name, implementor, authenticationTypeValue, id);
 
     // 기본 정렬 조건 셋팅
     if (pageable.getSort() == null || !pageable.getSort().iterator().hasNext()) {
@@ -453,7 +443,7 @@ public class WorkspaceController {
     }
     Page<DataConnection> connections = dataConnectionRepository.findAll(searchPredicated, pageable);
 
-    return ResponseEntity.ok(this.pagedResourcesAssembler.toResource(connections, resourceAssembler));
+    return ResponseEntity.ok(this.pagedResourcesAssembler.toResource(connections));
   }
 
   /**

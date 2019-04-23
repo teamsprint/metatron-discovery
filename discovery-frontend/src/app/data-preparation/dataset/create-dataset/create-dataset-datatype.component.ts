@@ -60,11 +60,6 @@ export class CreateDatasetDataTypeComponent extends AbstractPopupComponent imple
 
     super.ngOnInit();
 
-    if (sessionStorage.getItem('DATAFLOW_ID')) {
-      this.datasetService.dataflowId = sessionStorage.getItem('DATAFLOW_ID');
-      sessionStorage.removeItem('DATAFLOW_ID');
-    }
-
   }
 
   // Destory
@@ -98,6 +93,12 @@ export class CreateDatasetDataTypeComponent extends AbstractPopupComponent imple
           data: null
         });
         break;
+      case 'url' :
+        this.popupService.notiPopup({
+          name: 'select-url',
+          data: null
+        });
+        break;
     }
   } // function - next
 
@@ -119,12 +120,6 @@ export class CreateDatasetDataTypeComponent extends AbstractPopupComponent imple
   public close() {
     super.close();
 
-
-    // Check if came from dataflow
-    if (this.datasetService.dataflowId) {
-      this.datasetService.dataflowId = undefined;
-    }
-
     this.popupService.notiPopup({
       name: 'close-create',
       data: null
@@ -136,7 +131,7 @@ export class CreateDatasetDataTypeComponent extends AbstractPopupComponent imple
    * Check if staging db is enabled
    */
   public isStagingEnabled() : boolean {
-    return StorageService.isEnableStageDB
+    return StorageService.isEnableStageDB;
   }
 
 
