@@ -16,21 +16,21 @@ export class EngineService extends AbstractService {
   /**
    * 전체 서버 목록 조회(상태 포함)
    */
-  public getMonitoring(): Promise<any> {
+  public getMonitoring() {
     return this.get(this.URL_MONITORING);
   }
 
   /**
    * 서버 타입별 상태 조회
    */
-  public getMonitoringServersHealth(): Promise<any> {
+  public getMonitoringServersHealth() {
     return this.get(this.URL_MONITORING + '/servers/health');
   }
 
   /**
    * 차트조회
    */
-  public getMonitoringQuery(): Promise<any> {
+  public getMonitoringQuery() {
     return this.get(this.URL_MONITORING + '/query');
   }
 }
