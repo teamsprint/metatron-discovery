@@ -22,13 +22,13 @@
 
   <!-- contents det -->
   <ng-template [ngIf]="isSelectedContent.isOverview()">
-    <div overview (completeLoad)="completeContentLoad()"></div>
+    <div overview></div>
   </ng-template>
   <ng-template [ngIf]="isSelectedContent.isIngestion()">
-    <div ingestion (completeLoad)="completeContentLoad()"></div>
+    <div ingestion></div>
   </ng-template>
   <ng-template [ngIf]="isSelectedContent.isQuery()">
-    <div query (completeLoad)="completeContentLoad()"></div>
+    <div query></div>
   </ng-template>
   <!-- //contents det -->
 

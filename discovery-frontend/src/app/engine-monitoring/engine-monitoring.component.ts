@@ -16,31 +16,15 @@ import {AfterViewInit, Component, ElementRef, Injector, OnDestroy, OnInit} from 
 import {AbstractComponent} from '../common/component/abstract.component';
 import {ActivatedRoute} from '@angular/router';
 import {Engine} from '../domain/engine-monitoring/engine';
-import {EngineService} from "./service/engine.service";
+import {EngineService} from './service/engine.service';
 
 @Component({
   selector: 'engine-monitoring',
-  templateUrl: './engine-monitoring.component.html',
+  templateUrl: './engine-monitoring.component.html'
 })
 export class EngineMonitoringComponent extends AbstractComponent implements OnInit, OnDestroy, AfterViewInit {
 
-  /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-  | Private Variables
-  |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
-
-  /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-  | Protected Variables
-  |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
-
-  /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-  | Public Variables
-  |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
-
   public isSelectedContent: Engine.Content;
-
-  /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-  | Constructor
-  |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
   constructor(
     protected elementRef: ElementRef,
@@ -50,19 +34,15 @@ export class EngineMonitoringComponent extends AbstractComponent implements OnIn
     super(elementRef, injector);
   }
 
-  /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-  | Override Method
-  |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
-
   public ngOnInit() {
+
     super.ngOnInit();
 
     this.subscriptions.push(
       this.activatedRoute.data.subscribe((params: Engine.MonitoringRouterParams) => {
         this.isSelectedContent = new Engine.Content(params.type);
-      }),
+      })
     );
-    this.init();
   }
 
   public ngAfterViewInit() {
@@ -72,31 +52,5 @@ export class EngineMonitoringComponent extends AbstractComponent implements OnIn
   public ngOnDestroy() {
     super.ngOnDestroy();
   }
-
-  /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-  | Public Method
-  |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
-
-  public init(){
-
-  }
-
-  public completeContentLoad() {
-    this.loadingHide();
-  }
-
-
-
-  /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-   | Protected Method
-   |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
-
-  /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-   | Private Method
-   |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
-
-
-
-
 
 }

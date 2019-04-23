@@ -12,41 +12,22 @@
  * limitations under the License.
  */
 
-import {AfterViewInit, Component, ElementRef, EventEmitter, Injector, OnDestroy, OnInit, Output} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, Injector, OnDestroy, OnInit} from '@angular/core';
 import {AbstractComponent} from '../../../common/component/abstract.component';
-import {StateService} from '../../service/state.service';
 import {EngineService} from '../../service/engine.service';
-import {Engine} from "../../../domain/engine-monitoring/engine";
+import {Engine} from '../../../domain/engine-monitoring/engine';
+import {error} from '@angular/compiler/src/util';
+import * as _ from 'lodash';
 
 @Component({
   selector: '[overview]',
   templateUrl: './overview.component.html',
-  host: {'[class.ddp-wrap-contents-det]': 'true'},
+  host: { '[class.ddp-wrap-contents-det]': 'true' }
 })
 export class OverviewComponent extends AbstractComponent implements OnInit, OnDestroy, AfterViewInit {
 
-  /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-  | Private Variables
-  |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
+  public clusterStatus: Engine.ClusterStatus = new Engine.ClusterStatus();
 
-  @Output('completeLoad')
-  private readonly _completeLoad = new EventEmitter();
-
-
-
-  /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-  | Protected Variables
-  |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
-
-  /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-  | Public Variables
-  |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
-  public clusterStatus:Engine.ClusterStatus = new Engine.ClusterStatus();
-  /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-  | Constructor
-  |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
-
-  // noinspection JSUnusedLocalSymbols
   constructor(
     protected elementRef: ElementRef,
     protected injector: Injector,
@@ -54,15 +35,9 @@ export class OverviewComponent extends AbstractComponent implements OnInit, OnDe
     super(elementRef, injector);
   }
 
-  /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-  | Override Method
-  |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
-
   public ngOnInit() {
     super.ngOnInit();
-    this._completeLoad.emit();
-    this.init();
-
+    this._initialize();
   }
 
   public ngAfterViewInit() {
@@ -73,64 +48,14 @@ export class OverviewComponent extends AbstractComponent implements OnInit, OnDe
     super.ngOnDestroy();
   }
 
-
-  /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-  | Public Method
-  |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
-
-  public init(){
-    this._initView();
-  }
-
-  /**
-   * 전체 서버 목록 조회(상태 포함)
-   */
-  public getMonitoring(){
-    this.loadingShow();
-    // 전체 서버 목록 조회(상태 포함)
-    this.engineService.getMonitoring().then((result) => {
-      this.loadingHide();
-
-    }).catch((error) => {
-      this.loadingHide();
-    });
-
-  }
-  /**
-   * 서버 타입별 상태 조회
-   */
-  public getMonitoringServersHealth(){
-    this.loadingShow();
-    // 서버 타입별 상태 조회
-    this.engineService.getMonitoringServersHealth().then((result) => {
-      this.loadingHide();
-
-    }).catch((error)=> {
-      this.loadingHide();
-
-    });
-  }
-
-  /**
-   * 차트조회
-   */
-  public getMonitoringQuery(){
-    this.loadingShow();
-    // 차트조회
-    this.engineService.getMonitoringQuery().then((result) => {
-        this.loadingHide();
-      }
-    ).catch((error)=> {
-      this.loadingHide();
-
-    });
-
-  }
   public getStatusClass(status: string): string {
+
     let result = 'ddp-icon-status-success';
-    if(undefined == status ){
+
+    if (_.isNil(status)) {
       return result;
     }
+
     switch (status.toUpperCase()) {
       case 'true':
         result = 'ddp-icon-status-success';
@@ -145,31 +70,38 @@ export class OverviewComponent extends AbstractComponent implements OnInit, OnDe
         console.error('정의되지 않은 아이콘 타입입니다.', status);
         break;
     }
+
     return result;
   }
 
-  /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-  | Protected Method
-  |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
-
-  /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-  | Private Method
-  |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
-
   /**
-   * ui init
-   * @param
-   * @private
+   * 전체 서버 목록 조회(상태 포함)
    */
-  private _initView() {
-    // 전체 서버 목록 조회(상태 포함)
-    this.getMonitoring();
-    // 서버 타입별 상태 조회
-    this.getMonitoringServersHealth();
-    // 차트조회
-    // this.getMonitoringQuery();getMonitoringQuery
-    console.log('initView');
+  private _getMonitoringPromise() {
+    return new Promise((resolve, reject) => {
+      return this.engineService.getMonitoring()
+        .then(resolve)
+        .catch(reject)
+    })
   }
 
+  /**
+   * 서버 타입별 상태 조회
+   */
+  private _getMonitoringServersHealthPromise() {
+    return new Promise((resolve, reject) => {
+      return this.engineService.getMonitoringServersHealth()
+        .then(resolve)
+        .catch(reject)
+    });
+  }
 
+  private _initialize() {
+    Promise.resolve()
+      .then(() => this.loadingShow())
+      .then(() => this._getMonitoringPromise().then())
+      .then(() => this._getMonitoringServersHealthPromise().then())
+      .then(() => this.loadingHide())
+      .catch(error => this.commonExceptionHandler(error));
+  }
 }

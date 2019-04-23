@@ -80,32 +80,32 @@
       <div class="ddp-ui-status-value">
         <div class="ddp-label-status type-broker">
           Broker
-          <em ngClass="{{getStatusClass(clusterStatus.broker)}}"></em>
+          <em [ngClass]="[getStatusClass(clusterStatus.broker)]"></em>
         </div>
       </div>
       <div class="ddp-ui-status-value">
         <div class="ddp-label-status type-coordinator">
           Coordinator
-          <em ngClass="{{getStatusClass(clusterStatus.coordinator)}}" ></em>
+          <em [ngClass]="[getStatusClass(clusterStatus.coordinator)]"></em>
         </div>
       </div>
 
       <div class="ddp-ui-status-value">
         <div class="ddp-label-status type-historical">
           Historical
-          <em ngClass="{{getStatusClass(clusterStatus.historical)}}"></em>
+          <em [ngClass]="[getStatusClass(clusterStatus.historical)]"></em>
         </div>
       </div>
       <div class="ddp-ui-status-value">
         <div class="ddp-label-status type-overlord">
           Overlord
-          <em ngClass="{{getStatusClass(clusterStatus.overlord)}}"></em>
+          <em [ngClass]="[getStatusClass(clusterStatus.overlord)]"></em>
         </div>
       </div>
       <div class="ddp-ui-status-value">
         <div class="ddp-label-status type-manager">
           Middle Manager
-          <em ngClass="{{getStatusClass(clusterStatus.coordinator)}}"></em>
+          <em [ngClass]="[getStatusClass(clusterStatus.coordinator)]"></em>
         </div>
       </div>
     </div>

@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-import {AfterViewInit, Component, ElementRef, EventEmitter, Injector, OnDestroy, OnInit, Output} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, Injector, OnDestroy, OnInit} from '@angular/core';
 import {AbstractComponent} from '../../../common/component/abstract.component';
 import {StateService} from '../../service/state.service';
 import {EngineService} from '../../service/engine.service';
@@ -20,28 +20,9 @@ import {EngineService} from '../../service/engine.service';
 @Component({
   selector: '[query]',
   templateUrl: './query.component.html',
-  host: {'[class.ddp-wrap-contents-det]': 'true'},
+  host: { '[class.ddp-wrap-contents-det]': 'true' }
 })
 export class QueryComponent extends AbstractComponent implements OnInit, OnDestroy, AfterViewInit {
-
-  /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-  | Private Variables
-  |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
-
-  @Output('completeLoad')
-  private readonly _completeLoad = new EventEmitter();
-
-  /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-  | Protected Variables
-  |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
-
-  /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-  | Public Variables
-  |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
-
-  /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-  | Constructor
-  |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
   // noinspection JSUnusedLocalSymbols
   constructor(
@@ -52,13 +33,9 @@ export class QueryComponent extends AbstractComponent implements OnInit, OnDestr
     super(elementRef, injector);
   }
 
-  /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-  | Override Method
-  |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
-
   public ngOnInit() {
     super.ngOnInit();
-    this._completeLoad.emit();
+    this.loadingHide();
   }
 
   public ngAfterViewInit() {
@@ -68,17 +45,5 @@ export class QueryComponent extends AbstractComponent implements OnInit, OnDestr
   public ngOnDestroy() {
     super.ngOnDestroy();
   }
-
-  /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-  | Public Method
-  |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
-
-  /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-  | Protected Method
-  |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
-
-  /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-  | Private Method
-  |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
 }
