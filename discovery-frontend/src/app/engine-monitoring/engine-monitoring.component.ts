@@ -16,6 +16,7 @@ import {AfterViewInit, Component, ElementRef, Injector, OnDestroy, OnInit} from 
 import {AbstractComponent} from '../common/component/abstract.component';
 import {ActivatedRoute} from '@angular/router';
 import {Engine} from '../domain/engine-monitoring/engine';
+import {EngineService} from "./service/engine.service";
 
 @Component({
   selector: 'engine-monitoring',
@@ -43,6 +44,7 @@ export class EngineMonitoringComponent extends AbstractComponent implements OnIn
 
   constructor(
     protected elementRef: ElementRef,
+    protected engineService: EngineService,
     protected injector: Injector,
     private activatedRoute: ActivatedRoute) {
     super(elementRef, injector);
@@ -60,6 +62,7 @@ export class EngineMonitoringComponent extends AbstractComponent implements OnIn
         this.isSelectedContent = new Engine.Content(params.type);
       }),
     );
+    this.init();
   }
 
   public ngAfterViewInit() {
@@ -74,16 +77,26 @@ export class EngineMonitoringComponent extends AbstractComponent implements OnIn
   | Public Method
   |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
+  public init(){
+
+  }
+
   public completeContentLoad() {
     this.loadingHide();
   }
 
-  /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-  | Protected Method
-  |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
+
 
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-  | Private Method
-  |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
+   | Protected Method
+   |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
+
+  /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+   | Private Method
+   |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
+
+
+
+
 
 }

@@ -52,4 +52,16 @@ export namespace Engine {
     }
   }
 
+  export class ClusterStatus {
+    // coordinator
+    public coordinator: string;
+    // historical
+    public historical: string;
+    // middleManager
+    public middleManager: string;
+    // broker
+    public broker: string;
+    // broker
+    public overlord: string;
+  }
 }

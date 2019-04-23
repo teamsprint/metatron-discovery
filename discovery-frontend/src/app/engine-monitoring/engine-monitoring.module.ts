@@ -25,6 +25,7 @@ import {HeaderOptionComponent} from './component/header-option/header-option.com
 import {HeaderMenuComponent} from './component/header-menu/header-menu.component';
 import {HeaderComponent} from './component/header/header.component';
 import {EngineServiceModule} from './service/engine-service.module';
+import {EngineService} from "./service/engine.service";
 
 const _routes = [
   {
@@ -65,6 +66,10 @@ const _routes = [
     HeaderMenuComponent,
     HeaderOptionComponent,
   ],
+  providers: [
+    // 엔진 서비스
+    EngineService
+  ]
 })
 export class EngineMonitoringModule {
 }

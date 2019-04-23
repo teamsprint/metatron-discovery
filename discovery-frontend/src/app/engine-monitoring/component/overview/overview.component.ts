@@ -16,6 +16,7 @@ import {AfterViewInit, Component, ElementRef, EventEmitter, Injector, OnDestroy,
 import {AbstractComponent} from '../../../common/component/abstract.component';
 import {StateService} from '../../service/state.service';
 import {EngineService} from '../../service/engine.service';
+import {Engine} from "../../../domain/engine-monitoring/engine";
 
 @Component({
   selector: '[overview]',
@@ -31,6 +32,8 @@ export class OverviewComponent extends AbstractComponent implements OnInit, OnDe
   @Output('completeLoad')
   private readonly _completeLoad = new EventEmitter();
 
+
+
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   | Protected Variables
   |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
@@ -38,7 +41,7 @@ export class OverviewComponent extends AbstractComponent implements OnInit, OnDe
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   | Public Variables
   |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
-
+  public clusterStatus:Engine.ClusterStatus = new Engine.ClusterStatus();
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   | Constructor
   |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
@@ -47,7 +50,6 @@ export class OverviewComponent extends AbstractComponent implements OnInit, OnDe
   constructor(
     protected elementRef: ElementRef,
     protected injector: Injector,
-    private stateService: StateService,
     private engineService: EngineService) {
     super(elementRef, injector);
   }
@@ -59,6 +61,8 @@ export class OverviewComponent extends AbstractComponent implements OnInit, OnDe
   public ngOnInit() {
     super.ngOnInit();
     this._completeLoad.emit();
+    this.init();
+
   }
 
   public ngAfterViewInit() {
@@ -69,9 +73,80 @@ export class OverviewComponent extends AbstractComponent implements OnInit, OnDe
     super.ngOnDestroy();
   }
 
+
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   | Public Method
   |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
+
+  public init(){
+    this._initView();
+  }
+
+  /**
+   * 전체 서버 목록 조회(상태 포함)
+   */
+  public getMonitoring(){
+    this.loadingShow();
+    // 전체 서버 목록 조회(상태 포함)
+    this.engineService.getMonitoring().then((result) => {
+      this.loadingHide();
+
+    }).catch((error) => {
+      this.loadingHide();
+    });
+
+  }
+  /**
+   * 서버 타입별 상태 조회
+   */
+  public getMonitoringServersHealth(){
+    this.loadingShow();
+    // 서버 타입별 상태 조회
+    this.engineService.getMonitoringServersHealth().then((result) => {
+      this.loadingHide();
+
+    }).catch((error)=> {
+      this.loadingHide();
+
+    });
+  }
+
+  /**
+   * 차트조회
+   */
+  public getMonitoringQuery(){
+    this.loadingShow();
+    // 차트조회
+    this.engineService.getMonitoringQuery().then((result) => {
+        this.loadingHide();
+      }
+    ).catch((error)=> {
+      this.loadingHide();
+
+    });
+
+  }
+  public getStatusClass(status: string): string {
+    let result = 'ddp-icon-status-success';
+    if(undefined == status ){
+      return result;
+    }
+    switch (status.toUpperCase()) {
+      case 'true':
+        result = 'ddp-icon-status-success';
+        break;
+      case 'warn':
+        result = 'ddp-icon-status-warning';
+        break;
+      case 'error':
+        result = 'ddp-icon-status-error';
+        break;
+      default:
+        console.error('정의되지 않은 아이콘 타입입니다.', status);
+        break;
+    }
+    return result;
+  }
 
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   | Protected Method
@@ -80,5 +155,21 @@ export class OverviewComponent extends AbstractComponent implements OnInit, OnDe
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   | Private Method
   |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
+
+  /**
+   * ui init
+   * @param
+   * @private
+   */
+  private _initView() {
+    // 전체 서버 목록 조회(상태 포함)
+    this.getMonitoring();
+    // 서버 타입별 상태 조회
+    this.getMonitoringServersHealth();
+    // 차트조회
+    // this.getMonitoringQuery();getMonitoringQuery
+    console.log('initView');
+  }
+
 
 }
