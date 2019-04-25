@@ -103,15 +103,17 @@ public class EngineMonitoringJob extends QuartzJobBean {
           if(health.isPresent()){
             if (health.get().equals("true")) {
               LOGGER.debug("{} status is normal", target.getHostname());
-            } else {
-              LOGGER.warn("{} status is not normal", target.getHostname());
 
               EngineMonitoring patchTarget = monitoringRepository.findOne(target.getId());
 
-              patchTarget.setErrorMessage("Unknown Error");
-              patchTarget.setStatus(false);
+              patchTarget.setErrorMessage(null);
+              patchTarget.setErrorTime(null);
+              patchTarget.setStatus(true);
 
               monitoringRepository.save(patchTarget);
+
+            } else {
+              LOGGER.warn("{} status is not normal", target.getHostname());
             }
           }
         } catch (Exception e) {

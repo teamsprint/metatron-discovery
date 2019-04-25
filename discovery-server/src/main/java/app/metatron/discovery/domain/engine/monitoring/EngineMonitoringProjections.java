@@ -15,6 +15,7 @@
 package app.metatron.discovery.domain.engine.monitoring;
 
 import org.joda.time.DateTime;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.rest.core.config.Projection;
 
 import app.metatron.discovery.common.BaseProjections;
@@ -32,7 +33,7 @@ public class EngineMonitoringProjections extends BaseProjections {
 
     String getPort();
 
-    String getStatus();
+    Boolean getStatus();
 
   }
 
@@ -47,11 +48,14 @@ public class EngineMonitoringProjections extends BaseProjections {
 
     String getPort();
 
-    String getStatus();
+    Boolean getStatus();
 
     String getErrorMessage();
 
     DateTime getErrorTime();
+
+    @Value("#{target.getErrorDuration()}")
+    Long getErrorDuration();
   }
 
   @Projection(types = EngineMonitoring.class, name = "forServerHealth")
@@ -59,7 +63,7 @@ public class EngineMonitoringProjections extends BaseProjections {
 
     String getType();
 
-    String getStatus();
+    Boolean getStatus();
 
   }
 

@@ -58,6 +58,7 @@ public class EngineMonitoring extends AbstractHistoryEntity implements MetatronD
   @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
   DateTime errorTime;
 
+
   public EngineMonitoring() {
   }
 
@@ -105,7 +106,7 @@ public class EngineMonitoring extends AbstractHistoryEntity implements MetatronD
     return status;
   }
 
-  public void setStatus(boolean status) {
+  public void setStatus(Boolean status) {
     this.status = status;
   }
 
@@ -124,4 +125,13 @@ public class EngineMonitoring extends AbstractHistoryEntity implements MetatronD
   public void setErrorTime(DateTime errorTime) {
     this.errorTime = errorTime;
   }
+
+  public Long getErrorDuration() {
+    if(this.errorTime != null) {
+      return (DateTime.now().getMillis() - this.errorTime.getMillis()) / 1000;
+    } else {
+      return null;
+    }
+  }
+
 }
