@@ -16,7 +16,6 @@ import {AfterViewInit, Component, ElementRef, Injector, OnDestroy, OnInit} from 
 import {AbstractComponent} from '../common/component/abstract.component';
 import {ActivatedRoute} from '@angular/router';
 import {Engine} from '../domain/engine-monitoring/engine';
-import {EngineService} from './service/engine.service';
 
 @Component({
   selector: 'engine-monitoring',
@@ -26,11 +25,9 @@ export class EngineMonitoringComponent extends AbstractComponent implements OnIn
 
   public isSelectedContent: Engine.Content;
 
-  constructor(
-    protected elementRef: ElementRef,
-    protected engineService: EngineService,
-    protected injector: Injector,
-    private activatedRoute: ActivatedRoute) {
+  constructor(protected elementRef: ElementRef,
+              protected injector: Injector,
+              private activatedRoute: ActivatedRoute) {
     super(elementRef, injector);
   }
 
@@ -52,5 +49,4 @@ export class EngineMonitoringComponent extends AbstractComponent implements OnIn
   public ngOnDestroy() {
     super.ngOnDestroy();
   }
-
 }

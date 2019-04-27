@@ -25,11 +25,10 @@ import {EngineService} from '../../service/engine.service';
 export class QueryComponent extends AbstractComponent implements OnInit, OnDestroy, AfterViewInit {
 
   // noinspection JSUnusedLocalSymbols
-  constructor(
-    protected elementRef: ElementRef,
-    protected injector: Injector,
-    private stateService: StateService,
-    private engineService: EngineService) {
+  constructor(protected elementRef: ElementRef,
+              protected injector: Injector,
+              private stateService: StateService,
+              private engineService: EngineService) {
     super(elementRef, injector);
   }
 
@@ -45,5 +44,4 @@ export class QueryComponent extends AbstractComponent implements OnInit, OnDestr
   public ngOnDestroy() {
     super.ngOnDestroy();
   }
-
 }

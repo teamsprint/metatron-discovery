@@ -19,40 +19,19 @@ import {DruidClusterInformationComponent} from '../druid-cluster-information/dru
 @Component({
   selector: '[header-option]',
   templateUrl: './header-option.component.html',
-  host: {'[class.ddp-ui-header-option]': 'true'},
+  host: { '[class.ddp-ui-header-option]': 'true' }
 })
 export class HeaderOptionComponent extends AbstractComponent implements OnInit, OnDestroy, AfterViewInit {
-
-  /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-  | Private Variables
-  |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
   @ViewChild(DruidClusterInformationComponent)
   private readonly _druidClusterInformationComponent: DruidClusterInformationComponent;
 
-  /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-  | Protected Variables
-  |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
-
-  /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-  | Public Variables
-  |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
-
   public isShowOptionLayer: boolean;
 
-  /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-  | Constructor
-  |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
-
-  constructor(
-    protected elementRef: ElementRef,
-    protected injector: Injector) {
+  constructor(protected elementRef: ElementRef,
+              protected injector: Injector) {
     super(elementRef, injector);
   }
-
-  /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-  | Override Method
-  |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
   public ngOnInit() {
     super.ngOnInit();
@@ -65,10 +44,6 @@ export class HeaderOptionComponent extends AbstractComponent implements OnInit, 
   public ngOnDestroy() {
     super.ngOnDestroy();
   }
-
-  /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-  | Public Method
-  |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
   public showDruidClusterInformationModal() {
     this._druidClusterInformationComponent.show();
@@ -89,14 +64,6 @@ export class HeaderOptionComponent extends AbstractComponent implements OnInit, 
   public clickDruidGuide() {
     this._selfHide();
   }
-
-  /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-  | Protected Method
-  |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
-
-  /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-  | Private Method
-  |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
   private _selfHide() {
     this.isShowOptionLayer = false;

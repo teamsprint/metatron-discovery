@@ -26,15 +26,15 @@ import {Engine} from '../../../domain/engine-monitoring/engine';
 export class IngestionComponent extends AbstractComponent implements OnInit, OnDestroy, AfterViewInit {
 
   // noinspection JSUnusedLocalSymbols
-  constructor(
-    protected elementRef: ElementRef,
-    protected injector: Injector,
-    private stateService: StateService,
-    private engineService: EngineService) {
+  constructor(protected elementRef: ElementRef,
+              protected injector: Injector,
+              private stateService: StateService,
+              private engineService: EngineService) {
     super(elementRef, injector);
   }
 
   public ngOnInit() {
+
     super.ngOnInit();
     this.loadingHide();
 
