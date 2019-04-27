@@ -14,6 +14,9 @@
 
 import {Component} from '@angular/core';
 
+/**
+ * Do not process multilingual messages (intentional action)
+ */
 @Component({
   selector: 'error-icon',
   template: '<span class="ddp-tag-status type-error">Error</span>'
