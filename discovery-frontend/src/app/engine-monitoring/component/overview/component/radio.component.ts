@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-import {Component, ElementRef, EventEmitter, Injector, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {Component, ElementRef, EventEmitter, Injector, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges} from '@angular/core';
 import {AbstractComponent} from '../../../../common/component/abstract.component';
 import {CommonUtil} from '../../../../common/util/common.util';
 
@@ -21,7 +21,7 @@ import {CommonUtil} from '../../../../common/util/common.util';
   templateUrl: './radio.component.html',
   host: { '[class.ddp-wrap-edit3]': 'true' }
 })
-export class RadioComponent extends AbstractComponent implements OnInit, OnDestroy {
+export class RadioComponent extends AbstractComponent implements OnInit, OnDestroy, OnChanges {
 
   public readonly UUID = CommonUtil.getUUID();
   public readonly RADIO_BUTTON_NAME_PREFIX = 'overview-radio-button';
@@ -31,9 +31,9 @@ export class RadioComponent extends AbstractComponent implements OnInit, OnDestr
   public readonly BTN_TYPE_ERROR = 'ERROR';
 
   @Input()
-  public defaultSelectItem: 'ALL' | 'OK' | 'ERROR' = this.BTN_TYPE_ALL;
+  public selectItem: 'ALL' | 'OK' | 'ERROR' = this.BTN_TYPE_ALL;
 
-  private isSelectedType: 'ALL' | 'OK' | 'ERROR' = this.defaultSelectItem;
+  private isSelectedType: 'ALL' | 'OK' | 'ERROR' = this.selectItem;
 
   @Output('changeValue')
   private changeEvent: EventEmitter<'ALL' | 'OK' | 'ERROR'> = new EventEmitter();
@@ -49,6 +49,12 @@ export class RadioComponent extends AbstractComponent implements OnInit, OnDestr
 
   public ngOnDestroy() {
     super.ngOnDestroy();
+  }
+
+  public ngOnChanges(changes: SimpleChanges): void {
+    if (changes[ 'selectItem' ]) {
+      this.isSelectedType = changes[ 'selectItem' ].currentValue;
+    }
   }
 
   public selectType(btnType: 'ALL' | 'OK' | 'ERROR') {

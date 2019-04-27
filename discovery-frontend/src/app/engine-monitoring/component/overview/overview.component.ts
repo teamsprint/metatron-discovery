@@ -18,6 +18,7 @@ import {EngineService} from '../../service/engine.service';
 import {Engine} from '../../../domain/engine-monitoring/engine';
 import {PageResult} from '../../../domain/common/page';
 import * as _ from 'lodash';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: '[overview]',
@@ -36,14 +37,22 @@ export class OverviewComponent extends AbstractComponent implements OnInit, OnDe
 
   constructor(protected elementRef: ElementRef,
               protected injector: Injector,
+              private activatedRoute: ActivatedRoute,
               private engineService: EngineService) {
     super(elementRef, injector);
   }
 
   public ngOnInit() {
+
     super.ngOnInit();
     this._createPageableParameter();
     this._initializeView();
+
+    this.subscriptions.push(
+      this.activatedRoute.queryParams.subscribe(params => {
+        this._changeKeyword(_.get(params, 'keyword', ''));
+        this._changeStatus(_.get(params, 'status', 'ALL'));
+      }));
   }
 
   public ngAfterViewInit() {
@@ -143,12 +152,36 @@ export class OverviewComponent extends AbstractComponent implements OnInit, OnDe
     return new Promise((resolve, reject) => this.engineService.getMonitoringServersHealth().then(resolve).catch(reject));
   }
 
-  public changeKeyword(keyword: string) {
+  public searchByHostnameColumn(keyword: string) {
+    this.router.navigate([
+        `${Engine.Constant.ROUTE_PREFIX}${Engine.ContentType.OVERVIEW}`
+      ],
+      {
+        queryParams: {
+          keyword: encodeURIComponent(keyword),
+          status: encodeURIComponent(this.selectedStatus)
+        }
+      })
+  }
+
+  public searchByStatusColumn(status: 'ALL' | 'OK' | 'ERROR') {
+    this.router.navigate([
+        `${Engine.Constant.ROUTE_PREFIX}${Engine.ContentType.OVERVIEW}`
+      ],
+      {
+        queryParams: {
+          keyword: encodeURIComponent(this.keyword),
+          status: encodeURIComponent(status)
+        }
+      })
+  }
+
+  public _changeKeyword(keyword: string) {
     this._initTableSortDirection();
     this.keyword = keyword;
   }
 
-  public changeStatus(status: 'ALL' | 'OK' | 'ERROR') {
+  private _changeStatus(status: 'ALL' | 'OK' | 'ERROR') {
     this._initTableSortDirection();
     this.selectedStatus = status;
   }
