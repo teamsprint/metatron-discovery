@@ -16,11 +16,12 @@ import {AfterViewInit, Component, ElementRef, Injector, OnDestroy, OnInit} from 
 import {AbstractComponent} from '../../../common/component/abstract.component';
 import {StateService} from '../../service/state.service';
 import {EngineService} from '../../service/engine.service';
+import {Engine} from '../../../domain/engine-monitoring/engine';
 
 @Component({
   selector: '[ingestion]',
   templateUrl: './ingestion.component.html',
-  host: {'[class.ddp-wrap-contents-det]': 'true'},
+  host: { '[class.ddp-wrap-contents-det]': 'true' }
 })
 export class IngestionComponent extends AbstractComponent implements OnInit, OnDestroy, AfterViewInit {
 
@@ -36,6 +37,14 @@ export class IngestionComponent extends AbstractComponent implements OnInit, OnD
   public ngOnInit() {
     super.ngOnInit();
     this.loadingHide();
+
+    this.subscriptions.push(
+      this.stateService.changeTab$.subscribe(({ current, next }) => {
+        if (current.isIngestion()) {
+          this._changeTab(next);
+        }
+      })
+    );
   }
 
   public ngAfterViewInit() {
@@ -46,4 +55,7 @@ export class IngestionComponent extends AbstractComponent implements OnInit, OnD
     super.ngOnDestroy();
   }
 
+  private _changeTab(contentType: Engine.ContentType) {
+    this.router.navigate([ `${Engine.Constant.ROUTE_PREFIX}${contentType}` ]);
+  }
 }

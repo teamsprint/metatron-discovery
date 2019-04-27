@@ -16,9 +16,9 @@ import {AfterViewInit, Component, ElementRef, Injector, OnDestroy, OnInit} from 
 import {AbstractComponent} from '../../../common/component/abstract.component';
 import {EngineService} from '../../service/engine.service';
 import {Engine} from '../../../domain/engine-monitoring/engine';
-import {PageResult} from '../../../domain/common/page';
 import * as _ from 'lodash';
 import {ActivatedRoute} from '@angular/router';
+import {StateService} from '../../service/state.service';
 
 @Component({
   selector: '[overview]',
@@ -38,7 +38,8 @@ export class OverviewComponent extends AbstractComponent implements OnInit, OnDe
   constructor(protected elementRef: ElementRef,
               protected injector: Injector,
               private activatedRoute: ActivatedRoute,
-              private engineService: EngineService) {
+              private engineService: EngineService,
+              private stateService: StateService) {
     super(elementRef, injector);
   }
 
@@ -50,9 +51,17 @@ export class OverviewComponent extends AbstractComponent implements OnInit, OnDe
 
     this.subscriptions.push(
       this.activatedRoute.queryParams.subscribe(params => {
-        this._changeKeyword(_.get(params, 'keyword', ''));
+        this._changeKeyword(decodeURIComponent(_.get(params, 'keyword', '')));
         this._changeStatus(_.get(params, 'status', 'ALL'));
       }));
+
+    this.subscriptions.push(
+      this.stateService.changeTab$.subscribe(({ current, next }) => {
+        if (current.isOverview()) {
+          this._changeTab(next);
+        }
+      })
+    );
   }
 
   public ngAfterViewInit() {
@@ -66,24 +75,37 @@ export class OverviewComponent extends AbstractComponent implements OnInit, OnDe
   private _initializeView() {
     Promise.resolve()
       .then(() => this.loadingShow())
+      .then(() => this.engineService.getMonitoringServersHealth().then(result => this.clusterStatus = result))
       .then(() => {
-        return this._getMonitoringServersHealthWithPromise()
-          .then(result => {
-            this.clusterStatus = result;
-          })
-      })
-      .then(() => {
-        return this._getMonitoringWithPromise(Engine.Monitoring.ofEmpty(), this.pageResult, 'forDetailView')
-          .then(result => {
-            this.monitorings = result._embedded.monitorings;
-          })
+        return this.engineService.getMonitorings(Engine.Monitoring.ofEmpty(), this.pageResult, 'forDetailView')
+          .then(result => this.monitorings = result._embedded.monitorings)
       })
       .then(() => this.loadingHide())
+      .then(() => {
+        this.router.navigate([
+            `${Engine.Constant.ROUTE_PREFIX}${Engine.ContentType.OVERVIEW}`
+          ],
+          {
+            queryParams: {
+              keyword: encodeURIComponent(this.keyword),
+              status: this.selectedStatus
+            }
+          })
+      })
       .catch(error => {
         this.clusterStatus = new Engine.Cluster.Status();
         this.monitorings = [];
         this.commonExceptionHandler(error);
       });
+  }
+
+  /**
+   * Pagenation processing is not available on this screen
+   * create a Pageable parameter for importing a complete list
+   */
+  private _createPageableParameter() {
+    this.pageResult.number = 0;
+    this.pageResult.size = 5000;
   }
 
   /**
@@ -135,23 +157,6 @@ export class OverviewComponent extends AbstractComponent implements OnInit, OnDe
     return `${type.charAt(0).toLocaleUpperCase()}${type.substring(1, type.length)}`;
   }
 
-  /**
-   * Pagenation processing is not available on this screen
-   * create a Pageable parameter for importing a complete list
-   */
-  private _createPageableParameter() {
-    this.pageResult.number = 0;
-    this.pageResult.size = 5000;
-  }
-
-  private _getMonitoringWithPromise(monitoring: Engine.Monitoring, page: PageResult, projection: 'default' | 'forDetailView' | 'forServerHealth'): Promise<Engine.Result.Monitoring> {
-    return new Promise((resolve, reject) => this.engineService.getMonitorings(monitoring, page, projection).then(resolve).catch(reject));
-  }
-
-  private _getMonitoringServersHealthWithPromise(): Promise<Engine.Result.Health> {
-    return new Promise((resolve, reject) => this.engineService.getMonitoringServersHealth().then(resolve).catch(reject));
-  }
-
   public searchByHostnameColumn(keyword: string) {
     this.router.navigate([
         `${Engine.Constant.ROUTE_PREFIX}${Engine.ContentType.OVERVIEW}`
@@ -159,7 +164,7 @@ export class OverviewComponent extends AbstractComponent implements OnInit, OnDe
       {
         queryParams: {
           keyword: encodeURIComponent(keyword),
-          status: encodeURIComponent(this.selectedStatus)
+          status: this.selectedStatus
         }
       })
   }
@@ -171,7 +176,19 @@ export class OverviewComponent extends AbstractComponent implements OnInit, OnDe
       {
         queryParams: {
           keyword: encodeURIComponent(this.keyword),
-          status: encodeURIComponent(status)
+          status: status
+        }
+      })
+  }
+
+  private _changeTab(contentType: Engine.ContentType) {
+    this.router.navigate([
+        `${Engine.Constant.ROUTE_PREFIX}${contentType}`
+      ],
+      {
+        queryParams: {
+          keyword: encodeURIComponent(this.keyword),
+          status: this.selectedStatus
         }
       })
   }
