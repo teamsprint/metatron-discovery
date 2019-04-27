@@ -13,7 +13,7 @@
  */
 
 import {Component, ElementRef, HostListener, Injector, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import { NavigationEnd } from '@angular/router';
+import {NavigationEnd, NavigationExtras} from '@angular/router';
 import { AbstractComponent } from '../../../../common/component/abstract.component';
 import { WorkspaceService } from '../../../../workspace/service/workspace.service';
 import { Workspace } from '../../../../domain/workspace/workspace';
@@ -550,13 +550,18 @@ export class LNBComponent extends AbstractComponent implements OnInit, OnDestroy
 
   /**
    * 해당 메뉴로 이동
-   * @param {string} menu
    */
-  public move(menu: string) {
+  public move(menu: string, extras?: NavigationExtras) {
     if( this.router.url !== '/' + menu ) {
       // window.location.href = environment.baseHref + menu;
       this.loadingShow();
-      this.router.navigate([menu]).then();
+
+      if (extras) {
+        this.router.navigate([menu], extras).then();
+      } else {
+        this.router.navigate([menu]).then();
+      }
+
       this._closeLNB();
     }
   } // function - move
