@@ -50,14 +50,14 @@
 .ddp-ui-contents-det .ddp-box-type .ddp-wrap-status-value .ddp-label-status.type-coordinator {color:#f78887;}
 .ddp-ui-contents-det .ddp-box-type .ddp-wrap-status-value .ddp-label-status.type-historical {color:#93cf6d;}
 .ddp-ui-contents-det .ddp-box-type .ddp-wrap-status-value .ddp-label-status.type-overlord {color:#55bc9b;}
-.ddp-ui-contents-det .ddp-box-type .ddp-wrap-status-value .ddp-label-status.type-manager {color:#8899d9;}
+.ddp-ui-contents-det .ddp-box-type .ddp-wrap-status-value .ddp-label-status.type-middleManager {color:#8899d9;}
 
 .ddp-ui-contents-det .ddp-box-type .ddp-wrap-status-value .ddp-label-status:before {display:inline-block;position:absolute; left:0; top:0; bottom:0; width:5px; border-radius:4px; content:'';}
 .ddp-ui-contents-det .ddp-box-type .ddp-wrap-status-value .ddp-label-status.type-broker:before {background-color:#f7af88}
 .ddp-ui-contents-det .ddp-box-type .ddp-wrap-status-value .ddp-label-status.type-coordinator:before {background-color:#f78887}
 .ddp-ui-contents-det .ddp-box-type .ddp-wrap-status-value .ddp-label-status.type-historical:before{background-color:#93cf6d}
 .ddp-ui-contents-det .ddp-box-type .ddp-wrap-status-value .ddp-label-status.type-overlord:before{background-color:#55bc9b}
-.ddp-ui-contents-det .ddp-box-type .ddp-wrap-status-value .ddp-label-status.type-manager:before{background-color:#8899d9}
+.ddp-ui-contents-det .ddp-box-type .ddp-wrap-status-value .ddp-label-status.type-middleManager:before{background-color:#8899d9}
 
 .ddp-type-server {padding-bottom:20px;}
 .ddp-type-server .ddp-box-top-setting .ddp-type-search {float:Left; margin:15px 20px 0 20px;}
@@ -79,6 +79,7 @@ table.ddp-table-detail3 tr th {position:relative;padding:9px 30px 9px 14px;color
 table.ddp-table-detail3 tr th:last-of-type {border-right:none}
 table.ddp-table-detail3 tr th [class*="ddp-icon-array"] {position:absolute; top:50%; right:5px; margin-top:-10px;}
 table.ddp-table-detail3 tr td {padding:9px 18px 9px 18px; border:1px solid #e7e7ea; border-left:none; vertical-align:top; color:#4b515b; font-size:13px;}
+table.ddp-table-detail3 tr:nth-child(odd) td {background-color:#fafafa;}
 table.ddp-table-detail3 tr td ul.ddp-list-data {margin:-9px -18px;}
 table.ddp-table-detail3 tr td ul.ddp-list-data li {padding:9px 18px 9px 18px;}
 table.ddp-table-detail3 tr td ul.ddp-list-data li:nth-child(odd) {background-color:#fafafa;}
@@ -91,7 +92,7 @@ table.ddp-table-detail3 tr td .ddp-data-node.type-broker {color:#f7af88;}
 table.ddp-table-detail3 tr td .ddp-data-node.type-coordinator {color:#f78887;}
 table.ddp-table-detail3 tr td .ddp-data-node.type-historical {color:#93cf6d;}
 table.ddp-table-detail3 tr td .ddp-data-node.type-overlord {color:#54bc9b;}
-table.ddp-table-detail3 tr td .ddp-data-node.type-manager {color:#8899d9;}
+table.ddp-table-detail3 tr td .ddp-data-node.type-middleManager {color:#8899d9;}
 table.ddp-table-detail3 tr td .ddp-type-status-error {position:relative;}
 table.ddp-table-detail3 tr td .ddp-type-status-error .ddp-txt-error {position:relative; font-style:normal; margin-left:8px; cursor:pointer;}
 table.ddp-table-detail3 tr td .ddp-type-status-error .ddp-txt-error  .ddp-icon-error {margin-right:4px;}

@@ -1,3 +1,5 @@
+import {PageResult} from '../common/page';
+
 /*
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +16,62 @@
 
 export namespace Engine {
 
+  export type MonitoringRouterParams = { 'type': Engine.ContentType };
+
+  export enum NodeType {
+    BROKER = 'broker',
+    COORDINATOR = 'coordinator',
+    HISTORICAL = 'historical',
+    OVERLORD = 'overlord',
+    MIDDLE_MANAGER = 'middleManager'
+  }
+
+  export class Monitoring {
+    id: string;
+    type: NodeType;
+    hostname: string;
+    port: string;
+    status: boolean;
+    errorMessage: string;
+    errorTime: string;
+    errorDuration: string;
+
+    public static ofEmpty() {
+      return new Monitoring();
+    }
+
+  }
+
+  export namespace Cluster {
+
+    export enum Code {
+      NORMAL = 'normal',
+      WARN = 'warn',
+      ERROR = 'error'
+    }
+
+    export class Status {
+      coordinator: Code;
+      historical: Code;
+      middleManager: Code;
+      broker: Code;
+      overlord: Code;
+    }
+  }
+
+  export namespace Result {
+    export class Monitoring {
+      _embedded: {
+        monitorings: Engine.Monitoring[];
+      };
+      page: PageResult;
+    }
+
+    export class Health extends Cluster.Status {
+
+    }
+  }
+
   export class Constant {
     public static readonly ROUTE_PREFIX = 'management/engine-monitoring/';
   }
@@ -23,8 +81,6 @@ export namespace Engine {
     INGESTION = 'ingestion',
     QUERY = 'query'
   }
-
-  export type MonitoringRouterParams = { 'type': Engine.ContentType };
 
   export class Content {
 
@@ -50,18 +106,5 @@ export namespace Engine {
     public isQuery() {
       return this.value === Content.query.toString();
     }
-  }
-
-  export class ClusterStatus {
-    // coordinator
-    public coordinator: string;
-    // historical
-    public historical: string;
-    // middleManager
-    public middleManager: string;
-    // broker
-    public broker: string;
-    // broker
-    public overlord: string;
   }
 }

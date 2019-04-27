@@ -12,21 +12,17 @@
   ~ limitations under the License.
   -->
 
-<!--suppress NsUnresolvedStyleClassReference -->
-<em class="ddp-bg-back"></em>
-<div class="ddp-ui-contents-in ddp-pad0">
-
-  <!-- top -->
-  <div header [content]="isSelectedContent"></div>
-  <!-- //top -->
-
-  <!-- contents det -->
-  <ng-template [ngIf]="isSelectedContent.isOverview()">
-    <div overview></div>
-  </ng-template>
-  <ng-template [ngIf]="isSelectedContent.isIngestion()">
-    <div ingestion></div>
-  </ng-template>
-  <!-- //contents det -->
-
+<div class="ddp-type-search"
+     [class.ddp-selected]="isNotEmptyInput()"
+     (click)="clearValue()">
+  <!--suppress HtmlFormInputWithoutLabel -->
+  <input type="text"
+         #inputElement
+         (click)="$event.stopPropagation()"
+         [attr.placeholder]="placeholder"
+         (keyup.enter)="keyupEnterHandler($event)"
+         (keyup.escape)="keyupEscapeHandler($event)"
+         (blur)="blurHandler()"
+         [ngModel]="keyword">
+  <a href="javascript:" [ngClass]="['ddp-btn-delete']"></a>
 </div>

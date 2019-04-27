@@ -16,7 +16,7 @@ import {AfterViewInit, Component, ElementRef, Injector, OnDestroy, OnInit} from 
 import {AbstractComponent} from '../../../common/component/abstract.component';
 import {EngineService} from '../../service/engine.service';
 import {Engine} from '../../../domain/engine-monitoring/engine';
-import {error} from '@angular/compiler/src/util';
+import {PageResult} from '../../../domain/common/page';
 import * as _ from 'lodash';
 
 @Component({
@@ -26,18 +26,24 @@ import * as _ from 'lodash';
 })
 export class OverviewComponent extends AbstractComponent implements OnInit, OnDestroy, AfterViewInit {
 
-  public clusterStatus: Engine.ClusterStatus = new Engine.ClusterStatus();
+  public clusterStatus = new Engine.Cluster.Status();
+  public monitorings: Engine.Monitoring[] = [];
 
-  constructor(
-    protected elementRef: ElementRef,
-    protected injector: Injector,
-    private engineService: EngineService) {
+  public keyword: string = '';
+  public selectedStatus: 'ALL' | 'OK' | 'ERROR' = 'ALL';
+  public tableSortProperty: string = '';
+  public tableSortDirection: '' | 'desc' | 'asc' = '';
+
+  constructor(protected elementRef: ElementRef,
+              protected injector: Injector,
+              private engineService: EngineService) {
     super(elementRef, injector);
   }
 
   public ngOnInit() {
     super.ngOnInit();
-    this._initialize();
+    this._createPageableParameter();
+    this._initializeView();
   }
 
   public ngAfterViewInit() {
@@ -48,60 +54,106 @@ export class OverviewComponent extends AbstractComponent implements OnInit, OnDe
     super.ngOnDestroy();
   }
 
-  public getStatusClass(status: string): string {
-
-    let result = 'ddp-icon-status-success';
-
-    if (_.isNil(status)) {
-      return result;
-    }
-
-    switch (status.toUpperCase()) {
-      case 'true':
-        result = 'ddp-icon-status-success';
-        break;
-      case 'warn':
-        result = 'ddp-icon-status-warning';
-        break;
-      case 'error':
-        result = 'ddp-icon-status-error';
-        break;
-      default:
-        console.error('정의되지 않은 아이콘 타입입니다.', status);
-        break;
-    }
-
-    return result;
-  }
-
-  /**
-   * 전체 서버 목록 조회(상태 포함)
-   */
-  private _getMonitoringPromise() {
-    return new Promise((resolve, reject) => {
-      return this.engineService.getMonitoring()
-        .then(resolve)
-        .catch(reject)
-    })
-  }
-
-  /**
-   * 서버 타입별 상태 조회
-   */
-  private _getMonitoringServersHealthPromise() {
-    return new Promise((resolve, reject) => {
-      return this.engineService.getMonitoringServersHealth()
-        .then(resolve)
-        .catch(reject)
-    });
-  }
-
-  private _initialize() {
+  private _initializeView() {
     Promise.resolve()
       .then(() => this.loadingShow())
-      .then(() => this._getMonitoringPromise().then())
-      .then(() => this._getMonitoringServersHealthPromise().then())
+      .then(() => {
+        return this._getMonitoringServersHealthWithPromise()
+          .then(result => {
+            this.clusterStatus = result;
+          })
+      })
+      .then(() => {
+        return this._getMonitoringWithPromise(Engine.Monitoring.ofEmpty(), this.pageResult, 'forDetailView')
+          .then(result => {
+            this.monitorings = result._embedded.monitorings;
+          })
+      })
       .then(() => this.loadingHide())
-      .catch(error => this.commonExceptionHandler(error));
+      .catch(error => {
+        this.clusterStatus = new Engine.Cluster.Status();
+        this.monitorings = [];
+        this.commonExceptionHandler(error);
+      });
+  }
+
+  /**
+   * Cllck hostname column
+   */
+  public clickHostameHeaderColumn(column: string) {
+    if (this.tableSortProperty == column) {
+      this.tableSortDirection = this.tableSortDirection == 'desc' ? 'asc' : 'desc';
+    } else {
+      this.tableSortDirection = 'desc';
+    }
+    this.tableSortProperty = column;
+  }
+
+  /**
+   * Create labels with five node types.
+   *  - broker, coordinator, historical, overlord, middleManager
+   */
+  public convertTypeLabel(type: Engine.NodeType) {
+    switch (type) {
+      case Engine.NodeType.BROKER:
+        return this._toCamelCase(type);
+      case Engine.NodeType.COORDINATOR:
+        return this._toCamelCase(type);
+      case Engine.NodeType.HISTORICAL:
+        return this._toCamelCase(type);
+      case Engine.NodeType.OVERLORD:
+        return this._toCamelCase(type);
+      case Engine.NodeType.MIDDLE_MANAGER:
+        return this._toCamelCase(type);
+      default:
+        return type;
+    }
+  }
+
+  /**
+   * Utility function to change only the first letter to uppercase
+   */
+  private _toCamelCase(type: Engine.NodeType) {
+
+    if (_.isNil(type)) {
+      return '';
+    }
+
+    if (type.length === 0) {
+      return type;
+    }
+
+    return `${type.charAt(0).toLocaleUpperCase()}${type.substring(1, type.length)}`;
+  }
+
+  /**
+   * Pagenation processing is not available on this screen
+   * create a Pageable parameter for importing a complete list
+   */
+  private _createPageableParameter() {
+    this.pageResult.number = 0;
+    this.pageResult.size = 5000;
+  }
+
+  private _getMonitoringWithPromise(monitoring: Engine.Monitoring, page: PageResult, projection: 'default' | 'forDetailView' | 'forServerHealth'): Promise<Engine.Result.Monitoring> {
+    return new Promise((resolve, reject) => this.engineService.getMonitorings(monitoring, page, projection).then(resolve).catch(reject));
+  }
+
+  private _getMonitoringServersHealthWithPromise(): Promise<Engine.Result.Health> {
+    return new Promise((resolve, reject) => this.engineService.getMonitoringServersHealth().then(resolve).catch(reject));
+  }
+
+  public changeKeyword(keyword: string) {
+    this._initTableSortDirection();
+    this.keyword = keyword;
+  }
+
+  public changeStatus(status: 'ALL' | 'OK' | 'ERROR') {
+    this._initTableSortDirection();
+    this.selectedStatus = status;
+  }
+
+  private _initTableSortDirection() {
+    this.tableSortDirection = '';
   }
 }

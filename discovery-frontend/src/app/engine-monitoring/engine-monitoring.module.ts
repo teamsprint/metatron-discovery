@@ -25,36 +25,38 @@ import {HeaderOptionComponent} from './component/header-option/header-option.com
 import {HeaderMenuComponent} from './component/header-menu/header-menu.component';
 import {HeaderComponent} from './component/header/header.component';
 import {EngineServiceModule} from './service/engine-service.module';
-import {EngineService} from "./service/engine.service";
+import {EngineService} from './service/engine.service';
+import {StatusComponent} from './component/overview/component/status.component';
+import {OkIconComponent} from './component/overview/component/ok-icon.component';
+import {ErrorIconComponent} from './component/overview/component/error-icon.component';
+import {SearchComponent} from './component/overview/component/search.component';
+import {RadioComponent} from './component/overview/component/radio.component';
+import {TableSortPipe} from './component/overview/component/table-sort.pipe';
+import {TableFilterPipe} from './component/overview/component/table-filter.pipe';
 
 const _routes = [
   {
     path: '',
     redirectTo: Engine.ContentType.OVERVIEW,
-    pathMatch: 'full',
+    pathMatch: 'full'
   },
   {
     path: Engine.ContentType.OVERVIEW,
     component: EngineMonitoringComponent,
-    data: {'type': Engine.ContentType.OVERVIEW},
+    data: { 'type': Engine.ContentType.OVERVIEW }
   },
   {
     path: Engine.ContentType.INGESTION,
     component: EngineMonitoringComponent,
-    data: {'type': Engine.ContentType.INGESTION},
-  },
-  {
-    path: Engine.ContentType.QUERY,
-    component: EngineMonitoringComponent,
-    data: {'type': Engine.ContentType.QUERY},
-  },
+    data: { 'type': Engine.ContentType.INGESTION }
+  }
 ];
 
 @NgModule({
   imports: [
     CommonModule,
     EngineServiceModule,
-    RouterModule.forChild(_routes),
+    RouterModule.forChild(_routes)
   ],
   declarations: [
     OverviewComponent,
@@ -65,6 +67,13 @@ const _routes = [
     HeaderComponent,
     HeaderMenuComponent,
     HeaderOptionComponent,
+    StatusComponent,
+    OkIconComponent,
+    ErrorIconComponent,
+    SearchComponent,
+    RadioComponent,
+    TableFilterPipe,
+    TableSortPipe
   ],
   providers: [
     EngineService
