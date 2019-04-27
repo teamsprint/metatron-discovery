@@ -26,12 +26,12 @@
          [ngClass]="['ddp-box-top-setting']">
       <overview-search [keyword]="keyword"
                        [placeholder]="'Search server name'"
-                       (changeValue)="searchByHostnameColumn($event)">
+                       (changeValue)="initTableSortDirection(); searchByHostnameColumn($event)">
       </overview-search>
       <div class="ddp-type-option">
         <div overview-radio
              [selectItem]="selectedStatus"
-             (changeValue)="searchByStatusColumn($event)">
+             (changeValue)="initTableSortDirection(); searchByStatusColumn($event)">
         </div>
         <ul class="ddp-list-tab-button">
           <li>

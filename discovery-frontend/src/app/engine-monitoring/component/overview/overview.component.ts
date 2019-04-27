@@ -51,6 +51,7 @@ export class OverviewComponent extends AbstractComponent implements OnInit, OnDe
 
     this.subscriptions.push(
       this.activatedRoute.queryParams.subscribe(params => {
+        this.initTableSortDirection();
         this._changeKeyword(decodeURIComponent(_.get(params, 'keyword', '')));
         this._changeStatus(_.get(params, 'status', 'ALL'));
       }));
@@ -183,16 +184,14 @@ export class OverviewComponent extends AbstractComponent implements OnInit, OnDe
   }
 
   public _changeKeyword(keyword: string) {
-    this._initTableSortDirection();
     this.keyword = keyword;
   }
 
   private _changeStatus(status: 'ALL' | 'OK' | 'ERROR') {
-    this._initTableSortDirection();
     this.selectedStatus = status;
   }
 
-  private _initTableSortDirection() {
+  public initTableSortDirection() {
     this.tableSortDirection = '';
   }
 }
