@@ -81,17 +81,6 @@ export class OverviewComponent extends AbstractComponent implements OnInit, OnDe
           .then(result => this.monitorings = result._embedded.monitorings)
       })
       .then(() => this.loadingHide())
-      .then(() => {
-        this.router.navigate([
-            `${Engine.Constant.ROUTE_PREFIX}${Engine.ContentType.OVERVIEW}`
-          ],
-          {
-            queryParams: {
-              keyword: encodeURIComponent(this.keyword),
-              status: this.selectedStatus
-            }
-          })
-      })
       .catch(error => {
         this.clusterStatus = new Engine.Cluster.Status();
         this.monitorings = [];
