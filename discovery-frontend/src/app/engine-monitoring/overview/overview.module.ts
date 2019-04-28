@@ -5,8 +5,8 @@ import {OkIconComponent} from './component/ok-icon.component';
 import {ErrorIconComponent} from './component/error-icon.component';
 import {SearchComponent} from './component/search.component';
 import {RadioComponent} from './component/radio.component';
-import {TableFilterPipe} from './component/table-filter.pipe';
-import {TableSortPipe} from './component/table-sort.pipe';
+import {TableFilterPipe} from './pipe/table-filter.pipe';
+import {TableSortPipe} from './pipe/table-sort.pipe';
 import {EngineService} from '../service/engine.service';
 import {CommonModule} from '../../common/common.module';
 
