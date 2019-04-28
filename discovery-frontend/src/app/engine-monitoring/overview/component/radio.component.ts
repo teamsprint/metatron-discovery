@@ -13,8 +13,8 @@
  */
 
 import {Component, ElementRef, EventEmitter, Injector, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges} from '@angular/core';
-import {AbstractComponent} from '../../../../common/component/abstract.component';
-import {CommonUtil} from '../../../../common/util/common.util';
+import {AbstractComponent} from '../../../common/component/abstract.component';
+import {CommonUtil} from '../../../common/util/common.util';
 
 @Component({
   selector: '[overview-radio]',

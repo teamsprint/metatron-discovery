@@ -13,12 +13,12 @@
  */
 
 import {AfterViewInit, Component, ElementRef, Injector, OnDestroy, OnInit} from '@angular/core';
-import {AbstractComponent} from '../../../common/component/abstract.component';
-import {EngineService} from '../../service/engine.service';
-import {Engine} from '../../../domain/engine-monitoring/engine';
+import {AbstractComponent} from '../../common/component/abstract.component';
+import {EngineService} from '../service/engine.service';
+import {Engine} from '../../domain/engine-monitoring/engine';
 import * as _ from 'lodash';
 import {ActivatedRoute} from '@angular/router';
-import {StateService} from '../../service/state.service';
+import {StateService} from '../service/state.service';
 
 @Component({
   selector: '[overview]',

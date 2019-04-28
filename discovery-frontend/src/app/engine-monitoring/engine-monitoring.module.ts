@@ -13,7 +13,6 @@
  */
 
 import {NgModule} from '@angular/core';
-import {OverviewComponent} from './component/overview/overview.component';
 import {IngestionComponent} from './component/ingestion/ingestion.component';
 import {QueryComponent} from './component/query/query.component';
 import {EngineMonitoringComponent} from './engine-monitoring.component';
@@ -26,13 +25,7 @@ import {HeaderMenuComponent} from './component/header-menu/header-menu.component
 import {HeaderComponent} from './component/header/header.component';
 import {EngineServiceModule} from './service/engine-service.module';
 import {EngineService} from './service/engine.service';
-import {StatusComponent} from './component/overview/component/status.component';
-import {OkIconComponent} from './component/overview/component/ok-icon.component';
-import {ErrorIconComponent} from './component/overview/component/error-icon.component';
-import {SearchComponent} from './component/overview/component/search.component';
-import {RadioComponent} from './component/overview/component/radio.component';
-import {TableSortPipe} from './component/overview/component/table-sort.pipe';
-import {TableFilterPipe} from './component/overview/component/table-filter.pipe';
+import {OverviewModule} from './overview/overview.module';
 
 const _routes = [
   {
@@ -55,25 +48,18 @@ const _routes = [
 @NgModule({
   imports: [
     CommonModule,
+    OverviewModule,
     EngineServiceModule,
     RouterModule.forChild(_routes)
   ],
   declarations: [
-    OverviewComponent,
-    IngestionComponent,
-    QueryComponent,
     EngineMonitoringComponent,
     DruidClusterInformationComponent,
     HeaderComponent,
     HeaderMenuComponent,
     HeaderOptionComponent,
-    StatusComponent,
-    OkIconComponent,
-    ErrorIconComponent,
-    SearchComponent,
-    RadioComponent,
-    TableFilterPipe,
-    TableSortPipe
+    IngestionComponent,
+    QueryComponent
   ],
   providers: [
     EngineService
