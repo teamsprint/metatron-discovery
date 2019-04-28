@@ -3105,5 +3105,18 @@
   "msg.metadata.th.column.logical.tooltip.title": "逻辑列名是什么？",
   "msg.metadata.th.column.logical.tooltip.desc": "在Metatron中，逻辑列名是用户普遍所使用的列名。生成用户的商务用语或者索引时，指定逻辑名。逻辑列名是在metatron中，制作图表或者工作台时所被使用。",
 
-  "msg.engine.monotoring.title": "發動機監控"
+  "msg.engine.monotoring.title": "Engine Monitoring",
+  "msg.engine.monotoring.overview": "Overview",
+  "msg.engine.monotoring.overview.cluster.name.prefix": "Status",
+  "msg.engine.monotoring.overview.error.layer.prefix": "node",
+  "msg.engine.monotoring.overview.server.name": "Server name",
+  "msg.engine.monotoring.overview.server.name.search": "Search server name",
+  "msg.engine.monotoring.overview.node.name": "Node name",
+  "msg.engine.monotoring.overview.status": "Status",
+  "msg.engine.monotoring.overview.status.radio.title": "Status",
+  "msg.engine.monotoring.overview.view.mode.tooltip.grid": "Grid View",
+  "msg.engine.monotoring.overview.view.mode.tooltip.card": "Card View",
+  "msg.engine.monotoring.error.label": "Error",
+  "msg.engine.monotoring.failure.time.label": "Failure time",
+  "msg.engine.monotoring.ingestion": "Ingestion"
 }

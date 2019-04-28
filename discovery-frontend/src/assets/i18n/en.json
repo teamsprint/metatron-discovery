@@ -4037,5 +4037,18 @@
   "msg.catalog.alert.catalog.already.exists" : "Catalog already exists",
   "msg.catalog.alert.catalog.create.success" : "'{{value}}' catalog is created.",
 
-  "msg.engine.monotoring.title": "Engine Monitoring"
+  "msg.engine.monotoring.title": "Engine Monitoring",
+  "msg.engine.monotoring.overview": "Overview",
+  "msg.engine.monotoring.overview.cluster.name.prefix": "Status",
+  "msg.engine.monotoring.overview.error.layer.prefix": "node",
+  "msg.engine.monotoring.overview.server.name": "Server Name",
+  "msg.engine.monotoring.overview.server.name.search": "Search server name",
+  "msg.engine.monotoring.overview.node.name": "Node Name",
+  "msg.engine.monotoring.overview.status": "Status",
+  "msg.engine.monotoring.overview.status.radio.title": "Status",
+  "msg.engine.monotoring.overview.view.mode.tooltip.grid": "Grid View",
+  "msg.engine.monotoring.overview.view.mode.tooltip.card": "Card View",
+  "msg.engine.monotoring.error.label": "Error",
+  "msg.engine.monotoring.failure.time.label": "Failure time",
+  "msg.engine.monotoring.ingestion": "Ingestion"
 }

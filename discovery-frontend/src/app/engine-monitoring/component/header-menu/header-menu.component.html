@@ -15,9 +15,9 @@
 <!--suppress NsUnresolvedStyleClassReference -->
 <ul class="ddp-list-top-menu">
   <li [class.ddp-selected]="content.isOverview()">
-    <a href="javascript:" (click)="changeTab(CONTENT_TYPE.OVERVIEW)">Overview</a>
+    <a href="javascript:" (click)="changeTab(CONTENT_TYPE.OVERVIEW)">{{ 'msg.engine.monotoring.overview' | translate }}</a>
   </li>
   <li [class.ddp-selected]="content.isIngestion()">
-    <a href="javascript:" (click)="changeTab(CONTENT_TYPE.INGESTION)">Ingestion</a>
+    <a href="javascript:" (click)="changeTab(CONTENT_TYPE.INGESTION)">{{ 'msg.engine.monotoring.ingestion' | translate }}</a>
   </li>
 </ul>
