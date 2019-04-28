@@ -77,13 +77,13 @@ export namespace Engine {
   // Value to be used only on View
   ////////////////////////////////////////////////////////////////////////////
 
+  export type MonitoringRouterParams = { 'type': Engine.ContentType };
+
   export enum ContentType {
     OVERVIEW = 'overview',
     INGESTION = 'ingestion',
     QUERY = 'query'
   }
-
-  export type MonitoringRouterParams = { 'type': Engine.ContentType };
 
   export class Constant {
     public static readonly ROUTE_PREFIX = 'management/engine-monitoring/';
@@ -119,5 +119,11 @@ export namespace Engine {
     ALL = 'ALL',
     OK = 'OK',
     ERROR = 'ERROR'
+  }
+
+  export enum TableSortDirection {
+    NONE = '',
+    DESC = 'desc',
+    ASC = 'asc'
   }
 }

@@ -64,9 +64,9 @@
         <tr (click)="clickHostameHeaderColumn('hostname')">
           <th>
             Server Name
-            <em [class.ddp-icon-array-default2]="tableSortDirection === ''"
-                [class.ddp-icon-array-asc2]="tableSortDirection === 'desc'"
-                [class.ddp-icon-array-des2]="tableSortDirection === 'asc'">
+            <em [class.ddp-icon-array-default2]="tableSortDirection === TABLE_SORT_DIRECTION.NONE"
+                [class.ddp-icon-array-asc2]="tableSortDirection === TABLE_SORT_DIRECTION.DESC"
+                [class.ddp-icon-array-des2]="tableSortDirection === TABLE_SORT_DIRECTION.ASC">
             </em>
           </th>
           <th>Node Name</th>

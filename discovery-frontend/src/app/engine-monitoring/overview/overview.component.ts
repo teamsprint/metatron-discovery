@@ -27,13 +27,16 @@ import {StateService} from '../service/state.service';
 })
 export class OverviewComponent extends AbstractComponent implements OnInit, OnDestroy, AfterViewInit {
 
+  private readonly ENGINE_MONITORING_OVERVIEW_ROUTER_URL = `${Engine.Constant.ROUTE_PREFIX}${Engine.ContentType.OVERVIEW}`;
+  public readonly TABLE_SORT_DIRECTION = Engine.TableSortDirection;
+
   public clusterStatus = new Engine.Cluster.Status();
   public monitorings: Engine.Monitoring[] = [];
 
   public keyword: string = '';
   public selectedMonitoringStatus: Engine.MonitoringStatus = Engine.MonitoringStatus.ALL;
   public tableSortProperty: string = '';
-  public tableSortDirection: '' | 'desc' | 'asc' = '';
+  public tableSortDirection: Engine.TableSortDirection = this.TABLE_SORT_DIRECTION.NONE;
 
   constructor(protected elementRef: ElementRef,
               protected injector: Injector,
@@ -102,11 +105,15 @@ export class OverviewComponent extends AbstractComponent implements OnInit, OnDe
    * Cllck hostname column
    */
   public clickHostameHeaderColumn(column: string) {
+
     if (this.tableSortProperty == column) {
-      this.tableSortDirection = this.tableSortDirection == 'desc' ? 'asc' : 'desc';
+      this.tableSortDirection = this.tableSortDirection == this.TABLE_SORT_DIRECTION.DESC
+        ? this.TABLE_SORT_DIRECTION.ASC
+        : this.TABLE_SORT_DIRECTION.DESC;
     } else {
-      this.tableSortDirection = 'desc';
+      this.tableSortDirection = this.TABLE_SORT_DIRECTION.DESC;
     }
+
     this.tableSortProperty = column;
   }
 
@@ -149,7 +156,7 @@ export class OverviewComponent extends AbstractComponent implements OnInit, OnDe
 
   public searchByHostnameColumn(keyword: string) {
     this.router.navigate([
-        `${Engine.Constant.ROUTE_PREFIX}${Engine.ContentType.OVERVIEW}`
+        this.ENGINE_MONITORING_OVERVIEW_ROUTER_URL
       ],
       {
         queryParams: {
@@ -159,9 +166,9 @@ export class OverviewComponent extends AbstractComponent implements OnInit, OnDe
       })
   }
 
-  public searchByStatusColumn(status: 'ALL' | 'OK' | 'ERROR') {
+  public searchByStatusColumn(status: Engine.MonitoringStatus) {
     this.router.navigate([
-        `${Engine.Constant.ROUTE_PREFIX}${Engine.ContentType.OVERVIEW}`
+        this.ENGINE_MONITORING_OVERVIEW_ROUTER_URL
       ],
       {
         queryParams: {
@@ -192,6 +199,6 @@ export class OverviewComponent extends AbstractComponent implements OnInit, OnDe
   }
 
   public initTableSortDirection() {
-    this.tableSortDirection = '';
+    this.tableSortDirection = this.TABLE_SORT_DIRECTION.NONE;
   }
 }
