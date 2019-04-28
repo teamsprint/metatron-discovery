@@ -30,7 +30,7 @@
       </overview-search>
       <div class="ddp-type-option">
         <div overview-radio
-             [selectItem]="selectedStatus"
+             [selectedMonitoringStatus]="selectedMonitoringStatus"
              (changeValue)="initTableSortDirection(); searchByStatusColumn($event)">
         </div>
         <ul class="ddp-list-tab-button">
@@ -74,7 +74,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr *ngFor="let monitoring of monitorings | tableSort:tableSortProperty:tableSortDirection | tableFilter:{'hostname': keyword, 'status': selectedStatus}">
+        <tr *ngFor="let monitoring of monitorings | tableSort:tableSortProperty:tableSortDirection | tableFilter:{'hostname': keyword, 'status': selectedMonitoringStatus}">
           <td>{{ monitoring.hostname }}</td>
           <td>
             <span class="ddp-data-node" [ngClass]="['type-' + monitoring.type]">

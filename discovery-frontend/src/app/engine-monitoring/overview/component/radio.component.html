@@ -19,18 +19,18 @@
     <label class="ddp-label-radio">
       <input type="radio"
              [attr.name]="UUID + RADIO_BUTTON_NAME_PREFIX"
-             [checked]="isSelectedType === BTN_TYPE_ALL"
-             (click)="selectType(BTN_TYPE_ALL)">
+             [checked]="selectedMonitoringStatus === MONITORING_STATUS.ALL"
+             (click)="selectType(MONITORING_STATUS.ALL)">
       <i class="ddp-icon-radio"></i>
       <span class="ddp-txt-radio">
-         {{ BTN_TYPE_ALL }}
+         {{ MONITORING_STATUS.ALL }}
       </span>
     </label>
     <label class="ddp-label-radio">
       <input type="radio"
              [attr.name]="UUID + RADIO_BUTTON_NAME_PREFIX"
-             [checked]="isSelectedType === BTN_TYPE_OK"
-             (click)="selectType(BTN_TYPE_OK)">
+             [checked]="selectedMonitoringStatus === MONITORING_STATUS.OK"
+             (click)="selectType(MONITORING_STATUS.OK)">
       <i class="ddp-icon-radio"></i>
       <span class="ddp-txt-radio">
         <ok-icon></ok-icon>
@@ -39,8 +39,8 @@
     <label class="ddp-label-radio">
       <input type="radio"
              [attr.name]="UUID + RADIO_BUTTON_NAME_PREFIX"
-             [checked]="isSelectedType === BTN_TYPE_ERROR"
-             (click)="selectType(BTN_TYPE_ERROR)">
+             [checked]="selectedMonitoringStatus === MONITORING_STATUS.ERROR"
+             (click)="selectType(MONITORING_STATUS.ERROR)">
       <i class="ddp-icon-radio"></i>
       <span class="ddp-txt-radio">
          <error-icon></error-icon>
@@ -49,4 +49,3 @@
   </div>
 </div>
 <!-- //edit option -->
-

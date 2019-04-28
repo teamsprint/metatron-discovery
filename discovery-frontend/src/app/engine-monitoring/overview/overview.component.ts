@@ -31,7 +31,7 @@ export class OverviewComponent extends AbstractComponent implements OnInit, OnDe
   public monitorings: Engine.Monitoring[] = [];
 
   public keyword: string = '';
-  public selectedStatus: 'ALL' | 'OK' | 'ERROR' = 'ALL';
+  public selectedMonitoringStatus: Engine.MonitoringStatus = Engine.MonitoringStatus.ALL;
   public tableSortProperty: string = '';
   public tableSortDirection: '' | 'desc' | 'asc' = '';
 
@@ -53,7 +53,7 @@ export class OverviewComponent extends AbstractComponent implements OnInit, OnDe
       this.activatedRoute.queryParams.subscribe(params => {
         this.initTableSortDirection();
         this._changeKeyword(decodeURIComponent(_.get(params, 'keyword', '')));
-        this._changeStatus(_.get(params, 'status', 'ALL'));
+        this._changeStatus(_.get(params, 'status', Engine.MonitoringStatus.ALL));
       }));
 
     this.subscriptions.push(
@@ -154,7 +154,7 @@ export class OverviewComponent extends AbstractComponent implements OnInit, OnDe
       {
         queryParams: {
           keyword: encodeURIComponent(keyword),
-          status: this.selectedStatus
+          status: this.selectedMonitoringStatus
         }
       })
   }
@@ -178,7 +178,7 @@ export class OverviewComponent extends AbstractComponent implements OnInit, OnDe
       {
         queryParams: {
           keyword: encodeURIComponent(this.keyword),
-          status: this.selectedStatus
+          status: this.selectedMonitoringStatus
         }
       })
   }
@@ -187,8 +187,8 @@ export class OverviewComponent extends AbstractComponent implements OnInit, OnDe
     this.keyword = keyword;
   }
 
-  private _changeStatus(status: 'ALL' | 'OK' | 'ERROR') {
-    this.selectedStatus = status;
+  private _changeStatus(status: Engine.MonitoringStatus) {
+    this.selectedMonitoringStatus = status;
   }
 
   public initTableSortDirection() {

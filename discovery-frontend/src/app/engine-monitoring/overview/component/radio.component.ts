@@ -12,31 +12,27 @@
  * limitations under the License.
  */
 
-import {Component, ElementRef, EventEmitter, Injector, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges} from '@angular/core';
+import {Component, ElementRef, EventEmitter, Injector, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {AbstractComponent} from '../../../common/component/abstract.component';
 import {CommonUtil} from '../../../common/util/common.util';
+import {Engine} from '../../../domain/engine-monitoring/engine';
 
 @Component({
   selector: '[overview-radio]',
   templateUrl: './radio.component.html',
   host: { '[class.ddp-wrap-edit3]': 'true' }
 })
-export class RadioComponent extends AbstractComponent implements OnInit, OnDestroy, OnChanges {
+export class RadioComponent extends AbstractComponent implements OnInit, OnDestroy {
 
   public readonly UUID = CommonUtil.getUUID();
   public readonly RADIO_BUTTON_NAME_PREFIX = 'overview-radio-button';
-
-  public readonly BTN_TYPE_ALL = 'ALL';
-  public readonly BTN_TYPE_OK = 'OK';
-  public readonly BTN_TYPE_ERROR = 'ERROR';
+  public readonly MONITORING_STATUS = Engine.MonitoringStatus;
 
   @Input()
-  public selectItem: 'ALL' | 'OK' | 'ERROR' = this.BTN_TYPE_ALL;
-
-  private isSelectedType: 'ALL' | 'OK' | 'ERROR' = this.selectItem;
+  public selectedMonitoringStatus: Engine.MonitoringStatus = this.MONITORING_STATUS.ALL;
 
   @Output('changeValue')
-  private changeEvent: EventEmitter<'ALL' | 'OK' | 'ERROR'> = new EventEmitter();
+  private readonly changeEvent: EventEmitter<Engine.MonitoringStatus> = new EventEmitter();
 
   constructor(protected elementRef: ElementRef,
               protected injector: Injector) {
@@ -51,14 +47,7 @@ export class RadioComponent extends AbstractComponent implements OnInit, OnDestr
     super.ngOnDestroy();
   }
 
-  public ngOnChanges(changes: SimpleChanges): void {
-    if (changes[ 'selectItem' ]) {
-      this.isSelectedType = changes[ 'selectItem' ].currentValue;
-    }
-  }
-
-  public selectType(btnType: 'ALL' | 'OK' | 'ERROR') {
-    this.isSelectedType = btnType;
+  public selectType(btnType: Engine.MonitoringStatus) {
     this.changeEvent.emit(btnType);
   }
 }

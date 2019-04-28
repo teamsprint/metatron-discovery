@@ -29,6 +29,7 @@ import { ConfirmModalComponent } from '../../../../common/component/modal/confir
 import { BuildInfo } from "../../../../../environments/build.env";
 import {CommonService} from "../../../../common/service/common.service";
 import {Extension} from "../../../../common/domain/extension";
+import {Engine} from '../../../../domain/engine-monitoring/engine';
 
 @Component({
   selector: 'app-lnb',
@@ -39,6 +40,8 @@ export class LNBComponent extends AbstractComponent implements OnInit, OnDestroy
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
    | Private Variables
    |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
+
+  public readonly ENGINE_OVERVIEW_MONITORING_STATUS = Engine.MonitoringStatus;
 
   // 즐겨찾기 플래그
   private isFavorFl: boolean = false;

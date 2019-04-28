@@ -16,8 +16,6 @@ import {PageResult} from '../common/page';
 
 export namespace Engine {
 
-  export type MonitoringRouterParams = { 'type': Engine.ContentType };
-
   export enum NodeType {
     BROKER = 'broker',
     COORDINATOR = 'coordinator',
@@ -36,10 +34,13 @@ export namespace Engine {
     errorTime: string;
     errorDuration: string;
 
+    ////////////////////////////////////////////////////////////////////////////
+    // Value to be used only on View
+    ////////////////////////////////////////////////////////////////////////////
+
     public static ofEmpty() {
       return new Monitoring();
     }
-
   }
 
   export namespace Cluster {
@@ -60,6 +61,7 @@ export namespace Engine {
   }
 
   export namespace Result {
+
     export class Monitoring {
       _embedded: {
         monitorings: Engine.Monitoring[];
@@ -68,18 +70,23 @@ export namespace Engine {
     }
 
     export class Health extends Cluster.Status {
-
     }
   }
 
-  export class Constant {
-    public static readonly ROUTE_PREFIX = 'management/engine-monitoring/';
-  }
+  ////////////////////////////////////////////////////////////////////////////
+  // Value to be used only on View
+  ////////////////////////////////////////////////////////////////////////////
 
   export enum ContentType {
     OVERVIEW = 'overview',
     INGESTION = 'ingestion',
     QUERY = 'query'
+  }
+
+  export type MonitoringRouterParams = { 'type': Engine.ContentType };
+
+  export class Constant {
+    public static readonly ROUTE_PREFIX = 'management/engine-monitoring/';
   }
 
   export class Content {
@@ -106,5 +113,11 @@ export namespace Engine {
     public isQuery() {
       return this.value === Content.query.toString();
     }
+  }
+
+  export enum MonitoringStatus {
+    ALL = 'ALL',
+    OK = 'OK',
+    ERROR = 'ERROR'
   }
 }
