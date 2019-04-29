@@ -38,6 +38,9 @@ export class OverviewComponent extends AbstractComponent implements OnInit, OnDe
   public tableSortProperty: string = '';
   public tableSortDirection: Engine.TableSortDirection = this.TABLE_SORT_DIRECTION.NONE;
 
+  public readonly VIEW_MODE = Engine.ViewMode;
+  public selectedViewMode: Engine.ViewMode = this.VIEW_MODE.GRID;
+
   constructor(protected elementRef: ElementRef,
               protected injector: Injector,
               private activatedRoute: ActivatedRoute,
@@ -200,5 +203,18 @@ export class OverviewComponent extends AbstractComponent implements OnInit, OnDe
 
   public initTableSortDirection() {
     this.tableSortDirection = this.TABLE_SORT_DIRECTION.NONE;
+  }
+
+  public changeViewMode(viewMode: Engine.ViewMode) {
+
+    if (_.isNil(viewMode)) {
+      return;
+    }
+
+    if (this.selectedViewMode === viewMode) {
+      return;
+    }
+
+    this.selectedViewMode = viewMode;
   }
 }

@@ -126,4 +126,9 @@ export namespace Engine {
     DESC = 'desc',
     ASC = 'asc'
   }
+
+  export enum ViewMode {
+    GRID = 'grid',
+    CARD = 'card'
+  }
 }

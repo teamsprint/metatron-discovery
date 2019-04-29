@@ -33,15 +33,15 @@
              (changeValue)="initTableSortDirection(); searchByStatusColumn($event)">
         </div>
         <ul class="ddp-list-tab-button">
-          <li>
-            <a href="javascript:"><em class="ddp-icon-grid"></em></a>
+          <li [class.ddp-selected]="selectedViewMode === VIEW_MODE.CARD">
+            <a href="javascript:" (click)="changeViewMode(VIEW_MODE.CARD)"><em class="ddp-icon-grid"></em></a>
             <div class="ddp-ui-tooltip-info">
               <em class="ddp-icon-view-top"></em>
               {{ 'msg.engine.monotoring.overview.view.mode.tooltip.card' | translate }}
             </div>
           </li>
-          <li [ngClass]="['ddp-selected']">
-            <a href="javascript:"><em class="ddp-icon-listgrid"></em></a>
+          <li [class.ddp-selected]="selectedViewMode === VIEW_MODE.GRID">
+            <a href="javascript:" (click)="changeViewMode(VIEW_MODE.GRID)"><em class="ddp-icon-listgrid"></em></a>
             <div class="ddp-ui-tooltip-info">
               <em class="ddp-icon-view-top"></em>
               {{ 'msg.engine.monotoring.overview.view.mode.tooltip.grid' | translate }}
