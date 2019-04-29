@@ -193,7 +193,7 @@ export class OverviewComponent extends AbstractComponent implements OnInit, OnDe
       })
   }
 
-  public _changeKeyword(keyword: string) {
+  private _changeKeyword(keyword: string) {
     this.keyword = keyword;
   }
 
