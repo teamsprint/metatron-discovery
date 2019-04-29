@@ -17,6 +17,7 @@ import {AbstractComponent} from '../../../common/component/abstract.component';
 import {StateService} from '../../service/state.service';
 import {EngineService} from '../../service/engine.service';
 import {Engine} from '../../../domain/engine-monitoring/engine';
+import {filter} from 'rxjs/operators';
 
 @Component({
   selector: '[ingestion]',
@@ -39,11 +40,9 @@ export class IngestionComponent extends AbstractComponent implements OnInit, OnD
     this.loadingHide();
 
     this.subscriptions.push(
-      this.stateService.changeTab$.subscribe(({ current, next }) => {
-        if (current.isIngestion()) {
-          this._changeTab(next);
-        }
-      })
+      this.stateService.changeTab$
+        .pipe(filter(({ current }) => current.isIngestion()))
+        .subscribe(({ next }) => this._changeTab(next))
     );
   }
 

@@ -19,6 +19,7 @@ import {Engine} from '../../domain/engine-monitoring/engine';
 import * as _ from 'lodash';
 import {ActivatedRoute} from '@angular/router';
 import {StateService} from '../service/state.service';
+import {filter} from 'rxjs/operators';
 
 @Component({
   selector: '[overview]',
@@ -27,8 +28,9 @@ import {StateService} from '../service/state.service';
 })
 export class OverviewComponent extends AbstractComponent implements OnInit, OnDestroy, AfterViewInit {
 
-  public readonly TABLE_SORT_DIRECTION = Engine.TableSortDirection;
   private readonly ENGINE_MONITORING_OVERVIEW_ROUTER_URL = `${Engine.Constant.ROUTE_PREFIX}${Engine.ContentType.OVERVIEW}`;
+
+  public readonly TABLE_SORT_DIRECTION = Engine.TableSortDirection;
 
   public clusterStatus = new Engine.Cluster.Status();
   public monitorings: Engine.Monitoring[] = [];
@@ -56,18 +58,17 @@ export class OverviewComponent extends AbstractComponent implements OnInit, OnDe
     this._initializeView();
 
     this.subscriptions.push(
-      this.activatedRoute.queryParams.subscribe(params => {
-        this._initTableSortDirection();
-        this._changeKeyword(decodeURIComponent(_.get(params, 'keyword', '')));
-        this._changeStatus(_.get(params, 'status', Engine.MonitoringStatus.ALL));
-      }));
+      this.activatedRoute.queryParams
+        .subscribe(params => {
+          this._initTableSortDirection();
+          this._changeKeyword(decodeURIComponent(_.get(params, 'keyword', '')));
+          this._changeStatus(_.get(params, 'status', Engine.MonitoringStatus.ALL));
+        }));
 
     this.subscriptions.push(
-      this.stateService.changeTab$.subscribe(({ current, next }) => {
-        if (current.isOverview()) {
-          this._changeTab(next);
-        }
-      })
+      this.stateService.changeTab$
+        .pipe(filter(({ current }) => current.isOverview()))
+        .subscribe(({ next }) => this._changeTab(next))
     );
   }
 
