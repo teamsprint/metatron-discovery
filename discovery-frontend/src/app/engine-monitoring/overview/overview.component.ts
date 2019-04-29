@@ -27,8 +27,8 @@ import {StateService} from '../service/state.service';
 })
 export class OverviewComponent extends AbstractComponent implements OnInit, OnDestroy, AfterViewInit {
 
-  private readonly ENGINE_MONITORING_OVERVIEW_ROUTER_URL = `${Engine.Constant.ROUTE_PREFIX}${Engine.ContentType.OVERVIEW}`;
   public readonly TABLE_SORT_DIRECTION = Engine.TableSortDirection;
+  private readonly ENGINE_MONITORING_OVERVIEW_ROUTER_URL = `${Engine.Constant.ROUTE_PREFIX}${Engine.ContentType.OVERVIEW}`;
 
   public clusterStatus = new Engine.Cluster.Status();
   public monitorings: Engine.Monitoring[] = [];
