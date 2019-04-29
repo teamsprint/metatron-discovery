@@ -17,7 +17,7 @@ export class EngineService extends AbstractService {
   }
 
   /**
-   * 전체 서버 목록 조회(상태 포함)
+   * Get full server list (including status)
    */
   public getMonitorings(monitoring: Engine.Monitoring,
                         page: PageResult,
@@ -53,14 +53,14 @@ export class EngineService extends AbstractService {
   }
 
   /**
-   * 서버 타입별 상태 조회
+   * Get status inquiry by server type
    */
   public getMonitoringServersHealth(): Promise<Engine.Result.Health> {
     return this.get(this.URL_MONITORING + '/servers/health');
   }
 
   /**
-   * 차트조회
+   * Get chart data
    */
   public getMonitoringQuery() {
     return this.get(this.URL_MONITORING + '/query');
