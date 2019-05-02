@@ -206,6 +206,7 @@
                 </li>
               </ul>
             </li>
+            <!--
             <li *ngIf="permission.managementEngineMonitoring" [ngClass]="{'ddp-selected': lnbManager.management.engineMonitoring.fold == false}">
               <a href="javascript:" (click)="mgmtMenuClickListener('ENGINE_MONITORING')">
                 <em class="ddp-icon-dot"></em>
@@ -220,6 +221,7 @@
                 </li>
               </ul>
             </li>
+            -->
             <ng-container *ngIf="permission.managementDatasource">
               <li *ngFor="let item of getManagementExtensions"
                   [ngClass]="{'ddp-selected': lnbManager.management[item.name]['fold'] == false}">

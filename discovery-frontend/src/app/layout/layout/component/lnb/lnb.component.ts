@@ -562,7 +562,15 @@ export class LNBComponent extends AbstractComponent implements OnInit, OnDestroy
       if (extras) {
         this.router.navigate([menu], extras).then();
       } else {
-        this.router.navigate([menu]).then();
+        if( 'external/management_EngineMonitoring_Overview' === menu ) {
+          // 임시 코드
+          this.router.navigate(['management/engine-monitoring/overview'], { queryParams: { keyword: '', status: this.ENGINE_OVERVIEW_MONITORING_STATUS.ALL } } ).then();
+        } else if ( 'external/management_EngineMonitoring_Ingestion' === menu ) {
+          // 임시 코드
+          this.router.navigate(['management/engine-monitoring/ingestion']).then();
+        } else {
+          this.router.navigate([menu]).then();
+        }
       }
 
       this._closeLNB();
