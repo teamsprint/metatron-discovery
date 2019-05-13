@@ -14,6 +14,7 @@
 
 package app.metatron.discovery.domain.dataprep.etl;
 
+import app.metatron.discovery.domain.dataprep.sql.PrepSqlUtil;
 import com.google.common.collect.Maps;
 
 import app.metatron.discovery.common.GlobalObjectMapper;
@@ -115,6 +116,11 @@ import app.metatron.discovery.extension.dataconnection.jdbc.dialect.JdbcDialect;
 import app.metatron.discovery.prep.parser.exceptions.RuleException;
 import app.metatron.discovery.prep.parser.preparation.RuleVisitorParser;
 import app.metatron.discovery.prep.parser.preparation.rule.Rule;
+//add
+import app.metatron.discovery.domain.dataprep.sql.PrepSqlUtil;
+import static org.apache.ibatis.jdbc.SQL.*;
+import static org.apache.ibatis.jdbc.SqlBuilder.*;
+import java.util.ArrayList;
 
 import static app.metatron.discovery.domain.dataprep.PrepProperties.ETL_CORES;
 import static app.metatron.discovery.domain.dataprep.PrepProperties.ETL_LIMIT_ROWS;
@@ -323,6 +329,56 @@ public class TeddyExecutor {
         return df.rows.size();
     }
 
+    private int writeSql(String strUri, DataFrame df, String ssId, String tblName) {
+        LOGGER.debug("TeddyExecutor.writeSql(): strUri={} hadoopConfDir={}", strUri, hadoopConfDir);
+        PrintWriter printWriter = PrepSqlUtil.getSqlPrinter(strUri, hadoopConf);
+        String errmsg = null;
+
+        try {
+            List<String> colNameLists = new ArrayList<String>();
+
+            for(int colno=0; colno < df.getColCnt(); colno++) {
+                colNameLists.add(df.getColName(colno));
+            }
+
+            for (int rowno = 0; rowno < df.rows.size(); cancelCheck(ssId, ++rowno)) {
+                Row row = df.rows.get(rowno);
+                List<String> colValueLists = new ArrayList<String>();
+                for (int colno = 0; colno < df.getColCnt(); ++colno) {
+                    StringBuilder sb = new StringBuilder(0);
+                    sb.append("\"");
+                    sb.append(row.get(colno).toString());
+                    sb.append("\"");
+
+                    colValueLists.add(sb.toString());
+                }
+                String sql = new org.apache.ibatis.jdbc.SQL(){{
+                    INSERT_INTO(tblName);
+                    VALUES(colNameLists.toString().substring(1,colNameLists.toString().length()-1)
+                            , colValueLists.toString().substring(1,colValueLists.toString().length()-1));
+                }}.toString()+";";
+
+                printWriter.println(sql);
+            }
+
+        } catch (Exception e) {
+            errmsg = e.getMessage();
+        }
+
+        try {
+            printWriter.close();
+        } catch (Exception e) {
+            throw PrepException.create(PrepErrorCodes.PREP_TEDDY_ERROR_CODE, PrepMessageKey.MSG_DP_ALERT_FAILED_TO_CLOSE_CSV, e.getMessage());
+        }
+
+        if (errmsg != null) {
+            throw PrepException.create(PrepErrorCodes.PREP_TEDDY_ERROR_CODE, PrepMessageKey.MSG_DP_ALERT_FAILED_TO_WRITE_CSV, errmsg);
+        }
+
+        return df.rows.size();
+    }
+
+
     private Future<String> createUriSnapshot(String[] argv) throws Throwable {
         LOGGER.info("createUriSnapshot(): started");
 
@@ -334,6 +390,7 @@ public class TeddyExecutor {
         String masterTeddyDsId = ((String) datasetInfo.get("origTeddyDsId"));
         transformRecursive(datasetInfo, ssId);
         String masterFullDsId = replaceMap.get(masterTeddyDsId);
+        String tblName = (String) snapshotInfo.get("tblName");
 
         updateAsWriting(ssId);
 
@@ -347,6 +404,9 @@ public class TeddyExecutor {
                 break;
             case JSON:
                 writeJson(storedUri, df, ssId);
+                break;
+            case SQL:
+                writeSql(storedUri, df, ssId, tblName);
                 break;
             default:
                 assert false : storedUri;

@@ -74,7 +74,8 @@ public class PrSnapshot extends AbstractHistoryEntity {
     @JsonFormat(shape = JsonFormat.Shape.OBJECT)
     public enum URI_FILE_FORMAT {
         CSV,
-        JSON;
+        JSON,
+        SQL;
 
         @JsonValue
         public String toJson() {
@@ -1134,6 +1135,8 @@ public class PrSnapshot extends AbstractHistoryEntity {
     static public URI_FILE_FORMAT getFileFormatByUri(String uri) {
         if (uri.endsWith(".json")) {
             return URI_FILE_FORMAT.JSON;
+        } else if (uri.endsWith(".sql")) {
+            return URI_FILE_FORMAT.SQL;
         }
 
         return URI_FILE_FORMAT.CSV;
