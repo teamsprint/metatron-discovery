@@ -390,7 +390,8 @@ public class TeddyExecutor {
         String masterTeddyDsId = ((String) datasetInfo.get("origTeddyDsId"));
         transformRecursive(datasetInfo, ssId);
         String masterFullDsId = replaceMap.get(masterTeddyDsId);
-        String tblName = (String) snapshotInfo.get("tblName");
+//        String tblName = (String) snapshotInfo.get("tblName");
+        String tblName = (String) snapshotInfo.get("ssName");
 
         updateAsWriting(ssId);
 
@@ -403,9 +404,9 @@ public class TeddyExecutor {
                 writeCsv(storedUri, df, ssId);
                 break;
             case JSON:
-                writeJson(storedUri, df, ssId);
-                break;
-            case SQL:
+//                writeJson(storedUri, df, ssId);
+//                break;
+//            case SQL:
                 writeSql(storedUri, df, ssId, tblName);
                 break;
             default:
