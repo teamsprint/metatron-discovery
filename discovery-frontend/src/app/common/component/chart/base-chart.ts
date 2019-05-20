@@ -213,6 +213,12 @@ export abstract class BaseChart extends AbstractComponent implements OnInit, OnD
     // Set
     this.uiOption = value;
 
+    // point re-size from map point type
+    if (!_.isUndefined(this.uiOption['isChangeStyle']) && this.uiOption['isChangeStyle']) {
+      this.draw(false);
+      return;
+    }
+
     // 차트변경시 uiOption이 초기화되므로 uiOption값 재설정
     this.setDataInfo();
 
@@ -1608,6 +1614,7 @@ export abstract class BaseChart extends AbstractComponent implements OnInit, OnD
    * - 필요시 각 차트에서 Override
    */
   protected selection(): void {
+
   }
 
   /**
@@ -1615,8 +1622,10 @@ export abstract class BaseChart extends AbstractComponent implements OnInit, OnD
    * - 필요시 각 차트에서 Override
    */
   protected datazoom(): void {
+
     this.addChartDatazoomEventListener();
   }
+
 
   ////////////////////////////////////////////////////////
   // Support Method
@@ -2056,9 +2065,6 @@ export abstract class BaseChart extends AbstractComponent implements OnInit, OnD
           }
         });
       });
-
-      // 선택한 데이터
-      selectSameSeries(targetData);
     }
     return option;
   }
