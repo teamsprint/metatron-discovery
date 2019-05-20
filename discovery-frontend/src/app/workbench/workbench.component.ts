@@ -2166,9 +2166,12 @@ export class WorkbenchComponent extends AbstractComponent implements OnInit, OnD
     if (queryEditors.length === 0) {
       this.createNewEditor('', true);
     } else {
+
+      // Editor 순서 소팅
       const editors = queryEditors.sort((a, b) => {
         return a.order - b.order;
       });
+
       // 값 읽고 세팅 하기.
       for (let idx1: number = 0; idx1 < editors.length; idx1 = idx1 + 1) {
         this.textList.push({
@@ -2179,19 +2182,21 @@ export class WorkbenchComponent extends AbstractComponent implements OnInit, OnD
           index: editors[idx1].index,
           editorMode: false
         });
-        this.saveLocalStorage(editors[idx1].query, editors[idx1].id); // 로컬 스토리지에 저장
-
-        const generalConnection: any = this.getLocalStorageGeneral();
-        if (generalConnection !== null) {
-          if (!isUndefined(generalConnection.tabId)) {
-            this.selectedTabNum = generalConnection.tabId;
-          }
-          if (!isUndefined(generalConnection.schema)) {
-            this.workbench.dataConnection.database = generalConnection.schema;
-          }
-        }
-        this.tabChangeHandler(this.selectedTabNum, false)
       }
+
+      // 로컬 스토리지에 저장되어있는 값 불러오기
+      const generalConnection: any = this.getLocalStorageGeneral();
+      if (generalConnection !== null) {
+        if (!isUndefined(generalConnection.tabId)) {
+          this.selectedTabNum = generalConnection.tabId;
+        }
+        if (!isUndefined(generalConnection.schema)) {
+          this.workbench.dataConnection.database = generalConnection.schema;
+        }
+      }
+
+      // 현재 탭 선택
+      this.tabChangeHandler(this.selectedTabNum, false);
 
       // 슬라이드 아이콘 show hide
       this._calculateEditorSlideBtn();
