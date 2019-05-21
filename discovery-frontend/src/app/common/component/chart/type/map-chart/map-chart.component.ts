@@ -2838,7 +2838,7 @@ export class MapChartComponent extends BaseChart implements AfterViewInit {
     if (!this.isPage) {
 
     }
-  }
+  };
 
   /**
    * set map data zoom setting
