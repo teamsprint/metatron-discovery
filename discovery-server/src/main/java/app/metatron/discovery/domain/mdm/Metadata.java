@@ -14,29 +14,40 @@
 
 package app.metatron.discovery.domain.mdm;
 
-import com.google.common.collect.Lists;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import org.apache.commons.collections4.CollectionUtils;
-import org.hibernate.annotations.BatchSize;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.validator.constraints.NotBlank;
-
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import javax.persistence.*;
-import javax.validation.constraints.Size;
-
 import app.metatron.discovery.domain.AbstractHistoryEntity;
 import app.metatron.discovery.domain.MetatronDomain;
 import app.metatron.discovery.domain.datasource.DataSource;
 import app.metatron.discovery.domain.datasource.Field;
 import app.metatron.discovery.domain.mdm.catalog.Catalog;
+import app.metatron.discovery.domain.mdm.lineage.MdmLineageNode;
 import app.metatron.discovery.domain.mdm.source.MetadataSource;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.common.collect.Lists;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+import javax.validation.constraints.Size;
+import org.apache.commons.collections4.CollectionUtils;
+import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.validator.constraints.NotBlank;
 
 @Entity
 @Table(name="mdm_metadata")
@@ -95,6 +106,12 @@ public class Metadata extends AbstractHistoryEntity implements MetatronDomain<St
   @Transient
   List<String> tags;
 
+  /**
+   * Linked lineageNode
+   */
+  @OneToMany(mappedBy = "metadata", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  private List<MdmLineageNode> lineageNodes;
+
   public Metadata() {
   }
 
@@ -113,6 +130,7 @@ public class Metadata extends AbstractHistoryEntity implements MetatronDomain<St
     }
 
     this.columns = columns;
+    this.lineageNodes = Lists.newArrayList();
   }
 
   @JsonIgnore
@@ -244,6 +262,15 @@ public class Metadata extends AbstractHistoryEntity implements MetatronDomain<St
 
   public void setTags(List<String> tags) {
     this.tags = tags;
+  }
+
+  public List<MdmLineageNode> getLineageNodes() {
+    return lineageNodes;
+  }
+
+  public void setLineageNodes(
+      List<MdmLineageNode> lineageNodes) {
+    this.lineageNodes = lineageNodes;
   }
 
   @Override

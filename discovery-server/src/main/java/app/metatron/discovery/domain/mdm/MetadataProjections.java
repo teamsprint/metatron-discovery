@@ -14,14 +14,13 @@
 
 package app.metatron.discovery.domain.mdm;
 
+import app.metatron.discovery.common.BaseProjections;
+import app.metatron.discovery.domain.mdm.lineage.MdmLineageNode;
+import app.metatron.discovery.domain.user.UserProfile;
+import java.util.List;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.rest.core.config.Projection;
-
-import java.util.List;
-
-import app.metatron.discovery.common.BaseProjections;
-import app.metatron.discovery.domain.user.UserProfile;
 
 public class MetadataProjections extends BaseProjections {
 
@@ -87,6 +86,8 @@ public class MetadataProjections extends BaseProjections {
 
     @Value("#{@tagService.findByTagsInDomainItem(T(app.metatron.discovery.domain.tag.Tag$Scope).DOMAIN, T(app.metatron.discovery.common.entity.DomainType).METADATA, target.id, 'default')}")
     Object getTags();
+
+    List<MdmLineageNode> getLineageNodes();
 
     @Value("#{@cachedUserService.findUserProfile(target.createdBy)}")
     UserProfile getCreatedBy();
