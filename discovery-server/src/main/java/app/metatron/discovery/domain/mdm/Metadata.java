@@ -19,7 +19,6 @@ import app.metatron.discovery.domain.MetatronDomain;
 import app.metatron.discovery.domain.datasource.DataSource;
 import app.metatron.discovery.domain.datasource.Field;
 import app.metatron.discovery.domain.mdm.catalog.Catalog;
-import app.metatron.discovery.domain.mdm.lineage.MdmLineageNode;
 import app.metatron.discovery.domain.mdm.source.MetadataSource;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Lists;
@@ -106,12 +105,6 @@ public class Metadata extends AbstractHistoryEntity implements MetatronDomain<St
   @Transient
   List<String> tags;
 
-  /**
-   * Linked lineageNode
-   */
-  @OneToMany(mappedBy = "metadata", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-  private List<MdmLineageNode> lineageNodes;
-
   public Metadata() {
   }
 
@@ -130,7 +123,6 @@ public class Metadata extends AbstractHistoryEntity implements MetatronDomain<St
     }
 
     this.columns = columns;
-    this.lineageNodes = Lists.newArrayList();
   }
 
   @JsonIgnore
@@ -262,15 +254,6 @@ public class Metadata extends AbstractHistoryEntity implements MetatronDomain<St
 
   public void setTags(List<String> tags) {
     this.tags = tags;
-  }
-
-  public List<MdmLineageNode> getLineageNodes() {
-    return lineageNodes;
-  }
-
-  public void setLineageNodes(
-      List<MdmLineageNode> lineageNodes) {
-    this.lineageNodes = lineageNodes;
   }
 
   @Override

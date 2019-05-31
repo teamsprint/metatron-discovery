@@ -18,35 +18,55 @@ import app.metatron.discovery.common.KeepAsJsonDeserialzier;
 import app.metatron.discovery.common.entity.Spec;
 import app.metatron.discovery.domain.AbstractHistoryEntity;
 import app.metatron.discovery.domain.mdm.Metadata;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonRawValue;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
-import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * Catalog of metadata
  */
 @Entity
+@IdClass(MdmLineageNodeIdentifier.class)
 @Table(name="mdm_lineage_node")
 public class MdmLineageNode extends AbstractHistoryEntity {
 
+  /*
+   * It will be used as ID soon
+   *
   @Id
   @GeneratedValue(generator = "uuid")
   @GenericGenerator(name = "uuid", strategy = "uuid2")
   @Column(name = "id")
   private String id;
+  */
+
+  @Id
+  @Column(name = "system_name", nullable = false)
+  @Size(max = 150)
+  String systemName;
+
+  @Id
+  @Column(name = "table_name", nullable = false)
+  @Size(max = 150)
+  String tableName;
+
+  @Id
+  @Column(name = "column_name", nullable = false)
+  @Size(max = 150)
+  String columnName;
 
   @Column(name = "lineage_node_name", nullable = false)
   @NotBlank
@@ -57,11 +77,9 @@ public class MdmLineageNode extends AbstractHistoryEntity {
   @Size(max = 900)
   private String description;
 
-  @Column(name = "forward_node", length = 150)
-  private String forward;
-
-  @Column(name = "toward_node", length = 150)
-  private String toward;
+  @Column(name = "meta_source_type")
+  @Enumerated(EnumType.STRING)
+  private NodeType nodeType;
 
   /**
    * Lineage Node Attributes
@@ -78,18 +96,33 @@ public class MdmLineageNode extends AbstractHistoryEntity {
    */
   @ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.MERGE })
   @JoinColumn(name = "meta_id")
-  @JsonBackReference("lineage_node_metadata")
   private Metadata metadata;
 
   public MdmLineageNode() {
   }
 
-  public String getId() {
-    return id;
+  public String getSystemName() {
+    return systemName;
   }
 
-  public void setId(String id) {
-    this.id = id;
+  public void setSystemName(String systemName) {
+    this.systemName = systemName;
+  }
+
+  public String getTableName() {
+    return tableName;
+  }
+
+  public void setTableName(String tableName) {
+    this.tableName = tableName;
+  }
+
+  public String getColumnName() {
+    return columnName;
+  }
+
+  public void setColumnName(String columnName) {
+    this.columnName = columnName;
   }
 
   public String getName() {
@@ -108,20 +141,13 @@ public class MdmLineageNode extends AbstractHistoryEntity {
     this.description = description;
   }
 
-  public String getForward() {
-    return forward;
+  public NodeType getNodeType() {
+    return nodeType;
   }
 
-  public void setForward(String forward) {
-    this.forward = forward;
-  }
-
-  public String getToward() {
-    return toward;
-  }
-
-  public void setToward(String toward) {
-    this.toward = toward;
+  public void setNodeType(
+      NodeType nodeType) {
+    this.nodeType = nodeType;
   }
 
   public String getAttributes() {
@@ -143,9 +169,14 @@ public class MdmLineageNode extends AbstractHistoryEntity {
   @Override
   public String toString() {
     return "LineageNode{" +
-        "id='" + id + '\'' +
+        "id='" + tableName + '\'' +
         ", name='" + name + '\'' +
         ", description='" + description + '\'' +
+        ", nodeType=" + nodeType +
         "} " + super.toString();
+  }
+
+  public enum NodeType {
+    TABLE, VIEW, COLUMN, SYSTEM
   }
 }

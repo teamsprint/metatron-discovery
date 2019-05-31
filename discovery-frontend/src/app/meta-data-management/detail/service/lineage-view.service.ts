@@ -51,6 +51,15 @@ super(injector);
 |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
   /**
+   * 리니지 노드 목록 조회
+   * @param {string} projection
+   * @returns {Promise<any>}
+   */
+  public getLineageNodes(projection: string = 'forDetailView'): Promise<any> {
+    return this.get(this.URL_LINEAGENODE + `?projection=${projection}`);
+  }
+
+  /**
    * 메타데이터를 기준으로 리니지 노드 목록 조회
    * @param {string} metadataId
    * @param {string} projection
@@ -68,5 +77,9 @@ super(injector);
    */
   public getLineageNodesForMetadataName(metadataName: string, projection: string = 'forDetailView'): Promise<any> {
     return this.get(this.URL_LINEAGENODE + `?nameContain=${metadataName}`);
+  }
+
+  public postLineageNode(params: any): Promise<any> {
+    return this.post(this.URL_LINEAGENODE, params);
   }
 }

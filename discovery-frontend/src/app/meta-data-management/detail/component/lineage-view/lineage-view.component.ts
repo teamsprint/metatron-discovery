@@ -71,6 +71,7 @@ export class LineageViewComponent extends AbstractComponent implements OnInit, O
     // Init
     super.ngOnInit();
 
+    this.setRandomLineageNode();
     this.getLineageNodes();
 
   }
@@ -87,11 +88,39 @@ export class LineageViewComponent extends AbstractComponent implements OnInit, O
   |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
   /**
+   * Set a lineage node for testing
+   */
+  public setRandomLineageNode() {
+    let systemName: string = 'system_'+ Math.floor((Math.random() * 1000) + 1);
+    let tableName: string = 'table_'+ Math.floor((Math.random() * 1000) + 1);
+    let columnName: string = 'column_'+ Math.floor((Math.random() * 1000) + 1);
+    let nodeName: string = 'node_'+ Math.floor((Math.random() * 1000) + 1);
+    let params : any = {
+      'systemName': systemName,
+      'tableName': tableName,
+      'columnName': columnName,
+      'name': nodeName,
+      'description': 'desc',
+      'attributes': { 'test1':'test1', 'test2':'test2' },
+      'nodeType': 'TABLE'
+    };
+
+    this.lineageViewService.postLineageNode(params).then((result) => {
+      if (result) {
+        this.lineageNodes = result;
+      } else {
+        this.lineageNodes = [];
+      }
+    }).catch((error) => {
+      console.error(error);
+    });
+  } // function - setRandomLineageNode
+
+  /**
    * Get lineage nodes
    */
   public getLineageNodes() {
-    let metadataName = 'test';
-    this.lineageViewService.getLineageNodesForMetadataName(metadataName).then((result) => {
+    this.lineageViewService.getLineageNodes().then((result) => {
       if (result) {
         this.lineageNodes = result;
       } else {
