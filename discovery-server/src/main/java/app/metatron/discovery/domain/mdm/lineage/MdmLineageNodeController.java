@@ -68,10 +68,41 @@ public class MdmLineageNodeController {
   }
 
   /**
-   * Lineage Node 목록을 조회합니다.
+   * Lineage Node 목록을 저장합니다.
+   */
+  @RequestMapping(value = "/lineagenodes", method = RequestMethod.POST)
+  public ResponseEntity<?> postLineageNodes(
+      @RequestBody List<MdmLineageNode> lineageNodeResources,
+      PersistentEntityResourceAssembler resourceAssembler ) {
+
+    /*
+    List<MdmLineageNodeIdentifier> identifiers = Lists.newArrayList();
+    Iterator<MdmLineageNode> lineageNodeIterator = lineageNodeResources.iterator();
+    while(lineageNodeIterator.hasNext()) {
+      MdmLineageNode lineageNode = lineageNodeIterator.next();
+      this.lineageNodeRepository.save(lineageNode);
+      MdmLineageNodeIdentifier identifier
+          = new MdmLineageNodeIdentifier(lineageNode.systemName, lineageNode.tableName, lineageNode.columnName);
+      identifiers.add(identifier);
+    }
+    this.lineageNodeRepository.flush();
+
+    Predicate searchPredicated = MdmLineageNodePredicate.searchListbyIdentifiers(identifiers);
+    Page<MdmLineageNode> lineageNodes = lineageNodeRepository.findAll(searchPredicated, pageable);
+
+    return ResponseEntity.ok(resourceAssembler.toFullResource(lineageNodes));
+    */
+
+    this.lineageNodeRepository.save(lineageNodeResources);
+
+    return ResponseEntity.ok(lineageNodeResources);
+  }
+
+  /**
+   * Lineage Node 목록을 저장합니다.
    */
   @RequestMapping(value = "/lineagenodes/{metadataId}", method = RequestMethod.POST)
-  public ResponseEntity<?> postLineageNodes(
+  public ResponseEntity<?> postLineageNodesForMetadata(
       @PathVariable("metadataId") String metadataId,
       @RequestBody Resources<MdmLineageNode> lineageNodeResources,
       Pageable pageable, PersistentEntityResourceAssembler resourceAssembler ) {
@@ -82,7 +113,7 @@ public class MdmLineageNodeController {
     Iterator<MdmLineageNode> lineageNodeIterator = lineageNodeResources.iterator();
     while(lineageNodeIterator.hasNext()) {
       MdmLineageNode lineageNode = lineageNodeIterator.next();
-      lineageNode.setMetadata(metadata);
+      //lineageNode.setMetadata(metadata);
       lineageNodes.add( this.lineageNodeRepository.save(lineageNode) );
     }
 

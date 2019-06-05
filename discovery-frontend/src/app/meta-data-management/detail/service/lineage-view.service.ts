@@ -25,6 +25,7 @@ export class LineageViewService extends AbstractService {
 |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
 private readonly URL_LINEAGENODE = this.API_URL + 'lineagenodes';
+private readonly URL_LINEAGEEDGE = this.API_URL + 'lineageedges';
 
 /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 | Protected Variables
@@ -60,6 +61,15 @@ super(injector);
   }
 
   /**
+   * 리니지 엣지 목록 조회
+   * @param {string} projection
+   * @returns {Promise<any>}
+   */
+  public getLineageEdges(projection: string = 'forDetailView'): Promise<any> {
+    return this.get(this.URL_LINEAGEEDGE + `?projection=${projection}`);
+  }
+
+  /**
    * 메타데이터를 기준으로 리니지 노드 목록 조회
    * @param {string} metadataId
    * @param {string} projection
@@ -81,5 +91,9 @@ super(injector);
 
   public postLineageNode(params: any): Promise<any> {
     return this.post(this.URL_LINEAGENODE, params);
+  }
+
+  public postLineageEdge(params: any): Promise<any> {
+    return this.post(this.URL_LINEAGEEDGE, params);
   }
 }

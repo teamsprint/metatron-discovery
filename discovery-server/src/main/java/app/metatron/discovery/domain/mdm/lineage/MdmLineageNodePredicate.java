@@ -2,6 +2,7 @@ package app.metatron.discovery.domain.mdm.lineage;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Predicate;
+import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 
 public class MdmLineageNodePredicate {
@@ -18,6 +19,33 @@ public class MdmLineageNodePredicate {
 
     if(StringUtils.isNotEmpty(nameContains)) {
       builder = builder.and(lineageNode.name.containsIgnoreCase(nameContains));
+    }
+
+    return builder;
+  }
+
+  /**
+   * 기본 목록 조회 옵션 지정
+   *
+   * @param identifierList Identifier 목록
+   * @return
+   */
+  public static Predicate searchListbyIdentifiers(List<MdmLineageNodeIdentifier> identifierList) {
+
+    BooleanBuilder builder = new BooleanBuilder();
+    QMdmLineageNode lineageNode = QMdmLineageNode.mdmLineageNode;
+
+    for(MdmLineageNodeIdentifier identifier : identifierList) {
+      if ( identifier.getColumnName()!=null
+          && identifier.getSystemName()!=null
+          && identifier.getTableName()!=null ) {
+        BooleanBuilder itembuilder = new BooleanBuilder();
+        itembuilder = itembuilder.and(lineageNode.columnName.equalsIgnoreCase(identifier.getColumnName()));
+        itembuilder = itembuilder.and(lineageNode.tableName.equalsIgnoreCase(identifier.getTableName()));
+        itembuilder = itembuilder.and(lineageNode.systemName.equalsIgnoreCase(identifier.getSystemName()));
+
+        builder = builder.or(itembuilder);
+      }
     }
 
     return builder;

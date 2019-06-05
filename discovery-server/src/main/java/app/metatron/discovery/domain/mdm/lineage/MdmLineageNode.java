@@ -17,11 +17,9 @@ package app.metatron.discovery.domain.mdm.lineage;
 import app.metatron.discovery.common.KeepAsJsonDeserialzier;
 import app.metatron.discovery.common.entity.Spec;
 import app.metatron.discovery.domain.AbstractHistoryEntity;
-import app.metatron.discovery.domain.mdm.Metadata;
 import com.fasterxml.jackson.annotation.JsonRawValue;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -29,15 +27,10 @@ import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 import org.hibernate.validator.constraints.NotBlank;
 
-/**
- * Catalog of metadata
- */
 @Entity
 @IdClass(MdmLineageNodeIdentifier.class)
 @Table(name="mdm_lineage_node")
@@ -94,9 +87,11 @@ public class MdmLineageNode extends AbstractHistoryEntity {
   /**
    * Linked Metadata
    */
+  /*
   @ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.MERGE })
   @JoinColumn(name = "meta_id")
   private Metadata metadata;
+  */
 
   public MdmLineageNode() {
   }
@@ -158,18 +153,10 @@ public class MdmLineageNode extends AbstractHistoryEntity {
     this.attributes = attributes;
   }
 
-  public Metadata getMetadata() {
-    return metadata;
-  }
-
-  public void setMetadata(Metadata metadata) {
-    this.metadata = metadata;
-  }
-
   @Override
   public String toString() {
-    return "LineageNode{" +
-        "id='" + tableName + '\'' +
+    return "MdmLineageNode{" +
+        "id='" + systemName +'_'+ tableName +'_'+ columnName + '\'' +
         ", name='" + name + '\'' +
         ", description='" + description + '\'' +
         ", nodeType=" + nodeType +

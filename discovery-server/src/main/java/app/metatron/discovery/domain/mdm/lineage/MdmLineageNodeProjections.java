@@ -1,7 +1,6 @@
 package app.metatron.discovery.domain.mdm.lineage;
 
 import app.metatron.discovery.common.BaseProjections;
-import app.metatron.discovery.domain.mdm.Metadata;
 import app.metatron.discovery.domain.mdm.lineage.MdmLineageNode.NodeType;
 import org.springframework.data.rest.core.config.Projection;
 
@@ -32,6 +31,5 @@ public class MdmLineageNodeProjections extends BaseProjections {
     NodeType getNodeType();
 
     String getAttributes();
-    Metadata getMetadata();
   }
 }
