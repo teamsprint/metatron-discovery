@@ -57,6 +57,7 @@ public class MdmLineageNodePredicate {
    * @param metadataId meta_id 와 일치
    * @return
    */
+  /* not used
   public static Predicate searchListByMetaId(String metadataId) {
 
     BooleanBuilder builder = new BooleanBuilder();
@@ -68,4 +69,5 @@ public class MdmLineageNodePredicate {
 
     return builder;
   }
+  */
 }
