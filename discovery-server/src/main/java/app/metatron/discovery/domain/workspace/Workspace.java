@@ -33,6 +33,7 @@ import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Store;
 import org.hibernate.validator.constraints.NotBlank;
 import org.joda.time.DateTime;
+import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.data.rest.core.annotation.RestResource;
 
 import java.util.List;
@@ -189,6 +190,14 @@ public class Workspace extends AbstractHistoryEntity implements MetatronDomain<S
 
   public Workspace() {
     // Empty Constructor
+  }
+
+  /**
+   * Workaround for (hibernate) proxy problem in PersistentEntityJackson2Module.toResource <br/>
+   * Using WorkbenchProjections.DetailViewProjection class
+   */
+  public Object getWorkspaceProjection(ProjectionFactory projectionFactory, Class projection) {
+    return projectionFactory.createProjection(projection, this);
   }
 
   /**

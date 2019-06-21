@@ -23,7 +23,6 @@ import java.util.Set;
 
 import app.metatron.discovery.common.BaseProjections;
 import app.metatron.discovery.domain.user.UserProfile;
-import app.metatron.discovery.domain.workspace.WorkspaceProjections;
 
 /**
  * Created by kyungtaak on 2016. 11. 29..
@@ -72,11 +71,11 @@ public class WorkbenchProjections extends BaseProjections{
 
     String getGlobalVar();
 
-    WorkspaceProjections.HeaderViewProjection getWorkspace();
+    @Value("#{target.workspace.getWorkspaceProjection(@projectionFactory, T(app.metatron.discovery.domain.workspace.WorkspaceProjections$HeaderViewProjection))}")
+    Object getWorkspace();
 
     @Value("#{target.dataConnection.getDataConnectionProjection(@projectionFactory, T(app.metatron.discovery.domain.dataconnection.DataConnectionProjections$defaultProjection))}")
     Object getDataConnection();
-    //DataConnectionProjections.defaultProjection getDataConnection();
 
     Set<QueryEditor> getQueryEditors();
 
