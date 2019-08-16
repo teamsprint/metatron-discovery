@@ -19,6 +19,7 @@ import org.quartz.SchedulerException;
 import org.quartz.TriggerKey;
 import org.quartz.impl.triggers.CronTriggerImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,6 +32,7 @@ import java.text.ParseException;
 import java.util.HashMap;
 import java.util.List;
 
+@Profile("scheduling")
 @RestController
 @RequestMapping("/api")
 public class EngineMonitoringController {
