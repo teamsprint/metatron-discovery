@@ -22,16 +22,11 @@ import {
   OnInit,
   Output,
   QueryList,
+  Renderer,
   ViewChildren
 } from '@angular/core';
 import {AbstractComponent} from '../../../../common/component/abstract.component';
-import {
-  ConnectionType,
-  Datasource,
-  FieldFormat,
-  FieldFormatType,
-  FieldRole, LogicalType
-} from '../../../../domain/datasource/datasource';
+import {ConnectionType, Datasource, FieldFormat, FieldFormatType} from '../../../../domain/datasource/datasource';
 import * as _ from 'lodash';
 import {MetadataService} from '../../../metadata/service/metadata.service';
 import {MetadataModelService} from '../../../metadata/service/metadata.model.service';
@@ -155,6 +150,7 @@ export class ColumnSchemaComponent extends AbstractComponent implements OnInit, 
   constructor(
     protected element: ElementRef,
     protected injector: Injector,
+    public renderer: Renderer,
     public metaDataModelService: MetadataModelService,
     public constantService: ConstantService,
     private _columnDictionaryService: ColumnDictionaryService,
@@ -177,10 +173,13 @@ export class ColumnSchemaComponent extends AbstractComponent implements OnInit, 
       .then(() => this.loadingShow())
       .then(() => this._getColumnSchemas().then())
       .then(() => {
-        return this.getFieldData()
-          .then(fieldDataList => {
-            this.fieldDataList = _.isNil(fieldDataList) ? [] : fieldDataList
-          });
+        // TODO #2172 if staging or JDBC type metadata, not used field data
+        if (this.hasMetadataColumnInDatasource()) {
+          return this.getFieldData()
+            .then(fieldDataList => {
+              this.fieldDataList = _.isNil(fieldDataList) ? [] : fieldDataList
+            });
+        }
       })
       .then(() => this.loadingHide())
       .catch(error => this.commonExceptionHandler(error));
@@ -190,13 +189,25 @@ export class ColumnSchemaComponent extends AbstractComponent implements OnInit, 
     super.ngOnDestroy();
   }
 
-  public onClickInfoIcon(metadataColumn: MetadataColumn, index: number): void {
+  public onClickInfoIcon(metadataColumn: MetadataColumn, index: number, isFromDictionary: boolean = false): void {
     if (MetadataColumn.isTypeIsTimestamp(metadataColumn)) {
-      if (metadataColumn['typeListFl']) {
-        metadataColumn['typeListFl'] = false;
+      if (metadataColumn[ 'typeListFl' ]) {
+        metadataColumn[ 'typeListFl' ] = false;
       }
       metadataColumn.checked = true;
-      this._datetimePopupComponentList.toArray()[ index ].init();
+
+      if (isFromDictionary) {
+        // if not exist format in column, initial format
+        if (_.isNil(metadataColumn.format)) {
+          metadataColumn.format = new FieldFormat();
+          this.safelyDetectChanges();
+        }
+        // 열리는 순간 바로 validation을 해야한다.
+        this._datetimePopupComponentList.toArray()[index].initFromDictionary();
+      } else {
+        this._datetimePopupComponentList.toArray()[ index ].init();
+      }
+
     }
   }
 
@@ -249,38 +260,50 @@ export class ColumnSchemaComponent extends AbstractComponent implements OnInit, 
     });
   }
 
-
   /**
    * Save changed fields click event
    */
   public onClickSave(): void {
 
-    const datetimeValidPopupComponents: DatetimeValidPopupComponent[]
-      = this._datetimePopupComponentList
-      .filter(datetimePopupComponent => _.negate(_.isNil)(datetimePopupComponent.fieldFormat))
-      .filter(datetimeValidPopupComponent => !datetimeValidPopupComponent.fieldFormat.isValidFormat);
-
-    if (datetimeValidPopupComponents.length > 0) {
-      this.isSaveInvalid = true;
-      return;
+    // TODO 추후 데이터소스 연결시 if문 제거
+    if (this.hasMetadataColumnInDatasource()) {
+      this.isSaveInvalid = this.columnList.some(field =>  field.role !== Type.Role.TIMESTAMP && (field.type === Type.Logical.TIMESTAMP && !field.format.isValidFormat));
     }
-    this._updateColumnSchema();
+
+    if (!this.isSaveInvalid) {
+      this._updateColumnSchema();
+    }
   }
 
   /**
    * Logical type list show
    */
-  public onShowLogicalTypeList(metadataColumn: MetadataColumn): void {
+  public onShowLogicalTypeList(metadataColumn: MetadataColumn, typeElement, typeListElement): void {
 
     if (!this.isLogicalTypesLayerActivation(metadataColumn)) {
       return;
     }
 
     if (this.isSelectedMetadataColumnInColumnDictionaryDefined(metadataColumn) === false) {
-      // show flag
       metadataColumn[ 'typeListFl' ] = !metadataColumn[ 'typeListFl' ];
       // detect changes
       this.changeDetect.detectChanges();
+
+      if (metadataColumn[ 'typeListFl' ]) {
+        const $selectOptionPop = $(typeListElement);
+        const $selectOptionTop = $(typeElement).offset().top;
+        const $selectOptionLeft = $(typeElement).offset().left;
+        $selectOptionPop.css({
+          'position' :'fixed',
+          'left' : $selectOptionLeft,
+          'top' :$selectOptionTop + 23
+        });
+        if($selectOptionTop >  $(window).outerHeight() / 2) {
+          $selectOptionPop.css({
+            'top' : $selectOptionTop - $selectOptionPop.outerHeight() - 5
+          });
+        }
+      }
     }
   }
 
@@ -313,7 +336,7 @@ export class ColumnSchemaComponent extends AbstractComponent implements OnInit, 
         this.setIsExistErrorInFieldListFlag();
       }
     }
-    metadataColumn['typeListFl'] = false;
+    metadataColumn[ 'typeListFl' ] = false;
   }
 
   /**
@@ -324,8 +347,42 @@ export class ColumnSchemaComponent extends AbstractComponent implements OnInit, 
     this._selectedColumn.replaceFl = true;
     // 현재 선택한 컬럼의 사전 변경
     this._selectedColumn.dictionary = columnDictionary;
-    // 컬럼 사전이 있다면 해당 컬럼 사전의 상세정보 조회
-    columnDictionary && this._getDetailColumnDictionary(columnDictionary.id);
+
+    // 컬럼 딕셔너리 삭제시
+    if (columnDictionary === null) {
+      // logical column name 초기화
+      this._selectedColumn.name = this._selectedColumn.physicalName;
+
+      // # 2242
+      // role이 타입스템프 타입에 딕셔너리를 적용할 경우 type과 format 이 적용되지 않기 때문에..
+      // 딕셔너리를 해제해도 string으로 초기화 하지 않음
+      if (this._selectedColumn.role !== Type.Role.TIMESTAMP) {
+        // type string으로 초기화
+        this._selectedColumn.type = Type.Logical.STRING;
+        this._selectedColumn.format = null;
+
+      }
+
+
+      // code table 삭제
+      if (!_.isNil(this._selectedColumn.codeTable)) {
+        delete this._selectedColumn.codeTable
+      }
+
+      // description 초기화
+      this._selectedColumn.description = '';
+
+
+      // check validation
+      this.setIsExistErrorInFieldListFlag();
+
+
+
+    } else {
+      // 컬럼 사전이 있다면 해당 컬럼 사전의 상세정보 조회
+      this._getDetailColumnDictionary(columnDictionary.id);
+    }
+
   }
 
   /**
@@ -387,6 +444,12 @@ export class ColumnSchemaComponent extends AbstractComponent implements OnInit, 
    */
   public onClickSearchDictionary(metadataColumn: MetadataColumn): void {
     event.stopImmediatePropagation();
+
+
+    // GEO타입 딕셔너리 수정 불가 : #2242
+    if (this.isGeoType(metadataColumn.type)) {
+      return;
+    }
     this._saveCurrentlySelectedColumn(metadataColumn);
     this._chooseDictionaryEvent.emit({ name: 'CREATE', dictionary: metadataColumn.dictionary }); // 컬럼 사전 선택 컴포넌트
   }
@@ -441,18 +504,19 @@ export class ColumnSchemaComponent extends AbstractComponent implements OnInit, 
    * Set exist error in field list flag
    */
   public setIsExistErrorInFieldListFlag(): void {
+    // TODO 추후 데이터소스 연결시 if문 제거
+    if (this.hasMetadataColumnInDatasource()) {
+      this.isSaveInvalid = this.columnList.some(field =>  field.role !== Type.Role.TIMESTAMP && (field.type === Type.Logical.TIMESTAMP && !field.format.isValidFormat));
+    }
+  }
 
-
-
-    const datetimeValidPopupComponents: DatetimeValidPopupComponent[]
-      = this._datetimePopupComponentList
-      .filter(datetimePopupComponent => _.negate(_.isNil)(datetimePopupComponent.fieldFormat))
-      .filter(datetimeValidPopupComponent => !datetimeValidPopupComponent.fieldFormat.isValidFormat);
-
-
-
-    // this.isSaveInvalid = this.columnList.some(field =>  field.role !== Type.Role.TIMESTAMP && (field.type === Type.Logical.TIMESTAMP && !field.format.isValidFormat));
-    this.isSaveInvalid = datetimeValidPopupComponents.length > 0;
+  /**
+   * Return true if column is geo type
+   * @param type
+   */
+  public isGeoType(type: Type.Logical): boolean {
+    const types = ['GEO_LINE', 'GEO_POINT','GEO_POLYGON'];
+    return -1 < types.indexOf(type)
   }
 
   public isLogicalTypesLayerActivation(metadataColumn: MetadataColumn) {
@@ -462,8 +526,8 @@ export class ColumnSchemaComponent extends AbstractComponent implements OnInit, 
       && this.isTimestampColumn(metadataColumn) === false;
   }
 
-  public isTypeIsTimestamp(metadataColumn: MetadataColumn) {
-    return MetadataColumn.isTypeIsTimestamp(metadataColumn);
+  public isShowInformationIcon(metadataColumn: MetadataColumn) {
+    return MetadataColumn.isTypeIsTimestamp(metadataColumn) && !MetadataColumn.isRoleIsTimestamp(metadataColumn);
   }
 
   public isTimestampColumn(metadataColumn: MetadataColumn) {
@@ -512,6 +576,9 @@ export class ColumnSchemaComponent extends AbstractComponent implements OnInit, 
     this.selectedType = this.constantService.getTypeFiltersFirst();
     this.roleTypeFilters = this.constantService.getRoleTypeFilters();
     this.typeFilters = this.constantService.getTypeFilters();
+    this.selectedContentSort.key = 'physicalName';
+    this.selectedContentSort.sort = 'asc';
+    this.columnList = _.orderBy(this.columnList, this.selectedContentSort.key, 'asc' === this.selectedContentSort.sort ? 'asc' : 'desc');
   }
 
   public isShowInformationMessage() {
@@ -529,10 +596,10 @@ export class ColumnSchemaComponent extends AbstractComponent implements OnInit, 
     return metadataColumn.format && metadataColumn.format.isValidFormat === false;
   }
 
-  public onClickTypeSelectAndTimestampValidWrapElement(event: MouseEvent, metadataColumn: MetadataColumn) {
+  public onClickTypeSelectAndTimestampValidWrapElement(event: MouseEvent, metadataColumn: MetadataColumn, typeElement, typeListElement) {
 
     if (this._checkIfElementContainsClassName(this._getTargetElementClassList(event), this.TYPE_SELECT_AND_TIMESTAMP_VALID_WRAP_ELEMENT)) {
-      this.onShowLogicalTypeList(metadataColumn);
+      this.onShowLogicalTypeList(metadataColumn, typeElement, typeListElement);
       return;
     }
 
@@ -580,7 +647,7 @@ export class ColumnSchemaComponent extends AbstractComponent implements OnInit, 
       }
     }
 
-    if (this.isMetadataSourceTypeIsJdbc()) {
+    else if (this.isMetadataSourceTypeIsJdbc()) {
       return new Promise((resolve, reject) => {
         return this._dataconnectionService.getTableDataForHive({
           'type': 'TABLE',
@@ -592,7 +659,7 @@ export class ColumnSchemaComponent extends AbstractComponent implements OnInit, 
       });
     }
 
-    if (this.isMetadataSourceTypeIsStaging()) {
+    else if (this.isMetadataSourceTypeIsStaging()) {
       return new Promise((resolve, reject) => {
         return this._dataconnectionService.getTableDataForHive({
           'type': 'TABLE',
@@ -688,11 +755,15 @@ export class ColumnSchemaComponent extends AbstractComponent implements OnInit, 
         .then((result) => {
           result.map((field) => {
             if (MetadataColumn.isTypeIsTimestamp(field)) {
+              if (_.isNil(field.format)) {
+                field.format = new FieldFormat();
+              }
               field.format.isValidFormat = true;
             }
             return field;
           });
           this._hideCurrentTime(result);
+          this.columnList = _.orderBy(result.filter((metadataColumn: MetadataColumn) => MetadataColumn.isCurrentDatetime(metadataColumn) === false), this.selectedContentSort.key, 'asc' === this.selectedContentSort.sort ? 'asc' : 'desc');
           this._saveColumnDataOriginal();
           resolve();
         })
@@ -748,6 +819,9 @@ export class ColumnSchemaComponent extends AbstractComponent implements OnInit, 
         item.format = {
           format: item.format.format.substr(0, 254)
         };
+      }
+      if (!this.hasMetadataColumnInDatasource() && item.type === 'TIMESTAMP' && item.format && item.format.type === FieldFormatType.DATE_TIME && StringUtil.isEmpty(item.format.format)) {
+        item.format = null;
       }
       // dictionary가 있다면
       item.dictionary && (item[ 'dictionary' ] = `/api/dictionaries/${item.dictionary.id}`);
@@ -840,9 +914,16 @@ export class ColumnSchemaComponent extends AbstractComponent implements OnInit, 
     this.loadingShow();
     this._columnDictionaryService.getColumnDictionaryDetail(dictionaryId)
       .then((result) => {
-        // 변경된 컬럼의 사전정보로 logicalType, Format, CodeTable, Description 적용
-        this._selectedColumn.type = result.logicalType || null;
-        this._selectedColumn.format = result.format || new FieldFormat();
+
+        // 데이터소스 타입 메타데이터이고 && 컬럼의 role이 timestamp라면 ? 컬럼 딕셔너리를 추가했을때
+        // 타입과 포멧이 변경되면 안됨. stay as timestamp
+        console.info('selected type ==>', this._selectedColumn);
+        if (!(this._selectedColumn.role === Type.Role.TIMESTAMP && this.isMetadataSourceTypeIsEngine())) {
+          // 변경된 컬럼의 사전정보로 logicalType, Format, CodeTable, Description 적용
+          this._selectedColumn.type = result.logicalType || null;
+          this._selectedColumn.format = result.format || null;
+        }
+
         this._selectedColumn.description = result.description || null;
 
         // 이름이 사용자에 의해 변경되지 않았다면 컬럼 사전의 이름을 name으로 지정함
@@ -854,6 +935,19 @@ export class ColumnSchemaComponent extends AbstractComponent implements OnInit, 
           this._removeCodeTableForSelectedColumn();
           this.loadingHide();
         }
+
+        // 딕셔너리 타입이 타임스템프인경우 벨리데이션 전이기 떄문에 팝업 오픈 + 빨강 아이콘
+        if (result.logicalType === Type.Logical.TIMESTAMP) {
+
+          const idx = this.getColumns().findIndex((item) => {
+            return item.id === this._selectedColumn.id
+          });
+
+          this.safelyDetectChanges();
+          this.onClickInfoIcon(this._selectedColumn, idx, true);
+
+        }
+
       })
       .catch(error => this.commonExceptionHandler(error));
   }
@@ -922,5 +1016,40 @@ export class ColumnSchemaComponent extends AbstractComponent implements OnInit, 
 
   private isMetadataSourceTypeIsStaging() {
     return Metadata.isSourceTypeIsStaging(this.metaDataModelService.getMetadata().sourceType);
+  }
+
+  @ViewChildren('metadataColumnSchemaDescriptionInputs')
+  private metadataColumnSchemaDescriptionInputs: QueryList<ElementRef>;
+
+  @ViewChildren('metadataColumnSchemaDescriptionTds')
+  private metadataColumnSchemaDescriptionTds: QueryList<ElementRef>;
+
+  public focusMetadataColumnSchemaDescriptionInput(index: number, metadataColumn: MetadataColumn) {
+
+    if (this.isSelectedMetadataColumnInColumnDictionaryDefined(metadataColumn)) {
+      return;
+    }
+
+    this.metadataColumnSchemaDescriptionInputs.toArray()[ index ].nativeElement.focus();
+    this.renderer.setElementClass(this.metadataColumnSchemaDescriptionTds.toArray()[ index ].nativeElement, 'ddp-selected', true);
+  }
+
+  public blurMetadataColumnSchemaDescriptionInput(index: number) {
+    this.renderer.setElementClass(this.metadataColumnSchemaDescriptionTds.toArray()[ index ].nativeElement, 'ddp-selected', false);
+  }
+
+  @ViewChildren('metadataColumnSchemaNameInputs')
+  private metadataColumnSchemaNameInputs: QueryList<ElementRef>;
+
+  @ViewChildren('metadataColumnSchemaNameTds')
+  private metadataColumnSchemaNameTds: QueryList<ElementRef>;
+
+  public focusMetadataColumnSchemaNameInput(index: number) {
+    this.metadataColumnSchemaNameInputs.toArray()[ index ].nativeElement.focus();
+    this.renderer.setElementClass(this.metadataColumnSchemaNameTds.toArray()[ index ].nativeElement, 'ddp-selected', true);
+  }
+
+  public blurMetadataColumnSchemaNameInput(index: number) {
+    this.renderer.setElementClass(this.metadataColumnSchemaNameTds.toArray()[ index ].nativeElement, 'ddp-selected', false);
   }
 }

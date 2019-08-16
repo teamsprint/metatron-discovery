@@ -27,6 +27,8 @@ import {FieldFormatType, LogicalType} from '../../../domain/datasource/datasourc
 import * as _ from 'lodash';
 import {LinkedMetadataComponent} from '../../component/linked-metadata-columns/linked-metadata.component';
 import {LinkedMetaDataColumn} from '../../../domain/meta-data-management/metadata-column';
+import {Location} from '@angular/common';
+import {StringUtil} from "../../../common/util/string.util";
 
 @Component({
   selector: 'app-detail-column-dictionary',
@@ -115,6 +117,7 @@ export class DetailColumnDictionaryComponent extends AbstractComponent implement
   constructor(
     private _columnDictionaryService: ColumnDictionaryService,
     private _activatedRoute: ActivatedRoute,
+    private _location: Location,
     protected element: ElementRef,
     protected injector: Injector) {
     super(element, injector);
@@ -163,7 +166,7 @@ export class DetailColumnDictionaryComponent extends AbstractComponent implement
       Alert.success(this.translateService.instant('msg.metadata.ui.dictionary.delete.success',
         {value: this.columnDictionary.logicalName}));
       // 컬럼 사전 목록으로 돌아가기
-      this.router.navigate(['/management/metadata/column-dictionary']);
+      this._location.back();
     }).catch(error => this.commonExceptionHandler(error));
   }
 
@@ -182,6 +185,10 @@ export class DetailColumnDictionaryComponent extends AbstractComponent implement
    */
   public isSelectedLogicalType(type: any): boolean {
     return this.columnDictionary.logicalType === type;
+  }
+
+  public isEmptyDictionaryFormat(): boolean {
+    return _.isNil(this.columnDictionary.format) || StringUtil.isEmpty(this.columnDictionary.format.format);
   }
 
   /**
@@ -212,7 +219,7 @@ export class DetailColumnDictionaryComponent extends AbstractComponent implement
    */
   public onClickPrevButton(): void {
     // 컬럼 사전 목록 화면으로 이동
-    this.router.navigate(['/management/metadata/column-dictionary']);
+    this._location.back();
   }
 
   /**
@@ -520,7 +527,8 @@ export class DetailColumnDictionaryComponent extends AbstractComponent implement
     // 로딩 show
     this.loadingShow();
     // 코드 테이블 조회
-    this._columnDictionaryService.getCodeTableInColumnDictionary(this._columnDictionaryId).then((result) => {
+    this._columnDictionaryService.getCodeTableInColumnDictionary(this._columnDictionaryId)
+      .then((result) => {
       // 코드테이블
       this.columnDictionary.codeTable = result;
       // 로딩 hide

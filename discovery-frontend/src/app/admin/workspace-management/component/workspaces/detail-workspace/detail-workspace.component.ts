@@ -14,14 +14,13 @@
 
 import {AbstractComponent} from '../../../../../common/component/abstract.component';
 import {Component, ElementRef, Injector, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Location} from "@angular/common";
 import {ActivatedRoute} from '@angular/router';
 import {Modal} from '../../../../../common/domain/modal';
 import {ConfirmModalComponent} from '../../../../../common/component/modal/confirm/confirm.component';
 import {PublicType, WorkspaceAdmin} from '../../../../../domain/workspace/workspace';
 import {Alert} from '../../../../../common/util/alert.util';
 import {WorkspaceService} from '../../../../../workspace/service/workspace.service';
-import {User} from '../../../../../domain/user/user';
-import {UserDetail} from '../../../../../domain/common/abstract-history-entity';
 
 @Component({
   selector: 'app-detail-workspace',
@@ -51,8 +50,6 @@ export class DetailWorkspaceComponent extends AbstractComponent implements OnIni
   | Public Variables
   |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
-  public readonly UNKNOWN_USER = 'Unknown user';
-
   // 워크스페이스 객체
   public workspace: WorkspaceAdmin;
 
@@ -70,6 +67,7 @@ export class DetailWorkspaceComponent extends AbstractComponent implements OnIni
   // 생성자
   constructor(private workspaceService: WorkspaceService,
               private activatedRoute: ActivatedRoute,
+              private _location:Location,
               protected element: ElementRef,
               protected injector: Injector) {
     super(element, injector);
@@ -87,7 +85,6 @@ export class DetailWorkspaceComponent extends AbstractComponent implements OnIni
 
     // 쿼리 파라메터 저장
     this.activatedRoute.queryParams.subscribe(params => {
-      console.info( '>>>>>>> detail param', params );
       this._listSearchParams = params;
     });
 
@@ -216,15 +213,6 @@ export class DetailWorkspaceComponent extends AbstractComponent implements OnIni
     modal.btnName = this.translateService.instant('msg.spaces.spaces.ui.delete.btn');
     // 팝업 창 오픈
     this._confirmModalComponent.init(modal);
-  }
-
-  /**
-   * Full name lookup for user
-   *
-   * @param user
-   */
-  public getUserFullName(user: User | UserDetail) {
-    return (user && '__UNKNOWN_USER' !== user.fullName) ? user.fullName : '';
   }
 
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=

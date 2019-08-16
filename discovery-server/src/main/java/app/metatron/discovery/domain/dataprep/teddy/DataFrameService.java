@@ -48,8 +48,6 @@ public class DataFrameService {
   @Autowired
   PrepProperties prepProperties;
 
-  static final int hardRowLimit = 100 * 10000;
-
   static private List<String> getLiteralList(Expression expr) {
     List<String> literals = null;
     if (expr instanceof Constant.StringExpr) {
@@ -91,11 +89,11 @@ public class DataFrameService {
   }
 
   public DataFrame applyRule(DataFrame df, String ruleString, List<DataFrame> slaveDfs) throws TeddyException {
-    return applyRule(df, ruleString, slaveDfs, prepProperties.getSamplingCores(), prepProperties.getSamplingTimeout());
-  }
-
-  public DataFrame applyRule(DataFrame df, String ruleString, List<DataFrame> slaveDfs, Integer cores, Integer timeout) throws TeddyException {
     LOGGER.trace("applyRule(): start");
+
+    Integer cores = prepProperties.getSamplingCores();
+    Integer timeout = prepProperties.getSamplingTimeout();
+    Integer limitRows = prepProperties.getSamplingLimitRows();
 
     List<Future<List<Row>>> futures = new ArrayList<>();
     Rule rule = new RuleVisitorParser().parse(ruleString);
@@ -110,9 +108,14 @@ public class DataFrameService {
         if (DataFrame.isParallelizable(rule)) {
           int partSize = rowcnt / cores + 1;  // +1 to prevent being 0
 
+          // Outer joins cannot be parallelized. (But, implemented as prepare-gather structure)
+          if (rule.getName().equals("join") && ((Join) rule).getJoinType().equalsIgnoreCase("INNER") == false) {
+            partSize = rowcnt;
+          }
+
           for (int rowno = 0; rowno < rowcnt; rowno += partSize) {
             LOGGER.debug("applyRuleString(): add thread: rowno={} partSize={} rowcnt={}", rowno, partSize, rowcnt);
-            futures.add(gatherAsync(df, newDf, preparedArgs, rowno, Math.min(partSize, rowcnt - rowno), hardRowLimit));
+            futures.add(gatherAsync(df, newDf, preparedArgs, rowno, Math.min(partSize, rowcnt - rowno), limitRows));
           }
 
           for (int i = 0; i < futures.size(); i++) {
@@ -123,7 +126,7 @@ public class DataFrameService {
         } else {
           // if not parallelizable, newDf comes to be modified directly.
           // then, 'rows' returned is only for assertion.
-          List<Row> rows = newDf.gather(df, preparedArgs, 0, rowcnt, hardRowLimit);
+          List<Row> rows = newDf.gather(df, preparedArgs, 0, rowcnt, limitRows);
           assert rows == null : ruleString;
         }
       }

@@ -14,7 +14,15 @@
 
 import {Component, ElementRef, Injector, OnChanges, OnInit, ViewChild} from '@angular/core';
 import {AbstractComponent} from '../../../common/component/abstract.component';
-import {Datasource, FieldFormatType, FieldRole, SourceType, Status} from '../../../domain/datasource/datasource';
+import {
+  ConnectionType,
+  Datasource,
+  DatasourceInfo,
+  FieldFormatType,
+  FieldRole,
+  SourceType,
+  Status
+} from '../../../domain/datasource/datasource';
 import {DatasourceService} from '../../../datasource/service/datasource.service';
 import {Alert} from '../../../common/util/alert.util';
 import {DeleteModalComponent} from '../../../common/component/modal/delete/delete.component';
@@ -28,7 +36,8 @@ import {MetadataService} from '../../../meta-data-management/metadata/service/me
 import {Metadata} from '../../../domain/meta-data-management/metadata';
 import {CookieConstant} from '../../../common/constant/cookie.constant';
 import {CommonConstant} from '../../../common/constant/common.constant';
-import { Message } from '@stomp/stompjs';
+import {Message} from '@stomp/stompjs';
+import {CreateSourceCompleteData} from "../../service/data-source-create.service";
 
 @Component({
   selector: 'app-detail-datasource',
@@ -101,6 +110,10 @@ export class DetailDataSourceComponent extends AbstractComponent implements OnIn
   // timestamp column
   public timestampColumn: any;
 
+  public step: string;
+  public sourceData: DatasourceInfo;
+  public isShowReingestion: boolean;
+
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   | Constructor
   |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
@@ -122,7 +135,6 @@ export class DetailDataSourceComponent extends AbstractComponent implements OnIn
   public ngOnInit() {
     // Init
     super.ngOnInit();
-
     this.activatedRoute.params.subscribe((params) => {
       // sourceId
       this.datasourceId = params['sourceId'];
@@ -135,8 +147,10 @@ export class DetailDataSourceComponent extends AbstractComponent implements OnIn
         .then((datasource: Datasource) => {
           // create q
           const q = [];
-          // get meta data
-          q.push(this._getDatasourceMetadata(this.datasourceId));
+          // if datasource status ENABLED
+          if (datasource.status === Status.ENABLED) {
+            q.push(this._getDatasourceMetadata(this.datasourceId));
+          }
           // if datasource status not DISABLED
           if (datasource.status !== Status.DISABLED) {
             // history params
@@ -329,6 +343,46 @@ export class DetailDataSourceComponent extends AbstractComponent implements OnIn
   }
 
   /**
+   * 재적재 팝업 모달 오픈
+   */
+  public reIngestion(): void {
+    this.sourceData = new DatasourceInfo();
+    this.sourceData.datasourceId = this.datasourceId;
+    this.sourceData.type = this.datasource.srcType;
+    this.sourceData.connType = ConnectionType.ENGINE;
+    this.sourceData.completeData = new CreateSourceCompleteData();
+    this.sourceData.completeData.sourceName = this.datasource.name;
+    this.sourceData.completeData.sourceDescription = this.datasource.description;
+    this.sourceData.datasource = this.datasource;
+
+    if (this.datasource.srcType = SourceType.FILE) {
+      this.step = 'file-upload';
+    } else if (this.datasource.srcType = SourceType.JDBC) {
+      this.step = 'db-data-connection';
+    } else if (this.datasource.srcType = SourceType.HIVE) {
+      this.step = 'staging-db-select';
+    }
+  }
+
+  /**
+   * 데이터소스 생성 완료
+   */
+  public reIngestionComplete(): void {
+    this.datasource.status = Status.PREPARING;
+    this.isNotShowProgress = false;
+    this.isShowReingestion = false;
+    this.ngOnInit();
+  }
+
+  /**
+   * 데이터소스 생성 팝업 취소
+   */
+  public reIngestionClose(): void {
+    this.step = '';
+    this.onChangeMode( this.mode );
+  }
+
+  /**
    * 데이터소스 이름 수정
    */
   public renameDatasource() {
@@ -351,9 +405,15 @@ export class DetailDataSourceComponent extends AbstractComponent implements OnIn
   | Public Method - event
   |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
+  changedDatasourceStatus() {
+    this._getDatasourceMetadata(this.datasourceId)
+      .then(() => this.loadingHide())
+      .catch(error => this.commonExceptionHandler(error));
+  }
+
   // 뒤로가기
   public prevDatasourceList(): void {
-    this.router.navigate(['/management/storage/datasource']);
+    this.location.back();
   }
 
   // mode
@@ -477,6 +537,7 @@ export class DetailDataSourceComponent extends AbstractComponent implements OnIn
           // set view mode
           this.mode = mode;
           resolve(datasource);
+          this._showReingestion();
         })
         .catch(error => reject(error));
     });
@@ -544,9 +605,17 @@ export class DetailDataSourceComponent extends AbstractComponent implements OnIn
             // disconnect websocket
             this._subscribe.unsubscribe();
           }
+          this._showReingestion();
         }, headers);
     } catch (e) {
       console.info(e);
+    }
+  }
+
+  private _showReingestion() {
+    if (this.datasource.status != Status.PREPARING
+      && this.datasource.connType === ConnectionType.ENGINE && this.datasource.srcType === SourceType.FILE) {
+      this.isShowReingestion = true;
     }
   }
 

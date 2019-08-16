@@ -608,7 +608,7 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
   @OAuthRequest(username = "polaris", value = {"ROLE_SYSTEM_USER", "ROLE_PERM_SYSTEM_MANAGE_DATASOURCE"})
   public void getDataFromDataSources() {
 
-    String datasourceId = "ds-37";
+    String datasourceId = "ds-gis-37";
 
     //    SearchQueryRequest request = new SearchQueryRequest();
     //    request.setFilters(Lists.newArrayList(new InclusionFilter("Category", Lists.newArrayList("Office Supplies"))));
@@ -619,6 +619,7 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
       .auth().oauth2(oauth_token)
       .contentType(ContentType.JSON)
       .queryParam("limit", 5)
+      .queryParam("intervals", "2011-01-01/2012-01-01")
       //.body(request)
       .log().all()
     .when()
@@ -1544,7 +1545,7 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
       e.printStackTrace();
     }
 
-    String targetFile = getClass().getClassLoader().getResource("ingestion/sample_ingestion_space.csv").getPath();
+    String targetFile = getClass().getClassLoader().getResource("ingestion/sample_ingestion_header.csv").getPath();
 
     DataSource dataSource = new DataSource();
     dataSource.setName("localFileIngestion_" + PolarisUtils.randomString(5));
@@ -1562,22 +1563,24 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
 
     fields.add(new Field("d", DataType.STRING, DIMENSION, 1L));
 
-    Field field1 = new Field("sd", DataType.STRING, DIMENSION, 2L);
-    field1.setUnloaded(true);
+    Field field1 = new Field("sd_updated", DataType.STRING, DIMENSION, 2L);
+    field1.setOriginalName("sd");
+    //field1.setUnloaded(true);
     fields.add(field1);
 
     fields.add(new Field("m1", DataType.DOUBLE, MEASURE, 3L));
 
-    Field field2 = new Field("m2", DataType.DOUBLE, MEASURE, 4L);
-    field2.setUnloaded(true);
+    Field field2 = new Field("m2_updated", DataType.DOUBLE, MEASURE, 4L);
+    //field2.setUnloaded(true);
+    field2.setOriginalName("m2");
     fields.add(field2);
 
     dataSource.setFields(fields);
 
     LocalFileIngestionInfo localFileIngestionInfo = new LocalFileIngestionInfo();
     localFileIngestionInfo.setPath(targetFile);
-    localFileIngestionInfo.setRemoveFirstRow(false);
-    localFileIngestionInfo.setFormat(new CsvFileFormat("\u0020", "\n"));
+    localFileIngestionInfo.setRemoveFirstRow(true);
+    localFileIngestionInfo.setFormat(new CsvFileFormat(",", null));
     localFileIngestionInfo.setIntervals(Lists.newArrayList("2000-01-01T00:00:00.000Z/2020-01-01T00:00:00.000Z"));
 
     dataSource.setIngestion(GlobalObjectMapper.writeValueAsString(localFileIngestionInfo));
@@ -3512,7 +3515,7 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
 
     //
     List<String> wktList = Lists.newArrayList(
-            "MULTIPOINT((3.5 5.6),(4.8 10.5))"
+        "MULTIPOINT((3.5 5.6),(4.8 10.5))"
     );
 
     // @formatter:off

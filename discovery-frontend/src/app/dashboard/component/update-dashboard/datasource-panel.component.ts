@@ -13,28 +13,31 @@
  */
 
 import {
-  Component, DoCheck,
+  Component,
+  DoCheck,
   ElementRef,
   EventEmitter,
   Injector,
-  Input, KeyValueDiffers, OnDestroy,
+  Input,
+  KeyValueDiffers,
+  OnDestroy,
   OnInit,
   Output,
   ViewChild
 } from '@angular/core';
-import { AbstractComponent } from '../../../common/component/abstract.component';
-import { Datasource, Field, FieldRole, LogicalType } from '../../../domain/datasource/datasource';
-import { Filter } from '../../../domain/workbook/configurations/filter/filter';
-import { Widget } from '../../../domain/dashboard/widget/widget';
-import { Alert } from '../../../common/util/alert.util';
-import { StringUtil } from '../../../common/util/string.util';
-import { FilterUtil } from '../../util/filter.util';
+import {AbstractComponent} from '../../../common/component/abstract.component';
+import {Datasource, Field, FieldRole, LogicalType} from '../../../domain/datasource/datasource';
+import {Filter} from '../../../domain/workbook/configurations/filter/filter';
+import {Widget} from '../../../domain/dashboard/widget/widget';
+import {Alert} from '../../../common/util/alert.util';
+import {StringUtil} from '../../../common/util/string.util';
+import {FilterUtil} from '../../util/filter.util';
 import * as _ from 'lodash';
-import { CustomField } from '../../../domain/workbook/configurations/field/custom-field';
-import { BoardConfiguration, BoardDataSource, Dashboard } from '../../../domain/dashboard/dashboard';
-import { PageDataContextComponent } from '../../../page/page-data/page-data-context.component';
-import { DashboardUtil } from '../../util/dashboard.util';
-import { EventBroadcaster } from '../../../common/event/event.broadcaster';
+import {CustomField} from '../../../domain/workbook/configurations/field/custom-field';
+import {BoardConfiguration, BoardDataSource, Dashboard} from '../../../domain/dashboard/dashboard';
+import {PageDataContextComponent} from '../../../page/page-data/page-data-context.component';
+import {DashboardUtil} from '../../util/dashboard.util';
+import {EventBroadcaster} from '../../../common/event/event.broadcaster';
 
 @Component({
   selector: 'datasource-panel',
@@ -185,7 +188,7 @@ export class DatasourcePanelComponent extends AbstractComponent implements OnIni
    * @param {Datasource} dataSource
    */
   public selectDataSource(dataSource: Datasource) {
-    if( dataSource ) {
+    if( dataSource && dataSource.valid ) {
       this.dataSource = dataSource;
       const boardConf: BoardConfiguration = this.dashboard.configuration;
 
@@ -256,7 +259,7 @@ export class DatasourcePanelComponent extends AbstractComponent implements OnIni
 
     // 페이징 목록
     let start: number = (this.dimPage - 1) * this.DIM_PAGE_SIZE;
-    let end: number = (this.dimPage * this.DIM_PAGE_SIZE) - 1;
+    let end: number = (this.dimPage * this.DIM_PAGE_SIZE);
     this.displayDimensions = this.dimensionFields.slice(start, end);
   } // function - prevDimPage
 
@@ -272,7 +275,7 @@ export class DatasourcePanelComponent extends AbstractComponent implements OnIni
 
     // 페이징 목록
     let start: number = (this.dimPage - 1) * this.DIM_PAGE_SIZE;
-    let end: number = (this.dimPage * this.DIM_PAGE_SIZE) - 1;
+    let end: number = (this.dimPage * this.DIM_PAGE_SIZE);
     this.displayDimensions = this.dimensionFields.slice(start, end);
   } // function - nextDimPage
 
@@ -288,7 +291,7 @@ export class DatasourcePanelComponent extends AbstractComponent implements OnIni
 
     // 페이징 목록
     let start: number = (this.meaPage - 1) * this.MEA_PAGE_SIZE;
-    let end: number = (this.meaPage * this.MEA_PAGE_SIZE) - 1;
+    let end: number = (this.meaPage * this.MEA_PAGE_SIZE);
     this.displayMeasures = this.measureFields.slice(start, end);
   } // function - prevMeaPage
 
@@ -304,7 +307,7 @@ export class DatasourcePanelComponent extends AbstractComponent implements OnIni
 
     // 페이징 목록
     let start: number = (this.meaPage - 1) * this.MEA_PAGE_SIZE;
-    let end: number = (this.meaPage * this.MEA_PAGE_SIZE) - 1;
+    let end: number = (this.meaPage * this.MEA_PAGE_SIZE);
     this.displayMeasures = this.measureFields.slice(start, end);
   } // function - nextMeaPage
 
@@ -352,11 +355,6 @@ export class DatasourcePanelComponent extends AbstractComponent implements OnIni
     }
 
     if (field.useFilter) {  // 제거
-      // 필수필터이면 제거 불가능
-      if (field.role === FieldRole.TIMESTAMP && field.logicalType === LogicalType.TIMESTAMP) {
-        Alert.warning(this.translateService.instant('msg.board.alert.timestamp.del.error'));
-        return;
-      }
 
       // 추천필터 제거 볼가
       if (field.filtering) {
@@ -409,6 +407,16 @@ export class DatasourcePanelComponent extends AbstractComponent implements OnIni
     }
     this.isShowCustomFiled = true;
   } // function - openCustomFieldPopup
+
+  /**
+   * 사용자 정의 필드 팝업 열기 ( 컨텍스트 메뉴로 부터.. )
+   * @param customField
+   */
+  public openCustomFieldPopupFromContext( customField:CustomField ) {
+    this.customFieldPopupType = customField.role.toString();
+    this.selectedCustomField = customField;
+    this.isShowCustomFiled = true;
+  } // function - openCustomFieldPopupFromContext
 
   /**
    * 사용자 정의 컬럼 변경
@@ -495,7 +503,7 @@ export class DatasourcePanelComponent extends AbstractComponent implements OnIni
       if (this.DIM_PAGE_SIZE < dimensionFields.length) {
         this.dimPage = 1;
         this.dimTotalPage = Math.ceil(dimensionFields.length / this.DIM_PAGE_SIZE);
-        this.displayDimensions = dimensionFields.slice(0, this.DIM_PAGE_SIZE - 1);
+        this.displayDimensions = dimensionFields.slice(0, this.DIM_PAGE_SIZE);
       } else {
         this.dimPage = 1;
         this.dimTotalPage = 1;
@@ -505,7 +513,7 @@ export class DatasourcePanelComponent extends AbstractComponent implements OnIni
       if (this.MEA_PAGE_SIZE < measureFields.length) {
         this.meaPage = 1;
         this.meaTotalPage = Math.ceil(measureFields.length / this.MEA_PAGE_SIZE);
-        this.displayMeasures = measureFields.slice(0, this.MEA_PAGE_SIZE - 1);
+        this.displayMeasures = measureFields.slice(0, this.MEA_PAGE_SIZE);
       } else {
         this.meaPage = 1;
         this.meaTotalPage = 1;

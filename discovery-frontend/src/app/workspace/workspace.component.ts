@@ -15,7 +15,12 @@
 import {Component, ElementRef, Injector, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {AbstractComponent} from '../common/component/abstract.component';
 import {CreateWorkbookComponent} from '../workbook/component/create-workbook/create-workbook.component';
-import {CountByBookType, PermissionChecker, PublicType, Workspace} from '../domain/workspace/workspace';
+import {
+  CountByBookType,
+  PermissionChecker,
+  PublicType,
+  Workspace
+} from '../domain/workspace/workspace';
 import {WorkspaceService} from './service/workspace.service';
 import {ActivatedRoute} from '@angular/router';
 import {Book} from '../domain/workspace/book';
@@ -300,9 +305,9 @@ export class WorkspaceComponent extends AbstractComponent implements OnInit, OnD
       this._connTypeList = StorageService.connectionTypeList;
     }
     const connType = this.getConnType(book);
-    return this.getConnImplementorGrayImgUrl(
-      connType,
-      this._connTypeList.find(item => item.implementor === connType).iconResource3
+    return this.getConnImplementorGrayImgUrl(connType,
+      isNullOrUndefined(this._connTypeList.find(item => item.implementor === connType)) ?
+        null : this._connTypeList.find(item => item.implementor === connType).iconResource3
     );
   } // function - getWorkbenchConnTypeIcon
 
@@ -741,7 +746,13 @@ export class WorkspaceComponent extends AbstractComponent implements OnInit, OnD
     }
   } // function - detailPage
 
-  /**
+  public detailValidPage(book: Book) {
+    if ( book.contents.connValid ) {
+      this.detailPage(book.id, book.type);
+    }
+  }
+
+ /**
    * 데이터소스 뷰 페이지
    */
   public datasourceView() {

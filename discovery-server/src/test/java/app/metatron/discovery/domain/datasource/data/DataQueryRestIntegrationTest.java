@@ -214,9 +214,44 @@ public class DataQueryRestIntegrationTest extends AbstractRestIntegrationTest {
 
   @Test
   @OAuthRequest(username = "polaris", value = {"ROLE_SYSTEM_USER", "PERM_SYSTEM_WRITE_DATASOURCE"})
+  public void searchQueryForSalesLast() throws JsonProcessingException {
+
+    DataSource dataSource1 = new DefaultDataSource("sales_geo");
+
+    // Limit
+    Limit limit = new Limit();
+    limit.setLimit(1000);
+
+    List<Filter> filters = Lists.newArrayList();
+
+    List<Field> projections = Lists.newArrayList(
+        new DimensionField("Category"),
+        new MeasureField("Sales", MeasureField.AggregationType.LAST)
+    );
+
+    SearchQueryRequest request = new SearchQueryRequest(dataSource1, filters, projections, limit);
+
+    // @formatter:off
+    given()
+      .auth().oauth2(oauth_token)
+      .body(request)
+      .contentType(ContentType.JSON)
+      .log().all()
+    .when()
+      .post("/api/datasources/query/search")
+    .then()
+      .statusCode(HttpStatus.SC_OK)
+      .body("size()", is(3))
+      .log().all();
+    // @formatter:on
+
+  }
+
+  @Test
+  @OAuthRequest(username = "polaris", value = {"ROLE_SYSTEM_USER", "PERM_SYSTEM_WRITE_DATASOURCE"})
   public void searchQuerySelectForSales() throws JsonProcessingException {
 
-    DataSource dataSource1 = new DefaultDataSource("sales");
+    DataSource dataSource1 = new DefaultDataSource("sales_geo");
 
     // Limit
     Limit limit = new Limit();
@@ -227,7 +262,7 @@ public class DataQueryRestIntegrationTest extends AbstractRestIntegrationTest {
 
     List<Filter> filters = Lists.newArrayList(
         //        new IntervalFilter("OrderDate", "2011-01-04T00:00:00.000", "2012-05-19T00:00:00.000"),
-        //        new LikeFilter("Category", "T_chnology")
+        new LikeFilter("Category", "T_chnology")
     );
 
     List<Field> projections = Lists.newArrayList(
@@ -430,7 +465,7 @@ public class DataQueryRestIntegrationTest extends AbstractRestIntegrationTest {
   @OAuthRequest(username = "polaris", value = {"ROLE_SYSTEM_USER", "PERM_SYSTEM_WRITE_DATASOURCE"})
   public void searchQueryForSalesWithTimeRange() throws JsonProcessingException {
 
-    DataSource dataSource1 = new DefaultDataSource("sales");
+    DataSource dataSource1 = new DefaultDataSource("sales_geo");
 
     // Limit
     Limit limit = new Limit();
@@ -694,7 +729,7 @@ public class DataQueryRestIntegrationTest extends AbstractRestIntegrationTest {
   @OAuthRequest(username = "polaris", value = {"ROLE_SYSTEM_USER", "PERM_SYSTEM_WRITE_DATASOURCE"})
   public void searchQueryForSalesWithExpression() throws JsonProcessingException {
 
-    DataSource dataSource1 = new DefaultDataSource("sales");
+    DataSource dataSource1 = new DefaultDataSource("sales_geo");
 
     // Limit
     Limit limit = new Limit();
@@ -741,7 +776,7 @@ public class DataQueryRestIntegrationTest extends AbstractRestIntegrationTest {
   @OAuthRequest(username = "polaris", value = {"ROLE_SYSTEM_USER", "PERM_SYSTEM_WRITE_DATASOURCE"})
   public void searchQueryForSalesWithExpression1() throws JsonProcessingException {
 
-    DataSource dataSource1 = new DefaultDataSource("sales");
+    DataSource dataSource1 = new DefaultDataSource("sales_geo");
 
     // Limit
     Limit limit = new Limit();
@@ -756,7 +791,7 @@ public class DataQueryRestIntegrationTest extends AbstractRestIntegrationTest {
         new ExpressionField("orderdate_d", "\"OrderDate\"", "dimension", false),
         new ExpressionField("trim", "TRIM( \"Category\"  )", "dimension", false),
         new ExpressionField("case_dim", "CASE( \"Category\" == 'Furniture', 'F', 'default' )", "dimension", false),
-        //        new ExpressionField("switch_dim", "SWITCH( \"Category\", 'Furniture', 'F', 'Technology', 'T')", "dimension", false)
+        new ExpressionField("switch_dim", "SWITCH( \"Category\", 'Furniture', 'F', 'Technology', 'T')", "dimension", false),
         new ExpressionField("sumof_dim", "(SUMOF([SalesForecase]) - SUMOF( [Sales]  ) ) / SUMOF( [Sales]  ) * 100", "measure", true)
         //        new ExpressionField("test", "Sales + 1", "measure", false)
     );
@@ -1005,7 +1040,7 @@ public class DataQueryRestIntegrationTest extends AbstractRestIntegrationTest {
   @OAuthRequest(username = "polaris", value = {"ROLE_SYSTEM_USER", "PERM_SYSTEM_WRITE_DATASOURCE"})
   public void searchQueryForSalesWithSort() throws JsonProcessingException {
 
-    DataSource dataSource1 = new DefaultDataSource("sales");
+    DataSource dataSource1 = new DefaultDataSource("sales_geo");
 
     Field city = new DimensionField("City");
     Field sumDiscount = new MeasureField("Discount", MeasureField.AggregationType.SUM);
@@ -1046,7 +1081,7 @@ public class DataQueryRestIntegrationTest extends AbstractRestIntegrationTest {
   @OAuthRequest(username = "polaris", value = {"ROLE_SYSTEM_USER", "PERM_SYSTEM_WRITE_DATASOURCE"})
   public void searchQueryForSalesWithPivotFormat() throws JsonProcessingException {
 
-    DataSource dataSource1 = new DefaultDataSource("sales");
+    DataSource dataSource1 = new DefaultDataSource("sales_geo");
 
     Field cat = new DimensionField("Category");
     Field subCat = new DimensionField("Sub-Category");
@@ -1311,7 +1346,7 @@ public class DataQueryRestIntegrationTest extends AbstractRestIntegrationTest {
   @OAuthRequest(username = "polaris", value = {"ROLE_SYSTEM_USER", "PERM_SYSTEM_WRITE_DATASOURCE"})
   public void searchQueryForSalesWithBarChart() throws JsonProcessingException {
 
-    DataSource dataSource1 = new DefaultDataSource("sales");
+    DataSource dataSource1 = new DefaultDataSource("sales_geo");
 
     // Limit
     Limit limit = new Limit();
@@ -1334,7 +1369,7 @@ public class DataQueryRestIntegrationTest extends AbstractRestIntegrationTest {
 
     // Case 2. 디멘젼에 열선반에 위치하고 행선반에 디멘젼 처리
     Pivot pivot2 = new Pivot();
-    pivot2.setColumns(Lists.newArrayList(new DimensionField("Category"), new DimensionField("Sub-Category")));
+    pivot2.setColumns(Lists.newArrayList(new DimensionField("Category")));
     pivot2.setRows(Lists.newArrayList(new DimensionField("Region")));
     pivot2.setAggregations(Lists.newArrayList(
         new MeasureField("Sales", MeasureField.AggregationType.AVG)
@@ -1388,7 +1423,7 @@ public class DataQueryRestIntegrationTest extends AbstractRestIntegrationTest {
         new MeasureField("Sales", MeasureField.AggregationType.SUM), field4
     ));
 
-    SearchQueryRequest request = new SearchQueryRequest(dataSource1, filters, pivot1, limit);
+    SearchQueryRequest request = new SearchQueryRequest(dataSource1, filters, pivot2, limit);
     ChartResultFormat format = new ChartResultFormat("bar");
     format.addOptions("showPercentage", true);
     format.addOptions("showCategory", true);
@@ -2011,13 +2046,17 @@ public class DataQueryRestIntegrationTest extends AbstractRestIntegrationTest {
 
     DimensionField geoDimensionField = new DimensionField("gis");
 
+    // Only dimension case
+    //    List<Field> fields = Lists.newArrayList(geoDimensionField,
+    //                                            new DimensionField("gu"));
+
     List<Field> fields = Lists.newArrayList(geoDimensionField,
                                             new DimensionField("gu"),
                                             new MeasureField("py", null, MeasureField.AggregationType.NONE),
                                             new MeasureField("amt", null, MeasureField.AggregationType.NONE));
 
-    //MapViewLayer layer1 = new MapViewLayer("layer1", "estate", fields, new LayerView.HashLayerView("geohex", 5));
-    MapViewLayer layer1 = new MapViewLayer("layer1", "estate", fields, new LayerView.AbbreviatedView("geohex", 12, RelayAggregation.Relaytype.FIRST.name()));
+    //    MapViewLayer layer1 = new MapViewLayer("layer1", "estate", fields, new LayerView.ClusteringLayerView("geohex", 5));
+    MapViewLayer layer1 = new MapViewLayer("layer1", "estate", fields, new LayerView.AbbreviatedView("h3", 12, RelayAggregation.RelayType.FIRST.name()));
     Shelf geoShelf = new GeoShelf(Arrays.asList(layer1));
 
     SearchQueryRequest request = new SearchQueryRequest(dataSource1, filters, geoShelf, limit);
@@ -2828,14 +2867,14 @@ public class DataQueryRestIntegrationTest extends AbstractRestIntegrationTest {
   @OAuthRequest(username = "polaris", value = {"ROLE_SYSTEM_USER", "PERM_SYSTEM_WRITE_DATASOURCE"})
   public void candidateQueryForSaleFilterd() throws JsonProcessingException {
 
-    DataSource dataSource1 = new DefaultDataSource("sales");
+    DataSource dataSource1 = new DefaultDataSource("sales_geo");
 
     // Limit
     Limit limit = new Limit();
     limit.setLimit(50000);
 
     List<Filter> filters = Lists.newArrayList(
-        //        new InclusionFilter("State", Lists.newArrayList("Texas"))
+        new InclusionFilter("State", Lists.newArrayList("Texas"))
     );
 
     DimensionField targetField = new DimensionField("Category");
@@ -2856,14 +2895,10 @@ public class DataQueryRestIntegrationTest extends AbstractRestIntegrationTest {
 
     request.setUserFields(userFields);
 
-    System.out.println(GlobalObjectMapper.getDefaultMapper().writeValueAsString(request));
-
-    String query = "{\"dataSource\":{\"joins\":[],\"temporary\":false,\"id\":\"ds-gis-37\",\"name\":\"sales_geo\",\"uiDescription\":\"Sales data (2011~2014)\",\"type\":\"default\",\"connType\":\"ENGINE\",\"engineName\":\"sales_geo\"},\"targetField\":{\"type\":\"dimension\",\"name\":\"Category\"}}";
-
     // @formatter:off
     given()
       .auth().oauth2(oauth_token)
-      .body(query)
+      .body(request)
       .contentType(ContentType.JSON)
       .log().all()
     .when()
@@ -2878,7 +2913,7 @@ public class DataQueryRestIntegrationTest extends AbstractRestIntegrationTest {
   @OAuthRequest(username = "polaris", value = {"ROLE_SYSTEM_USER", "PERM_SYSTEM_WRITE_DATASOURCE"})
   public void candidateQueryForUserDefined() throws JsonProcessingException {
 
-    DataSource dataSource1 = new DefaultDataSource("sales");
+    DataSource dataSource1 = new DefaultDataSource("sales_geo");
 
     // Limit
     Limit limit = new Limit();
@@ -2899,8 +2934,8 @@ public class DataQueryRestIntegrationTest extends AbstractRestIntegrationTest {
     CandidateQueryRequest request = new CandidateQueryRequest();
     request.setDataSource(dataSource1);
     request.setFilters(filters);
-    request.setTargetField(targetField2);
-    request.setUserFields(Lists.newArrayList(expressionField2));
+    request.setTargetField(targetField1);
+    request.setUserFields(Lists.newArrayList(expressionField1));
 
     System.out.println(GlobalObjectMapper.getDefaultMapper().writeValueAsString(request));
 
@@ -3067,7 +3102,7 @@ public class DataQueryRestIntegrationTest extends AbstractRestIntegrationTest {
   @OAuthRequest(username = "polaris", value = {"ROLE_SYSTEM_USER", "PERM_SYSTEM_WRITE_DATASOURCE"})
   public void checkSimilarity() {
 
-    SimilarityQueryRequest queryRequest = new SimilarityQueryRequest(Lists.newArrayList("sales", "sales_join_category"), null);
+    SimilarityQueryRequest queryRequest = new SimilarityQueryRequest(Lists.newArrayList("sales_geo", "sales_join_category"), null);
 
     // @formatter:off
     given()

@@ -105,51 +105,6 @@ public interface LayerView extends Serializable {
       return builder.toString();
     }
 
-    @Override
-    public boolean needAggregation() {
-      return true;
-    }
-
-    public String getMethod() {
-      return method;
-    }
-
-    public Integer getPrecision() {
-      return precision;
-    }
-  }
-
-
-  class AbbreviatedView extends ClusteringLayerView implements LayerView {
-
-    RelayAggregation.Relaytype relayType;
-
-    @JsonCreator
-    public AbbreviatedView(@JsonProperty("method") String method,
-                           @JsonProperty("precision") Integer precision,
-                           @JsonProperty("relayType") String relayType) {
-      super(method, precision);
-      this.relayType = EnumUtils.getUpperCaseEnum(RelayAggregation.Relaytype.class, relayType);
-    }
-
-    public RelayAggregation.Relaytype getRelayType() {
-      return relayType;
-    }
-  }
-
-  class ClusteringLayerView extends HashLayerView implements LayerView {
-    String method;
-    Integer precision;
-
-    public ClusteringLayerView() {
-    }
-
-    @JsonCreator
-    public ClusteringLayerView(@JsonProperty("method") String method,
-                               @JsonProperty("precision") Integer precision) {
-      super(method, precision);
-    }
-
     @JsonIgnore
     public List<Aggregation> getClusteringAggregations(String fieldName) {
       List<String> pointKeyList = LogicalType.GEO_POINT.getGeoPointKeys();
@@ -170,6 +125,51 @@ public interface LayerView extends Serializable {
 
       return Lists.newArrayList(new ExprPostAggregator(expr));
 
+    }
+
+    @Override
+    public boolean needAggregation() {
+      return true;
+    }
+
+    public String getMethod() {
+      return method;
+    }
+
+    public Integer getPrecision() {
+      return precision;
+    }
+  }
+
+
+  class AbbreviatedView extends HashLayerView implements LayerView {
+
+    RelayAggregation.RelayType relayType;
+
+    @JsonCreator
+    public AbbreviatedView(@JsonProperty("method") String method,
+                           @JsonProperty("precision") Integer precision,
+                           @JsonProperty("relayType") String relayType) {
+      super(method, precision);
+      this.relayType = EnumUtils.getUpperCaseEnum(RelayAggregation.RelayType.class, relayType);
+    }
+
+    public RelayAggregation.RelayType getRelayType() {
+      return relayType;
+    }
+  }
+
+  class ClusteringLayerView extends HashLayerView implements LayerView {
+    String method;
+    Integer precision;
+
+    public ClusteringLayerView() {
+    }
+
+    @JsonCreator
+    public ClusteringLayerView(@JsonProperty("method") String method,
+                               @JsonProperty("precision") Integer precision) {
+      super(method, precision);
     }
 
   }

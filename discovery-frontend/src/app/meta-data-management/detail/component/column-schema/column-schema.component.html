@@ -284,17 +284,17 @@
         <td class="ddp-disabled">
           {{column.physicalName}}
         </td>
-        <td [ngClass]="['ddp-padding-none']">
-          <div class="ddp-input-form">
-            <!--suppress HtmlFormInputWithoutLabel -->
-            <input type="text"
-                   class="ddp-txt-input"
-                   [ngModel]="column.name"
-                   (ngModelChange)="column.name = $event; column.nameChangeFl = true; column.replaceFl = true">
-            <em class="ddp-bg-select"></em>
-          </div>
+        <td [ngClass]="['ddp-input-form']"
+            #metadataColumnSchemaNameTds
+            (click)="focusMetadataColumnSchemaNameInput(index)">
+          <input type="text"
+                 class="ddp-txt-input"
+                 #metadataColumnSchemaNameInputs
+                 (blur)="blurMetadataColumnSchemaNameInput(index)"
+                 [ngModel]="column.name"
+                 (ngModelChange)="column.name = $event; column.nameChangeFl = true; column.replaceFl = true">
         </td>
-        <td>
+        <td [ngClass]="{'ddp-disabled': isGeoType(column.type)}">
           <div class="ddp-select-search ddp-hover-tooltip">
             <a href="javascript:"
                class="ddp-ui-search2"
@@ -315,14 +315,13 @@
             [class.ddp-disabled]="isSelectedMetadataColumnInColumnDictionaryDefined(column)"
             [class.ddp-selected]="column['typeListFl'] || column.format?.isShowTimestampValidPopup"
             [ngClass]="[TYPE_SELECT_AND_TIMESTAMP_VALID_WRAP_ELEMENT]"
-            (click)="onClickTypeSelectAndTimestampValidWrapElement($event, column)"
+            (click)="onClickTypeSelectAndTimestampValidWrapElement($event, column, logicalType, logicalTypeList)"
             (clickOutside)="column['typeListFl'] = false;">
           <div class="ddp-wrap-type-option">
             <!-- select -->
-            <div #logicalType
+            <div #logicalType class="ddp-ui-selected-option"
                  [class.ddp-selected]="column['typeListFl']"
-                 [ngClass]="['ddp-ui-selected-option']"
-                 (click)="onShowLogicalTypeList(column)">
+                 (click)="onShowLogicalTypeList(column, logicalType, logicalTypeList)">
                 <span class="ddp-link-text ddp-txt-icon">
                   <em [ngClass]="[getFieldTypeIconClass(column.type)]"></em>
                   {{getSelectedLogicalTypeLabel(column)}}
@@ -332,7 +331,7 @@
                   </span>
                 </span>
               <!--suppress JSUnusedGlobalSymbols -->
-              <div class="ddp-wrap-popup2 ddp-scroll-none" [ngClass]="['ddp-types']"
+              <div class="ddp-wrap-popup2 ddp-types ddp-scroll-none"
                    #logicalTypeList>
                 <ul class="ddp-list-popup">
                   <li [class.ddp-selected]="isSelectedColumnLogicalType(column, LOGICAL.STRING)">
@@ -396,22 +395,32 @@
               <!-- //popup -->
             </div>
             <!-- //select -->
-            <div class="ddp-ui-info"
-                 [hidden]="isTypeIsTimestamp(column) === false"
-                 [class.ddp-selected]="column.format?.isShowTimestampValidPopup">
+          </div>
+          <div class="ddp-ui-info"
+               [hidden]="isShowInformationIcon(column) === false"
+               [class.ddp-selected]="column.format?.isShowTimestampValidPopup">
+            <!-- TODO 추후 데이터소스 연결시 error2에 있는 hasMetadataColumnInDatasource container와 template 제거 -->
+            <ng-container *ngIf="hasMetadataColumnInDatasource(); else none">
               <em [class.ddp-icon-sinfo2]="isValidInformationIcon(column)"
                   [class.ddp-icon-error2]="isInvalidInformationIcon(column)"
                   [ngClass]="[TIMESTAMP_VALID_PUPOP_ELEMENT]"
                   (click)="onClickInfoIcon(column, index)">
               </em>
-            </div>
+            </ng-container>
+            <ng-template #none>
+              <em class="ddp-icon-sinfo2"
+                  [ngClass]="[TIMESTAMP_VALID_PUPOP_ELEMENT]"
+                  (click)="onClickInfoIcon(column, index)">
+              </em>
+            </ng-template>
             <!-- format layer -->
             <datetime-valid-popup
-              [hidden]="isTypeIsTimestamp(column) === false"
+              [hidden]="isShowInformationIcon(column) === false"
               [fieldFormat]="column?.format"
               [fieldDataList]="fieldDataList"
               [fieldName]="column.physicalName"
-              (changedFieldFormat)="column.format = $event"
+              [isDisableValidation]="!hasMetadataColumnInDatasource()"
+              (changedFieldFormat)="column.format = $event; column.replaceFl = true;"
               (changedFieldFormatValid)="setIsExistErrorInFieldListFlag()"
               (closed)="column.replaceFl = true;">
             </datetime-valid-popup>
@@ -488,20 +497,15 @@
             {{column.codeTable.name}}
           </div>
         </td>
-        <td [class.ddp-padding-none]="!isSelectedMetadataColumnInColumnDictionaryDefined(column)"
-            [class.ddp-disabled]="isSelectedMetadataColumnInColumnDictionaryDefined(column)">
-          <span *ngIf="isSelectedMetadataColumnInColumnDictionaryDefined(column)">
-            {{column.description}}
-          </span>
-          <div class="ddp-input-form"
-               *ngIf="!isSelectedMetadataColumnInColumnDictionaryDefined(column)">
-            <!--suppress HtmlFormInputWithoutLabel -->
-            <input type="text"
-                   class="ddp-txt-input"
-                   [ngModel]="column.description"
-                   (ngModelChange)="column.description = $event; column.replaceFl = true">
-            <em class="ddp-bg-select"></em>
-          </div>
+        <td [ngClass]="['ddp-input-form']"
+            #metadataColumnSchemaDescriptionTds
+            (click)="focusMetadataColumnSchemaDescriptionInput(index, column)">
+          <input type="text"
+                 class="ddp-txt-input"
+                 #metadataColumnSchemaDescriptionInputs
+                 (blur)="blurMetadataColumnSchemaDescriptionInput(index)"
+                 [ngModel]="column.description"
+                 (ngModelChange)="column.description = $event; column.replaceFl = true">
         </td>
       </tr>
       </tbody>

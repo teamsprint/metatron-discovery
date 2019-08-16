@@ -13,7 +13,15 @@
  */
 
 import * as $ from 'jquery';
-import {AfterViewInit, ChangeDetectorRef, ElementRef, HostListener, Injector, OnDestroy, OnInit} from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  ElementRef,
+  HostListener,
+  Injector,
+  OnDestroy,
+  OnInit
+} from '@angular/core';
 import {Router} from '@angular/router';
 import {Loading} from '../util/loading.util';
 import {TranslateService} from '@ngx-translate/core';
@@ -34,7 +42,7 @@ import {Group} from '../../domain/user/group';
 import {UserDetail} from '../../domain/common/abstract-history-entity';
 import {StompService, StompState} from '@stomp/ng2-stompjs';
 import {Observable} from 'rxjs';
-import {filter, map} from 'rxjs/operators';
+import {filter} from 'rxjs/operators';
 import {isUndefined} from "util";
 import {ImplementorType} from "../../domain/dataconnection/dataconnection";
 import {LogicalType} from '../../domain/datasource/datasource';
@@ -637,7 +645,7 @@ export class AbstractComponent implements OnInit, AfterViewInit, OnDestroy, CanC
    * @return {string}
    */
   public getUserFullName(user: User | UserDetail) {
-    return (user && '__UNKNOWN_USER' !== user.fullName) ? user.fullName : '';
+    return (user && 'Unknown user' !== user.fullName) ? user.fullName : '';
   } // function - getUserFullName
 
   /**
@@ -646,7 +654,7 @@ export class AbstractComponent implements OnInit, AfterViewInit, OnDestroy, CanC
    * @return {string}
    */
   public getGroupName(group: Group) {
-    return (group && '__UNKNOWN_GROUP' !== group.name) ? group.name : '';
+    return (group && 'Unknown group' !== group.name) ? group.name : '';
   } // function - getGroupName
 
   /**
@@ -941,18 +949,12 @@ export class AbstractComponent implements OnInit, AfterViewInit, OnDestroy, CanC
    * @param {string} errMessage
    */
   protected commonExceptionHandler(err: any, errMessage?: string) {
-    console.error(err);
-    const url: string = this.router.url;
-    if (-1 < url.indexOf('/management') || -1 < url.indexOf('/admin') || -1 < url.indexOf('/workbook')) {
+    if (err && err.details) {
       Alert.errorDetail(err.message, err.details);
+    } else if (errMessage) {
+      Alert.error(errMessage);
     } else {
-      if (err && err.details) {
-        Alert.error(err.details);
-      } else if (errMessage) {
-        Alert.error(errMessage);
-      } else {
-        Alert.error(this.translateService.instant('msg.alert.retrieve.fail'));
-      }
+      Alert.error(this.translateService.instant('msg.alert.retrieve.fail'));
     }
     this.loadingHide();
   } // function - commonExceptionHandler

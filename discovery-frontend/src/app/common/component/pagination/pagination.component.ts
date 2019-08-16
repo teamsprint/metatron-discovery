@@ -76,7 +76,7 @@ export class PaginationComponent extends AbstractComponent implements OnInit, On
   public ngOnChanges(changes: SimpleChanges) {
     const infoChanges: SimpleChange = changes.info;
     if (infoChanges && infoChanges.currentValue) {
-      let startPage = (Math.floor(this.info.number / this._navigationSize) * this._navigationSize) - 1;
+      let startPage = (Math.floor(this.info.number / this._navigationSize) * this._navigationSize);
       this._setRange(startPage);
     }
   } // function - ngOnChanges
@@ -108,6 +108,7 @@ export class PaginationComponent extends AbstractComponent implements OnInit, On
    */
   public changePageSize(size: number) {
     if (this.info.size !== size) {
+      this.info.number = 0;
       this.changePageData.emit({page: this.info.number, size: size});
     }
   } // function - changePageSize
@@ -125,10 +126,18 @@ export class PaginationComponent extends AbstractComponent implements OnInit, On
    */
   public nextPagination() {
     let startPage = this.range[0] + this._navigationSize;
-    (this.info.totalPages < startPage) && (startPage = this.range[0]);
+    (this.info.totalPages <= startPage) && (startPage = this.range[0]);
     this._setRange(startPage);
   } // function - nextPagination
 
+
+  public openChangePageComboBox() {
+    if (this.info.totalElements <= this.info.size) {
+      return;
+    }
+
+    this.isOpenOpts = !this.isOpenOpts;
+  }
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
    | Private Method
    |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/

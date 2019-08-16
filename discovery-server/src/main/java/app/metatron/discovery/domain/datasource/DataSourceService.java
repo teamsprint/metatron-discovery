@@ -114,7 +114,7 @@ public class DataSourceService {
   @Autowired
   DataSourceProperties dataSourceProperties;
 
-  @Autowired
+  @Autowired(required = false)
   StorageProperties storageProperties;
 
   /**
@@ -266,7 +266,7 @@ public class DataSourceService {
 
     DataSource dataSource;
     if (dataSourceId.indexOf(ID_PREFIX) == 0) {
-      LOGGER.debug("Find temporary datasource : {}" + dataSourceId);
+      LOGGER.debug("Find temporary datasource : {}", dataSourceId);
 
       DataSourceTemporary temporary = temporaryRepository.findOne(dataSourceId);
       if (temporary == null) {
@@ -416,8 +416,7 @@ public class DataSourceService {
             DataSource.SourceType.SNAPSHOT
         };
 
-        boolean supportStageDB = storageProperties.getStagedb() != null;
-        if(supportStageDB){
+        if(storageProperties != null && storageProperties.getStagedb() != null){
           srcTypes = ArrayUtils.add(srcTypes, 2, DataSource.SourceType.HIVE);
         }
 

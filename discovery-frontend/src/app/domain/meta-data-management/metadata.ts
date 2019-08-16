@@ -43,10 +43,19 @@ export class Metadata extends AbstractHistoryEntity {
     return _.negate(_.isNil)(sourceType)
       && sourceType === SourceType.JDBC;
   }
+
+  public static isDisableMetadataNameCharacter(name: string) {
+    return (/^[!@#$%^*+=()~`\{\}\[\]\-\_\;\:\'\"\,\.\/\?\<\>\|\&\\]+$/gi).test(name);
+  }
+
+  public static isEmptyTags(metadata: Metadata): boolean {
+    return _.isNil(metadata.tags) || metadata.tags.length === 0;
+  }
 }
 
 export enum SourceType {
   ENGINE = <any>'ENGINE',
   STAGING = <any>'STAGEDB',
+  STAGEDB = <any>'STAGEDB',
   JDBC = <any>'JDBC'
 }

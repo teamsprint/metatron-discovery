@@ -123,6 +123,9 @@ public class DataConnectionFilterService {
     switch(criterionKey){
       case IMPLEMENTOR:
         for(JdbcDialect jdbcDialect : jdbcDialects){
+          if(jdbcDialect.getImplementor().equals("STAGE")){
+            continue;
+          }
           criterion.addFilter(new ListFilter(criterionKey, "implementor", jdbcDialect.getImplementor(), jdbcDialect.getName()));
         }
         break;
@@ -162,12 +165,14 @@ public class DataConnectionFilterService {
 
         //dataconnection create users
         List<String> creatorIdList = dataConnectionRepository.findDistinctCreatedBy();
-        List<User> creatorUserList = userRepository.findByUsernames(creatorIdList);
-        for(User creator : creatorUserList){
-          if(!creator.getUsername().equals(userName)){
-            ListFilter filter = new ListFilter("createdBy", creator.getUsername(),
-                    creator.getFullName());
-            userCriterion.addFilter(filter);
+        if(creatorIdList != null && !creatorIdList.isEmpty()){
+          List<User> creatorUserList = userRepository.findByUsernames(creatorIdList);
+          for(User creator : creatorUserList){
+            if(!creator.getUsername().equals(userName)){
+              ListFilter filter = new ListFilter("createdBy", creator.getUsername(),
+                                                 creator.getFullName());
+              userCriterion.addFilter(filter);
+            }
           }
         }
 

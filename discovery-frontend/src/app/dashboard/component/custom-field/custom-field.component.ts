@@ -14,21 +14,29 @@
 
 import * as _ from 'lodash';
 import {
-  AfterViewInit, Component, ElementRef, EventEmitter, Injector, Input, OnDestroy,
-  OnInit, Output,
+  AfterViewInit,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Injector,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
   ViewChild
 } from '@angular/core';
-import { DashboardService } from '../../service/dashboard.service';
-import { CommonCode } from '../../../domain/code/common-code';
-import { Field, FieldRole } from '../../../domain/datasource/datasource';
-import { AbstractComponent } from '../../../common/component/abstract.component';
-import { Alert } from '../../../common/util/alert.util';
-import { BoardDataSource } from '../../../domain/dashboard/dashboard';
-import { StringUtil } from '../../../common/util/string.util';
-import { ConfirmModalComponent } from '../../../common/component/modal/confirm/confirm.component';
-import { Modal } from '../../../common/domain/modal';
-import { CustomField } from '../../../domain/workbook/configurations/field/custom-field';
-import { DashboardUtil } from '../../util/dashboard.util';
+import {DashboardService} from '../../service/dashboard.service';
+import {CommonCode} from '../../../domain/code/common-code';
+import {ConnectionType, Field, FieldRole} from '../../../domain/datasource/datasource';
+import {AbstractComponent} from '../../../common/component/abstract.component';
+import {Alert} from '../../../common/util/alert.util';
+import {BoardDataSource} from '../../../domain/dashboard/dashboard';
+import {StringUtil} from '../../../common/util/string.util';
+import {ConfirmModalComponent} from '../../../common/component/modal/confirm/confirm.component';
+import {Modal} from '../../../common/domain/modal';
+import {CustomField} from '../../../domain/workbook/configurations/field/custom-field';
+import {DashboardUtil} from '../../util/dashboard.util';
+import {isNullOrUndefined} from "util";
 
 declare let $: any;
 
@@ -82,7 +90,6 @@ export class CustomFieldComponent extends AbstractComponent implements OnInit, O
   public close = new EventEmitter();
   @Output()
   public updateColumn = new EventEmitter();
-
 
   // 팝업 on/off
   public isShow = false;
@@ -168,6 +175,7 @@ export class CustomFieldComponent extends AbstractComponent implements OnInit, O
   public aggregated: boolean = false;
 
 
+  public DashboardUtil = DashboardUtil;
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
    | Constructor
    |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
@@ -186,8 +194,6 @@ export class CustomFieldComponent extends AbstractComponent implements OnInit, O
 
   // Init
   public ngOnInit() {
-
-    // Init
     super.ngOnInit();
 
     this._$calculationInput = $('#calculationInput');
@@ -203,6 +209,14 @@ export class CustomFieldComponent extends AbstractComponent implements OnInit, O
     this.setFilters();
     // 함수 및 자동완성 셋
     this.setCalculationFunction();
+  }
+
+  // Destroy
+  public ngOnDestroy() {
+    super.ngOnDestroy();
+  }
+
+  public ngAfterViewInit() {
 
     // 수정모드
     if (this.customField) {
@@ -217,18 +231,10 @@ export class CustomFieldComponent extends AbstractComponent implements OnInit, O
       this._$calculationInput.text(StringUtil.unescapeCustomColumnExpr(this.customField.expr));
       this.calValidButtonCheck();
     } else {
+      this._$calculationInput.text( '' );
       this.setColumnName();
     }
-  }
 
-  // Destory
-  public ngOnDestroy() {
-    // Destory
-    super.ngOnDestroy();
-  }
-
-
-  public ngAfterViewInit() {
     this.setAutoComplete();
     this._$calculationInput.trigger('focus');
     this._$calculationInput.attr('placeholder', this.translateService.instant('msg.board.custom.ui.content.placeholder'));
@@ -238,6 +244,8 @@ export class CustomFieldComponent extends AbstractComponent implements OnInit, O
       this.calValidButtonCheck();
       this.isCalFuncSuccess = null;
     });
+
+    this.safelyDetectChanges();
   }
 
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
@@ -455,7 +463,7 @@ export class CustomFieldComponent extends AbstractComponent implements OnInit, O
   public done() {
 
     // callFuncSuccess가 아닐때 columnName이 없을때 return
-    if ('S' !== this.isCalFuncSuccess || !this.columnName || '' == this.columnName.trim()) {
+    if ('S' !== this.isCalFuncSuccess || !this.columnName || '' == this.columnName.trim() || this.isReservedFieldName(this.columnName)) {
       return;
     }
 
@@ -494,17 +502,14 @@ export class CustomFieldComponent extends AbstractComponent implements OnInit, O
 
   // 함수 클릭
   public selectFunction(functionItem: CommonCode) {
-    let insertFunction = '<span>';
-    insertFunction += functionItem.commonValue + '( <span id="focusElement"></span>';
-    insertFunction += ' )</span>';
-    this.insertAtCursor(insertFunction);
+    this.insertAtCursor('<span>' + functionItem.commonValue + '( <span id="focusElement"></span> )</span>');
 
     // 검증 버튼 활성화
     this.calValidButtonCheck();
   }
 
   // 컬럼 클릭
-  public selecteColumn(column: Field) {
+  public selectColumn(column: Field) {
     let color = '#439fe5';
     if (column.role === FieldRole.DIMENSION) {
       color = '#5fd7a5';
@@ -521,7 +526,7 @@ export class CustomFieldComponent extends AbstractComponent implements OnInit, O
 
     // 검증 버튼 활성화
     this.calValidButtonCheck();
-  }
+  } // function - selectColumn
 
   // 커서가 위치한 곳에 텍스트를 넣는다.
   public insertAtCursor(innerHtml) {
@@ -549,7 +554,7 @@ export class CustomFieldComponent extends AbstractComponent implements OnInit, O
       // range를 갱신한다.
       sel.addRange(range);
     }
-  }
+  } // function - insertAtCursor
 
   // 계산식 버튼 활성화 여부
   public calValidButtonCheck() {
@@ -565,8 +570,10 @@ export class CustomFieldComponent extends AbstractComponent implements OnInit, O
       expr = StringUtil.trim(expr);
 
       const cloneDs:BoardDataSource = _.cloneDeep( this.dataSource );
+      if( ConnectionType.LINK.toString() === cloneDs.connType && !isNullOrUndefined(cloneDs.engineName) ) {
+        cloneDs.name = cloneDs.engineName;
+      }
       const param = { expr, dataSource: DashboardUtil.convertBoardDataSourceSpecToServer(cloneDs) };
-
       this.dashboardService.validate(param).then((result: any) => {
         this.aggregated = result.aggregated;
         this.isCalFuncSuccess = 'S';
@@ -635,6 +642,36 @@ export class CustomFieldComponent extends AbstractComponent implements OnInit, O
       return;
     } else {
       return;
+    }
+  }
+
+
+  /**
+   * Returns name for finding icon class
+   * @param type
+   * @param logicalType
+   */
+  public findNameForIcon(type: string, logicalType?: string) {
+
+    if (type === 'USER_DEFINED' || type === 'TEXT' ) {
+      return 'STRING'
+    }
+
+    if (type === 'LONG' || type === 'INTEGER' || type === 'DOUBLE' || type === 'CALCULATED') {
+      return 'LONG'
+    }
+
+    if (logicalType) {
+      return logicalType
+    }
+
+  }
+
+  public isReservedFieldName(name: string): boolean {
+    if (name === 'count' || name === '__time' || name === 'timestamp') {
+      return true;
+    } else {
+      return false;
     }
   }
 

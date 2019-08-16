@@ -68,6 +68,7 @@ import {FilterUtil} from './util/filter.util';
 import {ChartType} from '../common/component/chart/option/define/common';
 import {UIMapOption} from '../common/component/chart/option/ui-option/map/ui-map-chart';
 import {Shelf, ShelfLayers} from '../domain/workbook/configurations/shelf/shelf';
+import * as $ from "jquery";
 
 @Component({
   selector: 'app-update-dashboard',
@@ -289,7 +290,7 @@ export class UpdateDashboardComponent extends DashboardLayoutComponent implement
     this.subscriptions.push(
       this.broadCaster.on<any>('CHANGE_FILTER_SELECTOR').subscribe(data => {
         this.dashboard = DashboardUtil.updateWidget(this.dashboard, data.widget);
-        this.dashboard = DashboardUtil.updateBoardFilter(this.dashboard, data.filter);
+        this.dashboard = DashboardUtil.updateBoardFilter(this.dashboard, data.filter)[0];
       })
     );
 
@@ -353,7 +354,7 @@ export class UpdateDashboardComponent extends DashboardLayoutComponent implement
     });
     // 일괄삭제를 위한 서비스 등록
     this.subscriptions.push(popupSubscribe);
-
+    $('body').css( 'overflow', 'hidden' );
   } // function - ngOnInit
 
   /**
@@ -375,6 +376,7 @@ export class UpdateDashboardComponent extends DashboardLayoutComponent implement
    */
   public ngOnDestroy() {
     super.ngOnDestroy();
+    $('body').css( 'overflow', '' );
   } // function - ngOnDestroy
 
   /**
@@ -722,8 +724,24 @@ export class UpdateDashboardComponent extends DashboardLayoutComponent implement
     (0 < cntWidgetComps) && (this.resizeToFitScreenForSave());
 
     // 위젯 업데이트 후 작동
-    CommonUtil.waterfallPromise(promises).then(() => {
+    if( 0 < promises.length ) {
+      CommonUtil.waterfallPromise(promises).then(() => {
 
+        if (0 < cntWidgetComps) {
+          // 이미지 업로드 - 임시적으로 채운 화면인 인식되기 위해
+          this._uploadDashboardImage(this.dashboard)
+            .then(result => this._callUpdateDashboardService(result['imageUrl']))
+            .catch(() => this._callUpdateDashboardService(null));
+        } else {
+          this._callUpdateDashboardService(null);
+        }
+
+      }).catch((error) => {
+        console.error(error);
+        Alert.error(this.translateService.instant('msg.board.alert.widget.apply.error'));
+        this.hideBoardLoading();     // 로딩 hide
+      });
+    } else {
       if (0 < cntWidgetComps) {
         // 이미지 업로드 - 임시적으로 채운 화면인 인식되기 위해
         this._uploadDashboardImage(this.dashboard)
@@ -732,12 +750,8 @@ export class UpdateDashboardComponent extends DashboardLayoutComponent implement
       } else {
         this._callUpdateDashboardService(null);
       }
+    }
 
-    }).catch((error) => {
-      console.error(error);
-      Alert.error(this.translateService.instant('msg.board.alert.widget.apply.error'));
-      this.hideBoardLoading();     // 로딩 hide
-    });
   } // function - updateDashboard
 
   /**
@@ -1222,10 +1236,16 @@ export class UpdateDashboardComponent extends DashboardLayoutComponent implement
     this._changeChartFilterToGlobalFilter(filter);
 
     // 대시보드 필터 업데이트
-    this.dashboard = DashboardUtil.updateBoardFilter(this.dashboard, filter, true);
+    const updateResult:[Dashboard, boolean] = DashboardUtil.updateBoardFilter(this.dashboard, filter, true);
+    this.dashboard = updateResult[0];
 
     this._organizeAllFilters(true).then(() => {
       this._syncFilterWidget();
+
+      if( updateResult[1] ) {
+        // append New Filter
+        this.openIndexFilterPanel = DashboardUtil.getFilterWidgets(this.dashboard).length - 1;
+      }
 
       this._configFilterComp.close();
       this.hideBoardLoading();
@@ -1242,14 +1262,21 @@ export class UpdateDashboardComponent extends DashboardLayoutComponent implement
    * @param {Filter} filter
    */
   public configureFilter(filter: Filter) {
-    this.updateFilter(filter, true);
+    if( DashboardUtil.isNewFilter( this.dashboard, filter ) ) {
+      this.addFilter( filter, () => {
+        this.updateFilter(filter, true);
+      });
+    } else {
+      this.updateFilter(filter, true);
+    }
   } // function - configureFilter
 
   /**
    * 단일 필터 추가
    * @param {Filter} filter
+   * @param {Function} callback
    */
-  public addFilter(filter: Filter) {
+  public addFilter(filter: Filter, callback?:Function) {
     if (!filter.ui.widgetId) {
       this.showBoardLoading();
       const newFilterWidget: FilterWidget = new FilterWidget(filter, this.dashboard);
@@ -1260,6 +1287,15 @@ export class UpdateDashboardComponent extends DashboardLayoutComponent implement
 
         // 글로벌 필터 업데이트
         this.dashboard = DashboardUtil.addBoardFilter(this.dashboard, filter);
+
+        ( callback ) && ( callback() );
+
+        this.safelyDetectChanges();
+
+        // Layout 업데이트
+        this.renderLayout();
+
+        this.dashboard.updateId = CommonUtil.getUUID();
 
         this.hideBoardLoading();
       });

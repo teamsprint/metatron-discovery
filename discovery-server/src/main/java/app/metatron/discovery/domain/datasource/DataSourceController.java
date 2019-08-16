@@ -97,6 +97,7 @@ import app.metatron.discovery.domain.datasource.ingestion.IngestionOption;
 import app.metatron.discovery.domain.datasource.ingestion.IngestionOptionProjections;
 import app.metatron.discovery.domain.datasource.ingestion.IngestionOptionService;
 import app.metatron.discovery.domain.datasource.ingestion.LocalFileIngestionInfo;
+import app.metatron.discovery.domain.datasource.ingestion.ReingestionRequest;
 import app.metatron.discovery.domain.datasource.ingestion.job.IngestionJobRunner;
 import app.metatron.discovery.domain.engine.EngineIngestionService;
 import app.metatron.discovery.domain.engine.EngineLoadService;
@@ -107,11 +108,16 @@ import app.metatron.discovery.domain.workbench.WorkbenchProperties;
 import app.metatron.discovery.domain.workbook.configurations.Limit;
 import app.metatron.discovery.domain.workbook.configurations.datasource.DefaultDataSource;
 import app.metatron.discovery.domain.workbook.configurations.filter.Filter;
+import app.metatron.discovery.domain.workbook.configurations.filter.IntervalFilter;
+import app.metatron.discovery.util.AuthUtils;
 import app.metatron.discovery.util.CommonsCsvProcessor;
 import app.metatron.discovery.util.ExcelProcessor;
 import app.metatron.discovery.util.PolarisUtils;
 import app.metatron.discovery.util.ProjectionUtils;
 
+import static app.metatron.discovery.domain.datasource.DataSource.ConnectionType.ENGINE;
+import static app.metatron.discovery.domain.datasource.DataSource.SourceType.FILE;
+import static app.metatron.discovery.domain.datasource.DataSource.Status.PREPARING;
 import static app.metatron.discovery.domain.datasource.DataSourceErrorCodes.INGESTION_COMMON_ERROR;
 import static app.metatron.discovery.domain.datasource.DataSourceErrorCodes.INGESTION_ENGINE_GET_TASK_LOG_ERROR;
 import static app.metatron.discovery.domain.datasource.DataSourceTemporary.ID_PREFIX;
@@ -428,6 +434,7 @@ public class DataSourceController {
   public @ResponseBody
   ResponseEntity<?> getDataFromDatasource(@PathVariable("id") String id,
                                           @RequestParam(value = "limit", required = false) Integer limit,
+                                          @RequestParam(value = "intervals", required = false) List<String> intervals,
                                           @RequestBody(required = false) SearchQueryRequest request) {
 
     DataSource dataSource = dataSourceRepository.findOne(id);
@@ -461,6 +468,13 @@ public class DataSourceController {
         limit = 1000000;
       }
       request.setLimits(new Limit(limit));
+    }
+
+    if (CollectionUtils.isNotEmpty(intervals)) {
+      List<Field> timestampFields = dataSource.getFieldByRole(Field.FieldRole.TIMESTAMP);
+
+      IntervalFilter intervalFilter = new IntervalFilter(timestampFields.get(0).getName(), intervals);
+      request.addFilters(intervalFilter);
     }
 
     return ResponseEntity.ok(engineQueryService.search(request));
@@ -849,7 +863,7 @@ public class DataSourceController {
       try {
         geometry = wktReader.read(value);
 
-        LogicalType parsedType = findGeoType(geometry).orElseThrow(
+        LogicalType parsedType = findGeoType(geometry, type).orElseThrow(
             () -> new RuntimeException("ERROR_NOT_SUPPORT_WKT_TYPE")
         );
 
@@ -879,7 +893,7 @@ public class DataSourceController {
     return ResponseEntity.ok(resultResponse);
   }
 
-  private Optional<LogicalType> findGeoType(Geometry geometry) {
+  private Optional<LogicalType> findGeoType(Geometry geometry, LogicalType type) {
 
     Class<? extends Geometry> c = geometry.getClass();
     LogicalType logicalType = null;
@@ -890,7 +904,11 @@ public class DataSourceController {
     } else if (c.equals(Polygon.class)) {
       logicalType = LogicalType.GEO_POLYGON;
     } else if (c.equals(MultiLineString.class)) {
-      logicalType = LogicalType.GEO_LINE;
+      if (type != null && type == LogicalType.GEO_POLYGON) { // It can be a polygon.
+        logicalType = LogicalType.GEO_POLYGON;
+      } else {
+        logicalType = LogicalType.GEO_LINE;
+      }
     } else if (c.equals(MultiPolygon.class)) {
       logicalType = LogicalType.GEO_POLYGON;
     }
@@ -1107,6 +1125,99 @@ public class DataSourceController {
 
     ListCriterion criterion = dataSourceService.getListCriterionByKey(criterionKeyEnum);
     return ResponseEntity.ok(criterion);
+  }
+
+  @RequestMapping(path = "/datasources/{id}/append", method = {RequestMethod.PATCH, RequestMethod.PUT})
+  public @ResponseBody
+  ResponseEntity<?> appendReingestionDataSource(
+      @PathVariable("id") String id,
+      @RequestBody ReingestionRequest reingestionRequest) {
+
+    DataSource dataSource = dataSourceRepository.findOne(id);
+    if (dataSource == null) {
+      throw new ResourceNotFoundException(id);
+    }
+
+    if (reingestionRequest.getIngestionInfo() instanceof LocalFileIngestionInfo) {
+      IngestionInfo ingestionInfo = reingestionRequest.getIngestionInfo();
+      LocalFileIngestionInfo localFileIngestionInfo = (LocalFileIngestionInfo) dataSource.getIngestionInfo();
+      localFileIngestionInfo.setPath(((LocalFileIngestionInfo) ingestionInfo).getPath());
+      localFileIngestionInfo.setUploadFileName(((LocalFileIngestionInfo) ingestionInfo).getUploadFileName());
+      localFileIngestionInfo.setRemoveFirstRow(((LocalFileIngestionInfo) ingestionInfo).getRemoveFirstRow());
+      localFileIngestionInfo.setFormat(ingestionInfo.getFormat());
+      if (ingestionInfo.getIntervals() != null) {
+        localFileIngestionInfo.setIntervals(ingestionInfo.getIntervals());
+      }
+      dataSource.setIngestionInfo(localFileIngestionInfo);
+    }
+
+    if (!reingestionRequest.getPatches().isEmpty()) {
+      for (CollectionPatch patch : reingestionRequest.getPatches()) {
+        dataSource.getFields().add(new Field(patch));
+        LOGGER.debug("Add field in datasource({})", dataSource.getId());
+      }
+
+      metadataService.updateFromDataSource(dataSource, true);
+    }
+
+    // Status change
+    dataSource.setStatus(PREPARING);
+    dataSourceRepository.saveAndFlush(dataSource);
+
+    LOGGER.debug("Re-Ingestion append dataSource : {} ", dataSource.toString());
+
+    ThreadFactory factory = new ThreadFactoryBuilder()
+        .setNameFormat("ingestion-append-" + dataSource.getId() + "-%s")
+        .setDaemon(true)
+        .build();
+    ExecutorService service = Executors.newSingleThreadExecutor(factory);
+    service.submit(() -> jobRunner.ingestion(dataSource));
+
+    return ResponseEntity.noContent().build();
+  }
+
+  @RequestMapping(path = "/datasources/{id}/overwrite", method = {RequestMethod.PATCH, RequestMethod.PUT})
+  public @ResponseBody
+  ResponseEntity<?> overwriteReingestionDataSource(
+      @PathVariable("id") String id,
+      @RequestBody DataSource paramDataSource) {
+
+    DataSource dataSource = dataSourceRepository.findOne(id);
+    if (dataSource == null) {
+      throw new ResourceNotFoundException(id);
+    }
+
+    if (StringUtils.isEmpty(dataSource.getOwnerId())) {
+      dataSource.setOwnerId(AuthUtils.getAuthUserName());
+    }
+
+    if (dataSource.getConnType() == ENGINE) {
+      if (dataSource.getSrcType() == FILE) {
+        dataSource.setEngineName(dataSourceService.convertName(dataSource.getName()));
+        dataSource.setIncludeGeo(dataSource.existGeoField()); // mark datasource include geo column
+        dataSource.setStatus(PREPARING);
+        dataSource.setFields(paramDataSource.getFields());
+        dataSource.setIngestionInfo(paramDataSource.getIngestionInfo());
+        dataSource.setName(paramDataSource.getName());
+        dataSource.setDescription(paramDataSource.getDescription());
+      }
+    }
+
+    LOGGER.debug("Re-Ingestion overwrite dataSource : {} ", dataSource.toString());
+
+    dataSourceRepository.saveAndFlush(dataSource);
+    metadataService.updateFromDataSource(dataSource, true);
+
+    engineIngestionService.purgeDataSource(id);
+
+    ThreadFactory factory = new ThreadFactoryBuilder()
+        .setNameFormat("ingestion-overwrite-" + dataSource.getId() + "-%s")
+        .setDaemon(true)
+        .build();
+    ExecutorService service = Executors.newSingleThreadExecutor(factory);
+    service.submit(() -> jobRunner.ingestion(dataSource));
+
+    return ResponseEntity.noContent().build();
   }
 
   class TimeFormatCheckResponse {

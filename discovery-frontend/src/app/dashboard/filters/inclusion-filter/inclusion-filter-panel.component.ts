@@ -80,8 +80,12 @@ export class InclusionFilterPanelComponent extends AbstractFilterPanelComponent 
   public isSearchFocus: boolean = false;          // 검색바 포커스 여부
   public isOverCandidateWarning: boolean = false;  // Candidate Limit 을 넘겼는지 여부
 
+  public searchAllMessage = '';
+
   @Input('filter')
   public originalFilter: InclusionFilter;
+
+  public isDeSelected: boolean = false;
 
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
    | Constructor
@@ -179,17 +183,11 @@ export class InclusionFilterPanelComponent extends AbstractFilterPanelComponent 
 
   /**
    * 전체선택
-   * @param {MouseEvent} event
    */
-  public checkAll(event: MouseEvent) {
+  public checkAll() {
     if (this.isMultiSelector) {
-      const checked = event.target ? event.target['checked'] : event.currentTarget['checked'];
-      if (checked) {
-        this.filter.valueList = [];
-        this._candidateList.forEach(item => this.filter.valueList.push(item.name));
-      } else {
-        this.filter.valueList = [];
-      }
+      this.filter.valueList = [];
+      this._candidateList.forEach(item => this.filter.valueList.push(item.name));
     } else {
       this.filter.valueList = [];
     }
@@ -201,16 +199,9 @@ export class InclusionFilterPanelComponent extends AbstractFilterPanelComponent 
       }
     });
 
+    this.isDeSelected = false;
     this.updateFilterEvent.emit(this.filter);
   } // function - checkAll
-
-  /**
-   * 전체 체크 여부
-   * @returns {boolean}
-   */
-  public isCheckAll(): boolean {
-    return this.filter.valueList.length > 0 && this.filter.valueList.length === this._candidateList.length;
-  } // function - isCheckAll
 
   /**
    * 값 선택
@@ -240,6 +231,7 @@ export class InclusionFilterPanelComponent extends AbstractFilterPanelComponent 
       }
     });
 
+    this.isDeSelected = false;
     this.updateFilterEvent.emit(this.filter);
   } // function - onSelected
 
@@ -318,6 +310,11 @@ export class InclusionFilterPanelComponent extends AbstractFilterPanelComponent 
    * @param {boolean} isInitial
    */
   public setCandidatePage(page: number, isInitial: boolean = false) {
+    if(this.searchText === '') {
+      this.searchAllMessage = '';
+    } else {
+      this.searchAllMessage = this.translateService.instant('msg.board.filter.ui.search-all');
+    }
 
     if (isInitial) {
       this.pageCandidateList = [];
@@ -392,6 +389,12 @@ export class InclusionFilterPanelComponent extends AbstractFilterPanelComponent 
     this.isSearchFocus = false;
     this._candidate(false);
   } // function - candidateFromSearchText
+
+  public deselectAll() {
+    this.filter.valueList = [];
+    this.isDeSelected = true;
+    this.updateFilterEvent.emit(this.filter);
+  }
 
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
    | Protected Method
@@ -501,6 +504,12 @@ export class InclusionFilterPanelComponent extends AbstractFilterPanelComponent 
 
         // 위젯 화면 표시
         this.isShowFilter = true;
+
+        if(result == null || result.length == 0) {
+          this.searchAllMessage = this.translateService.instant('msg.board.filter.ui.search-all.nodata');
+        } else {
+          this.searchAllMessage = '';
+        }
 
         this.loadingHide();
       }).catch((error) => {

@@ -12,18 +12,18 @@
  * limitations under the License.
  */
 
-import {AbstractComponent} from '../../../../common/component/abstract.component';
-import {Component, ElementRef, Injector, ViewChild} from '@angular/core';
-import {WorkspaceService} from '../../../../workspace/service/workspace.service';
-import {Alert} from '../../../../common/util/alert.util';
-import {PublicType, WorkspaceAdmin} from '../../../../domain/workspace/workspace';
-import {PeriodComponent} from '../../../../common/component/period/period.component';
-import {Modal} from '../../../../common/domain/modal';
-import {ConfirmModalComponent} from '../../../../common/component/modal/confirm/confirm.component';
-import {PeriodData} from '../../../../common/value/period.data.value';
-import {Page} from "../../../../domain/common/page";
-import {ActivatedRoute} from "@angular/router";
-import {isNullOrUndefined} from "util";
+import { AbstractComponent } from '../../../../common/component/abstract.component';
+import { Component, ElementRef, Injector, ViewChild } from '@angular/core';
+import { WorkspaceService } from '../../../../workspace/service/workspace.service';
+import { Alert } from '../../../../common/util/alert.util';
+import { PublicType, WorkspaceAdmin } from '../../../../domain/workspace/workspace';
+import { PeriodComponent } from '../../../../common/component/period/period.component';
+import { Modal } from '../../../../common/domain/modal';
+import { ConfirmModalComponent } from '../../../../common/component/modal/confirm/confirm.component';
+import { PeriodData } from '../../../../common/value/period.data.value';
+import { Page } from "../../../../domain/common/page";
+import { ActivatedRoute } from "@angular/router";
+import { isNullOrUndefined } from "util";
 
 declare let moment: any;
 
@@ -65,7 +65,7 @@ export class SharedWorkspacesComponent extends AbstractComponent {
   @ViewChild(PeriodComponent)
   public periodComponent: PeriodComponent;
 
-  public initialPeriodData:PeriodData;
+  public initialPeriodData: PeriodData;
 
   // 정렬
   public selectedContentSort: Order = new Order();
@@ -81,7 +81,7 @@ export class SharedWorkspacesComponent extends AbstractComponent {
   public filterAllowance: boolean;
 
   // 사용자 정의 커스텀 Date 필터링
-  public customDateTypeList = [
+  public customDateTypeList: {label: string, value: string}[] = [
     {label: this.translateService.instant('msg.spaces.spaces.th.last.access'), value: 'LASTACCESSED'},
     {label: this.translateService.instant('msg.spaces.spaces.th.created'), value: 'CREATED'},
   ];
@@ -111,49 +111,55 @@ export class SharedWorkspacesComponent extends AbstractComponent {
     // ui 초기화
     this._initView();
 
-    // 파라메터 조회
-    this.activatedRoute.queryParams.subscribe(params => {
+    this.subscriptions.push(
+      // 파라메터 조회
+      this.activatedRoute.queryParams.subscribe(params => {
 
-      console.info( '>>>>>>> list param', params );
+        const size = params['size'];
+        (isNullOrUndefined(size)) || (this.page.size = size);
 
-      const size = params['size'];
-      (isNullOrUndefined(size)) || (this.page.size = size);
+        const page = params['page'];
+        (isNullOrUndefined(page)) || (this.page.page = page);
 
-      const page = params['page'];
-      (isNullOrUndefined(page)) || (this.page.page = page);
+        const publicType = params['publicType'];
+        (isNullOrUndefined(publicType)) || (this._filterWorkspaceType = publicType);
 
-      const publicType = params['publicType'];
-      (isNullOrUndefined(publicType)) || (this._filterWorkspaceType = publicType);
+        const searchText = params['nameContains'];
+        (isNullOrUndefined(searchText)) || (this.searchText = searchText);
 
-      const sort = params['sort'];
-      if (!isNullOrUndefined(sort)) {
-        const sortInfo = decodeURIComponent(sort).split(',');
-        this.selectedContentSort.key = sortInfo[0];
-        this.selectedContentSort.sort = sortInfo[1];
-      }
-      const published = params['published'];
-      (isNullOrUndefined(published)) || (this.filterAllowance = published);
-      const active = params['active'];
-      if (!isNullOrUndefined(active)) {
-        this._filterStatus = ('true' === active) ? 'active' : 'inactive';
-      }
+        const sort = params['sort'];
+        if (!isNullOrUndefined(sort)) {
+          const sortInfo = decodeURIComponent(sort).split(',');
+          this.selectedContentSort.key = sortInfo[0];
+          this.selectedContentSort.sort = sortInfo[1];
+        }
+        const published = params['published'];
+        (isNullOrUndefined(published)) || (this.filterAllowance = published);
+        const active = params['active'];
+        if (!isNullOrUndefined(active)) {
+          this._filterStatus = ('true' === active) ? 'active' : 'inactive';
+        }
 
-      this._filterDate = new PeriodData();
-      this._filterDate.type = 'ALL';
-      const searchDateBy = params['searchDateBy'];
-      const from = params['from'];
-      const to = params['to'];
-      if (!isNullOrUndefined(searchDateBy) && !isNullOrUndefined(from) && !isNullOrUndefined(to)) {
-        this._filterDate.type = 'NOT';
+        this._filterDate = new PeriodData();
+        this._filterDate.type = 'ALL';
+        const searchDateBy = params['searchDateBy'] ? params['searchDateBy']:'CREATED';
         this._filterDate.dateType = searchDateBy;
-        this._filterDate.startDateStr = decodeURIComponent(from);
-        this._filterDate.endDateStr = decodeURIComponent(to);
-        this.initialPeriodData = this._filterDate;
-      }
+        const from = params['from'];
+        const to = params['to'];
+        if (!isNullOrUndefined(searchDateBy) && !isNullOrUndefined(from) && !isNullOrUndefined(to)) {
+          this._filterDate.startDate = from;
+          this._filterDate.endDate = to;
+          this._filterDate.type = params['type'];
+          this._filterDate.startDateStr = decodeURIComponent(from);
+          this._filterDate.endDateStr = decodeURIComponent(to);
+          this.initialPeriodData = this._filterDate;
+          this.safelyDetectChanges();
+        }
 
-      // 워크스페이스 리스트 조회
-      this._getWorkspaceListInServer();
-    });
+        // 워크스페이스 리스트 조회
+        this._getWorkspaceListInServer();
+      })
+    );
   }
 
   /**
@@ -367,8 +373,8 @@ export class SharedWorkspacesComponent extends AbstractComponent {
     event.preventDefault();
     // status 변경
     this._filterStatus = state.value;
-    // 워크스페이스 재조회
-    this._getWorkspaceInit();
+    // 페이지 새로고침
+    this.reloadPage();
   }
 
   /**
@@ -378,8 +384,8 @@ export class SharedWorkspacesComponent extends AbstractComponent {
   public onFilterDate(event): void {
     // 선택한 날짜
     this._filterDate = event;
-    // 워크스페이스 재조회
-    this._getWorkspaceInit();
+    // 페이지 새로고침
+    this.reloadPage();
   }
 
   /**
@@ -391,8 +397,8 @@ export class SharedWorkspacesComponent extends AbstractComponent {
     event.preventDefault();
     // filtering
     this.filterAllowance = !allowanceFl;
-    // 워크스페이스 재조회
-    this._getWorkspaceInit();
+    // 페이지 새로고침
+    this.reloadPage();
   }
 
   /**
@@ -419,8 +425,8 @@ export class SharedWorkspacesComponent extends AbstractComponent {
           break;
       }
     }
-    // 워크스페이스 조회
-    this._getWorkspaceInit();
+    // 페이지 새로고침
+    this.reloadPage();
   }
 
   /**
@@ -444,8 +450,8 @@ export class SharedWorkspacesComponent extends AbstractComponent {
     event.preventDefault();
     // WorkspaceType 변경
     this._filterWorkspaceType = type;
-    // 워크스페이스 재조회
-    this._getWorkspaceInit();
+    // 페이지 새로고침
+    this.reloadPage();
   }
 
   /**
@@ -456,8 +462,7 @@ export class SharedWorkspacesComponent extends AbstractComponent {
     if (data) {
       this.page.page = data.page;
       this.page.size = data.size;
-      // 워크스페이스 조회
-      this._getWorkspaceListInServer();
+      this.reloadPage(false);
     }
   } // function - changePage
 
@@ -468,6 +473,18 @@ export class SharedWorkspacesComponent extends AbstractComponent {
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   | Private Method
   |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
+  /**
+   * 페이지를 새로 불러온다.
+   * @param {boolean} isFirstPage
+   */
+  public reloadPage(isFirstPage: boolean = true) {
+    (isFirstPage) && (this.page.page = 0);
+    this._searchParams = this._getWorkspaceParams();
+    this.router.navigate(
+      [this.router.url.replace(/\?.*/gi, '')],
+      {queryParams: this._searchParams, replaceUrl: true}
+    ).then();
+  } // function - reloadPage
 
   /**
    * 검색어로 공유워크스페이스 검색
@@ -477,8 +494,8 @@ export class SharedWorkspacesComponent extends AbstractComponent {
   private _searchText(keyword: string): void {
     // key word
     this.searchText = keyword;
-    // 재조회
-    this._getWorkspaceInit();
+    // 페이지 새로고침
+    this.reloadPage();
   }
 
   /**
@@ -494,8 +511,13 @@ export class SharedWorkspacesComponent extends AbstractComponent {
       .then(() => {
         // alert
         Alert.success(this.translateService.instant('msg.spaces.shared.alert.delete'));
-        // 재조회
-        this._getWorkspaceInit();
+
+        if (this.page.page > 0 && this._workspaceList.length === 1) {
+          this.page.page -= 1;
+        }
+
+        // 페이지 새로고침
+        this.reloadPage(false);
       })
       .catch((error) => {
         // alert
@@ -519,8 +541,8 @@ export class SharedWorkspacesComponent extends AbstractComponent {
       .then(() => {
         // alert
         Alert.success(status === 'active' ? this.translateService.instant('msg.spaces.shared.alert.status.active') : this.translateService.instant('msg.spaces.shared.alert.status.inactive'));
-        // 재조회
-        this._getWorkspaceInit();
+        // 페이지 새로고침
+        this.reloadPage();
       })
       .catch((error) => {
         // alert
@@ -546,8 +568,21 @@ export class SharedWorkspacesComponent extends AbstractComponent {
 
     // 전체 워크스페이스 조회
     const params = this._getWorkspaceParams();
+
+    // all 이면 'CREATED' or 'LASTACCESSED' 를 보내지 않음
+    params.type === 'ALL' ? delete params.searchDateBy : null;
+
     this.workspaceService.getWorkspaceByAdmin(params)
       .then((result) => {
+
+        if (this.page.page > 0 &&
+          isNullOrUndefined(result['_embedded']) ||
+          (!isNullOrUndefined(result['_embedded']) && result['_embedded'].workspaces.length === 0))
+        {
+          this.page.page = result.page.number - 1;
+          this._getWorkspaceListInServer();
+        }
+
         // 검색 파라메터 정보 저장
         this._searchParams = params;
         // 페이지 객체
@@ -565,16 +600,6 @@ export class SharedWorkspacesComponent extends AbstractComponent {
   }
 
   /**
-   * 워크스페이스 초기화 재조회
-   */
-  private _getWorkspaceInit(): void {
-    // 페이지 초기화
-    this.page.page = 0;
-    // 재조회
-    this._getWorkspaceListInServer();
-  }
-
-  /**
    * 워크스페이스 조회에 사용하는 파라메터
    * @returns {any}
    * @private
@@ -582,7 +607,8 @@ export class SharedWorkspacesComponent extends AbstractComponent {
   private _getWorkspaceParams(): any {
     const params = {
       size: this.page.size,
-      page: this.page.page
+      page: this.page.page,
+      pseudoParam : (new Date()).getTime(),
     };
 
     // 타입
@@ -596,8 +622,10 @@ export class SharedWorkspacesComponent extends AbstractComponent {
     // status
     this._filterStatus !== 'all' && (params['active'] = (this._filterStatus === 'active'));
     // date
+    params['type'] = 'ALL';
+    params['searchDateBy'] = this._filterDate.dateType;
     if (this._filterDate && this._filterDate.type !== 'ALL') {
-      params['searchDateBy'] = this._filterDate.dateType;
+      params['type'] = this._filterDate.type;
       if (this._filterDate.startDateStr) {
         params['from'] = moment(this._filterDate.startDateStr).format('YYYY-MM-DDTHH:mm:ss.SSSZ');
       }

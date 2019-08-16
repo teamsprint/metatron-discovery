@@ -26,7 +26,13 @@ import {
   ViewChild
 } from '@angular/core';
 import {AbstractPopupComponent} from '../../../../common/component/abstract-popup.component';
-import {ConnectionType, Datasource, Field, SourceType, Status} from '../../../../domain/datasource/datasource';
+import {
+  ConnectionType,
+  Datasource,
+  Field,
+  SourceType,
+  Status
+} from '../../../../domain/datasource/datasource';
 import {SetWorkspacePublishedComponent} from '../../../component/set-workspace-published/set-workspace-published.component';
 import {DatasourceService} from '../../../../datasource/service/datasource.service';
 import {QueryDetailComponent} from './component/query-detail/query-detail.component';
@@ -38,9 +44,11 @@ import {StringUtil} from '../../../../common/util/string.util';
 import {ConfirmModalComponent} from "../../../../common/component/modal/confirm/confirm.component";
 import {Modal} from "../../../../common/domain/modal";
 import {Alert} from "../../../../common/util/alert.util";
-import { IngestionLogComponent } from './component/ingestion-log/ingestion-log.component';
-import { CommonUtil } from '../../../../common/util/common.util';
+import {IngestionLogComponent} from './component/ingestion-log/ingestion-log.component';
+import {CommonUtil} from '../../../../common/util/common.util';
 import {Metadata} from "../../../../domain/meta-data-management/metadata";
+import {SsType} from "../../../../domain/data-preparation/pr-snapshot";
+import {DataStorageConstant} from "../../../constant/data-storage-constant";
 
 declare let echarts: any;
 
@@ -136,6 +144,8 @@ export class InformationDataSourceComponent extends AbstractPopupComponent imple
   @Input()
   public metaData: Metadata;
 
+  @Output() readonly changedDatasourceStatus = new EventEmitter();
+
   // source description edit flag
   public isEditSourceDescription: boolean = false;
   // advanced setting show flag
@@ -149,6 +159,11 @@ export class InformationDataSourceComponent extends AbstractPopupComponent imple
 
   // description
   public descriptionChangeText: string;
+
+  public dsStatus = Status;
+  public dsSrcType = SourceType;
+  public dsConnType = ConnectionType;
+  public snSsType = SsType;
 
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   | Constructor
@@ -197,8 +212,10 @@ export class InformationDataSourceComponent extends AbstractPopupComponent imple
         // set process status
         this._setProcessStatus(changes.ingestionProcess.currentValue);
         // if success ingestion
-        if (changes.ingestionProcess.currentValue['message'] === 'END_INGESTION_JOB') {
+        if (changes.ingestionProcess.currentValue['message'] === DataStorageConstant.Datasource.IngestionStep.END_INGESTION_JOB) {
           this._getFieldStats(this.timestampColumn.name, this.datasource.engineName);
+          // set metadata
+          this.changedDatasourceStatus.emit();
         }
       }
     }
@@ -263,9 +280,9 @@ export class InformationDataSourceComponent extends AbstractPopupComponent imple
   }
 
   /**
-   * Link master data click event
+   * Link meta data click event
    */
-  public onClickLinkMasterData(): void {
+  public onClickLinkMetadata(): void {
     this.router.navigate([`/management/metadata/metadata/${this.metaData.id}`]).then();
   }
 
@@ -552,6 +569,11 @@ export class InformationDataSourceComponent extends AbstractPopupComponent imple
   | Public Method - validation
   |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
+  isShowLinkMetadata(): boolean {
+    // 최초접근시 Enable 상태이거나 step이 END_INGESTION_JOB 인 경우
+    return (this.isNotShowProgress || this.ingestionProcessStatusStep >= 4) && !_.isNil(this.metaData);
+  }
+
   /**
    * source type linked
    */
@@ -771,26 +793,26 @@ export class InformationDataSourceComponent extends AbstractPopupComponent imple
   private _setProcessStatus(processData: any): void {
     switch (processData.message) {
       // 데이터 준비
-      case 'START_INGESTION_JOB':
-      case 'PREPARATION_HANDLE_LOCAL_FILE':
-      case 'PREPARATION_LOAD_FILE_TO_ENGINE':
+      case DataStorageConstant.Datasource.IngestionStep.START_INGESTION_JOB:
+      case DataStorageConstant.Datasource.IngestionStep.PREPARATION_HANDLE_LOCAL_FILE:
+      case DataStorageConstant.Datasource.IngestionStep.PREPARATION_LOAD_FILE_TO_ENGINE:
         this.ingestionProcessStatusStep = 1;
         break;
       // 엔진 적재
-      case 'ENGINE_INIT_TASK':
-      case 'ENGINE_RUNNING_TASK':
+      case DataStorageConstant.Datasource.IngestionStep.ENGINE_INIT_TASK:
+      case DataStorageConstant.Datasource.IngestionStep.ENGINE_RUNNING_TASK:
         this.ingestionProcessStatusStep = 2;
         break;
       // 상태 확인
-      case 'ENGINE_REGISTER_DATASOURCE':
+      case DataStorageConstant.Datasource.IngestionStep.ENGINE_REGISTER_DATASOURCE:
         this.ingestionProcessStatusStep = 3;
         break;
       // 완료
-      case 'END_INGESTION_JOB':
+      case DataStorageConstant.Datasource.IngestionStep.END_INGESTION_JOB:
         this.ingestionProcessStatusStep = 4;
         break;
       // 실패
-      case 'FAIL_INGESTION_JOB':
+      case DataStorageConstant.Datasource.IngestionStep.FAIL_INGESTION_JOB:
         break;
     }
   }

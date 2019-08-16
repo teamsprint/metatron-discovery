@@ -41,9 +41,12 @@ import {isNullOrUndefined, isUndefined} from 'util';
 import {LoadingComponent} from '../common/component/loading/loading.component';
 import {DatasourceService} from '../datasource/service/datasource.service';
 import {PageWidget} from '../domain/dashboard/widget/page-widget';
-import {Dashboard, BoardDataSource, BoardConfiguration} from '../domain/dashboard/dashboard';
+import {BoardConfiguration, BoardDataSource, Dashboard} from '../domain/dashboard/dashboard';
 import {
-  ConnectionType, Datasource, Field, IngestionRuleType
+  ConnectionType,
+  Datasource,
+  Field,
+  IngestionRuleType
 } from '../domain/datasource/datasource';
 import {Workbook} from '../domain/workbook/workbook';
 import {DataconnectionService} from '../dataconnection/service/dataconnection.service';
@@ -57,7 +60,12 @@ import {CodemirrorComponent} from './component/editor-workbench/codemirror.compo
 import {SaveAsHiveTableComponent} from "./component/save-as-hive-table/save-as-hive-table.component";
 import {DetailWorkbenchDatabase} from "./component/detail-workbench/detail-workbench-database/detail-workbench-database";
 import {Message} from '@stomp/stompjs';
-import {AuthenticationType, Dataconnection, InputMandatory, InputSpec} from "../domain/dataconnection/dataconnection";
+import {
+  AuthenticationType,
+  Dataconnection,
+  InputMandatory,
+  InputSpec
+} from "../domain/dataconnection/dataconnection";
 
 declare let moment: any;
 declare let Split;
@@ -157,6 +165,8 @@ export class WorkbenchComponent extends AbstractComponent implements OnInit, OnD
   private _splitHorizontal: any;
 
   private _workspaceId: string;
+
+  private _initialTimer: any;
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
    | Public Variables
    |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
@@ -402,21 +412,24 @@ export class WorkbenchComponent extends AbstractComponent implements OnInit, OnD
     this.sendViewActivityStream(this.workbenchId, 'WORKBENCH');
 
     // 초기 데이터 조회 - 화면이 표시되기 전에 로딩을 호출하여 표시되지 않는 문제로 지연 코드 추가
-    setTimeout(() => {
+    this._initialTimer
+      = setTimeout(() => {
       this.loadingBar.hide(); // 초기에 표시되는 문제로 숨김
       this.loadingShow();
       this._loadInitData(() => {
         this.webSocketCheck(() => this.loadingHide());
 
-        this._splitVertical = Split(['.sys-workbench-top-panel', '.sys-workbench-bottom-panel'], {
-          direction: 'vertical',
-          onDragEnd: () => {
-            this.isFootAreaPopupCheck = true;
-            this.onEndedResizing();
-          }
-        });
-        this.onEndedResizing();
-        this._activeHorizontalSlider();
+        if( 0 < $('.sys-workbench-top-panel').length && 0 < $( '.sys-workbench-bottom-panel').length ) {
+          this._splitVertical = Split(['.sys-workbench-top-panel', '.sys-workbench-bottom-panel'], {
+            direction: 'vertical',
+            onDragEnd: () => {
+              this.isFootAreaPopupCheck = true;
+              this.onEndedResizing();
+            }
+          });
+          this.onEndedResizing();
+          this._activeHorizontalSlider();
+        }
       });
     }, 500);
   } // function - ngAfterViewInit
@@ -442,7 +455,12 @@ export class WorkbenchComponent extends AbstractComponent implements OnInit, OnD
   public ngOnDestroy() {
     super.ngOnDestroy();
 
-    if( this._splitVertical ) {
+    if (this._initialTimer) {
+      clearTimeout(this._initialTimer);
+      this._initialTimer = undefined;
+    }
+
+    if (this._splitVertical) {
       this._splitVertical.destroy();
       this._splitVertical = undefined;
     }
@@ -459,7 +477,7 @@ export class WorkbenchComponent extends AbstractComponent implements OnInit, OnD
     // (this.timer) && (clearInterval(this.timer));
 
     // save info
-    if (this.cookieService.get(CookieConstant.KEY.LOGIN_TOKEN) !== '') {
+    if (this.cookieService.get(CookieConstant.KEY.LOGIN_TOKEN) !== '' && CommonConstant.stomp) {
       CommonConstant.stomp.publish(
         {
           destination: '/message/workbench/' + this.workbenchId + '/dataconnections/' + this.workbench.dataConnection.id + '/disconnect',
@@ -1301,6 +1319,11 @@ export class WorkbenchComponent extends AbstractComponent implements OnInit, OnD
       .catch((error) => {
         this.isExecutingQuery = false;
         this.loadingBar.hide();
+
+        if(error.code && error.code === "WB0002") {
+          this.stomp.initAndConnect();
+        }
+
         if (!isUndefined(error.details) && this._executeSqlReconnectCnt <= 5) {
           this.webSocketCheck(() => {
             this.setExecuteSql(param);
@@ -1357,7 +1380,6 @@ export class WorkbenchComponent extends AbstractComponent implements OnInit, OnD
             resultTab.message = 'Workbench Error - Query is Fail';
           }
           this._calculateEditorResultSlideBtn();
-          this._doneOrNextExecute();
         }
 
       });
@@ -1396,6 +1418,11 @@ export class WorkbenchComponent extends AbstractComponent implements OnInit, OnD
       .catch((error) => {
         this.isExecutingQuery = false;
         this.loadingBar.hide();
+
+        if(error.code && error.code === "WB0002") {
+          this.stomp.initAndConnect();
+        }
+
         if (!isUndefined(error.details) && this._executeSqlReconnectCnt <= 5) {
           this.webSocketCheck(() => {
             this.retryQuery(item);
@@ -1704,6 +1731,11 @@ export class WorkbenchComponent extends AbstractComponent implements OnInit, OnD
       downloadCsvForm.attr('action', CommonConstant.API_CONSTANT.API_URL + `queryeditors/${this.selectedEditorId}/query/download/csv`);
       downloadCsvForm.submit();
       this.intervalDownload = setInterval(() => that.checkQueryStatus(), 1000);
+
+      // 에러처리
+      $('#'+$('#downloadCsvForm').attr('target')).off('load').on('load', function(){
+        Alert.error(JSON.parse($(this).contents().find("body").text()).details);
+      });
     } catch (e) {
       // 재현이 되지 않음.
       console.info('다운로드 에러' + e);
@@ -1850,54 +1882,60 @@ export class WorkbenchComponent extends AbstractComponent implements OnInit, OnD
     // 워크벤치 아이디 저장
     // read Workbench With View Projection
     this.workbenchService.getWorkbench(this.workbenchId).then((data) => {
-      // 워크벤치 데이터
-      WorkbenchService.workbench = data;
-      WorkbenchService.workbenchId = this.workbenchId;
+      if (data.valid) {
+        // 워크벤치 데이터
+        WorkbenchService.workbench = data;
+        WorkbenchService.workbenchId = this.workbenchId;
 
-      // 퍼미션 조회를 위한 워크스페이스 정보 조회 및 퍼미션 체커 설정
-      this._workspaceId = data.workspace.id;
-      this.workspaceService.getWorkSpace(data.workspace.id, 'forDetailView').then((workspace: Workspace) => {
+        // 퍼미션 조회를 위한 워크스페이스 정보 조회 및 퍼미션 체커 설정
+        this._workspaceId = data.workspace.id;
+        this.workspaceService.getWorkSpace(data.workspace.id, 'forDetailView').then((workspace: Workspace) => {
 
-        // 퍼미션 체커 정의
-        const permissionChecker: PermissionChecker = new PermissionChecker(workspace);
+          // 퍼미션 체커 정의
+          const permissionChecker: PermissionChecker = new PermissionChecker(workspace);
 
-        if (workspace.active && permissionChecker.isViewWorkbench()) {
+          if (workspace.active && permissionChecker.isViewWorkbench()) {
 
-          // 관리 유저 여부 설정
-          this.isChangeAuthUser =
-            (permissionChecker.isManageWorkbench() || permissionChecker.isEditWorkbench(data.createdBy.username));
+            // 관리 유저 여부 설정
+            this.isChangeAuthUser =
+              (permissionChecker.isManageWorkbench() || permissionChecker.isEditWorkbench(data.createdBy.username));
 
-          this.mimeType = data.dataConnection.implementor.toString();
-          this.authenticationType = data.dataConnection['authenticationType'] || 'MANUAL';
-          if (data.dataConnection['authenticationType'] === 'DIALOG') {
-            this.loginLayerShow = true;
-            this.workbenchTemp = data;
+            this.mimeType = data.dataConnection.implementor.toString();
+            this.authenticationType = data.dataConnection['authenticationType'] || 'MANUAL';
+            if (data.dataConnection['authenticationType'] === 'DIALOG') {
+              this.loginLayerShow = true;
+              this.workbenchTemp = data;
+            } else {
+              this.workbenchTemp = data;
+              this.readQuery(this.workbenchTemp.queryEditors);
+              this.webSocketLoginId = '';
+              this.webSocketLoginPw = '';
+
+              // connectWebSocket.call(this);
+            }
+            connectWebSocket.call(this);
+
+            this.isDataManager = CommonUtil.isValidPermission(SYSTEM_PERMISSION.MANAGE_DATASOURCE);
+
+            if (data.dataConnection.supportSaveAsHiveTable) {
+              this.supportSaveAsHiveTable = data.dataConnection.supportSaveAsHiveTable;
+            }
+
+            this.setWorkbenchName();
+            this.setWorkbenchDesc();
+
           } else {
-            this.workbenchTemp = data;
-            this.readQuery(this.workbenchTemp.queryEditors);
-            this.webSocketLoginId = '';
-            this.webSocketLoginPw = '';
-
-            // connectWebSocket.call(this);
-          }
-          connectWebSocket.call(this);
-
-          this.isDataManager = CommonUtil.isValidPermission(SYSTEM_PERMISSION.MANAGE_DATASOURCE);
-
-          if (data.dataConnection.supportSaveAsHiveTable) {
-            this.supportSaveAsHiveTable = data.dataConnection.supportSaveAsHiveTable;
+            // 경고창 표시
+            this.openAccessDeniedConfirm();
           }
 
-          this.setWorkbenchName();
-          this.setWorkbenchDesc();
-
-        } else {
-          // 경고창 표시
-          this.openAccessDeniedConfirm();
-        }
-
-        // this.restoreQueryResultPreviousState(data.queryEditors);
-      });
+          this.restoreQueryResultPreviousState(data.queryEditors);
+        });
+      } else {
+        // 경고창 표시
+        this.loadingHide();
+        this.openAccessDeniedConfirm();
+      }
 
     }).catch((error) => {
       if (!isUndefined(error.details)) {
@@ -2000,7 +2038,7 @@ export class WorkbenchComponent extends AbstractComponent implements OnInit, OnD
     // 길이 계산은 index가 0일 경우에만 계산한다
     if (this.editorListObj.index === 0) {
       // 변경이 다 일어났을 때
-      this.changeDetect.detectChanges();
+      this.safelyDetectChanges();
       // 아이콘 버튼 show flag
       this.editorListObj.showBtnFl = this._isEditorMaxWidth();
     }
@@ -2023,7 +2061,7 @@ export class WorkbenchComponent extends AbstractComponent implements OnInit, OnD
     // 길이 계산은 index가 0일 경우에만 계산한다
     if (this.editorResultListObj.index === 0) {
       // 변경이 다 일어났을 때
-      this.changeDetect.detectChanges();
+      this.safelyDetectChanges();
       // 아이콘 버튼 show flag
       this.editorResultListObj.showBtnFl = this._isEditorResultMaxWidth();
     }
@@ -2280,6 +2318,8 @@ export class WorkbenchComponent extends AbstractComponent implements OnInit, OnD
             workbenchId: this.workbenchId,
             webSocketId: CommonConstant.websocketId
           };
+        } else if(data['connected'] === false){
+          Alert.error(data['message']);
         }
 
         if ('CONNECT' == data.command) {
@@ -2502,10 +2542,10 @@ export class WorkbenchComponent extends AbstractComponent implements OnInit, OnD
       const $gridCanvas = $('.grid-canvas');
       this._gridScrollEvtSub
         = this.gridComponent.grid.onScroll.subscribe((data1, data2) => {
-        if ( 0 < data2.scrollTop ) {
-          this.hideResultButtons = (data2.scrollTop > ($gridCanvas.height() - $gridViewport.height() - 10 ));
+        if (0 < data2.scrollTop) {
+          this.hideResultButtons = (data2.scrollTop > ($gridCanvas.height() - $gridViewport.height() - 10));
           this.safelyDetectChanges();
-        } else if( 0 === data2.scrollTop ) {
+        } else if (0 === data2.scrollTop) {
           this.hideResultButtons = false;
         }
       });
@@ -2632,7 +2672,14 @@ export class WorkbenchComponent extends AbstractComponent implements OnInit, OnD
    * 워크스페이스로 돌아가기
    */
   public goBack() {
-    this.router.navigate(['/workspace', this._workspaceId]).then();
+    const cookieWs = this.cookieService.get(CookieConstant.KEY.CURRENT_WORKSPACE);
+    let cookieWorkspace = null;
+    if (cookieWs) {
+      cookieWorkspace = JSON.parse(cookieWs);
+    }
+    if (null !== cookieWorkspace) {
+      this.router.navigate(['/workspace', cookieWorkspace['workspaceId']]);
+    }
   } // function - goBack
 
   // sql 포맷터
@@ -2727,31 +2774,31 @@ export class WorkbenchComponent extends AbstractComponent implements OnInit, OnD
           fieldData: currentResultTab.result.data
         };
 
-        if( StringUtil.isNotEmpty(this.workbench.dataConnection.hostname) ) {
+        if (StringUtil.isNotEmpty(this.workbench.dataConnection.hostname)) {
           this.setDatasource.connectionData.connection.hostname = this.workbench.dataConnection.hostname;
         }
-        if( 0 < this.workbench.dataConnection.port ) {
+        if (0 < this.workbench.dataConnection.port) {
           this.setDatasource.connectionData.connection.port = this.workbench.dataConnection.port;
         }
-        if( StringUtil.isNotEmpty(this.workbench.dataConnection.url) ) {
+        if (StringUtil.isNotEmpty(this.workbench.dataConnection.url)) {
           this.setDatasource.connectionData.connection.url = this.workbench.dataConnection.url;
         }
 
-        const inputSpec:InputSpec = this.workbench.dataConnection.connectionInformation.inputSpec;
-        if( InputMandatory.NONE !== inputSpec.catalog && StringUtil.isNotEmpty(this.workbench.dataConnection.catalog) ) {
+        const inputSpec: InputSpec = this.workbench.dataConnection.connectionInformation.inputSpec;
+        if (InputMandatory.NONE !== inputSpec.catalog && StringUtil.isNotEmpty(this.workbench.dataConnection.catalog)) {
           this.setDatasource.connectionData.connection.catalog = this.workbench.dataConnection.catalog;
         }
-        if( InputMandatory.NONE !== inputSpec.sid && StringUtil.isNotEmpty(this.workbench.dataConnection.sid) ) {
+        if (InputMandatory.NONE !== inputSpec.sid && StringUtil.isNotEmpty(this.workbench.dataConnection.sid)) {
           this.setDatasource.connectionData.connection.sid = this.workbench.dataConnection.sid;
         }
-        if( InputMandatory.NONE !== inputSpec.database && StringUtil.isNotEmpty(this.workbench.dataConnection.database) ) {
+        if (InputMandatory.NONE !== inputSpec.database && StringUtil.isNotEmpty(this.workbench.dataConnection.database)) {
           this.setDatasource.connectionData.connection.database = this.workbench.dataConnection.database;
         }
-        if( InputMandatory.NONE !== inputSpec.username ) {
+        if (InputMandatory.NONE !== inputSpec.username) {
           this.setDatasource.connectionData.connection.username
             = selectedSecurityType.value === AuthenticationType.DIALOG ? this.webSocketLoginId : connection.username;
         }
-        if( InputMandatory.NONE !== inputSpec.password ) {
+        if (InputMandatory.NONE !== inputSpec.password) {
           this.setDatasource.connectionData.connection.password
             = selectedSecurityType.value === AuthenticationType.DIALOG ? this.webSocketLoginPw : connection.password;
         }
@@ -2772,12 +2819,19 @@ export class WorkbenchComponent extends AbstractComponent implements OnInit, OnD
   } // function - createDatasource
 
   /**
-   * 데이터 소스 생성 후 처리
+   * 데이터소스 생성 완료
    */
   public createDatasourceComplete() {
+    this.useUnloadConfirm = false;
+  } // function - createDatasourceComplete
+
+  /**
+   * 데이터소스 생성 팝업 닫기
+   */
+  public closeCreateDatasource() {
     this.mainViewShow = true;
     this.mode = '';
-  } // function - createDatasourceComplete
+  } // function - closeCreateDatasource
 
   /**
    * 결과 검색 레이어를 On/Off 한다.
@@ -2968,7 +3022,7 @@ export class WorkbenchComponent extends AbstractComponent implements OnInit, OnD
         this.workbenchDesc = this.workbenchTemp.description;
       }
 
-      this.changeDetect.detectChanges();
+      this.safelyDetectChanges();
       this.wbName.nativeElement.focus();
     }
   }
@@ -2989,7 +3043,7 @@ export class WorkbenchComponent extends AbstractComponent implements OnInit, OnD
         this.workbenchName = this.workbenchTemp.name;
       }
 
-      this.changeDetect.detectChanges();
+      this.safelyDetectChanges();
       this.wbDesc.nativeElement.focus();
     }
   }
