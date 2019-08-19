@@ -14,6 +14,9 @@
 
 import {AfterViewInit, Component, ElementRef, Injector, OnDestroy, OnInit} from '@angular/core';
 import {AbstractPopupComponent} from '../../../common/component/abstract-popup.component';
+import {EngineService} from "../../service/engine.service";
+import {Engine} from "../../../domain/engine-monitoring/engine";
+import * as _ from 'lodash';
 
 @Component({
   selector: 'druid-cluster-information',
@@ -23,8 +26,15 @@ export class DruidClusterInformationComponent extends AbstractPopupComponent imp
 
   public isShow: boolean;
 
+  public monitorings: Engine.Monitoring[] = [];
+  public configs: any;
+  public configKeys: any;
+
+  public selectTab: string;
+
   constructor(protected elementRef: ElementRef,
-              protected injector: Injector) {
+              protected injector: Injector,
+              private engineService: EngineService) {
     super(elementRef, injector);
   }
 
@@ -48,7 +58,27 @@ export class DruidClusterInformationComponent extends AbstractPopupComponent imp
     this.isShow = false;
   }
 
+  public getServerInformation(name) {
+    const monitoring = this.monitorings.find(item => item.type === name);
+    return _.isNil(monitoring) ? '' : monitoring.hostname + ' (' + monitoring.port + ')';
+  }
+
+  public changeTab(name) {
+    this._getConfig(name);
+  }
+
   private _selfShow() {
+    this._getConfig('common');
     this.isShow = true;
+  }
+
+  private _getConfig(name) {
+    this.selectTab = name;
+    this.engineService.getInformation(name)
+      .then(result => {
+        this.monitorings = result.cluster;
+        this.configs = result.configs;
+        this.configKeys = Object.keys(this.configs).sort();
+      });
   }
 }

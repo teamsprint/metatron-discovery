@@ -36,6 +36,7 @@ import javax.annotation.PostConstruct;
 import app.metatron.discovery.domain.datasource.data.QueryTimeExcetpion;
 
 import static app.metatron.discovery.domain.engine.EngineProperties.BULK_LOAD;
+import static app.metatron.discovery.domain.engine.EngineProperties.GET_CONFIGS;
 import static app.metatron.discovery.domain.engine.EngineProperties.GET_DATASOURCE_LIST;
 import static app.metatron.discovery.domain.engine.EngineProperties.GET_HISTORICAL_NODE;
 import static app.metatron.discovery.domain.engine.EngineProperties.GET_MIDDLEMGMT_NODE;
@@ -99,6 +100,10 @@ public class DruidEngineRepository extends AbstractEngineRepository {
 
   public Optional<List> getMiddleManagerNodes(){
     return call(GET_MIDDLEMGMT_NODE, Maps.newHashMap(), List.class);
+  }
+
+  public <T> Optional<T> getConfigs(Map<String, Object> paramMap, Class<T> clazz){
+    return call(GET_CONFIGS, paramMap, clazz);
   }
 
   private class QueryResponseErrorHandler implements ResponseErrorHandler {

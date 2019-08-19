@@ -14,96 +14,73 @@
 
 <div class="ddp-label-name ddp-clear">
   <!-- TODO: 조회한 클러스터 이름 표시 필요 -->
-  <span class="ddp-txt-label">클러스터 이름 {{ 'msg.engine.monotoring.overview.cluster.name.prefix' | translate }}</span>
+  <span class="ddp-txt-label">{{ 'msg.engine.monotoring.overview.cluster.name.prefix' | translate }}</span>
   <!-- info -->
   <div class="ddp-wrap-info ddp-selected">
     <a href="javascript:" class="ddp-btn-info2"></a>
+    <div class="ddp-wrap-hover-layout">
     <!-- box layout -->
-    <div class="ddp-box-layout4">
-      <div class="ddp-form-scroll">
-        <table class="ddp-table-info ddp-type">
-          <colgroup>
-            <col width="110px">
-            <col width="*">
-          </colgroup>
-          <tbody>
-          <tr>
-            <th>
-              Host
-            </th>
-            <td>
-              18.22.22.2222
-            </td>
-          </tr>
-          <tr>
-            <th>
-              Port
-            </th>
-            <td>
-              8080
-            </td>
-          </tr>
-          <tr>
-            <th>
-              Server Count
-            </th>
-            <td>
-              200
-            </td>
-          </tr>
-          <tr>
-            <th>
-              Size (Curr/Max)
-            </th>
-            <td>
-              16.6GB / 12TB
-              <!-- bar -->
-              <div class="ddp-bar-size">
-                <span class="ddp-data-bar" style="width:20%;"></span>
-                <span class="ddp-data-line"></span>
-              </div>
-              <!-- //bar -->
-            </td>
-          </tr>
-          </tbody>
-        </table>
+      <div class="ddp-box-layout4">
+        <div class="ddp-form-scroll">
+          <table class="ddp-table-info ddp-type">
+            <colgroup>
+              <col width="160px">
+              <col width="*">
+            </colgroup>
+            <tbody>
+            <tr>
+              <th>
+                Broker Host (Port)
+              </th>
+              <td>
+                {{getServerInformation('broker')}}
+              </td>
+            </tr>
+            <tr>
+              <th>
+                Coordinator Host (Port)
+              </th>
+              <td>
+                {{getServerInformation('coordinator')}}
+              </td>
+            </tr>
+            <tr>
+              <th>
+                Overlord Host (Port)
+              </th>
+              <td>
+                {{getServerInformation('overlord')}}
+              </td>
+            </tr>
+            <tr>
+              <th>
+                Server Count
+              </th>
+              <td>
+                {{monitorings.length}}
+              </td>
+            </tr>
+            <tr>
+              <th>
+                Size (Curr/Max)
+              </th>
+              <td>
+                {{getClusterSize()}}
+                <!-- bar -->
+                <div class="ddp-bar-size">
+                  <span class="ddp-data-bar"></span>
+                  <span class="ddp-data-line"></span>
+                </div>
+                <!-- //bar -->
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
     <!-- //box layout -->
+    </div>
   </div>
   <!-- //info -->
-</div>
-
-<div class="ddp-wrap-status-value ddp-clear">
-  <div class="ddp-ui-status-value">
-    <div class="ddp-label-status type-broker">
-      Broker
-      <em [ngClass]="[getStatusClass(clusterStatus.broker)]"></em>
-    </div>
-  </div>
-  <div class="ddp-ui-status-value">
-    <div class="ddp-label-status type-coordinator">
-      Coordinator
-      <em [ngClass]="[getStatusClass(clusterStatus.coordinator)]"></em>
-    </div>
-  </div>
-  <div class="ddp-ui-status-value">
-    <div class="ddp-label-status type-historical">
-      Historical
-      <em [ngClass]="[getStatusClass(clusterStatus.historical)]"></em>
-    </div>
-  </div>
-  <div class="ddp-ui-status-value">
-    <div class="ddp-label-status type-overlord">
-      Overlord
-      <em [ngClass]="[getStatusClass(clusterStatus.overlord)]"></em>
-    </div>
-  </div>
-  <div class="ddp-ui-status-value">
-    <div class="ddp-label-status type-middleManager">
-      Middle Manager
-      <em [ngClass]="[getStatusClass(clusterStatus.middleManager)]"></em>
-    </div>
-  </div>
 </div>
 

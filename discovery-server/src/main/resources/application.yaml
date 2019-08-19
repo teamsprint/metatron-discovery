@@ -189,6 +189,10 @@ polaris:
         target: overlord
         method: GET
         uri: /druid/indexer/v1/workers
+      getConfigs:
+        target: coordinator
+        method: GET
+        uri: /druid/coordinator/v1/configs/{configName}
   cache:
     configFile: default-configs/default-jgroups-tcp.xml
 #  cors:

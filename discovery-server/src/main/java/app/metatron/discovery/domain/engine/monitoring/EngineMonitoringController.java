@@ -14,12 +14,16 @@
 
 package app.metatron.discovery.domain.engine.monitoring;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.TriggerKey;
 import org.quartz.impl.triggers.CronTriggerImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile;
 import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,11 +35,13 @@ import org.springframework.web.bind.annotation.RestController;
 import java.text.ParseException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-@Profile("scheduling")
 @RestController
 @RequestMapping("/api")
 public class EngineMonitoringController {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(EngineMonitoringController.class);
 
   @Autowired
   Scheduler scheduler;
@@ -92,4 +98,22 @@ public class EngineMonitoringController {
 
     return ResponseEntity.ok(scheduler);
   }
+
+  @RequestMapping(value = "/monitoring/information/{name}", method = RequestMethod.GET)
+  public ResponseEntity<?> findInformation(@PathVariable("name") String name) {
+    Map<String, Object> result = Maps.newHashMap();
+    List<EngineMonitoring> cluster = monitoringRepository.findByType(Lists.newArrayList("broker", "coordinator", "overlord"));
+    result.put("cluster", cluster);
+
+    HashMap configs = monitoringQueryService.getConfigs(name);
+    LOGGER.debug(configs.toString());
+    result.put("configs", configs);
+    return ResponseEntity.ok(result);
+  }
+
+  @RequestMapping(value = "/monitoring/size", method = RequestMethod.GET)
+  public ResponseEntity<?> findSize() {
+    return ResponseEntity.ok(monitoringQueryService.getSize());
+  }
+
 }

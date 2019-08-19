@@ -15,21 +15,23 @@
 import {Component, ElementRef, Injector, Input, OnDestroy, OnInit} from '@angular/core';
 import {AbstractComponent} from '../../../common/component/abstract.component';
 import {Engine} from '../../../domain/engine-monitoring/engine';
+import * as _ from "lodash";
+import {CommonUtil} from "../../../common/util/common.util";
 
 @Component({
   selector: '[overview-status-view]',
-  templateUrl: './status.component.html',
-  host: { '[class.ddp-box-type]': 'true' }
+  templateUrl: './status.component.html'
 })
 export class StatusComponent extends AbstractComponent implements OnInit, OnDestroy {
 
   @Input()
   public clusterStatus: Engine.Cluster.Status;
 
-  private readonly NORMAL_CLASS = 'ddp-icon-status-success';
-  private readonly WARN_CLASS = 'ddp-icon-status-warning';
-  private readonly ERROR_CLASS = 'ddp-icon-status-error';
-  private readonly NONE_CLASS = '';
+  @Input()
+  public monitorings: Engine.Monitoring[];
+
+  @Input()
+  public clusterSize: any;
 
   constructor(protected elementRef: ElementRef,
               protected injector: Injector) {
@@ -44,16 +46,17 @@ export class StatusComponent extends AbstractComponent implements OnInit, OnDest
     super.ngOnDestroy();
   }
 
-  public getStatusClass(clusterStatus: Engine.Cluster.Code) {
-    switch (clusterStatus) {
-      case Engine.Cluster.Code.NORMAL:
-        return this.NORMAL_CLASS;
-      case Engine.Cluster.Code.WARN:
-        return this.WARN_CLASS;
-      case Engine.Cluster.Code.ERROR:
-        return this.ERROR_CLASS;
-      default:
-        return this.NONE_CLASS;
+  public getServerInformation(name) {
+    const monitoring = this.monitorings.find(item => item.type === name);
+    return _.isNil(monitoring) ? '' : monitoring.hostname + ' (' + monitoring.port + ')';
+  }
+
+  public getClusterSize(): string {
+    if (_.isNil(this.clusterSize)){
+      return '';
+    } else {
+      $('.ddp-wrap-hover-layout .ddp-data-bar').css('width', Math.round(this.clusterSize.currSize/this.clusterSize.maxSize) +'%');
+      return CommonUtil.formatBytes(this.clusterSize.currSize, 0) + ' / ' + CommonUtil.formatBytes(this.clusterSize.maxSize, 0);
     }
   }
 }

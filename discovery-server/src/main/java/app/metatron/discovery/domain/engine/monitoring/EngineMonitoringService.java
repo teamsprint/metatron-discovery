@@ -15,6 +15,7 @@
 package app.metatron.discovery.domain.engine.monitoring;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -22,7 +23,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import app.metatron.discovery.common.GlobalObjectMapper;
@@ -99,6 +102,24 @@ public class EngineMonitoringService {
 
     return result;
 
+  }
+
+  public HashMap getConfigs(String configName) {
+    Map<String, Object> paramMap = Maps.newHashMap();
+    paramMap.put("configName", configName);
+    Optional<HashMap> result = engineRepository.getConfigs(paramMap, HashMap.class);
+    return result.orElse(Maps.newHashMap());
+  }
+
+  public Map getSize() {
+    Map<String, Object> sizeMap = Maps.newHashMap();
+    Optional<List> historicalNodes = engineRepository.getHistoricalNodes();
+    for (Object o : historicalNodes.get()) {
+      Map<String, Object> k = (Map<String, Object>) o;
+      sizeMap.put("currSize", Long.parseLong(String.valueOf(k.get("currSize"))));
+      sizeMap.put("maxSize", Long.parseLong(String.valueOf(k.get("maxSize"))));
+    }
+    return sizeMap;
   }
 
   private void setFiltersByType(List<Filter> filters, EngineMonitoringTarget monitoringTarget) {

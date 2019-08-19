@@ -70,6 +70,7 @@ public class EngineProperties {
   public final static String PURGE_DATASOURCE = "datasourcePurge";
   public final static String GET_HISTORICAL_NODE = "getHistoricalNode";
   public final static String GET_MIDDLEMGMT_NODE = "getMiddleMgmtNode";
+  public final static String GET_CONFIGS = "getConfigs";
 
   public final static String TEMP_CSV_PREFIX = "temp_ds_";
 

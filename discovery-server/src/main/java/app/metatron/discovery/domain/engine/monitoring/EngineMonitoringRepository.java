@@ -17,6 +17,7 @@ package app.metatron.discovery.domain.engine.monitoring;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QueryDslPredicateExecutor;
+import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
 
@@ -33,4 +34,8 @@ public interface EngineMonitoringRepository extends JpaRepository<EngineMonitori
   @RestResource(exported = false)
   @Query("SELECT MIN(status) as low_status, MAX(status) as max_status, em.type from EngineMonitoring em group by em.type")
   List<Object[]> findServerListByStatus();
+
+  @RestResource(exported = false)
+  @Query("SELECT em from EngineMonitoring em where em.type IN (:types)")
+  List<EngineMonitoring> findByType(@Param("types") List<String> types);
 }

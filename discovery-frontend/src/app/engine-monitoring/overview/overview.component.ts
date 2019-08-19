@@ -34,6 +34,7 @@ export class OverviewComponent extends AbstractComponent implements OnInit, OnDe
 
   public clusterStatus = new Engine.Cluster.Status();
   public monitorings: Engine.Monitoring[] = [];
+  public clusterSize: any;
 
   public keyword: string = '';
   public selectedMonitoringStatus: Engine.MonitoringStatus = Engine.MonitoringStatus.ALL;
@@ -42,6 +43,11 @@ export class OverviewComponent extends AbstractComponent implements OnInit, OnDe
 
   public readonly VIEW_MODE = Engine.ViewMode;
   public selectedViewMode: Engine.ViewMode = this.VIEW_MODE.GRID;
+
+  private readonly NORMAL_CLASS = 'ddp-icon-status-success';
+  private readonly WARN_CLASS = 'ddp-icon-status-warning';
+  private readonly ERROR_CLASS = 'ddp-icon-status-error';
+  private readonly NONE_CLASS = '';
 
   constructor(protected elementRef: ElementRef,
               protected injector: Injector,
@@ -88,6 +94,7 @@ export class OverviewComponent extends AbstractComponent implements OnInit, OnDe
         return this.engineService.getMonitorings(Engine.Monitoring.ofEmpty(), this.pageResult, 'forDetailView')
           .then(result => this.monitorings = result._embedded.monitorings)
       })
+      .then(() => this.engineService.getSize().then(result => this.clusterSize = result))
       .then(() => this.loadingHide())
       .catch(error => {
         this.clusterStatus = new Engine.Cluster.Status();
@@ -139,6 +146,19 @@ export class OverviewComponent extends AbstractComponent implements OnInit, OnDe
         return this._toCamelCase(type);
       default:
         return type;
+    }
+  }
+
+  public getStatusClass(clusterStatus: Engine.Cluster.Code) {
+    switch (clusterStatus) {
+      case Engine.Cluster.Code.NORMAL:
+        return this.NORMAL_CLASS;
+      case Engine.Cluster.Code.WARN:
+        return this.WARN_CLASS;
+      case Engine.Cluster.Code.ERROR:
+        return this.ERROR_CLASS;
+      default:
+        return this.NONE_CLASS;
     }
   }
 
