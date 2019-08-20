@@ -12,7 +12,15 @@
  * limitations under the License.
  */
 
-import {Component, ElementRef, HostListener, Injector, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  HostListener,
+  Injector,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
 import {NavigationEnd, NavigationExtras} from '@angular/router';
 import {AbstractComponent} from '../../../../common/component/abstract.component';
 import {WorkspaceService} from '../../../../workspace/service/workspace.service';
@@ -79,7 +87,7 @@ export class LNBComponent extends AbstractComponent implements OnInit, OnDestroy
     managementDatasource: false,
     managementMetadata: false,
     // TODO: 추후에 엔진 모니터링 메뉴에 대한 권한이 있는지 검사하는 로직 추가 필요 ( 임시 작업 )
-    managementEngineMonitoring: true,
+    managementEngineMonitoring: false,
     userAdmin: false,
     workspaceAdmin: false
   };
@@ -232,6 +240,7 @@ export class LNBComponent extends AbstractComponent implements OnInit, OnDestroy
         -1 < cookiePermission.indexOf(SYSTEM_PERMISSION.MANAGE_SHARED_WORKSPACE.toString())
         && -1 < cookiePermission.indexOf(SYSTEM_PERMISSION.MANAGE_SYSTEM.toString())
       );
+      this.permission.managementEngineMonitoring = (-1 < cookiePermission.indexOf(SYSTEM_PERMISSION.MANAGE_SYSTEM.toString()));
     }
     const cookieWs = this.cookieService.get(CookieConstant.KEY.CURRENT_WORKSPACE);
     (cookieWs) && (this.cookieInfo = JSON.parse(cookieWs));

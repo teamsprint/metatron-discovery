@@ -71,6 +71,10 @@ public class EngineProperties {
   public final static String GET_HISTORICAL_NODE = "getHistoricalNode";
   public final static String GET_MIDDLEMGMT_NODE = "getMiddleMgmtNode";
   public final static String GET_CONFIGS = "getConfigs";
+  public final static String GET_PENDING_TASKS = "getPendingTasks";
+  public final static String GET_RUNNING_TASKS = "getRunningTasks";
+  public final static String GET_WAITING_TASKS = "getWaitingTasks";
+  public final static String GET_COMPLETE_TASKS = "getCompleteTasks";
 
   public final static String TEMP_CSV_PREFIX = "temp_ds_";
 

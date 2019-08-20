@@ -35,14 +35,7 @@ import javax.annotation.PostConstruct;
 
 import app.metatron.discovery.domain.datasource.data.QueryTimeExcetpion;
 
-import static app.metatron.discovery.domain.engine.EngineProperties.BULK_LOAD;
-import static app.metatron.discovery.domain.engine.EngineProperties.GET_CONFIGS;
-import static app.metatron.discovery.domain.engine.EngineProperties.GET_DATASOURCE_LIST;
-import static app.metatron.discovery.domain.engine.EngineProperties.GET_HISTORICAL_NODE;
-import static app.metatron.discovery.domain.engine.EngineProperties.GET_MIDDLEMGMT_NODE;
-import static app.metatron.discovery.domain.engine.EngineProperties.INGESTION_DATASOUCE;
-import static app.metatron.discovery.domain.engine.EngineProperties.SEARCH_QUERY;
-import static app.metatron.discovery.domain.engine.EngineProperties.SUPERVISOR_INGESTION;
+import static app.metatron.discovery.domain.engine.EngineProperties.*;
 
 /**
  * Created by kyungtaak on 2016. 8. 22..
@@ -104,6 +97,22 @@ public class DruidEngineRepository extends AbstractEngineRepository {
 
   public <T> Optional<T> getConfigs(Map<String, Object> paramMap, Class<T> clazz){
     return call(GET_CONFIGS, paramMap, clazz);
+  }
+
+  public Optional<List> getPendingTasks() {
+    return call(GET_PENDING_TASKS, Maps.newHashMap(), List.class);
+  }
+
+  public Optional<List> getRunningTasks() {
+    return call(GET_RUNNING_TASKS, Maps.newHashMap(), List.class);
+  }
+
+  public Optional<List> getWaitingTasks() {
+    return call(GET_WAITING_TASKS, Maps.newHashMap(), List.class);
+  }
+
+  public Optional<List> getCompleteTasks() {
+    return call(GET_COMPLETE_TASKS, Maps.newHashMap(), List.class);
   }
 
   private class QueryResponseErrorHandler implements ResponseErrorHandler {

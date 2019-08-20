@@ -122,6 +122,26 @@ public class EngineMonitoringService {
     return sizeMap;
   }
 
+  public List getPendingTasks() {
+    Optional<List> tasks = engineRepository.getPendingTasks();
+    return tasks.get();
+  }
+
+  public List getRunningTasks() {
+    Optional<List> tasks = engineRepository.getRunningTasks();
+    return tasks.get();
+  }
+
+  public List getWaitingTasks() {
+    Optional<List> tasks = engineRepository.getWaitingTasks();
+    return tasks.get();
+  }
+
+  public List getCompleteTasks() {
+    Optional<List> tasks = engineRepository.getCompleteTasks();
+    return tasks.get();
+  }
+
   private void setFiltersByType(List<Filter> filters, EngineMonitoringTarget monitoringTarget) {
     if ( monitoringTarget.getHost() != null ) {
       filters.add(new SelectorFilter("host", monitoringTarget.getHost()));

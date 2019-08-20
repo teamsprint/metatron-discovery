@@ -116,4 +116,19 @@ public class EngineMonitoringController {
     return ResponseEntity.ok(monitoringQueryService.getSize());
   }
 
+  @RequestMapping(value= "monitoring/tasks/{status}", method = RequestMethod.GET)
+  public ResponseEntity<?> getRunningTasks(@PathVariable("status") String status) {
+    List list = Lists.newArrayList();
+    if ("pending".equals(status)) {
+      list = monitoringQueryService.getPendingTasks();
+    } else if ("running".equals(status)) {
+      list = monitoringQueryService.getRunningTasks();
+    } else if ("waiting".equals(status)) {
+      list = monitoringQueryService.getWaitingTasks();
+    } else if ("complete".equals(status)) {
+      list = monitoringQueryService.getCompleteTasks();
+    }
+    return ResponseEntity.ok(list);
+  }
+
 }
