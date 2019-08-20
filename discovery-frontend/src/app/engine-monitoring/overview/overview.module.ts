@@ -23,6 +23,9 @@ import {TableFilterPipe} from './pipe/table-filter.pipe';
 import {TableSortPipe} from './pipe/table-sort.pipe';
 import {EngineService} from '../service/engine.service';
 import {CommonModule} from '../../common/common.module';
+import {GraphComponent} from "./component/graph.component";
+import {DatasourceService} from "../../datasource/service/datasource.service";
+import {TimezoneService} from "../../data-storage/service/timezone.service";
 
 @NgModule({
   imports: [
@@ -31,6 +34,7 @@ import {CommonModule} from '../../common/common.module';
   declarations: [
     OverviewComponent,
     StatusComponent,
+    GraphComponent,
     OkIconComponent,
     ErrorIconComponent,
     SearchComponent,
@@ -39,7 +43,9 @@ import {CommonModule} from '../../common/common.module';
     TableSortPipe
   ],
   providers: [
-    EngineService
+    EngineService,
+    TimezoneService,
+    DatasourceService
   ],
   exports: [
     OverviewComponent

@@ -12,8 +12,8 @@
   ~ limitations under the License.
   -->
 
+<!-- Status Name & Info tooltip -->
 <div class="ddp-label-name ddp-clear">
-  <!-- TODO: 조회한 클러스터 이름 표시 필요 -->
   <span class="ddp-txt-label">{{ 'msg.engine.monotoring.overview.cluster.name.prefix' | translate }}</span>
   <!-- info -->
   <div class="ddp-wrap-info ddp-selected">
@@ -29,41 +29,23 @@
             </colgroup>
             <tbody>
             <tr>
-              <th>
-                Broker Host (Port)
-              </th>
-              <td>
-                {{getServerInformation('broker')}}
-              </td>
+              <th> Broker Host (Port) </th>
+              <td> {{getServerInformation('broker')}} </td>
             </tr>
             <tr>
-              <th>
-                Coordinator Host (Port)
-              </th>
-              <td>
-                {{getServerInformation('coordinator')}}
-              </td>
+              <th> Coordinator Host (Port) </th>
+              <td> {{getServerInformation('coordinator')}} </td>
             </tr>
             <tr>
-              <th>
-                Overlord Host (Port)
-              </th>
-              <td>
-                {{getServerInformation('overlord')}}
-              </td>
+              <th> Overlord Host (Port) </th>
+              <td> {{getServerInformation('overlord')}} </td>
             </tr>
             <tr>
-              <th>
-                Server Count
-              </th>
-              <td>
-                {{monitorings.length}}
-              </td>
+              <th> Server Count </th>
+              <td> {{monitorings.length}} </td>
             </tr>
             <tr>
-              <th>
-                Size (Curr/Max)
-              </th>
+              <th> Size (Curr/Max) </th>
               <td>
                 {{getClusterSize()}}
                 <!-- bar -->
@@ -83,4 +65,16 @@
   </div>
   <!-- //info -->
 </div>
+<!-- Status Name & Info tooltip -->
 
+<!--
+<div class="ddp-date-setting">
+  <span class="ddp-data-date">
+      2017.03.06 06:09:35 <a href="javascript:" class="ddp-btn-refresh"></a>
+  </span>
+  <a href="#" class="ddp-btn-toggle ddp-selected">Last 1 hour</a>
+  <a href="#" class="ddp-btn-toggle">Last 1 day</a>
+  <a href="#" class="ddp-btn-toggle">Last 7 days</a>
+  <a href="#" class="ddp-btn-toggle">Last 30 days</a>
+</div>
+-->
