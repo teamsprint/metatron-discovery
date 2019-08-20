@@ -82,7 +82,6 @@ public class EngineMonitoringController {
       }
     }
 
-
     return ResponseEntity.ok(result);
   }
 
@@ -106,7 +105,6 @@ public class EngineMonitoringController {
     result.put("cluster", cluster);
 
     HashMap configs = monitoringQueryService.getConfigs(name);
-    LOGGER.debug(configs.toString());
     result.put("configs", configs);
     return ResponseEntity.ok(result);
   }
@@ -116,7 +114,7 @@ public class EngineMonitoringController {
     return ResponseEntity.ok(monitoringQueryService.getSize());
   }
 
-  @RequestMapping(value= "monitoring/tasks/{status}", method = RequestMethod.GET)
+  @RequestMapping(value= "/monitoring/tasks/{status}", method = RequestMethod.GET)
   public ResponseEntity<?> getRunningTasks(@PathVariable("status") String status) {
     List list = Lists.newArrayList();
     if ("pending".equals(status)) {
