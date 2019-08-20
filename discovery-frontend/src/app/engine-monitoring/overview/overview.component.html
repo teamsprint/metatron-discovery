@@ -52,19 +52,24 @@
         </div>
       </div>
     </div>
+    <!-- // Status Bar -->
 
-    <!-- top setting -->
-    <div class="ddp-clear"
-         [ngClass]="['ddp-box-top-setting']">
+    <!-- Search & Filter -->
+    <div class="ddp-box-top-setting ddp-clear" >
+      <!-- Search Bar -->
       <overview-search [keyword]="keyword"
                        [placeholder]="'msg.engine.monotoring.overview.server.name.search' | translate"
                        (changeValue)="searchByHostnameColumn($event)">
       </overview-search>
+      <!-- // Search Bar -->
       <div class="ddp-type-option">
+        <!-- Filter Buttons -->
         <div overview-radio
              [selectedMonitoringStatus]="selectedMonitoringStatus"
              (changeValue)="searchByStatusColumn($event)">
         </div>
+        <!-- // Filter Buttons -->
+        <!-- View Type Buttons -->
         <ul class="ddp-list-tab-button">
           <li [class.ddp-selected]="selectedViewMode === VIEW_MODE.CARD">
             <a href="javascript:" (click)="changeViewMode(VIEW_MODE.CARD)"><em class="ddp-icon-grid"></em></a>
@@ -81,9 +86,10 @@
             </div>
           </li>
         </ul>
+        <!-- // View Type Buttons -->
       </div>
     </div>
-    <!-- //top setting -->
+    <!-- // Search & Filter -->
 
     <div class="ddp-box-detail">
       <ng-container *ngIf="monitorings | tableSort:tableSortProperty:tableSortDirection | tableFilter:{'hostname': keyword, 'status': selectedMonitoringStatus} as filteredItems">

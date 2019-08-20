@@ -6010,7 +6010,7 @@ table.ddp-table-union tr td .ddp-data-dropped strong {color:#666eb2; font-weight
 .ddp-ui-list-control .ddp-ui-accept-select .ddp-ui-user-buttons {float:left;}
 .ddp-ui-list-control .ddp-ui-view {position:absolute; bottom:0; right:40px;}
 
-.ddp-layout-contents .ddp-data-source-none {position:relative; float:left; width:100%; padding:28px 53px 28px 0; color:#9c9c9c; font-size:14px; box-sizing:border-box;}
+.ddp-layout-contents .ddp-data-source-none {position:relative; width:100%; padding:28px 53px 28px 0; color:#9c9c9c; font-size:14px; box-sizing:border-box;}
 
 /************************************************************************
 	page : 데이터 프리퍼레이션 데이터셋 추가
