@@ -163,83 +163,14 @@ export class GraphComponent extends AbstractComponent implements OnInit, OnDestr
    * @private
    */
   private _getUsageMemory() {
-    const queryParam: any =
-      {
-        dataSource: {
-          joins: [],
-          temporary: false,
-          name: 'druid-metric-topic',
-          type: 'default',
-          connType: 'ENGINE'
-        },
-        filters: [
-          {
-            selector: 'SINGLE_COMBO',
-            type: 'include',
-            field: 'metric',
-            valueList: ['jvm/mem/used'],
-            dataSource: 'druid-metric-topic'
-          }
-        ],
-        pivot: {
-          columns: [],
-          rows: [],
-          aggregations: [
-            {
-              type: 'measure',
-              aggregationType: 'SUM',
-              name: 'value',
-              subType: 'LONG',
-              subRole: 'MEASURE',
-              format: {
-                isAll: true,
-                type: 'percent',
-                sign: 'KRW',
-                decimal: 0,
-                useThousandsSep: true,
-                abbr: 'NONE'
-              },
-              aggregationTypeList: [],
-              alias: 'SUM(value)'
-            },
-            {
-              type: 'dimension',
-              name: 'memKind',
-              subType: 'UNKNOWN',
-              subRole: 'DIMENSION',
-              alias: 'memKind'
-            }
-          ]
-        },
-        limits: {
-          limit: 1000,
-          sort: []
-        },
-        resultFormat: {
-          type: 'chart',
-          mode: 'pie',
-          options: {
-            addMinMax: true,
-            showCategory: true,
-            showPercentage: true
-          },
-          columnDelimeter: '―'
+    this._engineSvc.getMemory().then((data) => {
+      const seriesData = data.map( item => {
+        ( 'useMem' === item.name ) && ( this.heapMemory = item.percentage.toFixed(0) + '%' );
+        item['itemStyle'] = {
+          normal:{ color: 'useMem' === item.name ? '#f0f4ff' : '#314673' }
         }
-      };
-
-    this._datasourceSvc.searchQuery(queryParam).then((data) => {
-      console.info(data);
-      const seriesData = data.columns[0].value.map( item => {
-        ( 'heap' === item.name ) && ( this.heapMemory = item.percentage.toFixed(0) + '%' );
-        return {
-          name: item.name,
-          value: item.value,
-          percentage: item.percentage,
-          itemStyle:{
-            normal:{ color: 'heap' === item.name ? '#f0f4ff' : '#314673' }
-          }
-        };
-      });
+        return item;
+      })
       const chartOpts: any = {
         'type': 'pie',
         'legend': {
@@ -329,7 +260,7 @@ export class GraphComponent extends AbstractComponent implements OnInit, OnDestr
                 abbr: 'NONE'
               },
               aggregationTypeList: [],
-              alias: 'COUNT(value)'
+              alias: 'SUM(value)'
             }
           ]
         },

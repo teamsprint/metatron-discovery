@@ -109,6 +109,11 @@ public class EngineMonitoringController {
     return ResponseEntity.ok(result);
   }
 
+  @RequestMapping(value = "/monitoring/memory", method = RequestMethod.POST)
+  public ResponseEntity<?> findMemory(@RequestBody EngineMonitoringRequest queryRequest) {
+    return ResponseEntity.ok(monitoringQueryService.getMemory(queryRequest));
+  }
+
   @RequestMapping(value = "/monitoring/size", method = RequestMethod.GET)
   public ResponseEntity<?> findSize() {
     return ResponseEntity.ok(monitoringQueryService.getSize());

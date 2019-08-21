@@ -18,6 +18,8 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,6 +37,7 @@ import app.metatron.discovery.domain.workbook.configurations.Pivot;
 import app.metatron.discovery.domain.workbook.configurations.datasource.DefaultDataSource;
 import app.metatron.discovery.domain.workbook.configurations.field.MeasureField;
 import app.metatron.discovery.domain.workbook.configurations.field.TimestampField;
+import app.metatron.discovery.domain.workbook.configurations.filter.TimeFilter;
 import app.metatron.discovery.domain.workbook.configurations.format.CustomDateTimeFormat;
 import app.metatron.discovery.query.druid.Aggregation;
 import app.metatron.discovery.query.druid.Filter;
@@ -54,7 +57,7 @@ public class EngineMonitoringService {
   @Autowired
   EngineMonitoringProperties monitoringProperties;
 
-  @Value("${polaris.engine.monitoring.emitter.datasource:druid-metric}")
+  @Value("${polaris.engine.monitoring.emitter.datasource:druid-metric-topic}")
   String datasourceName;
 
   public Object search(EngineMonitoringRequest request) {
@@ -80,6 +83,13 @@ public class EngineMonitoringService {
       request.getResultFormat().setConnType(ENGINE);
     }
 
+    if (request.getFromDate() == null) {
+      request.setFromDate(TimeFilter.MIN_DATETIME.toString());
+    }
+    if (request.getToDate() == null) {
+      request.setToDate(TimeFilter.MAX_DATETIME.toString());
+    }
+
     Query query;
 
     query = MonitoringQuery.builder(new DefaultDataSource(datasourceName))
@@ -102,6 +112,57 @@ public class EngineMonitoringService {
 
     return result;
 
+  }
+
+  public List getMemory(EngineMonitoringRequest queryRequest) {
+    float useMem = new Float(getUseMemory(queryRequest));
+    float maxMem = new Float(getMaxMemory(queryRequest));
+    float percentage = 100 * useMem / maxMem;
+    List memList = Lists.newArrayList();
+    Map<String, Object> useMemMap = Maps.newHashMap();
+    useMemMap.put("name", "useMem");
+    useMemMap.put("value", useMem);
+    useMemMap.put("percentage", percentage);
+
+    Map<String, Object> maxMemMap = Maps.newHashMap();
+    maxMemMap.put("name", "maxMem");
+    maxMemMap.put("value", maxMem);
+    maxMemMap.put("percentage", 100 - percentage);
+
+    memList.add(useMemMap);
+    memList.add(maxMemMap);
+    return memList;
+  }
+
+  public long getUseMemory(EngineMonitoringRequest queryRequest) {
+    if (queryRequest.getMonitoringTarget() == null) {
+      queryRequest.setMonitoringTarget(new EngineMonitoringTarget());
+    }
+    EngineMonitoringTarget engineMonitoringTarget = queryRequest.getMonitoringTarget();
+    engineMonitoringTarget.setMetric(EngineMonitoringTarget.MetricType.MEM_USED);
+    queryRequest.setMonitoringTarget(engineMonitoringTarget);
+    return sumValue(queryRequest);
+  }
+
+  public long getMaxMemory(EngineMonitoringRequest queryRequest) {
+    if (queryRequest.getMonitoringTarget() == null) {
+      queryRequest.setMonitoringTarget(new EngineMonitoringTarget());
+    }
+    EngineMonitoringTarget engineMonitoringTarget = queryRequest.getMonitoringTarget();
+    engineMonitoringTarget.setMetric(EngineMonitoringTarget.MetricType.MEM_MAX);
+    queryRequest.setMonitoringTarget(engineMonitoringTarget);
+    return sumValue(queryRequest);
+  }
+
+  private long sumValue(EngineMonitoringRequest queryRequest) {
+    ArrayNode engineData = (ArrayNode) search(queryRequest);
+    ObjectMapper mapper = new ObjectMapper();
+    long value = 0L;
+    for (JsonNode rowNode : engineData) {
+      Map<String, Object> result = mapper.convertValue(rowNode, Map.class);
+      value += Long.parseLong(String.valueOf(result.get("value")));
+    }
+    return value;
   }
 
   public HashMap getConfigs(String configName) {
