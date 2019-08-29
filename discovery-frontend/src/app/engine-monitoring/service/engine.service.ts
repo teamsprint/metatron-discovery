@@ -66,12 +66,23 @@ export class EngineService extends AbstractService {
     return this.post(this.URL_MONITORING + '/query', params);
   }
 
+  /**
+   * Get chart data
+   */
+  public getMonitoringData(params: object) {
+    return this.post(this.URL_MONITORING + '/data', params);
+  }
+
   public getMemory(params?: object) {
     return this.post(this.URL_MONITORING + '/memory', params == undefined ? {} : params);
   }
 
   public getInformation(name) {
     return this.get(this.URL_MONITORING + '/information/' + name);
+  }
+
+  public getDatasourceList() {
+    return this.get(this.URL_MONITORING + '/datasource/list');
   }
 
   public getSize() {

@@ -49,7 +49,6 @@ export class GraphComponent extends AbstractComponent implements OnInit, OnDestr
     this._getUsageMemory();
     this._getGcCount();
     this._getAvgQueryTime();
-    this._getQueryCount();
     this._getRunningTasks();
   }
 
@@ -210,79 +209,12 @@ export class GraphComponent extends AbstractComponent implements OnInit, OnDestr
   private _getGcCount() {
     const queryParam: any =
       {
-        dataSource: {
-          joins: [],
-          temporary: false,
-          name: 'druid-metric-topic',
-          type: 'default',
-          connType: 'ENGINE'
-        },
-        filters: [
-          {
-            selector: 'SINGLE_COMBO',
-            type: 'include',
-            field: 'metric',
-            valueList: ['jvm/gc/count'],
-            dataSource: 'druid-metric-topic'
-          }
-        ],
-        pivot: {
-          columns: [
-            {
-              type: 'timestamp',
-              name: 'event_time',
-              subType: 'TIMESTAMP',
-              subRole: 'TIMESTAMP',
-              format: {
-                'type': 'time_continuous',
-                'discontinuous': false,
-                'unit': 'SECOND',
-                'timeZone': 'Asia/Seoul',
-                'locale': 'en'
-              },
-              alias: 'SECOND(event_time)'
-            }
-          ],
-          rows: [],
-          aggregations: [
-            {
-              type: 'measure',
-              aggregationType: 'COUNT',
-              name: 'value',
-              subType: 'LONG',
-              subRole: 'MEASURE',
-              format: {
-                isAll: true,
-                type: 'number',
-                sign: 'KRW',
-                decimal: 0,
-                useThousandsSep: true,
-                abbr: 'NONE'
-              },
-              aggregationTypeList: [],
-              alias: 'SUM(value)'
-            }
-          ]
-        },
-        limits: {
-          limit: 1000,
-          sort: []
-        },
-        resultFormat: {
-          type: 'chart',
-          mode: 'line',
-          options: {
-            addMinMax: true,
-            showCategory: true,
-            showPercentage: true,
-            isCumulative: false
-          },
-          columnDelimeter: '―'
+        monitoringTarget: {
+          metric: 'GC_COUNT'
         }
       };
 
-    this._datasourceSvc.searchQuery(queryParam).then((data) => {
-      console.info(data);
+    this._engineSvc.getMonitoringData(queryParam).then((data) => {
       const chartOps: any = {
         'type': 'line',
         'grid': [
@@ -297,7 +229,7 @@ export class GraphComponent extends AbstractComponent implements OnInit, OnDestr
           {
             'type': 'category',
             'show': false,
-            'data': data.rows,
+            'data': data.time,
             'name': 'SECOND(event_time)',
             'axisName': 'SECOND(event_time)'
           }
@@ -314,7 +246,7 @@ export class GraphComponent extends AbstractComponent implements OnInit, OnDestr
           {
             'type': 'line',
             'name': 'AVG(value)',
-            'data': data.columns[0].value,
+            'data': data.value,
             'connectNulls': true,
             'showAllSymbol': true,
             'symbol': 'none',
@@ -331,6 +263,7 @@ export class GraphComponent extends AbstractComponent implements OnInit, OnDestr
       const chartobj = echarts.init(this._gcCountChartElmRef.nativeElement, 'exntu');
       chartobj.setOption(chartOps, false);
     });
+
   } // function - _getGcCount
 
   /**
@@ -340,79 +273,15 @@ export class GraphComponent extends AbstractComponent implements OnInit, OnDestr
   private _getAvgQueryTime() {
     const queryParam: any =
       {
-        dataSource: {
-          joins: [],
-          temporary: false,
-          name: 'druid-metric-topic',
-          type: 'default',
-          connType: 'ENGINE'
-        },
-        filters: [
-          {
-            selector: 'SINGLE_COMBO',
-            type: 'include',
-            field: 'metric',
-            valueList: ['query/time'],
-            dataSource: 'druid-metric-topic'
-          }
-        ],
-        pivot: {
-          columns: [
-            {
-              type: 'timestamp',
-              name: 'event_time',
-              subType: 'TIMESTAMP',
-              subRole: 'TIMESTAMP',
-              format: {
-                'type': 'time_continuous',
-                'discontinuous': false,
-                'unit': 'SECOND',
-                'timeZone': 'Asia/Seoul',
-                'locale': 'en'
-              },
-              alias: 'SECOND(event_time)'
-            }
-          ],
-          rows: [],
-          aggregations: [
-            {
-              type: 'measure',
-              aggregationType: 'AVG',
-              name: 'value',
-              subType: 'LONG',
-              subRole: 'MEASURE',
-              format: {
-                isAll: true,
-                type: 'number',
-                sign: 'KRW',
-                decimal: 0,
-                useThousandsSep: true,
-                abbr: 'NONE'
-              },
-              aggregationTypeList: [],
-              alias: 'AVG(value)'
-            }
-          ]
-        },
-        limits: {
-          limit: 1000,
-          sort: []
-        },
-        resultFormat: {
-          type: 'chart',
-          mode: 'line',
-          options: {
-            addMinMax: true,
-            showCategory: true,
-            showPercentage: true,
-            isCumulative: false
-          },
-          columnDelimeter: '―'
+        monitoringTarget : {
+          metric: 'QUERY_TIME',
+          includeCount: true
         }
       };
 
-    this._datasourceSvc.searchQuery(queryParam).then((data) => {
+    this._engineSvc.getMonitoringData(queryParam).then((data) => {
       console.info(data);
+      this.queryCount = data.total_count;
       const chartOps: any = {
         'type': 'line',
         'grid': [
@@ -427,7 +296,7 @@ export class GraphComponent extends AbstractComponent implements OnInit, OnDestr
           {
             'type': 'category',
             'show': false,
-            'data': data.rows,
+            'data': data.time,
             'name': 'SECOND(event_time)',
             'axisName': 'SECOND(event_time)'
           }
@@ -444,7 +313,7 @@ export class GraphComponent extends AbstractComponent implements OnInit, OnDestr
           {
             'type': 'line',
             'name': 'AVG(value)',
-            'data': data.columns[0].value,
+            'data': data.avg_value,
             'connectNulls': true,
             'showAllSymbol': true,
             'symbol': 'none',
@@ -464,74 +333,6 @@ export class GraphComponent extends AbstractComponent implements OnInit, OnDestr
   } // function - _getAvgQueryTime
 
   /**
-   * get Query Count
-   * @private
-   */
-  private _getQueryCount() {
-    const queryParam: any =
-      {
-        dataSource: {
-          joins: [],
-          temporary: false,
-          name: 'druid-metric-topic',
-          type: 'default',
-          connType: 'ENGINE'
-        },
-        filters: [
-          {
-            selector: 'SINGLE_COMBO',
-            type: 'include',
-            field: 'metric',
-            valueList: ['query/time'],
-            dataSource: 'druid-metric-topic'
-          }
-        ],
-        pivot: {
-          columns: [],
-          rows: [],
-          aggregations: [
-            {
-              type: 'measure',
-              aggregationType: 'COUNT',
-              name: 'value',
-              subType: 'LONG',
-              subRole: 'MEASURE',
-              format: {
-                isAll: true,
-                type: 'number',
-                sign: 'KRW',
-                decimal: 2,
-                useThousandsSep: true,
-                abbr: 'NONE'
-              },
-              aggregationTypeList: [],
-              alias: 'COUNT(value)'
-            }
-          ]
-        },
-        limits: {
-          limit: 1000,
-          sort: []
-        },
-        resultFormat: {
-          type: 'chart',
-          mode: 'label',
-          options: {
-            addMinMax: true,
-            showCategory: true,
-            showPercentage: true
-          },
-          columnDelimeter: '―'
-        }
-      };
-
-    this._datasourceSvc.searchQuery(queryParam).then((data) => {
-      this.queryCount = data.columns[0].value[0];
-      console.info('>>>>>> queryCount', data);
-    });
-  } // function - _getQueryCount
-
-  /**
    * get Running Tasks
    * @private
    */
@@ -542,4 +343,16 @@ export class GraphComponent extends AbstractComponent implements OnInit, OnDestr
       }
     });
   } // function - _getRunningTasks
+
+  /**
+   * get Datasource List
+   * @private
+   */
+  private _getDatasourceList() {
+    this._engineSvc.getDatasourceList().then( result => {
+      if( result ) {
+        //this.runningTaskCount = result.length;
+      }
+    });
+  } // function - _getDatasourceList
 }

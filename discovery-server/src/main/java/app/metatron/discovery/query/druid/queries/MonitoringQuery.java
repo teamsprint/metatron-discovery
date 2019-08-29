@@ -24,6 +24,7 @@ import app.metatron.discovery.query.druid.Aggregation;
 import app.metatron.discovery.query.druid.Dimension;
 import app.metatron.discovery.query.druid.Filter;
 import app.metatron.discovery.query.druid.Granularity;
+import app.metatron.discovery.query.druid.PostAggregation;
 import app.metatron.discovery.query.druid.Query;
 import app.metatron.discovery.query.druid.serializers.GranularitySerializer;
 import app.metatron.discovery.query.druid.virtualcolumns.VirtualColumn;
@@ -36,6 +37,8 @@ public class MonitoringQuery extends Query {
   Granularity granularity;
 
   List<Aggregation> aggregations;
+
+  List<PostAggregation> postAggregations;
 
   List<VirtualColumn> virtualColumns;
 
@@ -70,6 +73,10 @@ public class MonitoringQuery extends Query {
   public void setAggregations(List<Aggregation> aggregations) {
     this.aggregations = aggregations;
   }
+
+  public List<PostAggregation> getPostAggregations() { return postAggregations; }
+
+  public void setPostAggregations(List<PostAggregation> postAggregations) { this.postAggregations = postAggregations; }
 
   public Filter getFilter() {
     return filter;

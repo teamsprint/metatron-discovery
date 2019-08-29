@@ -30,6 +30,7 @@ import app.metatron.discovery.query.druid.AbstractQueryBuilder;
 import app.metatron.discovery.query.druid.Aggregation;
 import app.metatron.discovery.query.druid.Filter;
 import app.metatron.discovery.query.druid.Granularity;
+import app.metatron.discovery.query.druid.PostAggregation;
 import app.metatron.discovery.query.druid.dimensions.DefaultDimension;
 import app.metatron.discovery.query.druid.filters.AndFilter;
 import app.metatron.discovery.query.druid.granularities.SimpleGranularity;
@@ -45,7 +46,7 @@ public class MonitoringQueryBuilder extends AbstractQueryBuilder {
 
   private List<Aggregation> aggregations;
 
-
+  private List<PostAggregation> postAggregations;
 
   public MonitoringQueryBuilder(DataSource dataSource) {
     super(dataSource);
@@ -72,6 +73,11 @@ public class MonitoringQueryBuilder extends AbstractQueryBuilder {
 
   public MonitoringQueryBuilder aggregation(List<Aggregation> aggregations) {
     this.aggregations = aggregations;
+    return this;
+  }
+
+  public MonitoringQueryBuilder postAggregation(List<PostAggregation> postAggregations) {
+    this.postAggregations = postAggregations;
     return this;
   }
 
@@ -106,6 +112,12 @@ public class MonitoringQueryBuilder extends AbstractQueryBuilder {
       monitoringQuery.setAggregations(null);
     } else {
       monitoringQuery.setAggregations(aggregations);
+    }
+
+    if (CollectionUtils.isEmpty(postAggregations)) {
+      monitoringQuery.setPostAggregations(null);
+    } else {
+      monitoringQuery.setPostAggregations(postAggregations);
     }
 
     monitoringQuery.setGranularity(granularity);

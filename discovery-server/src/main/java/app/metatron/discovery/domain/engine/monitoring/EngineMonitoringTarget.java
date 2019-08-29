@@ -19,6 +19,7 @@ public class EngineMonitoringTarget {
   String service;
   String host;
   MetricType metric;
+  boolean includeCount = false;
 
   public EngineMonitoringTarget() {
   }
@@ -47,10 +48,15 @@ public class EngineMonitoringTarget {
     this.metric = metric;
   }
 
+  public boolean isIncludeCount() { return includeCount; }
+
+  public void setIncludeCount(boolean includeCount) { this.includeCount = includeCount; }
+
   public enum MetricType {
     MEM_MAX,
     MEM_USED,
     GC_COUNT,
-    GC_CPU
+    GC_CPU,
+    QUERY_TIME
   }
 }

@@ -55,10 +55,25 @@ public class EngineMonitoringController {
   @Autowired
   ProjectionFactory projectionFactory;
 
+  @RequestMapping(value = "/monitoring/test", method = RequestMethod.POST)
+  public ResponseEntity<?> test(@RequestBody Object queryRequest) {
+
+    Object result = monitoringQueryService.query(queryRequest);
+    return ResponseEntity.ok(result);
+  }
+
   @RequestMapping(value = "/monitoring/query", method = RequestMethod.POST)
   public ResponseEntity<?> monitoringQuery(@RequestBody EngineMonitoringRequest queryRequest) {
 
     Object result = monitoringQueryService.search(queryRequest);
+
+    return ResponseEntity.ok(result);
+  }
+
+  @RequestMapping(value = "/monitoring/data", method = RequestMethod.POST)
+  public ResponseEntity<?> monitoringData(@RequestBody EngineMonitoringRequest queryRequest) {
+
+    Object result = monitoringQueryService.getEngineData(queryRequest);
 
     return ResponseEntity.ok(result);
   }
@@ -117,6 +132,11 @@ public class EngineMonitoringController {
   @RequestMapping(value = "/monitoring/size", method = RequestMethod.GET)
   public ResponseEntity<?> findSize() {
     return ResponseEntity.ok(monitoringQueryService.getSize());
+  }
+
+  @RequestMapping(value = "/monitoring/datasource/list", method = RequestMethod.GET)
+  public ResponseEntity<?> findDatasourceList() {
+    return ResponseEntity.ok(monitoringQueryService.getDatasourceList());
   }
 
   @RequestMapping(value= "/monitoring/tasks/{status}", method = RequestMethod.GET)

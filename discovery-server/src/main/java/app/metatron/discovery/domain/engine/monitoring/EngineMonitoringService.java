@@ -18,9 +18,9 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 
+import org.datanucleus.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -31,6 +31,8 @@ import java.util.Map;
 import java.util.Optional;
 
 import app.metatron.discovery.common.GlobalObjectMapper;
+import app.metatron.discovery.common.MatrixResponse;
+import app.metatron.discovery.domain.datasource.data.result.ChartResultFormat;
 import app.metatron.discovery.domain.datasource.data.result.ObjectResultFormat;
 import app.metatron.discovery.domain.engine.DruidEngineRepository;
 import app.metatron.discovery.domain.workbook.configurations.Pivot;
@@ -41,9 +43,13 @@ import app.metatron.discovery.domain.workbook.configurations.filter.TimeFilter;
 import app.metatron.discovery.domain.workbook.configurations.format.CustomDateTimeFormat;
 import app.metatron.discovery.query.druid.Aggregation;
 import app.metatron.discovery.query.druid.Filter;
+import app.metatron.discovery.query.druid.PostAggregation;
 import app.metatron.discovery.query.druid.Query;
+import app.metatron.discovery.query.druid.aggregations.CountAggregation;
 import app.metatron.discovery.query.druid.aggregations.LongSumAggregation;
 import app.metatron.discovery.query.druid.filters.SelectorFilter;
+import app.metatron.discovery.query.druid.postaggregations.ArithmeticPostAggregation;
+import app.metatron.discovery.query.druid.postaggregations.FieldAccessorPostAggregator;
 import app.metatron.discovery.query.druid.queries.MonitoringQuery;
 
 import static app.metatron.discovery.domain.datasource.DataSource.ConnectionType.ENGINE;
@@ -57,8 +63,28 @@ public class EngineMonitoringService {
   @Autowired
   EngineMonitoringProperties monitoringProperties;
 
-  @Value("${polaris.engine.monitoring.emitter.datasource:druid-metric-topic}")
+  @Value("${polaris.engine.monitoring.emitter.datasource:druid-metric}")
   String datasourceName;
+
+  public Object query(Object query) {
+    EngineMonitoringRequest request = new EngineMonitoringRequest();
+    request.setResultFormat(new ObjectResultFormat(ENGINE));
+
+    String queryString = GlobalObjectMapper.writeValueAsString(query);
+    Optional<JsonNode> engineResult = engineRepository.query(queryString, JsonNode.class);
+    Object result = request.getResultFormat()
+                           .makeResult(
+                               engineResult.orElseGet(
+                                   () -> GlobalObjectMapper.getDefaultMapper().createArrayNode())
+                           );
+    if (result instanceof MatrixResponse && request.getResultFormat() instanceof ChartResultFormat) {
+      MatrixResponse response = (MatrixResponse) result;
+      return response;
+    } else {
+      return result;
+    }
+
+  }
 
   public Object search(EngineMonitoringRequest request) {
 
@@ -66,8 +92,16 @@ public class EngineMonitoringService {
     setFiltersByType(filters, request.getMonitoringTarget());
 
     List<Aggregation> aggregations = Lists.newArrayList();
+    List<PostAggregation> postAggregations = Lists.newArrayList();
     aggregations.add(new LongSumAggregation("value", "value"));
+    if (request.getMonitoringTarget().isIncludeCount()) {
+      aggregations.add(new CountAggregation("count"));
 
+      List<PostAggregation> fields = Lists.newArrayList();
+      fields.add(new FieldAccessorPostAggregator("value", "value"));
+      fields.add(new FieldAccessorPostAggregator("count", "count"));
+      postAggregations.add(new ArithmeticPostAggregation("avg_value", ArithmeticPostAggregation.AggregationFunction.DIVISION, fields));
+    }
 
     Pivot pivot = new Pivot();
     pivot.addColumn(new TimestampField("event_time", null, new CustomDateTimeFormat("yyyy-MM-dd HH:mm:ss.SSS")));
@@ -76,47 +110,92 @@ public class EngineMonitoringService {
 
     request.setPivot(pivot);
 
-
     if (request.getResultFormat() == null) {
       request.setResultFormat(new ObjectResultFormat(ENGINE));
     } else {
       request.getResultFormat().setConnType(ENGINE);
     }
 
-    if (request.getFromDate() == null) {
+    if (StringUtils.isEmpty(request.getFromDate())) {
       request.setFromDate(TimeFilter.MIN_DATETIME.toString());
     }
-    if (request.getToDate() == null) {
+    if (StringUtils.isEmpty(request.getToDate())) {
       request.setToDate(TimeFilter.MAX_DATETIME.toString());
     }
 
-    Query query;
-
-    query = MonitoringQuery.builder(new DefaultDataSource(datasourceName))
-        .filters(filters)
-        .granularity(request.getGranularity())
-        .aggregation(aggregations)
-        .format(request.getResultFormat())
-        .intervals(Lists.newArrayList(request.getFromDate(), request.getToDate()))
-        .build();
+    Query query = MonitoringQuery.builder(new DefaultDataSource(datasourceName))
+                           .filters(filters)
+                           .granularity(request.getGranularity())
+                           .aggregation(aggregations)
+                           .postAggregation(postAggregations)
+                           .format(request.getResultFormat())
+                           .intervals(Lists.newArrayList(request.getFromDate(), request.getToDate()))
+                           .build();
 
     String queryString = GlobalObjectMapper.writeValueAsString(query);
+
+    System.out.println(queryString);
 
     Optional<JsonNode> engineResult = engineRepository.query(queryString, JsonNode.class);
 
     Object result = request.getResultFormat()
-        .makeResult(engineResult.orElseGet(
-            () -> GlobalObjectMapper.getDefaultMapper().createArrayNode()
-            )
-        );
+                           .makeResult(engineResult.orElseGet(
+                               () -> GlobalObjectMapper.getDefaultMapper().createArrayNode()
+                                       )
+                           );
 
     return result;
+  }
 
+  public Object getEngineData(EngineMonitoringRequest queryRequest) {
+    Object data = search(queryRequest);
+    if (data instanceof MatrixResponse && queryRequest.getResultFormat() instanceof ChartResultFormat) {
+      MatrixResponse response = (MatrixResponse) data;
+      return response;
+    } else {
+      Map<String, Object> result = Maps.newHashMap();
+      ArrayNode engineData = (ArrayNode) data;
+      List<String> timeList = Lists.newArrayList();
+      List<Long> valueList = Lists.newArrayList();
+      List<Long> countList = Lists.newArrayList();
+      List<Float> avgList = Lists.newArrayList();
+      for (JsonNode rowNode : engineData) {
+        Map<String, Object> row = GlobalObjectMapper.getDefaultMapper().convertValue(rowNode, Map.class);
+        timeList.add(String.valueOf(row.get("event_time")));
+        valueList.add(Long.parseLong(String.valueOf(row.get("value"))));
+        if (queryRequest.getMonitoringTarget().isIncludeCount()) {
+          countList.add(Long.parseLong(String.valueOf(row.get("count"))));
+          avgList.add(Float.parseFloat(String.valueOf(row.get("avg_value"))));
+        }
+      }
+      result.put("time", timeList);
+      result.put("value", valueList);
+      result.put("total_value", valueList.stream().mapToLong(Long::longValue).sum());
+      if (queryRequest.getMonitoringTarget().isIncludeCount()) {
+        result.put("count", timeList);
+        result.put("avg_value", avgList);
+        result.put("total_count", countList.stream().mapToLong(Long::longValue).sum());
+      }
+      return result;
+    }
   }
 
   public List getMemory(EngineMonitoringRequest queryRequest) {
-    float useMem = new Float(getUseMemory(queryRequest));
-    float maxMem = new Float(getMaxMemory(queryRequest));
+    if (queryRequest.getMonitoringTarget() == null) {
+      queryRequest.setMonitoringTarget(new EngineMonitoringTarget());
+    }
+    EngineMonitoringTarget engineMonitoringTarget = queryRequest.getMonitoringTarget();
+    engineMonitoringTarget.setIncludeCount(true);
+    engineMonitoringTarget.setMetric(EngineMonitoringTarget.MetricType.MEM_USED);
+    queryRequest.setMonitoringTarget(engineMonitoringTarget);
+    Map result = (Map) getEngineData(queryRequest);
+    float useMem = new Float(String.valueOf(result.get("total_value")));
+
+    engineMonitoringTarget.setMetric(EngineMonitoringTarget.MetricType.MEM_MAX);
+    queryRequest.setMonitoringTarget(engineMonitoringTarget);
+    result = (Map) getEngineData(queryRequest);
+    float maxMem = new Float(String.valueOf(result.get("total_value")));
+
     float percentage = 100 * useMem / maxMem;
     List memList = Lists.newArrayList();
     Map<String, Object> useMemMap = Maps.newHashMap();
@@ -132,37 +211,6 @@ public class EngineMonitoringService {
     memList.add(useMemMap);
     memList.add(maxMemMap);
     return memList;
-  }
-
-  public long getUseMemory(EngineMonitoringRequest queryRequest) {
-    if (queryRequest.getMonitoringTarget() == null) {
-      queryRequest.setMonitoringTarget(new EngineMonitoringTarget());
-    }
-    EngineMonitoringTarget engineMonitoringTarget = queryRequest.getMonitoringTarget();
-    engineMonitoringTarget.setMetric(EngineMonitoringTarget.MetricType.MEM_USED);
-    queryRequest.setMonitoringTarget(engineMonitoringTarget);
-    return sumValue(queryRequest);
-  }
-
-  public long getMaxMemory(EngineMonitoringRequest queryRequest) {
-    if (queryRequest.getMonitoringTarget() == null) {
-      queryRequest.setMonitoringTarget(new EngineMonitoringTarget());
-    }
-    EngineMonitoringTarget engineMonitoringTarget = queryRequest.getMonitoringTarget();
-    engineMonitoringTarget.setMetric(EngineMonitoringTarget.MetricType.MEM_MAX);
-    queryRequest.setMonitoringTarget(engineMonitoringTarget);
-    return sumValue(queryRequest);
-  }
-
-  private long sumValue(EngineMonitoringRequest queryRequest) {
-    ArrayNode engineData = (ArrayNode) search(queryRequest);
-    ObjectMapper mapper = new ObjectMapper();
-    long value = 0L;
-    for (JsonNode rowNode : engineData) {
-      Map<String, Object> result = mapper.convertValue(rowNode, Map.class);
-      value += Long.parseLong(String.valueOf(result.get("value")));
-    }
-    return value;
   }
 
   public HashMap getConfigs(String configName) {
@@ -181,6 +229,11 @@ public class EngineMonitoringService {
       sizeMap.put("maxSize", Long.parseLong(String.valueOf(k.get("maxSize"))));
     }
     return sizeMap;
+  }
+
+  public List getDatasourceList() {
+    Optional<List> results = engineRepository.sql("SELECT datasource FROM sys.segments GROUP BY 1");
+    return results.get();
   }
 
   public List getPendingTasks() {
@@ -224,6 +277,9 @@ public class EngineMonitoringService {
         break;
       case MEM_USED:
         filters.add(new SelectorFilter("metric", "jvm/mem/used"));
+        break;
+      case QUERY_TIME:
+        filters.add(new SelectorFilter("metric", "query/time"));
         break;
     }
   }

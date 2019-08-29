@@ -99,6 +99,12 @@ public class DruidEngineRepository extends AbstractEngineRepository {
     return call(GET_CONFIGS, paramMap, clazz);
   }
 
+  public Optional<List> sql(String sql) {
+    Map paramMap = Maps.newHashMap();
+    paramMap.put("query", sql);
+    return call(SQL, Maps.newHashMap(), paramMap, List.class);
+  }
+
   public Optional<List> getPendingTasks() {
     return call(GET_PENDING_TASKS, Maps.newHashMap(), List.class);
   }
