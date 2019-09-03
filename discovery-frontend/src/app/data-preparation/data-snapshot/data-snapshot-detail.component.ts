@@ -353,7 +353,10 @@ export class DataSnapshotDetailComponent extends AbstractComponent implements On
    * Apply changed snapshot name to server
    */
   public editSnapshotName() {
-    if ((this.ssName.nativeElement.value !== this.selectedDataSnapshot.ssName) && this.ssName.nativeElement.value.trim() !== '') {
+    var re = /^[\w.]+$/g;
+    if( re.test( this.ssName.nativeElement.value ) === false ) {
+      Alert.error(this.translateService.instant('msg.dp.alert.ss.table.name'));
+    } else if ((this.ssName.nativeElement.value !== this.selectedDataSnapshot.ssName) && this.ssName.nativeElement.value.trim() !== '') {
       this.loadingShow();
       this.datasnapshotservice.editSnapshot({ssId: this.ssId, ssName: this.ssName.nativeElement.value}).then((result) => {
         this.loadingHide();

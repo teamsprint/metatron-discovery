@@ -35,6 +35,8 @@ import java.net.URISyntaxException;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataInputStream;
@@ -387,7 +389,16 @@ public class PrSnapshotService {
         List<String> ignoreKeys = Lists.newArrayList();
         ignoreKeys.add("ssId");
 
-        if(patchSnapshot.getSsName()!=null) { snapshot.setSsName(patchSnapshot.getSsName()); }
+        if(patchSnapshot.getSsName()!=null) {
+            String newSsName = patchSnapshot.getSsName();
+            Pattern pattern = Pattern.compile("^[\\w.]+$");
+            Matcher matcher = pattern.matcher(newSsName);
+            if( matcher.matches()==true ) {
+                snapshot.setSsName(newSsName);
+            } else {
+                throw PrepException.create(PrepErrorCodes.PREP_SNAPSHOT_ERROR_CODE, PrepMessageKey.MSG_DP_ALERT_INVALID_SNAPSHOT_NAME, newSsName);
+            }
+        }
         if(patchSnapshot.getStatus()!=null) { snapshot.setStatus(patchSnapshot.getStatus()); }
         if(patchSnapshot.getLineageInfo()!=null) { snapshot.setLineageInfo(patchSnapshot.getLineageInfo()); }
         if(patchSnapshot.getRuleCntDone()!=null) { snapshot.setRuleCntDone(patchSnapshot.getRuleCntDone()); }
