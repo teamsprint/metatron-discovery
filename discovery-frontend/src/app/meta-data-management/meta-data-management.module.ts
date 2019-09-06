@@ -24,6 +24,15 @@ import {CodeTableComponent} from './code-table/code-table.component';
 import {DetailCodeTableComponent} from './code-table/detail-code-table/detail-code-table.component';
 import {CreateCodeTableComponent} from './code-table/create-code-table/create-code-table.component';
 import {CodeTableService} from './code-table/service/code-table.service';
+
+import {LineageComponent} from './lineage/lineage.component';
+import {DetailLineageComponent} from './lineage/detail-lineage/detail-lineage.component';
+import {LineageService} from './lineage/service/lineage.service';
+import {EditLineagePopup} from './lineage/component/edit-lineage-popup.component';
+import {CreateLineageComponent} from './lineage/component/create-lineage.component';
+import {CreateLineageUploadFileComponent} from './lineage/component/create-lineage-upload-file.component';
+import {CreateLineageConfirmGridComponent} from './lineage/component/create-lineage-confirm-grid.component';
+
 import {ColumnDictionaryService} from './column-dictionary/service/column-dictionary.service';
 import {LinkedColumnDictionaryComponent} from './component/linked-column-dictionary/linked-column-dictionary.component';
 import {LinkedMetadataComponent} from './component/linked-metadata-columns/linked-metadata.component';
@@ -44,6 +53,9 @@ import {DetailModule} from './detail/detail.module';
 import {DatasourceMetadataSharedModule} from '../shared/datasource-metadata/datasource-metadata-shared.module';
 import {CreateMetadataModule} from "./metadata/create-metadata/create-metadata.module";
 import {SortingComponent} from "./component/sorting.component";
+import {MetadataDetailInformationComponent} from "./metadata/component/metadata-detail-information.component";
+import {MetadataDetailTopComponent} from "./metadata/component/metadata-detail-top.component";
+import {LayoutModule} from "../layout/layout/layout.module";
 
 @NgModule({
   imports: [
@@ -52,6 +64,7 @@ import {SortingComponent} from "./component/sorting.component";
     DatasourceShareModule,
     DatasourceMetadataSharedModule,
     CreateMetadataModule,
+    LayoutModule,
     RouterModule.forChild([
       {path: '', component: MetaDataManagementComponent, canActivate: [MetadataManagementGuard]},
       {path: ':tabId', component: MetaDataManagementComponent, canActivate: [MetadataManagementGuard]},
@@ -62,6 +75,7 @@ import {SortingComponent} from "./component/sorting.component";
         canActivate: [MetadataManagementGuard],
       },
       {path: 'code-table/:codeTableId', component: DetailCodeTableComponent, canActivate: [MetadataManagementGuard]},
+      {path: 'lineage/:lineageId', component: DetailLineageComponent, canActivate: [MetadataManagementGuard]},
     ]),
   ],
   declarations: [
@@ -87,15 +101,27 @@ import {SortingComponent} from "./component/sorting.component";
     ChooseCodeTableComponent,
     // 컬럼 사전 선택 텀포넌트
     ChooseColumnDictionaryComponent,
-
+    //리니지
+    LineageComponent,
+    DetailLineageComponent,
+    EditLineagePopup,
+    CreateLineageComponent,
+    CreateLineageUploadFileComponent,
+    CreateLineageConfirmGridComponent,
     SelectCatalogComponent,
     CatalogComponent,
+    // Metadata Detail
+    MetadataDetailTopComponent,
+    // Metadata Detail Tabs
+    MetadataDetailInformationComponent
   ],
   providers: [
     // 코드 테이블 서비스
     CodeTableService,
     // 컬럼 사전 서비스
     ColumnDictionaryService,
+    // 리니지 서비스
+    LineageService,
     // 메타데이터 서비스
     MetadataService,
     // 데이터소스 서비스

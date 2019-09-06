@@ -61,6 +61,8 @@ export class CriterionComponent extends AbstractComponent {
     // if exist extension criterion list in criterion list param
     if (!_.isNil(extensionCriterion)) {
       this._extensionCriterionList = _.cloneDeep(extensionCriterion.subCriteria);
+      
+      this.changedFilter.emit();
     }
     // if exist default filters
     if (!_.isNil(criterionResult.defaultFilters) && criterionResult.defaultFilters.length > 0) {
@@ -126,6 +128,7 @@ export class CriterionComponent extends AbstractComponent {
   public removeExtensionCriterion(criterion: Criteria.ListCriterion): void {
     // remove criterion in used criterion list
     this.usedCriterionList.splice(this.usedCriterionList.findIndex(usedCriterion => usedCriterion.criterionKey === criterion.criterionKey),1);
+
     // remove criterion in search params
     this.queryParams[Criteria.KEY_EXTENSIONS].splice(this.queryParams[Criteria.KEY_EXTENSIONS].findIndex(paramItem => paramItem === criterion.criterionKey), 1);
     Object.keys(this.queryParams).forEach((key) => {
@@ -153,6 +156,7 @@ export class CriterionComponent extends AbstractComponent {
    * @return {boolean}
    */
   public isExtensionCriterion(criterion: Criteria.ListCriterion): boolean {
+    // do not allow remove source type from default criterion
     return this._extensionCriterionList.findIndex(extensionCriterion => extensionCriterion.criterionKey === criterion.criterionKey) !== -1;
   }
 

@@ -107,7 +107,6 @@ export class MetadataService extends AbstractService {
    * @returns {Promise<any>}
    */
   public updateMetadata(id: string, params: any): Promise<any> {
-
     return this.patch(this.URL_METADATA + `/${id}`, params);
   }
 
@@ -242,5 +241,38 @@ export class MetadataService extends AbstractService {
       url += '?' + CommonUtil.objectToUrlString(params);
     }
     return this.get(url);
+  }
+
+  /**
+   * Get Top user in Metadata Detail
+   * @param {string} metaDataId
+   * @returns {Promise<any>}
+   */
+  public getTopUserInMetadataDetail(metaDataId: string): Promise<any> {
+    return this.get(this.URL_METADATA + `/${metaDataId}/users/frequency`);
+  }
+
+  /**
+   * Get Recently Updated in Metadata Detail Info
+   * @param {string} metaDataId
+   * @returns {Observable<any>}
+   */
+  public getRecentlyUpdatedInMetadataDetail(metaDataId: string): Promise<any> {
+    return this.get(this.URL_METADATA + `/${metaDataId}/history`);
+  }
+
+
+  public getMetadataTagList(projection: string, params?): Promise<any> {
+    // URL
+    let url: string = this.URL_METADATA + `/tags?projection=${projection}`;
+    // if exist params
+    if (params) {
+      url += '&' + CommonUtil.objectToUrlString(params);
+    }
+    return this.get(url);
+  }
+
+  public isShowLineage(): Promise<any> {
+    return this.get(this.API_URL + `extensions/lineage`)
   }
 }

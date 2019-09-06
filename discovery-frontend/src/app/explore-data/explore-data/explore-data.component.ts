@@ -12,40 +12,64 @@
  * limitations under the License.
  */
 
-import {Component, ElementRef, HostListener, Injector, OnDestroy, OnInit} from '@angular/core';
+import {
+  Component,
+  ComponentFactoryResolver,
+  ComponentRef,
+  ElementRef,
+  Injector,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+  ViewContainerRef
+} from '@angular/core';
 import {AbstractComponent} from '../../common/component/abstract.component';
 import {MetadataService} from "../../meta-data-management/metadata/service/metadata.service";
-import {Metadata} from "../../domain/meta-data-management/metadata";
+import {Metadata, SourceType} from "../../domain/meta-data-management/metadata";
 import * as _ from 'lodash';
-import {CatalogService} from "../../meta-data-management/catalog/service/catalog.service";
-import {Catalog} from "../../domain/catalog/catalog";
-import {StringUtil} from "../../common/util/string.util";
+import {MetadataContainerComponent} from "./popup/metadata-container.component";
+import {DatasourceService} from "../../datasource/service/datasource.service";
+import {ExploreDataListComponent} from "./explore-data-list.component";
+import {EventBroadcaster} from "../../common/event/event.broadcaster";
+import {ExploreDataConstant} from "../constant/explore-data-constant";
+import {Subscription} from "rxjs";
+import {meta} from "@turf/turf";
 
 @Component({
   selector: 'app-exploredata-view',
   templateUrl: './explore-data.component.html',
+  entryComponents: [MetadataContainerComponent]
 })
 export class ExploreDataComponent extends AbstractComponent implements OnInit, OnDestroy {
 
+  @ViewChild('component_metadata_detail', {read: ViewContainerRef}) entry: ViewContainerRef;
+
+  @ViewChild(ExploreDataListComponent)
+  private readonly _exploreDataListComponent: ExploreDataListComponent;
+
+  entryRef: ComponentRef<MetadataContainerComponent>;
+
   selectedMetadata: Metadata;
-  selectedCatalog: Catalog.Tree;
 
   // data
   mode: ExploreMode = ExploreMode.MAIN;
   sourceTypeCount: number = 0;
   stagingTypeCount: number = 0;
   databaseTypeCount: number = 0;
-  catalogList: Catalog.Tree;
-  catalogSearchKeyword: string;
+  datasetTypeCount: number = 0;
 
-  isFoldingNavigation: boolean;
+  subscription: Subscription;
+
+  readonly $layoutContentsClass = $( '.ddp-layout-contents' );
 
   // enum
   readonly EXPLORE_MODE = ExploreMode;
 
   // 생성자
   constructor(private metadataService: MetadataService,
-              private catalogService: CatalogService,
+              private resolver: ComponentFactoryResolver,
+              private dataSourceService: DatasourceService,
+              private broadcaster: EventBroadcaster,
               protected element: ElementRef,
               protected injector: Injector) {
     super(element, injector);
@@ -54,72 +78,129 @@ export class ExploreDataComponent extends AbstractComponent implements OnInit, O
   // Init
   public ngOnInit() {
     super.ngOnInit();
+    let broadCastSuccessCount: number = 0;
+    // subscribe
+    this.subscription = this.broadcaster.on(ExploreDataConstant.BroadCastKey.EXPLORE_INITIAL).subscribe(() => {
+      if (broadCastSuccessCount >= 2) {
+        this.loadingHide();
+      } else {
+        broadCastSuccessCount++;
+      }
+    });
 
-    const init = async () => {
-      this.loadingShow();
+    this.loadingShow();
+    const initial = async () => {
       await this._setMetadataSourceTypeCount();
-      await this._setCatalogList(Catalog.Constant.CATALOG_ROOT_ID);
     };
-    init().catch(error => this.commonExceptionHandler(error));
+    initial().then(() => this.broadcaster.broadcast(ExploreDataConstant.BroadCastKey.EXPLORE_INITIAL)).catch(() => this.broadcaster.broadcast(ExploreDataConstant.BroadCastKey.EXPLORE_INITIAL));
   }
 
   public ngAfterViewInit() {
     super.ngAfterViewInit();
-    $( '.ddp-layout-contents' ).addClass( 'ddp-layout-meta' )
+    this.$layoutContentsClass.addClass( 'ddp-layout-meta' );
   }
 
   // Destroy
   public ngOnDestroy() {
     super.ngOnDestroy();
-    $( '.ddp-layout-contents' ).removeClass( 'ddp-layout-meta' )
+    this.$layoutContentsClass.removeClass( 'ddp-layout-meta' );
+    this.subscription.unsubscribe();
   }
 
-  @HostListener('window:scroll')
-  onScrolled() {
-    if($(window).scrollTop() > 0){
-      $('.ddp-layout-contents').addClass('ddp-scroll');
-    }
-    else if($(window).scrollTop() === 0) {
-      $('.ddp-layout-contents').removeClass('ddp-scroll');
-    }
-  }
-
-  isEmptyCatalogSearchKeyword(): boolean {
-    return StringUtil.isEmpty(this.catalogSearchKeyword);
-  }
-
-  onChangeTab() {
-    // TODO 임시
+  goToExploreMain(): void {
     this.mode = ExploreMode.MAIN;
   }
 
-  onChangeFoldingNavigation(): void {
-    this.isFoldingNavigation = !this.isFoldingNavigation;
+  onChangedSearch(): void {
+    this._setExploreListMode();
+    this._exploreDataListComponent.initMetadataList();
   }
 
-  onChangeCatalogSearchValue(value: string): void {
-    this.catalogSearchKeyword = value;
-    // if empty catalog search keyword
-    if (this.isEmptyCatalogSearchKeyword()) {
-      this.loadingShow();
-      this._setCatalogList(Catalog.Constant.CATALOG_ROOT_ID)
-        .then(() => this.loadingHide())
-        .catch(error => this.commonExceptionHandler(error));
-    } else {
-      this._setCatalogListUsedSearch();
-    }
-  }
-
-  onClickCatalog(catalog: Catalog.Tree): void {
-    this.mode = ExploreMode.CATALOG;
-    this.selectedCatalog = catalog;
+  onChangedLnbData(): void {
+    this._setExploreListMode();
+    this._exploreDataListComponent.initMetadataList();
   }
 
   onClickMetadata(metadata: Metadata) {
-    this.selectedMetadata = metadata
+    // declare variables needed for metadata-container(modal) component
+    let metadataDetail;
+    let recentlyQueriesForDatabase;
+    let recentlyQueriesForDataSource;
+    let topUserList;
+    let recentlyUpdatedList;
+
+    // get datas...
+    const getRecentlyQueriesForDatabase = async (sourcetype: SourceType) => {
+      if (sourcetype === SourceType.STAGEDB) {
+        recentlyQueriesForDatabase = await this.dataSourceService.getRecentlyQueriesInMetadataDetailForDatabase(metadataDetail.source.id, this.page.page, this.page.size, this.page.sort)
+          .catch(error => this.commonExceptionHandler(error));
+      } else {
+        if (metadataDetail.source.source != undefined) {
+          recentlyQueriesForDatabase = await this.dataSourceService.getRecentlyQueriesInMetadataDetailForDatabase(metadataDetail.source.source.id, this.page.page, this.page.size, this.page.sort)
+            .catch(error => this.commonExceptionHandler(error));
+        } else {
+          recentlyQueriesForDatabase = await this.dataSourceService.getRecentlyQueriesInMetadataDetailForDatabase(metadataDetail.source.id, this.page.page, this.page.size, this.page.sort)
+            .catch(error => this.commonExceptionHandler(error));
+        }
+      }
+    };
+
+    const getRecentlyQueriesForDataSource = async () => {
+      if (metadataDetail.source.source !== undefined) {
+        recentlyQueriesForDataSource = await this.dataSourceService.getRecentlyQueriesInMetadataDetailForDataSource(metadataDetail.source.source.id, this.page.page, this.page.size, this.page.sort)
+          .catch(error => this.commonExceptionHandler(error));
+      }
+    };
+
+    const getTopUser = async () => {
+      topUserList = await this.metadataService.getTopUserInMetadataDetail(metadata.id).catch(error => this.commonExceptionHandler(error));
+      topUserList = topUserList === undefined ? [] : topUserList;
+    };
+
+    const getRecentlyUpdatedList = async () => {
+      recentlyUpdatedList = await this.metadataService.getRecentlyUpdatedInMetadataDetail(metadata.id).catch(error => this.commonExceptionHandler(error));
+    };
+
+    // get metadataDetail to use datasourceService which is using metadataDetail
+    this.metadataService.getDetailMetaData(metadata.id).then(async (result) => {
+      metadataDetail = result;
+
+      await getTopUser();
+      await getRecentlyUpdatedList();
+
+      if (metadata.sourceType === SourceType.ENGINE) {
+        await getRecentlyQueriesForDataSource();
+        this.entryRef = this.entry.createComponent(this.resolver.resolveComponentFactory(MetadataContainerComponent));
+        this.entryRef.instance.metadataDetailData = metadataDetail;
+        this.entryRef.instance.topUserList = topUserList;
+        this.entryRef.instance.recentlyUpdatedList = recentlyUpdatedList;
+        if (recentlyQueriesForDataSource !== undefined) {
+          if (recentlyQueriesForDataSource['_embedded']) {
+            this.entryRef.instance.recentlyQueriesForDataSource = recentlyQueriesForDataSource['_embedded']['datasourcequeryhistories'];
+          }
+        }
+
+        this.entryRef.instance.metadataId = metadata.id;
+      } else if (metadata.sourceType === SourceType.JDBC || metadata.sourceType === SourceType.STAGEDB) {
+        await getRecentlyQueriesForDatabase(metadata.sourceType);
+        this.entryRef = this.entry.createComponent(this.resolver.resolveComponentFactory(MetadataContainerComponent));
+        this.entryRef.instance.metadataDetailData = metadataDetail;
+        this.entryRef.instance.topUserList = topUserList;
+        this.entryRef.instance.recentlyUpdatedList = recentlyUpdatedList;
+        if (recentlyQueriesForDatabase['_embedded']) {
+          this.entryRef.instance.recentlyQueriesForDataBase = recentlyQueriesForDatabase['_embedded']['queryhistories'];
+        }
+        this.entryRef.instance.metadataId = metadata.id;
+      }
+      this.loadingHide();
+      this.entryRef.instance.closedPopup.subscribe(() => {
+        // close
+        this.entryRef.destroy();
+      });
+    }).catch(error => this.commonExceptionHandler(error));
   }
 
-  onCloseMetadataContainer() {
+  onCloseMetadataContainer(): void {
     this.selectedMetadata = null;
   }
 
@@ -136,25 +217,16 @@ export class ExploreDataComponent extends AbstractComponent implements OnInit, O
     }
   }
 
-  private async _setCatalogList(catalogId: string) {
-    const result = await this.catalogService.getTreeCatalogs(catalogId);
-    if (catalogId === Catalog.Constant.CATALOG_ROOT_ID) {
-      this.catalogList = result;
+  private _setExploreListMode(): void {
+    // if MAIN component
+    if (this.mode === ExploreMode.MAIN) {
+      this.mode = ExploreMode.LIST;
+      this.safelyDetectChanges();
     }
-  }
-
-  private _setCatalogListUsedSearch(): void {
-    this.loadingShow();
-    this.catalogService.getCatalogs({nameContains: this.catalogSearchKeyword}, 'forSimpleTreeView')
-      .then((result) => {
-        this.catalogList = result;
-        this.loadingHide();
-      })
-      .catch(error => this.commonExceptionHandler(error));
   }
 }
 
 enum ExploreMode {
   MAIN = 'MAIN',
-  CATALOG = 'CATALOG'
+  LIST = 'LIST'
 }

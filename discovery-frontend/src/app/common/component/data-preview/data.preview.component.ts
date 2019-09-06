@@ -24,7 +24,12 @@ import {
   ViewChild,
   ViewChildren
 } from '@angular/core';
-import {BoardDataSource, Dashboard, JoinMapping, QueryParam} from '../../../domain/dashboard/dashboard';
+import {
+  BoardDataSource,
+  Dashboard,
+  JoinMapping,
+  QueryParam
+} from '../../../domain/dashboard/dashboard';
 import {DatasourceService} from 'app/datasource/service/datasource.service';
 import {
   ConnectionType,
@@ -49,7 +54,11 @@ import {CommonUtil} from '../../util/common.util';
 import {DataDownloadComponent, PreviewResult} from '../data-download/data.download.component';
 import {MetadataColumn} from '../../../domain/meta-data-management/metadata-column';
 import {DashboardUtil} from '../../../dashboard/util/dashboard.util';
-import {ImplementorType, Dataconnection, AuthenticationType} from '../../../domain/dataconnection/dataconnection';
+import {
+  AuthenticationType,
+  Dataconnection,
+  ImplementorType
+} from '../../../domain/dataconnection/dataconnection';
 import {PeriodData} from "../../value/period.data.value";
 import {TimeRangeFilter} from "../../../domain/workbook/configurations/filter/time-range-filter";
 import {Filter} from "../../../domain/workbook/configurations/filter/filter";
@@ -57,6 +66,9 @@ import {DIRECTION, Sort} from "../../../domain/workbook/configurations/sort";
 import {TimezoneService} from "../../../data-storage/service/timezone.service";
 import {StringUtil} from "../../util/string.util";
 import {StorageService} from "../../../data-storage/service/storage.service";
+import {TimeAllFilter} from "../../../domain/workbook/configurations/filter/time-all-filter";
+import {BoundFilter} from "../../../domain/workbook/configurations/filter/bound-filter";
+import {InclusionFilter} from "../../../domain/workbook/configurations/filter/inclusion-filter";
 
 declare let echarts: any;
 
@@ -223,7 +235,8 @@ export class DataPreviewComponent extends AbstractPopupComponent implements OnIn
     if (this.source['configuration']) {
       this.isDashboard = true;
       const dashboardInfo: Dashboard = (<Dashboard>this.source);
-      this.datasources = _.cloneDeep(DashboardUtil.getMainDataSources(dashboardInfo));
+      //this.datasources = _.cloneDeep(DashboardUtil.getMainDataSources(dashboardInfo));
+      this.datasources = _.cloneDeep(dashboardInfo.dataSources);
     } else {
       this.isDashboard = false;
       this.datasources.push(<Datasource>_.cloneDeep(this.source));
@@ -350,22 +363,19 @@ export class DataPreviewComponent extends AbstractPopupComponent implements OnIn
 
       let params = new QueryParam();
       params.limits.limit = this.rowNum < 1 ? 100 : this.rowNum;
-      if (this.isDashboard) {
+      //if (this.isDashboard) {
         // 대시보드인 경우
-        params = this._getDashboardQueryParam( source, (<Dashboard>this.source), params );
-      } else {
+        //params = this._getDashboardQueryParam( source, (<Dashboard>this.source), params );
+      //} else {
         // 데이터소스인 경우
         const dsInfo = _.cloneDeep(<Datasource>source);
         params.dataSource.name = dsInfo.engineName;
         params.dataSource.engineName = dsInfo.engineName;
         params.dataSource.connType = dsInfo.connType.toString();
         params.dataSource.type = 'default';
-      }
+      //}
 
-      if (this._filters && 0 < this._filters.length) {
-        params.filters = this._filters;
-      }
-      // params.metaQuery = true;
+      params.filters = (this._filters && 0 < this._filters.length) ? this._filters : [];
 
       this.loadingShow();
       this.datasourceService.getDatasourceQuery(params).then(gridData => {
@@ -378,10 +388,10 @@ export class DataPreviewComponent extends AbstractPopupComponent implements OnIn
         this.datasourceService.getDatasourceQuery(params).then(metaData => {
           this.downloadPreview = new PreviewResult(metaData.estimatedSize, metaData.totalCount);
           (this.rowNum > this.downloadPreview.count) && (this.rowNum = this.downloadPreview.count);
-          res(gridData);
-          this.loadingHide();
+        }).catch((err) => {
         });
-
+        res(gridData);
+        this.loadingHide();
       }).catch((err) => {
         console.error(err);
         rej(err);
@@ -970,7 +980,8 @@ export class DataPreviewComponent extends AbstractPopupComponent implements OnIn
             : []
         },
         // TODO 필드 확인
-        userFields: []
+        userFields: [],
+        filters : []
       };
       // 선택된 measure
       params.pivot.columns.push({
@@ -979,6 +990,18 @@ export class DataPreviewComponent extends AbstractPopupComponent implements OnIn
         name: this.selectedField.name
       });
 
+      const filters = this.columns
+        .filter( item => item.filtering )
+        .map( item => {
+          if( FieldRole.TIMESTAMP === item.role ) {
+            return new TimeAllFilter( item );
+          } else if( FieldRole.MEASURE === item.role ) {
+            return new BoundFilter(item.name);
+          } else {
+            return new InclusionFilter( item.name );
+          }
+        });
+      params.filters = filters;
 
       // 측정값에 대해 데이터 조회
       this.datasourceService.getDatasourceQuery(params)
@@ -1112,10 +1135,12 @@ export class DataPreviewComponent extends AbstractPopupComponent implements OnIn
     // 메타데이터가 존재한다면
     if (this.isExistMetaData(source)) {
       const fieldMetaData: MetadataColumn = _.find(source.uiMetaData.columns, {'physicalName': field.name});
-      // code table
-      field['codeTable'] = fieldMetaData.codeTable;
-      // dictionary
-      field['dictionary'] = fieldMetaData.dictionary;
+      if (!_.isUndefined(fieldMetaData)) {
+        // code table
+        field['codeTable'] = fieldMetaData.codeTable;
+        // dictionary
+        field['dictionary'] = fieldMetaData.dictionary;
+      }
     }
   }
 

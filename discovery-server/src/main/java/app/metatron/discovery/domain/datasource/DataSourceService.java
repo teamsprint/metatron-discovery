@@ -342,6 +342,8 @@ public class DataSourceService {
                                                   "createdTimeFrom", "createdTimeTo", "", "",
                                                   "msg.storage.ui.criterion.created-time"));
     criteria.add(createdTimeCriterion);
+    criteria.add(new ListCriterion(DataSourceListCriterionKey.SOURCE_TYPE,
+                                   ListCriterionType.CHECKBOX, "msg.storage.ui.criterion.source-type"));
 
     //DateTime
     //    criteria.add(new ListCriterion(DataSourceListCriterionKey.DATETIME,
@@ -367,8 +369,6 @@ public class DataSourceService {
                                                     ListCriterionType.CHECKBOX, "msg.storage.ui.criterion.connection-type"));
     //    moreCriterion.addSubCriterion(new ListCriterion(DataSourceListCriterionKey.DATASOURCE_TYPE,
     //            ListCriterionType.CHECKBOX, "msg.storage.ui.criterion.ds-type"));
-    moreCriterion.addSubCriterion(new ListCriterion(DataSourceListCriterionKey.SOURCE_TYPE,
-                                                    ListCriterionType.CHECKBOX, "msg.storage.ui.criterion.source-type"));
     criteria.add(moreCriterion);
 
     //description
@@ -445,21 +445,14 @@ public class DataSourceService {
         criterion.addFilter(new ListFilter(criterionKey, "workspace",
                                            myWorkspace.getId(), myWorkspace.getName()));
 
-        //owner public workspace not published
-        List<Workspace> ownerPublicWorkspaces
-            = workspaceService.getPublicWorkspaces(false, true, false, null);
-        for(Workspace workspace : ownerPublicWorkspaces){
-          criterion.addFilter(new ListFilter(criterionKey, "workspace",
-                                             workspace.getId(), workspace.getName()));
-        }
-
         //member public workspace not published
         List<Workspace> memberPublicWorkspaces
-            = workspaceService.getPublicWorkspaces(false, false, false, null);
+            = workspaceService.getPublicWorkspaces(false, null, null, null);
         for (Workspace workspace : memberPublicWorkspaces) {
           criterion.addFilter(new ListFilter(criterionKey, "workspace",
                                              workspace.getId(), workspace.getName()));
         }
+
         break;
       case CREATOR:
         //allow search

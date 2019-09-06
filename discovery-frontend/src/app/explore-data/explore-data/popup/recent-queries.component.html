@@ -2,19 +2,19 @@
   <!-- top -->
   <div class="ddp-ui-top">
     <div class="ddp-data-name">
-      Recently Queries
+      {{'msg.explore.ui.detail.recent.query'| translate}}
       <div class="ddp-data-info"><em class="ddp-icon-info"></em>List up to the last 100 cases.</div>
     </div>
     <em class="ddp-btn-popup-close" (click)="closePopup()"></em>
   </div>
   <!-- //top -->
-  <!-- cpmtemts -->
-  <div class="ddp-ui-preview-contents ">
-    <table class="ddp-table-form ddp-table-type3">
+  <!--  if sourceType is ENGINE(dataSource)    -->
+  <div class="ddp-ui-preview-contents">
+    <table class="ddp-table-form ddp-table-type3" *ngIf="recentlyQueriesForDataSource.length > 0">
       <colgroup>
         <col width="15%">
-        <col width="15%">
-        <col width="20%">
+        <col width="10%">
+        <col width="10%">
         <col width="150px">
         <col width="*">
       </colgroup>
@@ -27,35 +27,59 @@
         <th>Query</th>
       </tr>
       </thead>
-      <tbody>
-      <tr>
-        <td>yyyy-mm-dd hh:mm:ss</td>
-        <td>SUMMARY</td>
-        <td>John Smith</td>
-        <td> <span class="ddp-data-state ddp-success">Success</span></td>
+      <!--  if sourceType is ENGINE(dataSource)    -->
+      <tbody >
+      <tr *ngFor="let recentQuery of recentlyQueriesForDataSource">
+        <td>{{ recentQuery.createdTime | mdate:'YYYY-MM-DD HH:mm:ss' }}</td>
+        <td>{{ recentQuery.queryType }}</td>
+        <td>{{ recentQuery.creator.fullName }}</td>
+        <td> <span class="ddp-data-state" [ngClass]="recentQuery.succeed ? 'ddp-success' : 'ddp-fail'">{{ recentQuery.succeed ? 'Success' : 'Fail' }}</span></td>
         <td>
           <div class="ddp-txt-long ddp-type-button">
-            <a href="javascript:" class="ddp-btn-selection ddp-fright" (click)="onClickCopy()">Copy</a>
-            <span class="ddp-txt-name" title="TammarneyTamTammarneyTammarneTammarneyTammarneTammarneyTammarneTammarneyTammarnemarne">TammarneyTamTammarneyTammarneTammarneyTammarneTammarneyTammarneTammarneyTammarnemarne</span>
+            <a href="javascript:" class="ddp-btn-selection ddp-fright" (click)="onClickCopy(recentQuery.query)">Copy</a>
+            <span class="ddp-txt-name" title="{{ recentQuery.query }}">{{ recentQuery.query }}</span>
           </div>
         </td>
       </tr>
+      <!--  if sourceType is ENGINE(dataSource)    -->
+    </table>
+  </div>
+
+  <!--  if sourceType is JDBC(database) || StageDB    -->
+  <div class="ddp-ui-preview-contents" *ngIf="recentlyQueriesForDataBase.length > 0">
+    <table class="ddp-table-form ddp-table-type3">
+      <colgroup>
+        <col width="15%">
+        <col width="10%">
+        <col width="150px">
+        <col width="*">
+      </colgroup>
+      <thead>
       <tr>
-        <td>yyyy-mm-dd hh:mm:ss</td>
-        <td>SUMMARY</td>
-        <td>John Smith</td>
-        <td> <span class="ddp-data-state ddp-fail">fail</span></td>
+        <th>Date</th>
+        <th>User</th>
+        <th>Result</th>
+        <th>Query</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let recentQuery of recentlyQueriesForDataBase">
+        <td>{{ recentQuery['createdTime'] | mdate:'YYYY-MM-DD HH:mm:ss'}}</td>
+        <td>{{ recentQuery['createdBy']['fullName'] }}</td>
+        <td> <span class="ddp-data-state" [ngClass]="recentQuery.queryResultStatus === 'SUCCESS' ? 'ddp-success' : 'ddp-fail'">{{ recentQuery.queryResultStatus === 'SUCCESS'? 'Success' : 'Fail' }}</span></td>
         <td>
           <div class="ddp-txt-long ddp-type-button">
-            <a href="javascript:" class="ddp-btn-selection ddp-fright">Copy</a>
-            <span class="ddp-txt-name" title="TammarneyTamTammarneyTammarneTammarneyTammarneTammarneyTammarneTammarneyTammarnemarne">TammarneyTamTammarneyTammarneTammarneyTammarneTammarneyTammarneTammarneyTammarnemarne</span>
+            <a href="javascript:" class="ddp-btn-selection ddp-fright" (click)="onClickCopy(recentQuery.query)">Copy</a>
+            <span class="ddp-txt-name" title="{{ recentQuery.query }}">{{ recentQuery['query'] }}</span>
           </div>
         </td>
       </tr>
       </tbody>
-
     </table>
 
   </div>
+  <!--  if sourceType is JDBC(database)    -->
+
+
   <!-- //cpmtemts -->
 </div>

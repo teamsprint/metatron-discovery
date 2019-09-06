@@ -36,6 +36,7 @@ import {Metadata, SourceType} from '../../domain/meta-data-management/metadata';
 })
 export class MetadataDetailComponent extends AbstractComponent implements OnInit, OnDestroy {
 
+
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   | Private Variables
   |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
@@ -75,6 +76,8 @@ export class MetadataDetailComponent extends AbstractComponent implements OnInit
 
   public selectedMetadataId: string;
 
+  public metadata: Metadata;
+
   // 이름 에디팅여부
   public isNameEdit: boolean = false;
   public isDescEdit: boolean = false;
@@ -84,6 +87,11 @@ export class MetadataDetailComponent extends AbstractComponent implements OnInit
 
   public name: string;
   public desc: string;
+
+  public metadataLoaded: boolean = false;
+
+  // Lineage 탭 제어
+  public showLineageTab: boolean = false;
 
   /**
    * Metadata SourceType Enum
@@ -106,6 +114,10 @@ export class MetadataDetailComponent extends AbstractComponent implements OnInit
     this.activatedRoute.params.subscribe((params) => {
 
       this.selectedMetadataId = params['metadataId'];
+      if( params['tab'] ) {
+        this.tab = params['tab'];
+        this.metadataLoaded = false;
+      }
 
       this.getMetadataDetail();
     });
@@ -115,6 +127,8 @@ export class MetadataDetailComponent extends AbstractComponent implements OnInit
   | Override Method
   |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
   public ngOnInit() {
+    this._showLineageTab();
+
     super.ngOnInit();
   }
 
@@ -129,8 +143,16 @@ export class MetadataDetailComponent extends AbstractComponent implements OnInit
    * Go back
    */
   public goBack() {
-    this._location.back();
+    this.router.navigate(['management/metadata/metadata']);
+    //this._location.back();
   } // function - goBack
+
+  /**
+   * Change current selected tab
+   */
+  public changeTab(tab: string) {
+    this.tab = tab;
+  }
 
   /**
    * Get metadata detail information
@@ -140,7 +162,9 @@ export class MetadataDetailComponent extends AbstractComponent implements OnInit
     this.metadataService.getDetailMetaData(this.selectedMetadataId).then((result) => {
       this.loadingHide();
       if (result) {
+        this.metadata = result;
         this.metadataModelService.setMetadata(result);
+        this.metadataLoaded = true;
       }
     }).catch(() => {
       this.loadingHide();
@@ -274,9 +298,18 @@ export class MetadataDetailComponent extends AbstractComponent implements OnInit
   | Private Method
   |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
+  private _showLineageTab() {
+    this.metadataService.isShowLineage()
+      .then((result) => {
+        this.showLineageTab = result;
+      })
+      .catch(error => {});
+  }
+
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   | Private Method - getter
   |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
 }
+
 

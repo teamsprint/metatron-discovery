@@ -15,9 +15,11 @@
 
 .ddp-form-search.ddp-full {width:100%;}
 
-/*??*/
-.ddp-ui-searching .ddp-btn-search-close {display:inline-block; padding:5px; position:absolute; top:50%; right:5px; margin-top:-8px; cursor:pointer; font-size:0px;}
-.ddp-ui-searching .ddp-btn-search-close:before {display:inline-block; width:7px; height:7px; background:url(../../../images/btn_sclose.png) no-repeat; background-position:left -38px; content:'';}
+.ddp-ui-searching {position:relative; margin:0 16px 0 16px; padding:0 30px 0 26px; background-color:#f3f4f9}
+.ddp-ui-searching .ddp-icon-search {display:inline-block; position:absolute; top:50%; left:8px; margin-top:-7px;  width:13px; height:14px; background:url(../../../images/btn_search.png) no-repeat left -51px; }
+.ddp-ui-searching.type-search input {color:#666db7;}
+.ddp-ui-searching input {display:block; width:100%; padding:5px 0 4px 0; border:none; font-size:13px; line-height:21px; background:none;}
+.ddp-ui-searching .ddp-btn-delete {display:inline-block; position:absolute; top:50%; right:8px; margin-top:-8px; width:15px; height:15px; background:url(../../../images/btn_close.png) no-repeat; background-position:-16px -132px;}
 
 .ddp-form-search2 {position:relative; padding-right:30px; border:1px solid #d0d1d9;}
 .ddp-form-search2 input {display:block; width:100%; padding:6px 10px 6px 10px; box-sizing:border-box; border:none;}
@@ -72,7 +74,8 @@
 .ddp-select-search.ddp-selected .ddp-box-layout4 {display:block; z-index:20;}
 .ddp-select-search.ddp-selected a.ddp-ui-search2 {text-decoration:underline;}
 .ddp-select-search.ddp-selected .ddp-ui-search2 span.ddp-icon-search {background-color:#e3e3e8;}
-
+.ddp-type-search.type-box {border:1px solid #d0d1d8; border-radius:2px; padding-left:35px; box-sizing:border-box;}
+.ddp-type-search.type-box:before {left:12px;}
 .ddp-type-search {position:relative; padding:0 20px 0 23px;}
 .ddp-type-search:before {display:Inline-block; position:absolute; top:50%; left:0; width:14px; height:14px; margin-top:-7px; background:url(../../../images/icon_search.png) no-repeat; background-position:-15px -12px; content:'';}
 .ddp-type-search .ddp-btn-delete {display:none; position:absolute; top:50%; right:0; margin-top:-8px; width:15px; height:15px; background:url(../../../images/btn_close.png) no-repeat; background-position:left -132px;}

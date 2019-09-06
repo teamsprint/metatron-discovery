@@ -14,18 +14,6 @@
 
 package app.metatron.discovery.domain.mdm;
 
-import app.metatron.discovery.common.entity.DomainType;
-import app.metatron.discovery.common.entity.SearchParamValidator;
-import app.metatron.discovery.common.exception.ResourceNotFoundException;
-import app.metatron.discovery.common.data.projection.DataGrid;
-import app.metatron.discovery.domain.CollectionPatch;
-import app.metatron.discovery.domain.datasource.DataSourceService;
-import app.metatron.discovery.domain.tag.Tag;
-import app.metatron.discovery.domain.tag.TagProjections;
-import app.metatron.discovery.domain.tag.TagService;
-import app.metatron.discovery.util.HttpUtils;
-import app.metatron.discovery.util.ProjectionUtils;
-
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
@@ -45,15 +33,36 @@ import org.springframework.data.rest.webmvc.RepositoryRestController;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.format.support.DefaultFormattingConversionService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.LinkedHashMap;
-import javax.servlet.http.HttpServletResponse;
-import java.util.HashMap;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import javax.servlet.http.HttpServletResponse;
+
+import app.metatron.discovery.common.data.projection.DataGrid;
+import app.metatron.discovery.common.entity.DomainType;
+import app.metatron.discovery.common.entity.SearchParamValidator;
+import app.metatron.discovery.common.exception.ResourceNotFoundException;
+import app.metatron.discovery.domain.CollectionPatch;
+import app.metatron.discovery.domain.datasource.DataSourceService;
+import app.metatron.discovery.domain.tag.Tag;
+import app.metatron.discovery.domain.tag.TagProjections;
+import app.metatron.discovery.domain.tag.TagService;
+import app.metatron.discovery.domain.user.User;
+import app.metatron.discovery.domain.user.UserRepository;
+import app.metatron.discovery.util.HttpUtils;
+import app.metatron.discovery.util.ProjectionUtils;
 
 @RepositoryRestController
 public class MetadataController {
@@ -75,6 +84,8 @@ public class MetadataController {
   @Autowired
   MetadataPopularityRepository metadataPopularityRepository;
 
+  @Autowired
+  UserRepository userRepository;
 
   @Autowired
   PagedResourcesAssembler pagedResourcesAssembler;
@@ -88,6 +99,7 @@ public class MetadataController {
   MetadataColumnProjections metadataColumnProjections = new MetadataColumnProjections();
 
   MetadataProjections metadataProjections = new MetadataProjections();
+  TagProjections tagProjections = new TagProjections();
 
   public MetadataController() {
   }
@@ -106,10 +118,13 @@ public class MetadataController {
    */
   @RequestMapping(value = "/metadatas", method = RequestMethod.GET)
   public ResponseEntity <?> findMetadatas(
+      @RequestParam(value = "keyword", required = false) String keyword,
       @RequestParam(value = "sourceType", required = false) String sourceType,
       @RequestParam(value = "catalogId", required = false) String catalogId,
       @RequestParam(value = "tag", required = false) String tag,
       @RequestParam(value = "nameContains", required = false) String nameContains,
+      @RequestParam(value = "descContains", required = false) String descContains,
+      @RequestParam(value = "creatorContains", required = false) String creatorContains,
       @RequestParam(value = "searchDateBy", required = false) String searchDateBy,
       @RequestParam(value = "from", required = false)
       @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME) DateTime from,
@@ -130,11 +145,22 @@ public class MetadataController {
           new Sort(Sort.Direction.ASC, "name"));
     }
 
-    Page <Metadata> metadatas = metadataRepository.searchMetadatas(searchSourceType, catalogId, tag, nameContains, searchDateBy, from, to, pageable);
+    List<User> targetUser = null;
+    List<String> targetUserId = null;
+    if(StringUtils.isNotEmpty(keyword)){
+      targetUser = userRepository.findByFullNameContainingIgnoreCaseOrIdContainingIgnoreCase(keyword, keyword);
+      targetUserId = targetUser.stream().map(user -> user.getUsername()).collect(Collectors.toList());
+    } else if(StringUtils.isNotEmpty(creatorContains)){
+      targetUser = userRepository.findByFullNameContainingIgnoreCaseOrIdContainingIgnoreCase(creatorContains, creatorContains);
+      targetUserId = targetUser.stream().map(user -> user.getUsername()).collect(Collectors.toList());
+    }
+
+    Page <Metadata> metadatas = metadataRepository.searchMetadatas(keyword, searchSourceType, catalogId, tag,
+                                                                   nameContains, descContains, targetUserId,
+                                                                   searchDateBy, from, to, pageable);
 
     return ResponseEntity.ok(this.pagedResourcesAssembler.toResource(metadatas, resourceAssembler));
   }
-
 
   @RequestMapping(value = "/metadatas/metasources/{sourceId}", method = RequestMethod.POST)
   public ResponseEntity <?> findMetadataByOriginSource(@PathVariable("sourceId") String sourceId,
@@ -157,12 +183,26 @@ public class MetadataController {
   }
 
   @RequestMapping(value = "/metadatas/tags", method = RequestMethod.GET)
-  public ResponseEntity <?> findTagsInMetadata(@RequestParam(value = "nameContains", required = false) String nameContains) {
+  public ResponseEntity <?> findTagsInMetadata(@RequestParam(value = "nameContains", required = false) String nameContains,
+                                               @RequestParam(value = "projection", required = false, defaultValue = "default") String projection,
+                                               Pageable pageable) {
 
-    List tags = tagService.findByTagsWithDomain(Tag.Scope.DOMAIN, DomainType.METADATA, nameContains);
+    Class projectionCls = tagProjections.getProjectionByName(projection);
+    List tags;
+
+    if(pageable.getSort() == null || !pageable.getSort().iterator().hasNext()) {
+      Sort newSort = new Sort(Sort.Direction.ASC, "name");
+      pageable = new PageRequest(pageable.getPageNumber(), pageable.getPageSize(), newSort);
+    }
+
+    if(projectionCls == TagProjections.TreeProjection.class){
+      tags = tagService.getTagsWithCount(Tag.Scope.DOMAIN, DomainType.METADATA, nameContains, pageable.getSort());
+    } else {
+      tags = tagService.findByTagsWithDomain(Tag.Scope.DOMAIN, DomainType.METADATA, nameContains, pageable.getSort());
+    }
 
     return ResponseEntity.ok(
-        ProjectionUtils.toListResource(projectionFactory, TagProjections.DefaultProjection.class, tags)
+        ProjectionUtils.toListResource(projectionFactory, projectionCls, tags)
     );
   }
 
@@ -316,7 +356,10 @@ public class MetadataController {
                                                     .map(p -> p.getMetadataId())
                                                     .collect(Collectors.toList());
 
-    List metadatas = metadataRepository.findAll(metadataId);
+    List<Metadata> metadatas = metadataRepository.findAll(metadataId);
+    if(metadatas.isEmpty()){
+      metadatas = new ArrayList();
+    }
 
     //order by populraity
     metadatas.sort((a, b) -> {
@@ -330,6 +373,26 @@ public class MetadataController {
         return -1;
       }
     });
+
+    //if list's size less than page's size, getting latest metadata
+    int metadataSize = metadatas == null ? 0 : metadatas.size();
+    int requiredMetadataSize = pageable.getPageSize() - metadataSize;
+    if(requiredMetadataSize > 0){
+      List<Metadata> latestMetadataList = metadataRepository.findTop10ByOrderByCreatedTimeDesc();
+      for(int i = 0; i < latestMetadataList.size(); ++i){
+        //If the metadata is not duplicated, add it to the list
+        Metadata latestMetadata = latestMetadataList.get(i);
+
+        long addedCount = metadatas.stream().filter(metadata -> metadata.getId().equals(latestMetadata.getId())).count();
+        if(addedCount == 0){
+          metadatas.add(latestMetadata);
+        }
+
+        if(metadatas.size() == pageable.getPageSize()){
+          break;
+        }
+      }
+    }
 
     Page<Metadata> metadataPage = new PageImpl<Metadata>(metadatas, pageable, metadataPopularityList.getTotalElements());
     Page<Metadata> metadataResourced = ProjectionUtils.toPageResource(projectionFactory,
@@ -373,7 +436,7 @@ public class MetadataController {
     }
 
     DataGrid result = metadataService.getDataGrid(metadata, limit);
-    responseMap.put("size", result.getRows() == null ? 0 : result.getRows().size());
+    responseMap.put("size", result == null || result.getRows() == null ? 0 : result.getRows().size());
     responseMap.put("data", result);
 
     return ResponseEntity.ok(responseMap);
@@ -406,4 +469,29 @@ public class MetadataController {
 
     return null;
   }
+
+  @RequestMapping(path = "/metadatas/{metadataId}/users/frequency", method = RequestMethod.GET)
+  public ResponseEntity <?> getFrequentUser(@PathVariable("metadataId") String metadataId){
+    //getting metadata from id
+    Metadata metadata = metadataRepository.findOne(metadataId);
+    if (metadata == null) {
+      throw new ResourceNotFoundException(metadataId);
+    }
+
+    List<?> frequentUserList = metadataService.getFrequentUser(metadata, 3);
+    return ResponseEntity.ok(frequentUserList);
+  }
+
+  @RequestMapping(path = "/metadatas/{metadataId}/history", method = RequestMethod.GET)
+  public ResponseEntity <?> getRecentlyUpdateUser(@PathVariable("metadataId") String metadataId){
+    //getting metadata from id
+    Metadata metadata = metadataRepository.findOne(metadataId);
+    if (metadata == null) {
+      throw new ResourceNotFoundException(metadataId);
+    }
+
+    List<?> updateHistoryList = metadataService.getUpdateHistory(metadata, 5);
+    return ResponseEntity.ok(updateHistoryList);
+  }
+
 }

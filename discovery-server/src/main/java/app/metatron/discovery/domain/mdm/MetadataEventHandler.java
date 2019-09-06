@@ -70,7 +70,6 @@ public class MetadataEventHandler {
   public void handleBeforeCreate(Metadata metadata) {
 
     MetadataSource metadataSource = metadata.getSource();
-
     if (metadataSource.getType() == Metadata.SourceType.ENGINE) {
 
       // Check engine datasource info.
@@ -182,6 +181,11 @@ public class MetadataEventHandler {
             metadata.addColumn(metadataColumn);
           }
         }
+
+        Map<String, Object> detailInfo = jdbcConnectionService.showTableDescription(jdbcDataConnection, schema, tableName);
+        if(detailInfo != null){
+          metadataSource.setSourceInfo(GlobalObjectMapper.writeValueAsString(detailInfo));
+        }
       }
     } else if (metadataSource.getType() == Metadata.SourceType.STAGEDB) {
 
@@ -229,9 +233,6 @@ public class MetadataEventHandler {
       detailInfo.put("Partition Fields", hiveTableInformation.getPartitionFields());
 
       metadataSource.setSourceInfo(GlobalObjectMapper.writeValueAsString(detailInfo));
-
-    } else {
-      throw new IllegalArgumentException("Not support source type.");
     }
   }
 

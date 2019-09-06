@@ -22,7 +22,7 @@
         <!-- edit option -->
         <div class="ddp-ui-edit-option">
           <!-- selectbox -->
-          <!-- 선택시 : ddp-selected 추가 -->
+          <!-- add ddp-selected when clicked-->
           <component-select
             [defaultIndex]="typeDefaultIndex"
             [array]="sourceTypeList"
@@ -59,7 +59,7 @@
     <!-- //option -->
     <!-- option -->
     <div class="ddp-ui-option ddp-optiontype ddp-clear">
-      <!-- 검색 -->
+      <!-- search -->
       <div class="ddp-form-search ddp-fleft">
         <em class="ddp-icon-search"></em>
         <component-input
@@ -70,7 +70,7 @@
           (changeValue)="listSearchText = $event; onSearchText();">
         </component-input>
       </div>
-      <!-- //검색 -->
+      <!-- //search -->
       <!-- right -->
       <div class="ddp-ui-rightoption">
         <span *ngIf="getTotalContentsCount > 1" class="ddp-data-total" [innerHTML]="'msg.metadata.ui.lists' | translate : { value : getTotalContentsCount }"></span>
@@ -85,7 +85,7 @@
     </div>
     <!-- //option -->
   </div>
-  <table class="ddp-table-form ddp-table-type3" *ngIf="metadatas && metadatas.length > 0">
+  <table class="ddp-table-form ddp-table-line" *ngIf="metadatas && metadatas.length > 0">
     <colgroup>
       <col width="120px">
       <col width="*">
@@ -121,7 +121,6 @@
                 <li>• {{'msg.metadata.md.ui.tooltip.point.3' | translate}}</li>
               </ul>
             </div>
-
           </div>
           <!-- //popup -->
         </div>
@@ -140,18 +139,22 @@
       </td>
       <td>
         <div class="ddp-txt-long" title="{{getTooltipValue(metadata)}}">
-          {{metadata.name}}
-          <span class="ddp-txt-colortype" *ngIf="metadata.description">-{{metadata.description}}</span>
+          <span [innerHTML]="getMetadataName(metadata.name)"></span>
+          <span class="ddp-txt-colortype" *ngIf="isEnableDescription(metadata)" [innerHTML]="getMetadataDescription(metadata.description)"></span>
         </div>
       </td>
       <td>
-        <div class="ddp-txt-long">
-          <span class="ddp-tags" *ngFor="let tag of metadata.tags">#{{tag.name}}</span>
+        <div class="ddp-wrap-tags" *ngIf="isEnableTag(metadata)">
+          <span class="ddp-tags"># {{metadata.tags[0].name}}</span>
+          <span class="ddp-tag-more" *ngIf="isExistMoreTags(metadata)">+ {{metadata.tags.length - 1}}</span>
         </div>
       </td>
       <td>
-        <div class="ddp-bar">
-          <span [style.width]="metadata.popularity ? metadata.popularity + '%' : 0 + '%'"></span>
+        <div class="ddp-ui-popularity">
+          <em class="ddp-icon-popularity"></em>
+          <div class="ddp-bar">
+            <span [style.width]="metadata.popularity + '%'"></span>
+          </div>
         </div>
       </td>
       <td>
@@ -167,7 +170,7 @@
   <div class="ddp-data-source-none" *ngIf="metadatas && metadatas.length === 0; else yesMd">
     {{'msg.metadata.ui.no.metadata' | translate}}
   </div>
-  <!-- //데이터 없음 -->
+  <!-- //no data -->
 
   <ng-template #yesMd>
     <component-pagination [info]="pageResult" (changePageData)="changePage($event)"></component-pagination>

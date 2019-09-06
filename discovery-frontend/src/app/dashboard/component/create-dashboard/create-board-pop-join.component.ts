@@ -64,8 +64,11 @@ export class CreateBoardPopJoinComponent extends AbstractPopupComponent implemen
 
   public isEmptyPreviewGrid: boolean = false; // 프리뷰 그리드 데이터 존재 여부
   public isShowJoinPopup: boolean = false;    // Join Popup 표시 여부
+  public isShowTypes:boolean = false;
 
   public editingJoin: EditJoin;               // 편집중인 조인 정보
+
+  public logicalTypeMap: any = {};
 
   @Output('complete')
   public completeEvent: EventEmitter<JoinMapping[]> = new EventEmitter();
@@ -90,7 +93,6 @@ export class CreateBoardPopJoinComponent extends AbstractPopupComponent implemen
    */
   public ngOnInit() {
     super.ngOnInit();
-
   }
 
   /**
@@ -356,13 +358,30 @@ export class CreateBoardPopJoinComponent extends AbstractPopupComponent implemen
     }
   } // function - selectJoinColumn
 
+  public isValidJoinKeys() {
+    if ('' !== this.editingJoin.leftJoinKey.trim() && '' !== this.editingJoin.rightJoinKey.trim()) {
+      const leftField = this.getGridFields(this.editingJoin.left.uiFields).find(item => item.name === this.editingJoin.leftJoinKey);
+      const rightField = this.getGridFields(this.editingJoin.right.uiFields).find(item => item.name === this.editingJoin.rightJoinKey);
+      if (leftField && rightField) {
+        const numberTypes = ['INT', 'INTEGER', 'LONG', 'DOUBLE', 'FLOAT'];
+        const leftType = leftField.logicalType ? (-1 < numberTypes.indexOf(leftField.logicalType.toString()) ? 'number' : leftField.logicalType.toString()) : '';
+        const rightType = rightField.logicalType ? (-1 < numberTypes.indexOf(rightField.logicalType.toString()) ? 'number' : rightField.logicalType.toString()) : '';
+        return leftType === rightType;
+      } else {
+        return false;
+      }
+    } else {
+      return false;
+    }
+  }
+
   /**
    * 조인키를 추가한다.
    */
   public addToJoinKeys() {
 
     // validation
-    if ('' === this.editingJoin.leftJoinKey.trim() || '' === this.editingJoin.rightJoinKey.trim()) {
+    if (!this.isValidJoinKeys()) {
       this.editingJoin.joinChooseColumnErrorFl = true;
       return;
     }
@@ -439,6 +458,10 @@ export class CreateBoardPopJoinComponent extends AbstractPopupComponent implemen
     return name.replace(new RegExp('(' + searchText + ')'), '<span class="ddp-txt-search">$1</span>');
   } // function - highlightSearchText
 
+  public objKeyList( obj ) {
+    return ( obj ) ? Object.keys(obj) : [];
+  }
+
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   | Protected Method
   |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
@@ -487,7 +510,6 @@ export class CreateBoardPopJoinComponent extends AbstractPopupComponent implemen
   private _initPreview() {
     (this.joinPreview) && (this.joinPreview.destroy());
     this.isEmptyPreviewGrid = false;
-    this.editingJoin.previewGridFl = false;
   } // function - _initPreview
 
   /**
@@ -505,6 +527,18 @@ export class CreateBoardPopJoinComponent extends AbstractPopupComponent implemen
         Alert.warning(this.translateService.instant('msg.board.alert.join.setting.error'));
         return;
       }
+
+      this.logicalTypeMap = []
+        .concat( this.editingJoin.left.uiFields )
+        .concat( this.editingJoin.right.uiFields )
+        .reduce((acc, item) => {
+          acc[item.logicalType] = ( acc[item.logicalType] ) ? acc[item.logicalType] + 1 : 1;
+          return acc;
+        }, {} );
+      // this.previewLogicalTypes
+      //   = Object.keys( logicalTypeMap ).map( key => {
+      //     return { type : key, count : logicalTypeMap[key] };
+      // });
 
       // 조인 정보 생성
       const joinInfo = new JoinMapping();
@@ -538,7 +572,6 @@ export class CreateBoardPopJoinComponent extends AbstractPopupComponent implemen
           joinInfo.joinAlias = 'join_' + (paramJoins.length + 1);
           paramJoins.push(joinInfo);
         }
-
       }
 
       // 조회 상태 저장
@@ -548,7 +581,6 @@ export class CreateBoardPopJoinComponent extends AbstractPopupComponent implemen
 
       this._queryData(paramJoins).then((data) => {
         this.editingJoin.columnCnt = data[1].length;
-        this.editingJoin.previewGridFl = true;
 
         if (0 < data[0].length && 0 < data[1].length) {
           this.isEmptyPreviewGrid = false;
@@ -742,8 +774,6 @@ class EditJoin {
 
   public columnCnt: number = 0;
   public rowNum: number = 1000;
-
-  public previewGridFl: boolean = false;
 
   public tempJoinMappings: JoinMapping[];
 

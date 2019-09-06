@@ -115,7 +115,9 @@
     <li *ngIf="permission.exploreData" [ngClass]="{'ddp-selected': lnbManager.exploreData.fold == false}" >
       <div class="ddp-wrap-listmenu">
         <a href="javascript:" (click)="depth1Menu1ClickListener( 'EXPLOREDATA' )">
-          <span class="ddp-txt-lnbmenu">{{'msg.comm.menu.title.explore-data' | translate}}</span>
+          <span class="ddp-txt-lnbmenu">{{'msg.comm.menu.title.explore-data' | translate}}
+            <span class="ddp-tag-beta">Beta</span>
+          </span>
           <em class="ddp-icon-menuview"></em>
         </a>
         <!-- sub -->
@@ -187,6 +189,11 @@
                 <li>
                   <a href="javascript:" (click)="move('management/metadata/code-table')">
                     {{'msg.comm.menu.manage.metadata.code-table' | translate}}
+                  </a>
+                </li>
+                <li *ngIf="permission.lineage">
+                  <a href="javascript:" (click)="move('management/metadata/lineage')">
+                    {{'msg.comm.menu.manage.metadata.lineage' | translate}}
                   </a>
                 </li>
                 <li>
