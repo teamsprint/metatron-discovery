@@ -20,7 +20,6 @@ import com.google.common.collect.Maps;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 
-import org.datanucleus.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -39,7 +38,6 @@ import app.metatron.discovery.domain.workbook.configurations.Pivot;
 import app.metatron.discovery.domain.workbook.configurations.datasource.DefaultDataSource;
 import app.metatron.discovery.domain.workbook.configurations.field.MeasureField;
 import app.metatron.discovery.domain.workbook.configurations.field.TimestampField;
-import app.metatron.discovery.domain.workbook.configurations.filter.TimeFilter;
 import app.metatron.discovery.domain.workbook.configurations.format.CustomDateTimeFormat;
 import app.metatron.discovery.query.druid.Aggregation;
 import app.metatron.discovery.query.druid.Filter;
@@ -114,13 +112,6 @@ public class EngineMonitoringService {
       request.setResultFormat(new ObjectResultFormat(ENGINE));
     } else {
       request.getResultFormat().setConnType(ENGINE);
-    }
-
-    if (StringUtils.isEmpty(request.getFromDate())) {
-      request.setFromDate(TimeFilter.MIN_DATETIME.toString());
-    }
-    if (StringUtils.isEmpty(request.getToDate())) {
-      request.setToDate(TimeFilter.MAX_DATETIME.toString());
     }
 
     Query query = MonitoringQuery.builder(new DefaultDataSource(datasourceName))

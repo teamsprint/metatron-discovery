@@ -55,7 +55,7 @@ export class StatusComponent extends AbstractComponent implements OnInit, OnDest
     if (_.isNil(this.clusterSize)){
       return '';
     } else {
-      $('.ddp-wrap-hover-layout .ddp-data-bar').css('width', Math.round(this.clusterSize.currSize/this.clusterSize.maxSize) +'%');
+      $('.ddp-wrap-hover-layout .ddp-data-bar').css('width', Math.round(this.clusterSize.currSize/this.clusterSize.maxSize*100) +'%');
       return CommonUtil.formatBytes(this.clusterSize.currSize, 0) + ' / ' + CommonUtil.formatBytes(this.clusterSize.maxSize, 0);
     }
   }

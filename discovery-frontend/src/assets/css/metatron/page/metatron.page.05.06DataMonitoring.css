@@ -191,7 +191,7 @@ table.ddp-table-detail3 tr td .ddp-type-status-error:hover .ddp-box-layout4 {dis
 .ddp-ui-contents-det .ddp-wrap-top-filtering {margin:0 0 10px 0; padding:0 20px}
 
 .ddp-wrap-top-filtering .ddp-filter-search.type-dataname .ddp-form-filter-search {width:234px;}
-.ddp-wrap-top-filtering .ddp-form-filtering:first-of-type .ddp-result-filtering {margin-left:0;}
+/*.ddp-wrap-top-filtering .ddp-form-filtering:first-of-type .ddp-result-filtering {margin-left:0;}*/
 
 /* refresh form */
 .ddp-wrap-dropdown.type-refresh .ddp-btn-refresh {display:inline-block; position:absolute; top:0; right:0; width:30px; height:30px; border-radius:0 2px 2px 0; background-color:#90969f;}

@@ -19,6 +19,7 @@ import {EngineService} from "../../service/engine.service";
 
 declare let echarts: any;
 declare let $: any;
+declare let moment: any;
 
 @Component({
   selector: '[overview-graph-view]',
@@ -45,7 +46,6 @@ export class GraphComponent extends AbstractComponent implements OnInit, OnDestr
 
   public ngOnInit() {
     super.ngOnInit();
-    this._getGcCPU();
     this._getUsageMemory();
     this._getGcCount();
     this._getAvgQueryTime();
@@ -55,107 +55,6 @@ export class GraphComponent extends AbstractComponent implements OnInit, OnDestr
   public ngOnDestroy() {
     super.ngOnDestroy();
   }
-
-  /**
-   * get GC CPU
-   * @private
-   */
-  private _getGcCPU() {
-    const queryParam: any =
-      {
-        dataSource: {
-          joins: [],
-          temporary: false,
-          name: 'druid-metric-topic',
-          type: 'default',
-          connType: 'ENGINE'
-        },
-        filters: [
-          {
-            selector: 'SINGLE_COMBO',
-            type: 'include',
-            field: 'metric',
-            valueList: ['jvm/gc/cpu'],
-            dataSource: 'druid-metric-topic'
-          }
-        ],
-        pivot: {
-          columns: [],
-          rows: [],
-          aggregations: [
-            {
-              type: 'measure',
-              aggregationType: 'AVG',
-              name: 'value',
-              subType: 'LONG',
-              subRole: 'MEASURE',
-              format: {
-                isAll: true,
-                type: 'percent',
-                sign: 'KRW',
-                decimal: 0,
-                useThousandsSep: true,
-                customSymbol: null,
-                abbr: 'NONE'
-              },
-              aggregationTypeList: [],
-              alias: 'AVG(value)'
-            },
-            {
-              type: 'dimension',
-              name: 'gcGen',
-              subType: 'UNKNOWN',
-              subRole: 'DIMENSION',
-              alias: 'gcGen'
-            }
-          ]
-        },
-        limits: {
-          limit: 1000,
-          sort: []
-        },
-        resultFormat: {
-          type: 'chart',
-          mode: 'pie',
-          options: {
-            addMinMax: true,
-            showCategory: true,
-            showPercentage: true
-          },
-          columnDelimeter: '―'
-        }
-      };
-
-    this._datasourceSvc.searchQuery(queryParam).then((data) => {
-      const seriesData = data.columns[0].value.map( item => {
-        ( 'young' === item.name ) && ( this.gcCpu = item.percentage.toFixed(0) + '%' );
-        return {
-          name: item.name,
-          value: item.value,
-          percentage: item.percentage,
-          itemStyle:{
-            normal:{ color: 'young' === item.name ? '#f0f4ff' : '#4762a8' }
-          }
-        };
-      });
-      const chartOpts: any = {
-        type: 'pie',
-        series: [
-          {
-            type: 'pie',
-            name: 'AVG(value)',
-            radius: ['60%', '68%'],
-            center: ['50%', '55%'],
-            data: seriesData,
-            hoverAnimation: false
-          }
-        ],
-        label: { normal: { show: false } }
-      };
-      const chartObj = echarts.init(this._gcCpuChartElmRef.nativeElement, 'exntu');
-      chartObj.setOption(chartOpts, false);
-    });
-  } // function - _getGcCPU
 
   /**
    * get Usage Memory
@@ -171,31 +70,31 @@ export class GraphComponent extends AbstractComponent implements OnInit, OnDestr
         return item;
       })
       const chartOpts: any = {
-        'type': 'pie',
-        'legend': {
-          'show': false,
-          'seriesSync': false,
-          'left': 'left',
-          'symbol': 'circle',
-          'width': '100%',
-          'itemGap': 20,
-          'pageItems': 5,
-          'textStyle': {
-            'fontSize': 13,
-            'fontFamily': 'SpoqaHanSans'
+        type: 'pie',
+        legend: {
+          show: false,
+          seriesSync: false,
+          left: 'left',
+          symbol: 'circle',
+          width: '100%',
+          itemGap: 20,
+          pageItems: 5,
+          textStyle: {
+            fontSize: 13,
+            fontFamily: 'SpoqaHanSans'
           }
         },
         'series': [
           {
-            'type': 'pie',
-            'name': 'AVG(value)',
-            'radius': ['60%', '68%'],
-            'center': ['50%', '55%'],
-            'data': seriesData,
-            'hoverAnimation': false
+            type: 'pie',
+            name: 'AVG(value)',
+            radius: ['60%', '68%'],
+            center: ['50%', '55%'],
+            data: seriesData,
+            hoverAnimation: false
           }
         ],
-        'label': { 'normal': { 'show': false } }
+        label: { normal: { show: false } }
       };
       const chartObj = echarts.init(this._usageMemoryChartElmRef.nativeElement, 'exntu');
       chartObj.setOption(chartOpts, false);
@@ -211,52 +110,60 @@ export class GraphComponent extends AbstractComponent implements OnInit, OnDestr
       {
         monitoringTarget: {
           metric: 'GC_COUNT'
-        }
+        },
+        fromDate: moment().subtract(7, 'days').format('YYYY-MM-DDTHH:mm:ss'),
+        toDate: moment().format('YYYY-MM-DDTHH:mm:ss')
       };
 
     this._engineSvc.getMonitoringData(queryParam).then((data) => {
       const chartOps: any = {
-        'type': 'line',
-        'grid': [
+        type: 'line',
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            type: 'line'
+          }
+        },
+        grid: [
           {
-            'top': 0,
-            'bottom': 0,
-            'left': 0,
-            'right': 0
+            top: 0,
+            bottom: 0,
+            left: 0,
+            right: 0
           }
         ],
-        'xAxis': [
+        xAxis: [
           {
-            'type': 'category',
-            'show': false,
-            'data': data.time,
-            'name': 'SECOND(event_time)',
-            'axisName': 'SECOND(event_time)'
+            type: 'category',
+            show: false,
+            data: data.time,
+            name: 'SECOND(event_time)',
+            axisName: 'SECOND(event_time)'
           }
         ],
-        'yAxis': [
+        yAxis: [
           {
-            'type': 'value',
-            'show': false,
-            'name': 'AVG(value)',
-            'axisName': 'AVG(value)'
+            type: 'value',
+            show: false,
+            name: 'GC Count',
+            axisName: 'GC Count'
           }
         ],
-        'series': [
+        series: [
           {
-            'type': 'line',
-            'name': 'AVG(value)',
-            'data': data.value,
-            'connectNulls': true,
-            'showAllSymbol': true,
-            'symbol': 'none',
-            'sampling': 'max',
-            'itemStyle': {
-              'normal': {
-                'color': '#72d9a7'
+            type: 'line',
+            name: 'GC Count',
+            data: data.value,
+            connectNulls: true,
+            showAllSymbol: true,
+            symbol: 'none',
+            sampling: 'max',
+            itemStyle: {
+              normal: {
+                color: '#72d9a7'
               }
             },
-            'smooth': true
+            smooth: true
           }
         ]
       };
@@ -276,54 +183,61 @@ export class GraphComponent extends AbstractComponent implements OnInit, OnDestr
         monitoringTarget : {
           metric: 'QUERY_TIME',
           includeCount: true
-        }
+        },
+        fromDate: moment().subtract(7, 'days').format('YYYY-MM-DDTHH:mm:ss'),
+        toDate: moment().format('YYYY-MM-DDTHH:mm:ss')
       };
 
     this._engineSvc.getMonitoringData(queryParam).then((data) => {
-      console.info(data);
       this.queryCount = data.total_count;
       const chartOps: any = {
-        'type': 'line',
-        'grid': [
+        type: 'line',
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            type: 'line'
+          }
+        },
+        grid: [
           {
-            'top': 0,
-            'bottom': 0,
-            'left': 0,
-            'right': 0
+            top: 0,
+            bottom: 0,
+            left: 0,
+            right: 0
           }
         ],
-        'xAxis': [
+        xAxis: [
           {
-            'type': 'category',
-            'show': false,
-            'data': data.time,
-            'name': 'SECOND(event_time)',
-            'axisName': 'SECOND(event_time)'
+            type: 'category',
+            show: false,
+            data: data.time,
+            name: 'SECOND(event_time)',
+            axisName: 'SECOND(event_time)'
           }
         ],
-        'yAxis': [
+        yAxis: [
           {
-            'type': 'value',
-            'show': false,
-            'name': 'AVG(value)',
-            'axisName': 'AVG(value)'
+            type: 'value',
+            show: false,
+            name: 'Avg Query Time',
+            axisName: 'Avg Query Time'
           }
         ],
-        'series': [
+        series: [
           {
-            'type': 'line',
-            'name': 'AVG(value)',
-            'data': data.avg_value,
-            'connectNulls': true,
-            'showAllSymbol': true,
-            'symbol': 'none',
-            'sampling': 'max',
-            'itemStyle': {
-              'normal': {
-                'color': '#2eaaaf'
+            type: 'line',
+            name: 'Avg Query Time',
+            data: data.avg_value,
+            connectNulls: true,
+            showAllSymbol: true,
+            symbol: 'none',
+            sampling: 'max',
+            itemStyle: {
+              normal: {
+                color: '#2eaaaf'
               }
             },
-            'smooth': true
+            smooth: true
           }
         ]
       };
