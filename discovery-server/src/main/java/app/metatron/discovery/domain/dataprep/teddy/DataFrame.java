@@ -231,6 +231,10 @@ public class DataFrame implements Serializable, Transformable {
     return colDescs.get(colno).getType();
   }
 
+  public void setColDesc(int colno, ColumnDescription colDesc) {
+    colDescs.set(colno, colDesc);
+  }
+
   private void setColType(int colno, ColumnType colType) {
     colDescs.get(colno).setType(colType);
   }
