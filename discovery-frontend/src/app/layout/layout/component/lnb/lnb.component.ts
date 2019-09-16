@@ -115,7 +115,7 @@ export class LNBComponent extends AbstractComponent implements OnInit, OnDestroy
     // 데이터 탐색
     exploreData: {
       fold: true,
-      exploreView : { fold: true },
+      data: {fold : true},
       favorite: { fold : true }
     },
     // 매니지먼트
@@ -349,11 +349,11 @@ export class LNBComponent extends AbstractComponent implements OnInit, OnDestroy
    * @param menuName
    */
   public exploreDataMenuClickListener(menuName:string) {
-    this.lnbManager.exploreData.exploreView.fold = true;
+    this.lnbManager.exploreData.data.fold = true;
     this.lnbManager.exploreData.favorite.fold = true;
     switch (menuName) {
-      case 'EXPLOREDATA_VIEW' :
-        this.lnbManager.exploreData.exploreView.fold = false;
+      case 'EXPLOREDATA_DATA' :
+        this.lnbManager.exploreData.data.fold = false;
         break;
       case 'EXPLOREDATA_FAVORITE' :
         this.lnbManager.exploreData.favorite.fold = false;
