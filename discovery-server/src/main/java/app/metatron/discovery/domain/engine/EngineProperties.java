@@ -75,6 +75,7 @@ public class EngineProperties {
   public final static String GET_RUNNING_TASKS = "getRunningTasks";
   public final static String GET_WAITING_TASKS = "getWaitingTasks";
   public final static String GET_COMPLETE_TASKS = "getCompleteTasks";
+  public final static String GET_SUPERVISOR_LIST = "getSupervisorList";
   public final static String SQL = "sql";
 
   public final static String TEMP_CSV_PREFIX = "temp_ds_";

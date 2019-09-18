@@ -121,6 +121,10 @@ public class DruidEngineRepository extends AbstractEngineRepository {
     return call(GET_COMPLETE_TASKS, Maps.newHashMap(), List.class);
   }
 
+  public Optional<List> getSupervisorList() {
+    return call(GET_SUPERVISOR_LIST, Maps.newHashMap(), List.class);
+  }
+
   private class QueryResponseErrorHandler implements ResponseErrorHandler {
 
     @Override

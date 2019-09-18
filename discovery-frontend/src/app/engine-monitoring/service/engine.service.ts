@@ -4,6 +4,7 @@ import {AbstractService} from '../../common/service/abstract.service';
 import {Engine} from '../../domain/engine-monitoring/engine';
 import * as _ from 'lodash';
 import {PageResult} from '../../domain/common/page';
+import {Criteria} from "../../domain/datasource/criteria";
 
 @Injectable({
   providedIn: EngineServiceModule
@@ -90,6 +91,35 @@ export class EngineService extends AbstractService {
   }
 
   public getRunningTasks() {
-    return this.get(this.URL_MONITORING + '/tasks/running' );
+    return this.get(this.URL_MONITORING + '/ingestion/tasks/running' );
   }
+
+  public getTaskList() {
+    return this.get(this.URL_MONITORING + '/ingestion/task/list');
+  }
+
+  public getSupervisorList() {
+    return this.get(this.URL_MONITORING + '/ingestion/supervisor/list');
+  }
+
+  public getWorkerList() {
+    return this.get(this.URL_MONITORING + '/ingestion/worker/list');
+  }
+
+  public getCriterionListInTask() {
+    return this.get(this.URL_MONITORING + '/ingestion/task/criteria');
+  }
+
+  public getCriterionInTask(criterionKey: Criteria.ListCriterionKey) {
+    return this.get(this.URL_MONITORING + `/ingestion/task/criteria/${criterionKey}`);
+  }
+
+  public getCriterionListInWorker() {
+    return this.get(this.URL_MONITORING + '/ingestion/worker/criteria');
+  }
+
+  public getCriterionInWorker(criterionKey: Criteria.ListCriterionKey) {
+    return this.get(this.URL_MONITORING + `/ingestion/worker/criteria/${criterionKey}`);
+  }
+
 }

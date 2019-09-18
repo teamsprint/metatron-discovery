@@ -3327,5 +3327,13 @@
   "msg.engine.monotoring.overview.view.mode.tooltip.card": "Card View",
   "msg.engine.monotoring.error.label": "Error",
   "msg.engine.monotoring.failure.time.label": "Failure time",
-  "msg.engine.monotoring.ingestion": "Ingestion"
+  "msg.engine.monotoring.ingestion": "Ingestion",
+  "msg.engine.monitoring.ui.criterion.duration": "Duration",
+  "msg.engine.monitoring.ui.criterion.type": "Type",
+  "msg.engine.monitoring.ui.criterion.used-capacity": "Used Capacity",
+  "msg.engine.monitoring.ui.criterion.version": "Version",
+  "msg.engine.monitoring.ui.criterion.completed-time": "Completed Time",
+  "msg.engine.monitoring.ph.task.search": "Search task ID or datasource name",
+  "msg.engine.monitoring.ph.supervisor.search": "Search supervisor ID or datasource name",
+  "msg.engine.monitoring.ph.worker.search": "Search worker host or ip"
 }

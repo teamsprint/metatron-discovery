@@ -37,6 +37,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import app.metatron.discovery.common.criteria.ListCriterion;
+import app.metatron.discovery.common.exception.ResourceNotFoundException;
+import app.metatron.discovery.domain.engine.DruidEngineRepository;
+
 @RestController
 @RequestMapping("/api")
 public class EngineMonitoringController {
@@ -51,6 +55,9 @@ public class EngineMonitoringController {
 
   @Autowired
   EngineMonitoringRepository monitoringRepository;
+
+  @Autowired
+  DruidEngineRepository engineRepository;
 
   @Autowired
   ProjectionFactory projectionFactory;
@@ -114,7 +121,7 @@ public class EngineMonitoringController {
   }
 
   @RequestMapping(value = "/monitoring/information/{name}", method = RequestMethod.GET)
-  public ResponseEntity<?> findInformation(@PathVariable("name") String name) {
+  public ResponseEntity<?> getInformation(@PathVariable("name") String name) {
     Map<String, Object> result = Maps.newHashMap();
     List<EngineMonitoring> cluster = monitoringRepository.findByType(Lists.newArrayList("broker", "coordinator", "overlord"));
     result.put("cluster", cluster);
@@ -125,21 +132,21 @@ public class EngineMonitoringController {
   }
 
   @RequestMapping(value = "/monitoring/memory", method = RequestMethod.POST)
-  public ResponseEntity<?> findMemory(@RequestBody EngineMonitoringRequest queryRequest) {
+  public ResponseEntity<?> getMemory(@RequestBody EngineMonitoringRequest queryRequest) {
     return ResponseEntity.ok(monitoringQueryService.getMemory(queryRequest));
   }
 
   @RequestMapping(value = "/monitoring/size", method = RequestMethod.GET)
-  public ResponseEntity<?> findSize() {
+  public ResponseEntity<?> getSize() {
     return ResponseEntity.ok(monitoringQueryService.getSize());
   }
 
   @RequestMapping(value = "/monitoring/datasource/list", method = RequestMethod.GET)
-  public ResponseEntity<?> findDatasourceList() {
+  public ResponseEntity<?> getDatasourceList() {
     return ResponseEntity.ok(monitoringQueryService.getDatasourceList());
   }
 
-  @RequestMapping(value= "/monitoring/tasks/{status}", method = RequestMethod.GET)
+  @RequestMapping(value= "/monitoring/ingestion/tasks/{status}", method = RequestMethod.GET)
   public ResponseEntity<?> getRunningTasks(@PathVariable("status") String status) {
     List list = Lists.newArrayList();
     if ("pending".equals(status)) {
@@ -153,5 +160,66 @@ public class EngineMonitoringController {
     }
     return ResponseEntity.ok(list);
   }
+
+  @RequestMapping(value = "/monitoring/ingestion/task/criteria", method = RequestMethod.GET)
+  public ResponseEntity<?> getCriteriaInTask() {
+    List<ListCriterion> listCriteria = monitoringQueryService.getListCriterionInTask();
+
+    HashMap<String, Object> response = new HashMap<>();
+    response.put("criteria", listCriteria);
+
+    return ResponseEntity.ok(response);
+  }
+
+  @RequestMapping(value = "/monitoring/ingestion/task/criteria/{criterionKey}", method = RequestMethod.GET)
+  public ResponseEntity<?> getCriterionDetailInTask(@PathVariable(value = "criterionKey") String criterionKey) {
+    EngineMonitoringCriterionKey criterionKeyEnum = EngineMonitoringCriterionKey.valueOf(criterionKey);
+
+    if (criterionKeyEnum == null) {
+      throw new ResourceNotFoundException("Criterion(" + criterionKey + ") is not founded.");
+    }
+
+    ListCriterion criterion = monitoringQueryService.getListCriterionInTaskByKey(criterionKeyEnum);
+    return ResponseEntity.ok(criterion);
+  }
+
+  @RequestMapping(value = "/monitoring/ingestion/task/list", method = RequestMethod.GET)
+  public ResponseEntity<?> getTaskList() {
+    return ResponseEntity.ok(monitoringQueryService.getTaskList());
+  }
+
+  @RequestMapping(value = "/monitoring/ingestion/supervisor/list", method = RequestMethod.GET)
+  public ResponseEntity<?> getSupervisorList() {
+    return ResponseEntity.ok(monitoringQueryService.getSupervisorList());
+  }
+
+  @RequestMapping(value = "/monitoring/ingestion/worker/criteria", method = RequestMethod.GET)
+  public ResponseEntity<?> getCriteriaInWorker() {
+    List<ListCriterion> listCriteria = monitoringQueryService.getListCriterionInWorker();
+
+    HashMap<String, Object> response = new HashMap<>();
+    response.put("criteria", listCriteria);
+
+    return ResponseEntity.ok(response);
+  }
+
+  @RequestMapping(value = "/monitoring/ingestion/worker/criteria/{criterionKey}", method = RequestMethod.GET)
+  public ResponseEntity<?> getCriterionDetailInWorker(@PathVariable(value = "criterionKey") String criterionKey) {
+    EngineMonitoringCriterionKey criterionKeyEnum = EngineMonitoringCriterionKey.valueOf(criterionKey);
+
+    if (criterionKeyEnum == null) {
+      throw new ResourceNotFoundException("Criterion(" + criterionKey + ") is not founded.");
+    }
+
+    ListCriterion criterion = monitoringQueryService.getListCriterionInWorkerByKey(criterionKeyEnum);
+    return ResponseEntity.ok(criterion);
+  }
+
+  @RequestMapping(value = "/monitoring/ingestion/worker/list", method = RequestMethod.GET)
+  public ResponseEntity<?> getWorkerList() {
+    return ResponseEntity.ok(engineRepository.getMiddleManagerNodes().get());
+  }
+
+
 
 }

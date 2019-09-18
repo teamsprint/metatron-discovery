@@ -24,6 +24,7 @@ import {Engine} from '../domain/engine-monitoring/engine';
 export class EngineMonitoringComponent extends AbstractComponent implements OnInit, OnDestroy, AfterViewInit {
 
   public isSelectedContent: Engine.Content;
+  public selectedIngestionContentType: Engine.IngestionContentType;
 
   constructor(protected elementRef: ElementRef,
               protected injector: Injector,
@@ -38,6 +39,7 @@ export class EngineMonitoringComponent extends AbstractComponent implements OnIn
     this.subscriptions.push(
       this.activatedRoute.data.subscribe((params: Engine.MonitoringRouterParams) => {
         this.isSelectedContent = new Engine.Content(params.type);
+        this.selectedIngestionContentType = params.group;
       })
     );
   }

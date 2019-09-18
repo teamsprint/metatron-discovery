@@ -203,15 +203,7 @@ export class OverviewComponent extends AbstractComponent implements OnInit, OnDe
   }
 
   private _changeTab(contentType: Engine.ContentType) {
-    this.router.navigate([
-        `${Engine.Constant.ROUTE_PREFIX}${contentType}`
-      ],
-      {
-        queryParams: {
-          keyword: encodeURIComponent(this.keyword),
-          status: this.selectedMonitoringStatus
-        }
-      })
+    this.router.navigate([ `${Engine.Constant.ROUTE_PREFIX}${contentType}` ]);
   }
 
   private _changeKeyword(keyword: string) {

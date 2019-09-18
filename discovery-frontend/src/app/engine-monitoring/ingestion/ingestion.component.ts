@@ -12,11 +12,19 @@
  * limitations under the License.
  */
 
-import {AfterViewInit, Component, ElementRef, Injector, OnDestroy, OnInit} from '@angular/core';
-import {AbstractComponent} from '../../../common/component/abstract.component';
-import {StateService} from '../../service/state.service';
-import {EngineService} from '../../service/engine.service';
-import {Engine} from '../../../domain/engine-monitoring/engine';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  Injector,
+  Input,
+  OnDestroy,
+  OnInit
+} from '@angular/core';
+import {AbstractComponent} from '../../common/component/abstract.component';
+import {StateService} from '../service/state.service';
+import {EngineService} from '../service/engine.service';
+import {Engine} from '../../domain/engine-monitoring/engine';
 import {filter} from 'rxjs/operators';
 
 @Component({
@@ -34,8 +42,12 @@ export class IngestionComponent extends AbstractComponent implements OnInit, OnD
     super(elementRef, injector);
   }
 
-  public ngOnInit() {
+  @Input('tab')
+  public tab: Engine.IngestionContentType;
 
+  public readonly INGESTION_CONTENT_TYPE = Engine.IngestionContentType;
+
+  public ngOnInit() {
     super.ngOnInit();
     this.loadingHide();
 
@@ -52,6 +64,22 @@ export class IngestionComponent extends AbstractComponent implements OnInit, OnD
 
   public ngOnDestroy() {
     super.ngOnDestroy();
+  }
+
+  public get isTaskTab(): boolean {
+    return this.tab === Engine.IngestionContentType.TASK;
+  }
+
+  public get isSupervisorTab(): boolean {
+    return this.tab === Engine.IngestionContentType.SUPERVISOR;
+  }
+
+  public get isRemoteWorkerTab(): boolean {
+    return this.tab === Engine.IngestionContentType.REMOTE_WORKER;
+  }
+
+  public changeIngestionTab(ingestionContentType: Engine.IngestionContentType) {
+    this.router.navigate([ `${Engine.Constant.ROUTE_PREFIX}ingestion/${ingestionContentType}` ]);
   }
 
   private _changeTab(contentType: Engine.ContentType) {

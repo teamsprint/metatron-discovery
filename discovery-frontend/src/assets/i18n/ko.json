@@ -4278,5 +4278,13 @@
   "msg.engine.monotoring.overview.view.mode.tooltip.card": "카드 뷰",
   "msg.engine.monotoring.error.label": "오류",
   "msg.engine.monotoring.failure.time.label": "실패 시간",
-  "msg.engine.monotoring.ingestion": "적재"
+  "msg.engine.monotoring.ingestion": "적재",
+  "msg.engine.monitoring.ui.criterion.duration": "소요시간",
+  "msg.engine.monitoring.ui.criterion.type": "타입",
+  "msg.engine.monitoring.ui.criterion.used-capacity": "용량",
+  "msg.engine.monitoring.ui.criterion.version": "버전",
+  "msg.engine.monitoring.ui.criterion.completed-time": "완료된 시간",
+  "msg.engine.monitoring.ph.task.search": "Search task ID or datasource name",
+  "msg.engine.monitoring.ph.supervisor.search": "Search supervisor ID or datasource name",
+  "msg.engine.monitoring.ph.worker.search": "Search worker host or ip"
 }

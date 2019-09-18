@@ -77,7 +77,7 @@ export namespace Engine {
   // Value to be used only on View
   ////////////////////////////////////////////////////////////////////////////
 
-  export type MonitoringRouterParams = { 'type': Engine.ContentType };
+  export type MonitoringRouterParams = { 'type': Engine.ContentType, 'group': any };
 
   export enum ContentType {
     OVERVIEW = 'overview',
@@ -130,5 +130,11 @@ export namespace Engine {
   export enum ViewMode {
     GRID = 'grid',
     CARD = 'card'
+  }
+
+  export enum IngestionContentType {
+    TASK = 'task',
+    SUPERVISOR = 'supervisor',
+    REMOTE_WORKER = 'worker'
   }
 }

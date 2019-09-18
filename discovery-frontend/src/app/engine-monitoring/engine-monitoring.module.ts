@@ -13,7 +13,7 @@
  */
 
 import {NgModule} from '@angular/core';
-import {IngestionComponent} from './component/ingestion/ingestion.component';
+import {IngestionComponent} from './ingestion/ingestion.component';
 import {QueryComponent} from './component/query/query.component';
 import {EngineMonitoringComponent} from './engine-monitoring.component';
 import {CommonModule} from '../common/common.module';
@@ -26,6 +26,12 @@ import {HeaderComponent} from './component/header/header.component';
 import {EngineServiceModule} from './service/engine-service.module';
 import {EngineService} from './service/engine.service';
 import {OverviewModule} from './overview/overview.module';
+import {TaskComponent} from "./ingestion/component/task/task.component";
+import {SupervisorComponent} from "./ingestion/component/supervisor/supervisor.component";
+import {WorkerComponent} from "./ingestion/component/worker/worker.component";
+import {WorkerDetailComponent} from "./ingestion/component/worker/worker-detail.component";
+import {DataStorageCriteriaModule} from "../data-storage/data-storage-criteria.module";
+import IngestionContentType = Engine.IngestionContentType;
 
 const _routes = [
   {
@@ -40,14 +46,31 @@ const _routes = [
   },
   {
     path: Engine.ContentType.INGESTION,
+    redirectTo: 'ingestion/task',
+    pathMatch: 'full'
+  },
+  {
+    path: 'ingestion/task',
     component: EngineMonitoringComponent,
-    data: { 'type': Engine.ContentType.INGESTION }
-  }
+    data: {'type': Engine.ContentType.INGESTION, 'group': IngestionContentType.TASK}
+  },
+  {
+    path: 'ingestion/supervisor',
+    component: EngineMonitoringComponent,
+    data: {'type': Engine.ContentType.INGESTION, 'group': IngestionContentType.SUPERVISOR}
+  },
+  {
+    path: 'ingestion/worker',
+    component: EngineMonitoringComponent,
+    data: {'type': Engine.ContentType.INGESTION, 'group': IngestionContentType.REMOTE_WORKER}
+  },
+  { path: 'ingestion/worker/:host', component: WorkerDetailComponent}
 ];
 
 @NgModule({
   imports: [
     CommonModule,
+    DataStorageCriteriaModule,
     OverviewModule,
     EngineServiceModule,
     RouterModule.forChild(_routes)
@@ -59,7 +82,11 @@ const _routes = [
     HeaderMenuComponent,
     HeaderOptionComponent,
     IngestionComponent,
-    QueryComponent
+    QueryComponent,
+    TaskComponent,
+    SupervisorComponent,
+    WorkerComponent,
+    WorkerDetailComponent
   ],
   providers: [
     EngineService

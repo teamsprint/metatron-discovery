@@ -25,7 +25,7 @@
     <div overview></div>
   </ng-template>
   <ng-template [ngIf]="isSelectedContent.isIngestion()">
-    <div ingestion></div>
+    <div ingestion [tab]="selectedIngestionContentType"></div>
   </ng-template>
   <!-- //contents det -->
 

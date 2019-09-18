@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +32,9 @@ import java.util.Optional;
 
 import app.metatron.discovery.common.GlobalObjectMapper;
 import app.metatron.discovery.common.MatrixResponse;
+import app.metatron.discovery.common.criteria.ListCriterion;
+import app.metatron.discovery.common.criteria.ListCriterionType;
+import app.metatron.discovery.common.criteria.ListFilter;
 import app.metatron.discovery.domain.datasource.data.result.ChartResultFormat;
 import app.metatron.discovery.domain.datasource.data.result.ObjectResultFormat;
 import app.metatron.discovery.domain.engine.DruidEngineRepository;
@@ -247,6 +251,163 @@ public class EngineMonitoringService {
     return tasks.get();
   }
 
+  public List getTaskList() {
+    Optional<List> results = engineRepository.sql("SELECT \"task_id\", \"type\", \"datasource\", \"created_time\", CASE WHEN \"status\" = 'RUNNING' THEN \"runner_status\" ELSE \"status\" END AS \"status\", CASE WHEN \"status\" = 'RUNNING' THEN (CASE WHEN \"runner_status\" = 'RUNNING' THEN 4 WHEN \"runner_status\" = 'PENDING' THEN 3 ELSE 2 END) ELSE 1 END AS \"rank\", \"location\", \"duration\", \"error_msg\" FROM sys.tasks ORDER BY \"rank\" DESC, \"created_time\" DESC");
+    return results.get();
+  }
+
+  public List getSupervisorList() {
+    Optional<List> tasks = engineRepository.getSupervisorList();
+    return tasks.get();
+  }
+
+  public List<ListCriterion> getListCriterionInTask() {
+
+    List<ListCriterion> criteria = new ArrayList<>();
+
+    //Status
+    criteria.add(new ListCriterion(EngineMonitoringCriterionKey.TASK_STATUS,
+                                   ListCriterionType.CHECKBOX, "msg.storage.ui.criterion.status"));
+
+    //Duration
+    ListCriterion durationCriterion
+        = new ListCriterion(EngineMonitoringCriterionKey.DURATION,
+                            ListCriterionType.RANGE_DATETIME, "msg.engine.monitoring.ui.criterion.duration");
+    durationCriterion.addFilter(new ListFilter(EngineMonitoringCriterionKey.DURATION,
+                                               "durationFrom", "durationTo", "", "",
+                                               "msg.engine.monotoring.ui.criterion.duration"));
+    criteria.add(durationCriterion);
+
+    //Type
+    criteria.add(new ListCriterion(EngineMonitoringCriterionKey.TYPE,
+                                   ListCriterionType.CHECKBOX, "msg.engine.monitoring.ui.criterion.type"));
+
+    //CreatedTime
+    ListCriterion createdTimeCriterion
+        = new ListCriterion(EngineMonitoringCriterionKey.CREATED_TIME,
+                            ListCriterionType.RANGE_DATETIME, "msg.storage.ui.criterion.created-time");
+    createdTimeCriterion.addFilter(new ListFilter(EngineMonitoringCriterionKey.CREATED_TIME,
+                                                  "createdTimeFrom", "createdTimeTo", "", "",
+                                                  "msg.storage.ui.criterion.created-time"));
+    criteria.add(createdTimeCriterion);
+
+    return criteria;
+  }
+
+  public ListCriterion getListCriterionInTaskByKey(EngineMonitoringCriterionKey criterionKey) {
+    ListCriterion criterion = new ListCriterion();
+    criterion.setCriterionKey(criterionKey);
+
+    switch (criterionKey) {
+      case TASK_STATUS:
+        EngineMonitoring.TaskStatus[] statuses = {
+            EngineMonitoring.TaskStatus.PENDING,
+            EngineMonitoring.TaskStatus.WAITING,
+            EngineMonitoring.TaskStatus.RUNNING,
+            EngineMonitoring.TaskStatus.SUCCESS,
+            EngineMonitoring.TaskStatus.FAILED
+        };
+        for (EngineMonitoring.TaskStatus status : statuses) {
+          String filterName = status.toString();
+          criterion.addFilter(new ListFilter(criterionKey, "taskStatus", status.toString(), filterName));
+        }
+        break;
+      case DURATION:
+        //created_time
+        criterion.addFilter(new ListFilter(EngineMonitoringCriterionKey.DURATION,
+                                           "durationFrom", "durationTo", "", "",
+                                           "msg.engine.monitoring.ui.criterion.duration"));
+        break;
+      case TYPE:
+        EngineMonitoring.TaskType[] taskTypes = {
+            EngineMonitoring.TaskType.INDEX,
+            EngineMonitoring.TaskType.KAFKA,
+            EngineMonitoring.TaskType.HADOOP
+        };
+
+        for (EngineMonitoring.TaskType taskType : taskTypes) {
+          String filterName = taskType.toString();
+          criterion.addFilter(new ListFilter(criterionKey, "taskType",
+                                             taskType.toString(), filterName));
+        }
+        break;
+      case CREATED_TIME:
+        //created_time
+        criterion.addFilter(new ListFilter(EngineMonitoringCriterionKey.CREATED_TIME,
+                                           "createdTimeFrom", "createdTimeTo", "", "",
+                                           "msg.storage.ui.criterion.created-time"));
+        break;
+      default:
+        break;
+    }
+
+    return criterion;
+  }
+
+  public List<ListCriterion> getListCriterionInWorker() {
+
+    List<ListCriterion> criteria = new ArrayList<>();
+
+    //Capacity
+    ListCriterion capacityCriterion
+        = new ListCriterion(EngineMonitoringCriterionKey.CAPACITY,
+                            ListCriterionType.RANGE_DATETIME, "msg.engine.monitoring.ui.criterion.used-capacity");
+    capacityCriterion.addFilter(new ListFilter(EngineMonitoringCriterionKey.CAPACITY,
+                                                  "capacityFrom", "capacityTo", "", "",
+                                                  "msg.engine.monitoring.ui.criterion.used-capacity"));
+    criteria.add(capacityCriterion);
+
+    //Version
+    ListCriterion versionCriterion
+        = new ListCriterion(EngineMonitoringCriterionKey.VERSION,
+                            ListCriterionType.RANGE_DATETIME, "msg.engine.monitoring.ui.criterion.version");
+    versionCriterion.addFilter(new ListFilter(EngineMonitoringCriterionKey.VERSION,
+                                                  "versionFrom", "versionTo", "", "",
+                                                  "msg.engine.monitoring.ui.criterion.version"));
+    criteria.add(versionCriterion);
+
+    //CreatedTime
+    ListCriterion createdTimeCriterion
+        = new ListCriterion(EngineMonitoringCriterionKey.COMPLETED_TIME,
+                            ListCriterionType.RANGE_DATETIME, "msg.engine.monitoring.ui.criterion.completed-time");
+    createdTimeCriterion.addFilter(new ListFilter(EngineMonitoringCriterionKey.COMPLETED_TIME,
+                                                  "completedTimeFrom", "completedTimeTo", "", "",
+                                                  "msg.storage.ui.criterion.completed-time"));
+    criteria.add(createdTimeCriterion);
+
+    return criteria;
+  }
+
+  public ListCriterion getListCriterionInWorkerByKey(EngineMonitoringCriterionKey criterionKey) {
+    ListCriterion criterion = new ListCriterion();
+    criterion.setCriterionKey(criterionKey);
+
+    switch (criterionKey) {
+      case CAPACITY:
+        //created_time
+        criterion.addFilter(new ListFilter(EngineMonitoringCriterionKey.CAPACITY,
+                                           "capacityFrom", "capacityTo", "", "",
+                                           "msg.engine.monitoring.ui.criterion.used-capacity"));
+        break;
+      case VERSION:
+        //created_time
+        criterion.addFilter(new ListFilter(EngineMonitoringCriterionKey.VERSION,
+                                           "versionFrom", "versionTo", "", "",
+                                           "msg.engine.monitoring.ui.criterion.version"));
+        break;
+      case COMPLETED_TIME:
+        //created_time
+        criterion.addFilter(new ListFilter(EngineMonitoringCriterionKey.COMPLETED_TIME,
+                                           "completedTimeFrom", "completedTimeTo", "", "",
+                                           "msg.engine.monitoring.ui.criterion.completed-time"));
+        break;
+      default:
+        break;
+    }
+
+    return criterion;
+  }
+
   private void setFiltersByType(List<Filter> filters, EngineMonitoringTarget monitoringTarget) {
     if ( monitoringTarget.getHost() != null ) {
       filters.add(new SelectorFilter("host", monitoringTarget.getHost()));
@@ -272,6 +433,9 @@ public class EngineMonitoringService {
       case QUERY_TIME:
         filters.add(new SelectorFilter("metric", "query/time"));
         break;
+      case SUPERVISOR_LAG:
+        filters.add(new SelectorFilter("metric", "ingest/kafka/lag"));
+        break;
     }
   }
 
@@ -291,4 +455,5 @@ public class EngineMonitoringService {
 
     return columns;
   }
+
 }

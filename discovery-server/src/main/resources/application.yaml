@@ -213,6 +213,10 @@ polaris:
         target: broker
         method: POST
         uri: /druid/v2/sql
+      getSupervisorList:
+        target: overlord
+        method: GET
+        uri: /druid/indexer/v1/supervisor?full
   cache:
     configFile: default-configs/default-jgroups-tcp.xml
 #  cors:
