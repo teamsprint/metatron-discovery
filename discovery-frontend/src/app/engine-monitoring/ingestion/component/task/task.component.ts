@@ -60,8 +60,6 @@ export class TaskComponent extends AbstractComponent implements OnInit, OnDestro
   public selectedContentSort: Order = new Order();
 
   public ngOnInit() {
-    // Init
-    super.ngOnInit();
     // loading show
     this.loadingShow();
     // get criterion list
@@ -95,11 +93,15 @@ export class TaskComponent extends AbstractComponent implements OnInit, OnDestro
             // init criterion search param
             this.criterionComponent.initSearchParams(searchParams);
           }
+          this.pageResult.size = this.page.size;
+          this.pageResult.number = this.page.page;
           this._getTaskList();
         }));
       })
       .catch(error => this.commonExceptionHandler(error));
 
+    // Init
+    super.ngOnInit();
     this.loadingHide();
   }
 
@@ -126,6 +128,10 @@ export class TaskComponent extends AbstractComponent implements OnInit, OnDestro
       this.page.size = data.size;
       this._getTaskPagingList();
     }
+  }
+
+  public onClickTask(taskId: string): void {
+    this.router.navigate(['/management/engine-monitoring/ingestion/task', taskId]).then();
   }
 
   public getStatusClass(taskStatus: TaskStatus): string {
@@ -215,10 +221,9 @@ export class TaskComponent extends AbstractComponent implements OnInit, OnDestro
 
   private _filteringTaskList(): Task[] {
     const filterParam = this._getTaskParams();
-    console.log(filterParam);
     return _.cloneDeep(this.taskTotalList).filter(item => {
-      const matchStatus = !filterParam['status'] || filterParam['status'].length == 0 || filterParam['status'].some(status => item.status == status);
-      const matchType = !filterParam['type'] || filterParam['type'].length == 0 || filterParam['type'].some(type => item.type == type);
+      const matchStatus = !filterParam['taskStatus'] || filterParam['taskStatus'].length == 0 || filterParam['taskStatus'].some(status => item.status == status);
+      const matchType = !filterParam['taskType'] || filterParam['taskType'].length == 0 || filterParam['taskType'].some(type => this.getTypeTranslate(item.type) == type.toLowerCase());
       const matchSearchWord = !filterParam['containsText'] || item.task_id.indexOf(filterParam['containsText']) > -1 || item.datasource.indexOf(filterParam['containsText']) > -1;
       const matchCreatedTime = (_.isNil(filterParam['createdTimeFrom'] && _.isNil(filterParam['createdTimeTo'])))
         || (filterParam['createdTimeFrom'] == "" && filterParam['createdTimeTo'] == "")

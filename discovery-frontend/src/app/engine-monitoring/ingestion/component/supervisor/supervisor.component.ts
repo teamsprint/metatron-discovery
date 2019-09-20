@@ -101,6 +101,10 @@ export class SupervisorComponent extends AbstractComponent implements OnInit, On
     }
   }
 
+  public onClickSupervisor(supervisorId: string): void {
+    this.router.navigate(['/management/engine-monitoring/ingestion/supervisor', supervisorId]).then();
+  }
+
   /**
    * Search connection keypress event
    * @param {string} keyword

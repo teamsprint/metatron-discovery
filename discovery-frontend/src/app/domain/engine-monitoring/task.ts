@@ -21,6 +21,8 @@ export class Task {
   status: TaskStatus;
   task_id: string;
   type: TaskType;
+  queue_ingestion_time: string;
+  host: string;
 }
 
 export enum TaskStatus {

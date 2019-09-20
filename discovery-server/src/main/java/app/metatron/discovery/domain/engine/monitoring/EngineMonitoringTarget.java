@@ -18,6 +18,8 @@ public class EngineMonitoringTarget {
 
   String service;
   String host;
+  String taskId;
+  String datasource;
   MetricType metric;
   boolean includeCount = false;
 
@@ -40,6 +42,10 @@ public class EngineMonitoringTarget {
     this.host = host;
   }
 
+  public String getTaskId() { return taskId; }
+
+  public void setTaskId(String taskId) { this.taskId = taskId; }
+
   public MetricType getMetric() {
     return metric;
   }
@@ -47,6 +53,10 @@ public class EngineMonitoringTarget {
   public void setMetric(MetricType metric) {
     this.metric = metric;
   }
+
+  public String getDatasource() { return datasource; }
+
+  public void setDatasource(String datasource) { this.datasource = datasource; }
 
   public boolean isIncludeCount() { return includeCount; }
 
@@ -58,6 +68,9 @@ public class EngineMonitoringTarget {
     GC_COUNT,
     GC_CPU,
     QUERY_TIME,
-    SUPERVISOR_LAG
+    SUPERVISOR_LAG,
+    INGEST_PROCESSED,
+    INGEST_UNPARSEABLE,
+    INGEST_THROWNAWAY
   }
 }

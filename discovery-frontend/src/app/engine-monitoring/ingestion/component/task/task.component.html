@@ -75,7 +75,7 @@
   </tr>
   </thead>
   <tbody>
-  <tr *ngFor="let task of taskList">
+  <tr *ngFor="let task of taskList" (click)="onClickTask(task.task_id);">
     <td>
       <div class="ddp-txt-long" title="{{task.task_id}}">
         {{task.task_id}}

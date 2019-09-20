@@ -95,31 +95,47 @@ export class EngineService extends AbstractService {
   }
 
   public getTaskList() {
-    return this.get(this.URL_MONITORING + '/ingestion/task/list');
+    return this.get(this.URL_MONITORING + '/ingestion/tasks/list');
+  }
+
+  public getTaskById(taskId) {
+    return this.get(this.URL_MONITORING + '/ingestion/task/' + taskId);
+  }
+
+  public getTaskLogById(taskId) {
+    return this.get(this.URL_MONITORING + '/ingestion/task/' + taskId + '/log');
+  }
+
+  public shutdownTaskLogById(taskId) {
+    return this.post(this.URL_MONITORING + '/ingestion/task/' + taskId + '/shutdown', null);
   }
 
   public getSupervisorList() {
-    return this.get(this.URL_MONITORING + '/ingestion/supervisor/list');
+    return this.get(this.URL_MONITORING + '/ingestion/supervisors/list');
+  }
+
+  public getSupervisorStatus(supervisorId) {
+    return this.get(this.URL_MONITORING + '/ingestion/supervisor/' + supervisorId);
   }
 
   public getWorkerList() {
-    return this.get(this.URL_MONITORING + '/ingestion/worker/list');
+    return this.get(this.URL_MONITORING + '/ingestion/workers/list');
   }
 
   public getCriterionListInTask() {
-    return this.get(this.URL_MONITORING + '/ingestion/task/criteria');
+    return this.get(this.URL_MONITORING + '/ingestion/tasks/criteria');
   }
 
   public getCriterionInTask(criterionKey: Criteria.ListCriterionKey) {
-    return this.get(this.URL_MONITORING + `/ingestion/task/criteria/${criterionKey}`);
+    return this.get(this.URL_MONITORING + `/ingestion/tasks/criteria/${criterionKey}`);
   }
 
   public getCriterionListInWorker() {
-    return this.get(this.URL_MONITORING + '/ingestion/worker/criteria');
+    return this.get(this.URL_MONITORING + '/ingestion/workers/criteria');
   }
 
   public getCriterionInWorker(criterionKey: Criteria.ListCriterionKey) {
-    return this.get(this.URL_MONITORING + `/ingestion/worker/criteria/${criterionKey}`);
+    return this.get(this.URL_MONITORING + `/ingestion/workers/criteria/${criterionKey}`);
   }
 
 }

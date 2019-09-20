@@ -38,8 +38,14 @@ import java.util.List;
 import java.util.Map;
 
 import app.metatron.discovery.common.criteria.ListCriterion;
+import app.metatron.discovery.common.exception.MetatronException;
 import app.metatron.discovery.common.exception.ResourceNotFoundException;
+import app.metatron.discovery.domain.datasource.DataSourceIngestionException;
 import app.metatron.discovery.domain.engine.DruidEngineRepository;
+import app.metatron.discovery.domain.engine.EngineIngestionService;
+
+import static app.metatron.discovery.domain.datasource.DataSourceErrorCodes.INGESTION_COMMON_ERROR;
+import static app.metatron.discovery.domain.datasource.DataSourceErrorCodes.INGESTION_ENGINE_GET_TASK_LOG_ERROR;
 
 @RestController
 @RequestMapping("/api")
@@ -58,6 +64,9 @@ public class EngineMonitoringController {
 
   @Autowired
   DruidEngineRepository engineRepository;
+
+  @Autowired
+  EngineIngestionService engineIngestionService;
 
   @Autowired
   ProjectionFactory projectionFactory;
@@ -81,6 +90,14 @@ public class EngineMonitoringController {
   public ResponseEntity<?> monitoringData(@RequestBody EngineMonitoringRequest queryRequest) {
 
     Object result = monitoringQueryService.getEngineData(queryRequest);
+
+    return ResponseEntity.ok(result);
+  }
+
+  @RequestMapping(value = "/monitoring/stream", method = RequestMethod.POST)
+  public ResponseEntity<?> monitoringStream(@RequestBody EngineMonitoringRequest queryRequest) {
+
+    Object result = monitoringQueryService.selectStreamQuery(queryRequest);
 
     return ResponseEntity.ok(result);
   }
@@ -161,7 +178,7 @@ public class EngineMonitoringController {
     return ResponseEntity.ok(list);
   }
 
-  @RequestMapping(value = "/monitoring/ingestion/task/criteria", method = RequestMethod.GET)
+  @RequestMapping(value = "/monitoring/ingestion/tasks/criteria", method = RequestMethod.GET)
   public ResponseEntity<?> getCriteriaInTask() {
     List<ListCriterion> listCriteria = monitoringQueryService.getListCriterionInTask();
 
@@ -171,7 +188,7 @@ public class EngineMonitoringController {
     return ResponseEntity.ok(response);
   }
 
-  @RequestMapping(value = "/monitoring/ingestion/task/criteria/{criterionKey}", method = RequestMethod.GET)
+  @RequestMapping(value = "/monitoring/ingestion/tasks/criteria/{criterionKey}", method = RequestMethod.GET)
   public ResponseEntity<?> getCriterionDetailInTask(@PathVariable(value = "criterionKey") String criterionKey) {
     EngineMonitoringCriterionKey criterionKeyEnum = EngineMonitoringCriterionKey.valueOf(criterionKey);
 
@@ -183,17 +200,46 @@ public class EngineMonitoringController {
     return ResponseEntity.ok(criterion);
   }
 
-  @RequestMapping(value = "/monitoring/ingestion/task/list", method = RequestMethod.GET)
+  @RequestMapping(value = "/monitoring/ingestion/tasks/list", method = RequestMethod.GET)
   public ResponseEntity<?> getTaskList() {
     return ResponseEntity.ok(monitoringQueryService.getTaskList());
   }
 
-  @RequestMapping(value = "/monitoring/ingestion/supervisor/list", method = RequestMethod.GET)
+  @RequestMapping(value = "/monitoring/ingestion/task/{taskId:.+}", method = RequestMethod.GET)
+  public ResponseEntity<?> getTaskById(@PathVariable String taskId) {
+    return ResponseEntity.ok(monitoringQueryService.getTaskById(taskId));
+  }
+
+  @RequestMapping(value = "/monitoring/ingestion/task/{taskId}/log", method = RequestMethod.GET)
+  public ResponseEntity<?> getTaskLogById(@PathVariable String taskId) {
+    EngineIngestionService.EngineTaskLog taskLog;
+    try {
+      taskLog = engineIngestionService.getIngestionTaskLog(taskId, null);
+    } catch (MetatronException e) {
+      throw new DataSourceIngestionException(INGESTION_ENGINE_GET_TASK_LOG_ERROR, "Task log on engine not founded", e);
+    } catch (Exception e) {
+      throw new DataSourceIngestionException(INGESTION_COMMON_ERROR, e);
+    }
+
+    return ResponseEntity.ok(taskLog.getLogs());
+  }
+
+  @RequestMapping(value = "/monitoring/ingestion/task/{taskId}/shutdown", method = RequestMethod.POST)
+  public ResponseEntity<?> shutDownTaskById(@PathVariable String taskId) {
+    return ResponseEntity.ok(monitoringQueryService.shutDownIngestionTask(taskId));
+  }
+
+  @RequestMapping(value = "/monitoring/ingestion/supervisors/list", method = RequestMethod.GET)
   public ResponseEntity<?> getSupervisorList() {
     return ResponseEntity.ok(monitoringQueryService.getSupervisorList());
   }
 
-  @RequestMapping(value = "/monitoring/ingestion/worker/criteria", method = RequestMethod.GET)
+  @RequestMapping(value = "/monitoring/ingestion/supervisor/{supervisorId:.+}", method = RequestMethod.GET)
+  public ResponseEntity<?> getSupervisorStatus(@PathVariable String supervisorId) {
+    return ResponseEntity.ok(monitoringQueryService.getSupervisorStatus(supervisorId));
+  }
+
+  @RequestMapping(value = "/monitoring/ingestion/workers/criteria", method = RequestMethod.GET)
   public ResponseEntity<?> getCriteriaInWorker() {
     List<ListCriterion> listCriteria = monitoringQueryService.getListCriterionInWorker();
 
@@ -203,7 +249,7 @@ public class EngineMonitoringController {
     return ResponseEntity.ok(response);
   }
 
-  @RequestMapping(value = "/monitoring/ingestion/worker/criteria/{criterionKey}", method = RequestMethod.GET)
+  @RequestMapping(value = "/monitoring/ingestion/workers/criteria/{criterionKey}", method = RequestMethod.GET)
   public ResponseEntity<?> getCriterionDetailInWorker(@PathVariable(value = "criterionKey") String criterionKey) {
     EngineMonitoringCriterionKey criterionKeyEnum = EngineMonitoringCriterionKey.valueOf(criterionKey);
 
@@ -215,7 +261,7 @@ public class EngineMonitoringController {
     return ResponseEntity.ok(criterion);
   }
 
-  @RequestMapping(value = "/monitoring/ingestion/worker/list", method = RequestMethod.GET)
+  @RequestMapping(value = "/monitoring/ingestion/workers/list", method = RequestMethod.GET)
   public ResponseEntity<?> getWorkerList() {
     return ResponseEntity.ok(engineRepository.getMiddleManagerNodes().get());
   }

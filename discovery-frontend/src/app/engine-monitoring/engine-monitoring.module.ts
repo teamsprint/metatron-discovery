@@ -31,7 +31,8 @@ import {SupervisorComponent} from "./ingestion/component/supervisor/supervisor.c
 import {WorkerComponent} from "./ingestion/component/worker/worker.component";
 import {WorkerDetailComponent} from "./ingestion/component/worker/worker-detail.component";
 import {DataStorageCriteriaModule} from "../data-storage/data-storage-criteria.module";
-import IngestionContentType = Engine.IngestionContentType;
+import {TaskDetailComponent} from "./ingestion/component/task/task-detail.component";
+import {SupervisorDetailComponent} from "./ingestion/component/supervisor/supervisor-detail.component";
 
 const _routes = [
   {
@@ -52,18 +53,20 @@ const _routes = [
   {
     path: 'ingestion/task',
     component: EngineMonitoringComponent,
-    data: {'type': Engine.ContentType.INGESTION, 'group': IngestionContentType.TASK}
+    data: {'type': Engine.ContentType.INGESTION, 'group': Engine.IngestionContentType.TASK}
   },
   {
     path: 'ingestion/supervisor',
     component: EngineMonitoringComponent,
-    data: {'type': Engine.ContentType.INGESTION, 'group': IngestionContentType.SUPERVISOR}
+    data: {'type': Engine.ContentType.INGESTION, 'group': Engine.IngestionContentType.SUPERVISOR}
   },
   {
     path: 'ingestion/worker',
     component: EngineMonitoringComponent,
-    data: {'type': Engine.ContentType.INGESTION, 'group': IngestionContentType.REMOTE_WORKER}
+    data: {'type': Engine.ContentType.INGESTION, 'group': Engine.IngestionContentType.REMOTE_WORKER}
   },
+  { path: 'ingestion/task/:taskId', component: TaskDetailComponent},
+  { path: 'ingestion/supervisor/:supervisorId', component: SupervisorDetailComponent},
   { path: 'ingestion/worker/:host', component: WorkerDetailComponent}
 ];
 
@@ -86,7 +89,9 @@ const _routes = [
     TaskComponent,
     SupervisorComponent,
     WorkerComponent,
-    WorkerDetailComponent
+    WorkerDetailComponent,
+    TaskDetailComponent,
+    SupervisorDetailComponent
   ],
   providers: [
     EngineService

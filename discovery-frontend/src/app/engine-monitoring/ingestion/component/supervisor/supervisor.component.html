@@ -50,7 +50,7 @@
   </tr>
   </thead>
   <tbody>
-  <tr *ngFor="let supervisor of supervisorList">
+  <tr *ngFor="let supervisor of supervisorList" (click)="onClickSupervisor(supervisor.id);">
     <td>
       <div class="ddp-txt-long" title="{{supervisor.id}}">
         {{supervisor.id}}

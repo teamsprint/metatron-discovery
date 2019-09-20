@@ -20,10 +20,16 @@ import com.google.common.collect.Maps;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 
+import org.apache.commons.collections4.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.thymeleaf.util.StringUtils;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -37,6 +43,7 @@ import app.metatron.discovery.common.criteria.ListCriterionType;
 import app.metatron.discovery.common.criteria.ListFilter;
 import app.metatron.discovery.domain.datasource.data.result.ChartResultFormat;
 import app.metatron.discovery.domain.datasource.data.result.ObjectResultFormat;
+import app.metatron.discovery.domain.engine.DruidEngineMetaRepository;
 import app.metatron.discovery.domain.engine.DruidEngineRepository;
 import app.metatron.discovery.domain.workbook.configurations.Pivot;
 import app.metatron.discovery.domain.workbook.configurations.datasource.DefaultDataSource;
@@ -49,18 +56,25 @@ import app.metatron.discovery.query.druid.PostAggregation;
 import app.metatron.discovery.query.druid.Query;
 import app.metatron.discovery.query.druid.aggregations.CountAggregation;
 import app.metatron.discovery.query.druid.aggregations.LongSumAggregation;
+import app.metatron.discovery.query.druid.filters.AndFilter;
 import app.metatron.discovery.query.druid.filters.SelectorFilter;
 import app.metatron.discovery.query.druid.postaggregations.ArithmeticPostAggregation;
 import app.metatron.discovery.query.druid.postaggregations.FieldAccessorPostAggregator;
 import app.metatron.discovery.query.druid.queries.MonitoringQuery;
+import app.metatron.discovery.query.druid.queries.SelectStreamQuery;
 
 import static app.metatron.discovery.domain.datasource.DataSource.ConnectionType.ENGINE;
 
 @Component
 public class EngineMonitoringService {
 
+  private static final Logger LOGGER = LoggerFactory.getLogger(EngineMonitoringService.class);
+
   @Autowired
   DruidEngineRepository engineRepository;
+
+  @Autowired
+  DruidEngineMetaRepository engineMetaRepository;
 
   @Autowired
   EngineMonitoringProperties monitoringProperties;
@@ -108,6 +122,7 @@ public class EngineMonitoringService {
     Pivot pivot = new Pivot();
     pivot.addColumn(new TimestampField("event_time", null, new CustomDateTimeFormat("yyyy-MM-dd HH:mm:ss.SSS")));
 
+
     pivot.addAggregation(new MeasureField("value", null, MeasureField.AggregationType.SUM));
 
     request.setPivot(pivot);
@@ -128,8 +143,6 @@ public class EngineMonitoringService {
                            .build();
 
     String queryString = GlobalObjectMapper.writeValueAsString(query);
-
-    System.out.println(queryString);
 
     Optional<JsonNode> engineResult = engineRepository.query(queryString, JsonNode.class);
 
@@ -256,9 +269,35 @@ public class EngineMonitoringService {
     return results.get();
   }
 
+  public Object getTaskById(String taskId) {
+    Optional<List> results = engineRepository.sql("SELECT \"task_id\", \"type\", \"datasource\", \"created_time\", \"queue_insertion_time\", \"location\", \"host\", CASE WHEN \"status\" = 'RUNNING' THEN \"runner_status\" ELSE \"status\" END AS \"status\", \"location\", \"duration\", \"error_msg\" FROM sys.tasks WHERE \"task_id\" = '" + taskId + "'");
+    if (CollectionUtils.isNotEmpty(results.get())) {
+      return results.get().get(0);
+    } else {
+      return null;
+    }
+  }
+
+  public boolean shutDownIngestionTask(String taskId) {
+    try {
+        engineMetaRepository.shutDownIngestionTask(taskId);
+      LOGGER.info("Successfully shutdown ingestion task : {}", taskId);
+    } catch (Exception e) {
+      LOGGER.warn("Fail to shutdown ingestion task : {}", taskId);
+      return false;
+    }
+
+    return true;
+  }
+
   public List getSupervisorList() {
     Optional<List> tasks = engineRepository.getSupervisorList();
     return tasks.get();
+  }
+
+  public Map getSupervisorStatus(String supervisorId){
+    Optional<Map> result = engineMetaRepository.getSupervisorIngestionStatus(supervisorId);
+    return result.get();
   }
 
   public List<ListCriterion> getListCriterionInTask() {
@@ -270,13 +309,13 @@ public class EngineMonitoringService {
                                    ListCriterionType.CHECKBOX, "msg.storage.ui.criterion.status"));
 
     //Duration
-    ListCriterion durationCriterion
+    /*ListCriterion durationCriterion
         = new ListCriterion(EngineMonitoringCriterionKey.DURATION,
                             ListCriterionType.RANGE_DATETIME, "msg.engine.monitoring.ui.criterion.duration");
     durationCriterion.addFilter(new ListFilter(EngineMonitoringCriterionKey.DURATION,
                                                "durationFrom", "durationTo", "", "",
                                                "msg.engine.monotoring.ui.criterion.duration"));
-    criteria.add(durationCriterion);
+    criteria.add(durationCriterion);*/
 
     //Type
     criteria.add(new ListCriterion(EngineMonitoringCriterionKey.TYPE,
@@ -313,7 +352,6 @@ public class EngineMonitoringService {
         }
         break;
       case DURATION:
-        //created_time
         criterion.addFilter(new ListFilter(EngineMonitoringCriterionKey.DURATION,
                                            "durationFrom", "durationTo", "", "",
                                            "msg.engine.monitoring.ui.criterion.duration"));
@@ -349,22 +387,22 @@ public class EngineMonitoringService {
     List<ListCriterion> criteria = new ArrayList<>();
 
     //Capacity
-    ListCriterion capacityCriterion
+    /*ListCriterion capacityCriterion
         = new ListCriterion(EngineMonitoringCriterionKey.CAPACITY,
                             ListCriterionType.RANGE_DATETIME, "msg.engine.monitoring.ui.criterion.used-capacity");
     capacityCriterion.addFilter(new ListFilter(EngineMonitoringCriterionKey.CAPACITY,
                                                   "capacityFrom", "capacityTo", "", "",
                                                   "msg.engine.monitoring.ui.criterion.used-capacity"));
-    criteria.add(capacityCriterion);
+    criteria.add(capacityCriterion);*/
 
     //Version
-    ListCriterion versionCriterion
+    /*ListCriterion versionCriterion
         = new ListCriterion(EngineMonitoringCriterionKey.VERSION,
                             ListCriterionType.RANGE_DATETIME, "msg.engine.monitoring.ui.criterion.version");
     versionCriterion.addFilter(new ListFilter(EngineMonitoringCriterionKey.VERSION,
                                                   "versionFrom", "versionTo", "", "",
                                                   "msg.engine.monitoring.ui.criterion.version"));
-    criteria.add(versionCriterion);
+    criteria.add(versionCriterion);*/
 
     //CreatedTime
     ListCriterion createdTimeCriterion
@@ -384,19 +422,16 @@ public class EngineMonitoringService {
 
     switch (criterionKey) {
       case CAPACITY:
-        //created_time
         criterion.addFilter(new ListFilter(EngineMonitoringCriterionKey.CAPACITY,
                                            "capacityFrom", "capacityTo", "", "",
                                            "msg.engine.monitoring.ui.criterion.used-capacity"));
         break;
       case VERSION:
-        //created_time
         criterion.addFilter(new ListFilter(EngineMonitoringCriterionKey.VERSION,
                                            "versionFrom", "versionTo", "", "",
                                            "msg.engine.monitoring.ui.criterion.version"));
         break;
       case COMPLETED_TIME:
-        //created_time
         criterion.addFilter(new ListFilter(EngineMonitoringCriterionKey.COMPLETED_TIME,
                                            "completedTimeFrom", "completedTimeTo", "", "",
                                            "msg.engine.monitoring.ui.criterion.completed-time"));
@@ -408,6 +443,51 @@ public class EngineMonitoringService {
     return criterion;
   }
 
+  public Object selectStreamQuery(EngineMonitoringRequest request) {
+
+    AndFilter filter = new AndFilter();
+    List<String> columns;
+    if ( request.getMonitoringTarget().getTaskId() != null ) {
+      filter.addField(new SelectorFilter("taskId", request.getMonitoringTarget().getTaskId()));
+      columns = Lists.newArrayList("__time", "metric", "service", "host", "value", "datasource", "taskId", "taskType");
+    } else if ( request.getMonitoringTarget().getDatasource() != null) {
+      filter.addField(new SelectorFilter("dataSource", request.getMonitoringTarget().getDatasource()));
+      columns = Lists.newArrayList("__time", "metric", "value", "datasource");
+    } else {
+      return null;
+    }
+
+    switch (request.getMonitoringTarget().getMetric()) {
+      case SUPERVISOR_LAG:
+        filter.addField(new SelectorFilter("metric", "ingest/kafka/lag"));
+        break;
+      case INGEST_PROCESSED:
+        filter.addField(new SelectorFilter("metric", "ingest/events/processed"));
+        break;
+      case INGEST_UNPARSEABLE:
+        filter.addField(new SelectorFilter("metric", "ingest/events/unparseable"));
+        break;
+      case INGEST_THROWNAWAY:
+        filter.addField(new SelectorFilter("metric", "ingest/events/thrownAway"));
+        break;
+    }
+    SelectStreamQuery selectStreamQuery = SelectStreamQuery.builder(new DefaultDataSource(datasourceName))
+                                                           .columns(columns)
+                                                           .build();
+    selectStreamQuery.setFilter(filter);
+    if (StringUtils.isEmpty(request.getFromDate()) || StringUtils.isEmpty(request.getToDate())) {
+      LocalDateTime nowTime = LocalDateTime.now();
+
+      String toDate = nowTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
+      String fromDate = nowTime.minusHours(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
+      request.setFromDate(fromDate);
+      request.setToDate(toDate);
+    }
+    selectStreamQuery.setIntervals(Lists.newArrayList(request.getFromDate()+"/"+request.getToDate()));
+    selectStreamQuery.setLimit(100);
+    return query(selectStreamQuery);
+  }
+
   private void setFiltersByType(List<Filter> filters, EngineMonitoringTarget monitoringTarget) {
     if ( monitoringTarget.getHost() != null ) {
       filters.add(new SelectorFilter("host", monitoringTarget.getHost()));
@@ -415,6 +495,10 @@ public class EngineMonitoringService {
 
     if ( monitoringTarget.getService() != null ) {
       filters.add(new SelectorFilter("service", monitoringTarget.getService()));
+    }
+
+    if ( monitoringTarget.getTaskId() != null ) {
+      filters.add(new SelectorFilter("taskId", monitoringTarget.getTaskId()));
     }
 
     switch (monitoringTarget.getMetric()) {
@@ -432,9 +516,6 @@ public class EngineMonitoringService {
         break;
       case QUERY_TIME:
         filters.add(new SelectorFilter("metric", "query/time"));
-        break;
-      case SUPERVISOR_LAG:
-        filters.add(new SelectorFilter("metric", "ingest/kafka/lag"));
         break;
     }
   }
