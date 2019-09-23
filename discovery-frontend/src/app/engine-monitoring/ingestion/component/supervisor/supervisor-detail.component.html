@@ -14,6 +14,11 @@
 <div class="ddp-type-contents2">
 
   <div class="ddp-top-flow">
+    <!-- 버튼 -->
+    <div class="ddp-data-form">
+      <a href="#" class="ddp-btn-buttons3 type-normal" (click)="confirmOpen('SHUTDOWN'); $event.preventDefault();">{{'msg.engine.monitoring.ingestion.shutdown' | translate}}</a>
+      <a href="#" class="ddp-btn-buttons3 type-normal" (click)="confirmOpen('RESET'); $event.preventDefault();">{{'msg.engine.monitoring.ingestion.reset' | translate}}</a>
+    </div>
     <!-- navi wrap -->
     <div class="ddp-wrap-navi">
 
@@ -201,5 +206,21 @@
     </div>
     <!-- //detail -->
 
+  </div>
+</div>
+<div class="ddp-wrap-layout-popup" *ngIf="showConfirm">
+  <div class="ddp-box-popup ddp-box-popup-type2">
+    <a href="javascript:" class="ddp-btn-close" (click)="showConfirm = false"></a>
+    <!-- title -->
+    <div class="ddp-pop-title">{{confirmModal.name}}</div>
+    <!-- //title -->
+
+    <!-- button -->
+    <div class="ddp-ui-buttons">
+      <a href="javascript:" class="ddp-btn-type-popup" (click)="showConfirm = false">{{'msg.comm.btn.cancl' | translate}}</a>
+      <!-- disabled 시 ddp-disabled 추가 -->
+      <a href="javascript:" class="ddp-btn-type-popup ddp-bg-black" (click)="confirmDone();">{{confirmModal.btnName}}</a>
+    </div>
+    <!-- //button -->
   </div>
 </div>

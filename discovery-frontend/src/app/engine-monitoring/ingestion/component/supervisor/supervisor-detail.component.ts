@@ -25,6 +25,8 @@ import {AbstractComponent} from "../../../../common/component/abstract.component
 import {EngineService} from "../../../service/engine.service";
 import {ActivatedRoute} from "@angular/router";
 import {Engine} from "../../../../domain/engine-monitoring/engine";
+import {Modal} from "../../../../common/domain/modal";
+import {Alert} from "../../../../common/util/alert.util";
 
 declare let echarts: any;
 declare let $: any;
@@ -32,7 +34,8 @@ declare let moment: any;
 
 @Component({
   selector: 'app-detail-upervisor',
-  templateUrl: './supervisor-detail.component.html'
+  templateUrl: './supervisor-detail.component.html',
+  styles: ['.ddp-data-form .ddp-btn-buttons3:first-of-type {margin-right: 10px;}']
 })
 export class SupervisorDetailComponent extends AbstractComponent implements OnInit, OnDestroy, AfterViewInit {
 
@@ -53,6 +56,9 @@ export class SupervisorDetailComponent extends AbstractComponent implements OnIn
   public processed: any;
   public unparseable: any;
   public thrownaway: any;
+
+  public showConfirm:boolean = false;
+  public confirmModal: Modal;
 
   public ngOnInit() {
     this.loadingShow();
@@ -77,6 +83,40 @@ export class SupervisorDetailComponent extends AbstractComponent implements OnIn
 
   public prevSupervisorList(): void {
     this.router.navigate(['/management/engine-monitoring/ingestion/supervisor']);
+  }
+
+  public confirmOpen(confirmType): void {
+    this.confirmModal = new Modal();
+    this.confirmModal.data = confirmType;
+    if (this.confirmModal.data === 'SHUTDOWN') {
+      this.confirmModal.name = this.translateService.instant('msg.engine.monitoring.ingestion.supervisor.shutdown.confirm');
+      this.confirmModal.btnName = this.translateService.instant('msg.engine.monitoring.ingestion.shutdown');
+    } else if (this.confirmModal.data === 'RESET') {
+      this.confirmModal.name = this.translateService.instant('msg.engine.monitoring.ingestion.supervisor.reset.confirm');
+      this.confirmModal.btnName = this.translateService.instant('msg.engine.monitoring.ingestion.reset');
+    }
+    this.showConfirm = true;
+  }
+
+  public confirmDone(): void {
+    if (this.confirmModal.data === 'SHUTDOWN') {
+      this.engineService.shutdownSupervisorById(this.supervisorId).then((data) => {
+        if (data) {
+          this._getSupervisorDetail();
+        } else {
+          Alert.error(this.translateService.instant('msg.engine.monitoring.ingestion.supervisor.shutdown.confirm.fail'));
+        }
+      });
+    } else if (this.confirmModal.data === 'RESET') {
+      this.engineService.resetSupervisorById(this.supervisorId).then((data) => {
+        if (data) {
+          this._getSupervisorDetail();
+        } else {
+          Alert.error(this.translateService.instant('msg.engine.monitoring.ingestion.supervisor.reset.confirm.fail'));
+        }
+      });
+    }
+    this.showConfirm = false;
   }
 
   private _getSupervisorDetail(): void {

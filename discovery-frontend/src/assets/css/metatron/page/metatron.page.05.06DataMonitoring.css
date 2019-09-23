@@ -81,6 +81,11 @@
 .ddp-wrap-engine-graph .ddp-box-graph.type-count-num.type-warning {background-color:#f3a611;}
 .ddp-wrap-engine-graph .ddp-box-graph.type-count-num.type-warning .ddp-icon-warning {display:block; float:left;}
 .ddp-wrap-engine-graph .ddp-box-graph.type-count-num.type-warning .ddp-data-per {background-color:#dc494f;}
+.ddp-wrap-engine-graph .ddp-box-graph.type-datasource {width:250px; height:250px; background-color:#1d4a49;}
+.ddp-wrap-engine-graph .ddp-box-graph.type-datasource .ddp-data-per {display:inline-block; padding:2px 6px 3px 6px; border-radius:2px; color:#fff; background-color:rgba(0, 0, 0, 0.2);}
+.ddp-wrap-engine-graph .ddp-box-graph.type-datasource.type-warning {background-color:#f3a611;}
+.ddp-wrap-engine-graph .ddp-box-graph.type-datasource.type-warning .ddp-icon-warning {display:inline-block; margin-left:3px; vertical-align:middle;}
+.ddp-wrap-engine-graph .ddp-box-graph.type-datasource.type-warning .ddp-data-per {background-color:#dc494f;}
 .ddp-wrap-engine-graph .ddp-box-graph.type-task {margin-bottom:6px; height:122px; background-color:#625c9e;}
 .ddp-wrap-engine-graph .ddp-wrap-num-graph {display:flex; flex-direction: column;}
 

@@ -89,7 +89,7 @@ export class TaskDetailComponent extends AbstractComponent implements OnInit, On
 
   public shutdownTask(): void {
     this.showShutdownConfirm = false;
-    this.engineService.shutdownTaskLogById(this._taskId).then((data) => {
+    this.engineService.shutdownTaskById(this._taskId).then((data) => {
       if (data) {
         this._getTaskDetail();
       } else {

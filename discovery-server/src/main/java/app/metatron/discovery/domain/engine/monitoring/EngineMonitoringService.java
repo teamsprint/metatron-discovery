@@ -302,6 +302,30 @@ public class EngineMonitoringService {
     return result.get();
   }
 
+  public boolean shutDownSupervisor(String supervisorId) {
+    try {
+      engineMetaRepository.shutDownSupervisorIngestionTask(supervisorId);
+      LOGGER.info("Successfully shutdown supervisor : {}", supervisorId);
+    } catch (Exception e) {
+      LOGGER.warn("Fail to shutdown supervisor : {}", supervisorId);
+      return false;
+    }
+
+    return true;
+  }
+
+  public boolean resetSupervisor(String supervisorId) {
+    try {
+      engineMetaRepository.resetSupervisorIngestionTask(supervisorId);
+      LOGGER.info("Successfully reset supervisor : {}", supervisorId);
+    } catch (Exception e) {
+      LOGGER.warn("Fail to reset supervisor : {}", supervisorId);
+      return false;
+    }
+
+    return true;
+  }
+
   public List<ListCriterion> getListCriterionInTask() {
 
     List<ListCriterion> criteria = new ArrayList<>();

@@ -37,6 +37,7 @@ export class GraphComponent extends AbstractComponent implements OnInit, OnDestr
   public heapMemory:string = '';
   public queryCount:number = 0;
   public runningTaskCount:number = 0;
+  public datasourceCount:number = 0;
 
   constructor(private _datasourceSvc: DatasourceService,
               private _engineSvc: EngineService,
@@ -51,6 +52,7 @@ export class GraphComponent extends AbstractComponent implements OnInit, OnDestr
     this._getGcCount();
     this._getAvgQueryTime();
     this._getRunningTasks();
+    this._getDatasourceList();
   }
 
   public ngOnDestroy() {
@@ -266,7 +268,7 @@ export class GraphComponent extends AbstractComponent implements OnInit, OnDestr
   private _getDatasourceList() {
     this._engineSvc.getDatasourceList().then( result => {
       if( result ) {
-        //this.runningTaskCount = result.length;
+       this.datasourceCount = result.length;
       }
     });
   } // function - _getDatasourceList

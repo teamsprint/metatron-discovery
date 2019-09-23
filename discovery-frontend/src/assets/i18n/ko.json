@@ -4255,7 +4255,12 @@
   "msg.engine.monitoring.ph.task.search": "Search task ID or datasource name",
   "msg.engine.monitoring.ph.supervisor.search": "Search supervisor ID or datasource name",
   "msg.engine.monitoring.ph.worker.search": "Search worker host or ip",
-  "msg.engine.monitoring.ingestion.task.shutdown": "강제 종료",
+  "msg.engine.monitoring.ingestion.shutdown": "강제 종료",
   "msg.engine.monitoring.ingestion.task.shutdown.confirm": "현재 수행중인 태스크를 강제 종료하시겠습니까?",
-  "msg.engine.monitoring.ingestion.task.shutdown.confirm.fail": "테스크 강제종료에 실패하였습니다."
+  "msg.engine.monitoring.ingestion.task.shutdown.confirm.fail": "테스크 강제종료에 실패하였습니다.",
+  "msg.engine.monitoring.ingestion.supervisor.shutdown.confirm": "현재 수행중인 Supervisor를 강제 종료하시겠습니까?",
+  "msg.engine.monitoring.ingestion.supervisor.shutdown.confirm.fail": "Supervisor 강제종료에 실패하였습니다.",
+  "msg.engine.monitoring.ingestion.reset": "Reset",
+  "msg.engine.monitoring.ingestion.supervisor.reset.confirm": "현재 수행중인 Supervisor를 Reset하시겠습니까?",
+  "msg.engine.monitoring.ingestion.supervisor.reset.confirm.fail": "Supervisor Reset에 실패하였습니다."
 }

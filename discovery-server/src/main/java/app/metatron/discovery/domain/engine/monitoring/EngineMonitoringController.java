@@ -244,6 +244,16 @@ public class EngineMonitoringController {
     return ResponseEntity.ok(monitoringQueryService.getIngestRow(queryRequest));
   }
 
+  @RequestMapping(value = "/monitoring/ingestion/supervisor/{supervisorId}/shutdown", method = RequestMethod.POST)
+  public ResponseEntity<?> shutDownSupervisorById(@PathVariable String supervisorId) {
+    return ResponseEntity.ok(monitoringQueryService.shutDownSupervisor(supervisorId));
+  }
+
+  @RequestMapping(value = "/monitoring/ingestion/supervisor/{supervisorId}/reset", method = RequestMethod.POST)
+  public ResponseEntity<?> resetSupervisorById(@PathVariable String supervisorId) {
+    return ResponseEntity.ok(monitoringQueryService.resetSupervisor(supervisorId));
+  }
+
   @RequestMapping(value = "/monitoring/ingestion/workers/criteria", method = RequestMethod.GET)
   public ResponseEntity<?> getCriteriaInWorker() {
     List<ListCriterion> listCriteria = monitoringQueryService.getListCriterionInWorker();

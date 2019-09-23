@@ -4289,7 +4289,12 @@
   "msg.engine.monitoring.ph.task.search": "Search task ID or datasource name",
   "msg.engine.monitoring.ph.supervisor.search": "Search supervisor ID or datasource name",
   "msg.engine.monitoring.ph.worker.search": "Search worker host or ip",
-  "msg.engine.monitoring.ingestion.task.shutdown": "Shutdown",
-  "msg.engine.monitoring.ingestion.task.shutdown.confirm": "Do you want to kill the current task?",
-  "msg.engine.monitoring.ingestion.task.shutdown.confirm.fail": "Failed to shutdown the task."
+  "msg.engine.monitoring.ingestion.shutdown": "Shutdown",
+  "msg.engine.monitoring.ingestion.task.shutdown.confirm": "Do you want to shutdown the current task?",
+  "msg.engine.monitoring.ingestion.task.shutdown.confirm.fail": "Failed to shutdown the task.",
+  "msg.engine.monitoring.ingestion.supervisor.shutdown.confirm": "Do you want to shutdown the current supervisor?",
+  "msg.engine.monitoring.ingestion.supervisor.shutdown.confirm.fail": "Failed to shutdown the supervisor",
+  "msg.engine.monitoring.ingestion.reset": "Reset",
+  "msg.engine.monitoring.ingestion.supervisor.reset.confirm": "Do you want to reset the current supervisor?",
+  "msg.engine.monitoring.ingestion.supervisor.reset.confirm.fail": "Failed to reset the supervisor"
 }

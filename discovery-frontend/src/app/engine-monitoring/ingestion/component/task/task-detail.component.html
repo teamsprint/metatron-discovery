@@ -16,7 +16,7 @@
   <div class="ddp-top-flow">
     <!-- 버튼 -->
     <div class="ddp-data-form">
-      <a href="#" class="ddp-btn-buttons3 type-normal" (click)="confirmShutdownTaskOpen();" *ngIf="isCompletedTask">Shutdown</a>
+      <a href="#" class="ddp-btn-buttons3 type-normal" (click)="confirmShutdownTaskOpen(); $event.preventDefault();" *ngIf="isCompletedTask">{{'msg.engine.monitoring.ingestion.shutdown' | translate}}</a>
     </div>
     <!-- //버튼 -->
     <!-- navi wrap -->
@@ -160,7 +160,7 @@
     <div class="ddp-ui-buttons">
       <a href="javascript:" class="ddp-btn-type-popup" (click)="showShutdownConfirm = false">{{'msg.comm.btn.cancl' | translate}}</a>
       <!-- disabled 시 ddp-disabled 추가 -->
-      <a href="javascript:" class="ddp-btn-type-popup ddp-bg-black" (click)="shutdownTask();">{{'msg.engine.monitoring.ingestion.task.shutdown' | translate}}</a>
+      <a href="javascript:" class="ddp-btn-type-popup ddp-bg-black" (click)="shutdownTask();">{{'msg.engine.monitoring.ingestion.shutdown' | translate}}</a>
     </div>
     <!-- //button -->
   </div>

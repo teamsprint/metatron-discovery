@@ -110,7 +110,7 @@ export class EngineService extends AbstractService {
     return this.get(this.URL_MONITORING + '/ingestion/task/' + taskId + '/log');
   }
 
-  public shutdownTaskLogById(taskId) {
+  public shutdownTaskById(taskId) {
     return this.post(this.URL_MONITORING + '/ingestion/task/' + taskId + '/shutdown', null);
   }
 
@@ -124,6 +124,14 @@ export class EngineService extends AbstractService {
 
   public getSupervisorRows(params: object) {
     return this.post(this.URL_MONITORING + '/ingestion/supervisor/row', params);
+  }
+
+  public shutdownSupervisorById(supervisorId) {
+    return this.post(this.URL_MONITORING + '/ingestion/supervisor/' + supervisorId + '/shutdown', null);
+  }
+
+  public resetSupervisorById(supervisorId) {
+    return this.post(this.URL_MONITORING + '/ingestion/supervisor/' + supervisorId + '/reset', null);
   }
 
   public getWorkerList() {
