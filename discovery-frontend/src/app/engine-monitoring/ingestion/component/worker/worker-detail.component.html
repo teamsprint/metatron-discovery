@@ -18,7 +18,7 @@
     <div class="ddp-wrap-navi">
 
       <a href="javascript:" class="ddp-btn-back" (click)="prevWorkerList()"></a>
-      <span class="ddp-data-name">{{worker.worker.host}}</span>
+      <span class="ddp-data-name" *ngIf="worker">{{worker.worker.host}}</span>
     </div>
     <!-- //navi wrap -->
   </div>
@@ -31,7 +31,7 @@
 
       <label class="ddp-label-detail">information</label>
 
-      <table class="ddp-table-detail">
+      <table class="ddp-table-detail" *ngIf="worker">
         <colgroup>
           <col width="180px">
           <col width="*">
