@@ -16,6 +16,7 @@ import {Component, ElementRef, Injector, OnDestroy, OnInit, ViewChild} from '@an
 import {AbstractComponent} from '../../../common/component/abstract.component';
 import {DatasourceService} from '../../../datasource/service/datasource.service';
 import {EngineService} from "../../service/engine.service";
+import {Engine} from "../../../domain/engine-monitoring/engine";
 
 declare let echarts: any;
 declare let $: any;
@@ -109,7 +110,7 @@ export class GraphComponent extends AbstractComponent implements OnInit, OnDestr
     const queryParam: any =
       {
         monitoringTarget: {
-          metric: 'GC_COUNT'
+          metric: Engine.MonitoringTarget.GC_COUNT
         },
         fromDate: moment().subtract(7, 'days').format('YYYY-MM-DDTHH:mm:ss'),
         toDate: moment().format('YYYY-MM-DDTHH:mm:ss')
@@ -181,7 +182,7 @@ export class GraphComponent extends AbstractComponent implements OnInit, OnDestr
     const queryParam: any =
       {
         monitoringTarget : {
-          metric: 'QUERY_TIME',
+          metric: Engine.MonitoringTarget.QUERY_TIME,
           includeCount: true
         },
         fromDate: moment().subtract(7, 'days').format('YYYY-MM-DDTHH:mm:ss'),

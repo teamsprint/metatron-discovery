@@ -239,6 +239,11 @@ public class EngineMonitoringController {
     return ResponseEntity.ok(monitoringQueryService.getSupervisorStatus(supervisorId));
   }
 
+  @RequestMapping(value = "/monitoring/ingestion/supervisor/row", method = RequestMethod.POST)
+  public ResponseEntity<?> getIngestRow(@RequestBody EngineMonitoringRequest queryRequest) {
+    return ResponseEntity.ok(monitoringQueryService.getIngestRow(queryRequest));
+  }
+
   @RequestMapping(value = "/monitoring/ingestion/workers/criteria", method = RequestMethod.GET)
   public ResponseEntity<?> getCriteriaInWorker() {
     List<ListCriterion> listCriteria = monitoringQueryService.getListCriterionInWorker();

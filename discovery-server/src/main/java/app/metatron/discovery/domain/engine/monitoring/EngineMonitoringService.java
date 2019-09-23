@@ -28,9 +28,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.thymeleaf.util.StringUtils;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -443,8 +445,22 @@ public class EngineMonitoringService {
     return criterion;
   }
 
-  public Object selectStreamQuery(EngineMonitoringRequest request) {
+  public Map<String, Object> getIngestRow(EngineMonitoringRequest request) {
+    Map<String, Object> result = Maps.newHashMap();
+    request.getMonitoringTarget().setMetric(EngineMonitoringTarget.MetricType.INGEST_PROCESSED);
+    Map<String, Object> processed = selectStreamQuery(request);
+    request.getMonitoringTarget().setMetric(EngineMonitoringTarget.MetricType.INGEST_UNPARSEABLE);
+    Map<String, Object> unparseable = selectStreamQuery(request);
+    request.getMonitoringTarget().setMetric(EngineMonitoringTarget.MetricType.INGEST_THROWNAWAY);
+    Map<String, Object> thrownaway = selectStreamQuery(request);
+    result.put("time", processed.get("time"));
+    result.put("processed", processed.get("value"));
+    result.put("unparseable", unparseable.get("value"));
+    result.put("thrownaway", thrownaway.get("value"));
+    return result;
+  }
 
+  public Map<String, Object> selectStreamQuery(EngineMonitoringRequest request) {
     AndFilter filter = new AndFilter();
     List<String> columns;
     if ( request.getMonitoringTarget().getTaskId() != null ) {
@@ -456,6 +472,13 @@ public class EngineMonitoringService {
     } else {
       return null;
     }
+
+    request.setResultFormat(new ObjectResultFormat(ENGINE));
+    Map<String, String> fieldMapper = Maps.newLinkedHashMap();
+    for (String column : columns) {
+      fieldMapper.put(column, column);
+    }
+    request.setResultFieldMapper(fieldMapper);
 
     switch (request.getMonitoringTarget().getMetric()) {
       case SUPERVISOR_LAG:
@@ -475,6 +498,7 @@ public class EngineMonitoringService {
                                                            .columns(columns)
                                                            .build();
     selectStreamQuery.setFilter(filter);
+
     if (StringUtils.isEmpty(request.getFromDate()) || StringUtils.isEmpty(request.getToDate())) {
       LocalDateTime nowTime = LocalDateTime.now();
 
@@ -485,7 +509,27 @@ public class EngineMonitoringService {
     }
     selectStreamQuery.setIntervals(Lists.newArrayList(request.getFromDate()+"/"+request.getToDate()));
     selectStreamQuery.setLimit(100);
-    return query(selectStreamQuery);
+
+    String queryString = GlobalObjectMapper.writeValueAsString(selectStreamQuery);
+    Optional<JsonNode> engineResult = engineRepository.query(queryString, JsonNode.class);
+    Object data = request.getResultFormat()
+                           .makeResult(
+                               engineResult.orElseGet(
+                                   () -> GlobalObjectMapper.getDefaultMapper().createArrayNode())
+                           );
+
+    Map<String, Object> result = Maps.newHashMap();
+    ArrayNode engineData = (ArrayNode) data;
+    List<String> timeList = Lists.newArrayList();
+    List<Long> valueList = Lists.newArrayList();
+    for (JsonNode rowNode : engineData) {
+      Map<String, Object> row = GlobalObjectMapper.getDefaultMapper().convertValue(rowNode, Map.class);
+      timeList.add(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(Long.parseLong(String.valueOf(row.get("__time"))))));
+      valueList.add(Long.parseLong(String.valueOf(row.get("value"))));
+    }
+    result.put("time", timeList);
+    result.put("value", valueList);
+    return result;
   }
 
   private void setFiltersByType(List<Filter> filters, EngineMonitoringTarget monitoringTarget) {

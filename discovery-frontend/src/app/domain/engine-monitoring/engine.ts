@@ -137,4 +137,16 @@ export namespace Engine {
     SUPERVISOR = 'supervisor',
     REMOTE_WORKER = 'worker'
   }
+
+  export enum MonitoringTarget {
+    MEM_MAX = 'MEM_MAX',
+    MEM_USED = 'MEM_USED',
+    GC_COUNT = 'GC_COUNT',
+    GC_CPU = 'GC_CPU',
+    QUERY_TIME = 'QUERY_TIME',
+    SUPERVISOR_LAG = 'SUPERVISOR_LAG',
+    INGEST_PROCESSED = 'INGEST_PROCESSED',
+    INGEST_UNPARSEABLE = 'INGEST_UNPARSEABLE',
+    INGEST_THROWNAWAY = 'INGEST_THROWNAWAY'
+  }
 }

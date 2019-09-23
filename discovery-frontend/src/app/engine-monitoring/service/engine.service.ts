@@ -74,6 +74,10 @@ export class EngineService extends AbstractService {
     return this.post(this.URL_MONITORING + '/data', params);
   }
 
+  public getMonitoringStream(params: object) {
+    return this.post(this.URL_MONITORING + '/stream', params);
+  }
+
   public getMemory(params?: object) {
     return this.post(this.URL_MONITORING + '/memory', params == undefined ? {} : params);
   }
@@ -116,6 +120,10 @@ export class EngineService extends AbstractService {
 
   public getSupervisorStatus(supervisorId) {
     return this.get(this.URL_MONITORING + '/ingestion/supervisor/' + supervisorId);
+  }
+
+  public getSupervisorRows(params: object) {
+    return this.post(this.URL_MONITORING + '/ingestion/supervisor/row', params);
   }
 
   public getWorkerList() {

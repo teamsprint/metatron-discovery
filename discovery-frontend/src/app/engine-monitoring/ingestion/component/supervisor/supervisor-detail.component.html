@@ -30,7 +30,7 @@
       <div class="ddp-label-option">
         <label class="ddp-label-detail">Processed rows</label>
         <!-- 클릭시 ddp-selected 추가 -->
-        <div class="ddp-type-selectbox">
+        <!--<div class="ddp-type-selectbox">
           <span class="ddp-txt-selectbox">Last 1Hour</span>
 
           <ul class="ddp-list-selectbox ddp-selectdown ">
@@ -55,10 +55,10 @@
               </a>
             </li>
           </ul>
-        </div>
+        </div>-->
       </div>
 
-      <div class="ddp-box-graph">
+      <div class="ddp-box-graph" #row>
 
       </div>
     </div>
@@ -68,7 +68,7 @@
       <div class="ddp-label-option">
         <label class="ddp-label-detail">LAG</label>
         <!-- 클릭시 ddp-selected 추가 -->
-        <div class="ddp-type-selectbox">
+        <!--<div class="ddp-type-selectbox">
           <span class="ddp-txt-selectbox">Last 1Hour</span>
 
           <ul class="ddp-list-selectbox ddp-selectdown ">
@@ -93,9 +93,9 @@
               </a>
             </li>
           </ul>
-        </div>
+        </div>-->
       </div>
-      <div class="ddp-box-graph">
+      <div class="ddp-box-graph" #lag>
 
       </div>
     </div>
@@ -146,12 +146,12 @@
             </div>
           </th>
           <td>
-            1234
+            {{processed}}
           </td>
         </tr>
         <tr>
           <th>
-            Unpraseable
+            Unparseable
             <div class="ddp-wrap-hover-info">
               <em class="ddp-icon-info3"></em>
               <!-- popup -->
@@ -168,7 +168,7 @@
             </div>
           </th>
           <td>
-            0
+            {{unparseable}}
           </td>
         </tr>
         <tr>
@@ -192,7 +192,7 @@
             </div>
           </th>
           <td>
-            0
+            {{thrownaway}}
           </td>
         </tr>
         </tbody>
@@ -202,3 +202,4 @@
     <!-- //detail -->
 
   </div>
+</div>
