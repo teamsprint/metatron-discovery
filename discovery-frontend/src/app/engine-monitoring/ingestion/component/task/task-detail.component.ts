@@ -26,6 +26,7 @@ import {EngineService} from "../../../service/engine.service";
 import {ActivatedRoute} from "@angular/router";
 import {Task, TaskStatus, TaskType} from "../../../../domain/engine-monitoring/task";
 import {Alert} from "../../../../common/util/alert.util";
+import {Location} from "@angular/common";
 
 @Component({
   selector: 'app-detail-task',
@@ -36,7 +37,8 @@ import {Alert} from "../../../../common/util/alert.util";
 export class TaskDetailComponent extends AbstractComponent implements OnInit, OnDestroy, AfterViewInit {
 
   // noinspection JSUnusedLocalSymbols
-  constructor(protected elementRef: ElementRef,
+  constructor(private _location: Location,
+              protected elementRef: ElementRef,
               protected injector: Injector,
               private activatedRoute: ActivatedRoute,
               private engineService: EngineService) {
@@ -74,9 +76,8 @@ export class TaskDetailComponent extends AbstractComponent implements OnInit, On
     super.ngOnDestroy();
   }
 
-  // 뒤로가기
   public prevTaskList(): void {
-    this.router.navigate(['/management/engine-monitoring/ingestion/task']);
+    this._location.back();
   }
 
   public refreshTask(): void {

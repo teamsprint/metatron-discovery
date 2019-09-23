@@ -27,6 +27,7 @@ import {ActivatedRoute} from "@angular/router";
 import {Engine} from "../../../../domain/engine-monitoring/engine";
 import {Modal} from "../../../../common/domain/modal";
 import {Alert} from "../../../../common/util/alert.util";
+import {Location} from "@angular/common";
 
 declare let echarts: any;
 declare let $: any;
@@ -40,7 +41,8 @@ declare let moment: any;
 export class SupervisorDetailComponent extends AbstractComponent implements OnInit, OnDestroy, AfterViewInit {
 
   // noinspection JSUnusedLocalSymbols
-  constructor(protected elementRef: ElementRef,
+  constructor(private _location: Location,
+              protected elementRef: ElementRef,
               protected injector: Injector,
               private activatedRoute: ActivatedRoute,
               private engineService: EngineService) {
@@ -82,7 +84,7 @@ export class SupervisorDetailComponent extends AbstractComponent implements OnIn
   }
 
   public prevSupervisorList(): void {
-    this.router.navigate(['/management/engine-monitoring/ingestion/supervisor']);
+    this._location.back();
   }
 
   public confirmOpen(confirmType): void {

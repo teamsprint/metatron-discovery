@@ -16,6 +16,7 @@ import {AfterViewInit, Component, ElementRef, Injector, OnDestroy, OnInit} from 
 import {AbstractComponent} from "../../../../common/component/abstract.component";
 import {EngineService} from "../../../service/engine.service";
 import {ActivatedRoute} from "@angular/router";
+import {Location} from "@angular/common";
 
 @Component({
   selector: 'app-detail-worker',
@@ -24,7 +25,8 @@ import {ActivatedRoute} from "@angular/router";
 export class WorkerDetailComponent extends AbstractComponent implements OnInit, OnDestroy, AfterViewInit {
 
   // noinspection JSUnusedLocalSymbols
-  constructor(protected elementRef: ElementRef,
+  constructor(private _location: Location,
+              protected elementRef: ElementRef,
               protected injector: Injector,
               private activatedRoute: ActivatedRoute,
               private engineService: EngineService) {
@@ -55,9 +57,8 @@ export class WorkerDetailComponent extends AbstractComponent implements OnInit, 
     super.ngOnDestroy();
   }
 
-  // 뒤로가기
   public prevWorkerList(): void {
-    this.router.navigate(['/management/engine-monitoring/ingestion/worker']);
+    this._location.back();
   }
 
   public getCapacityPercent(): string {
