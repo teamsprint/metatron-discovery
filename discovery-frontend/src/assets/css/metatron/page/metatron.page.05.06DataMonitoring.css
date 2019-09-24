@@ -244,4 +244,15 @@ table.ddp-table-detail3 tr td .ddp-type-status-error:hover .ddp-box-layout4 {dis
 .ddp-ui-datadetail .ddp-label-option {position:relative;}
 .ddp-ui-datadetail .ddp-label-option .ddp-type-selectbox {position:absolute; top:-12px; right:0; width:180px;}
 
-
+.ddp-detail-contents.type-form .ddp-option-type {position:absolute; top:0; right:40px; z-index:1;}
+.ddp-detail-contents.type-form .ddp-option-type .ddp-type-selectbox {width:180px;}
+.ddp-detail-contents.type-form .ddp-wrap-monitoring {height:330px;background-color:#383f49;}
+.ddp-detail-overview {margin-top:20px;}
+.ddp-detail-overview .ddp-label {margin-bottom:10px;color:#4e5368; font-weight:bold;}
+.ddp-detail-overview .ddp-box-viewtable {position:absolute; top:373px; left:0; right:0; bottom:20px; min-height:auto; border:1px solid #d0d1d8; overflow:auto;}
+.ddp-detail-contents .ddp-view-datadetail {position:absolute; top:30px; left:0; right:0; bottom:0; padding:0 0 20px 20px; overflow:auto;}
+.ddp-detail-contents .ddp-view-datadetail .ddp-ui-datadetail .ddp-label-detail {font-size:13px; font-weight:bold;}
+.ddp-detail-contents .ddp-view-datadetail .ddp-wrap-graph {height:230px;background-color:#383f49;}
+.ddp-detail-contents .ddp-ui-datadetail.type-detail + .ddp-ui-datadetail.type-detail {padding-top:20px;}
+.ddp-table-detail tr td .ddp-datasource .ddp-tag-status {display:inline-block; margin-right:8px;}
+.ddp-table-detail tr td .ddp-datasource .ddp-txt-info {display:inline-block;}

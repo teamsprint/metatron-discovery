@@ -26,6 +26,7 @@ import {CommonModule} from '../../common/common.module';
 import {GraphComponent} from "./component/graph.component";
 import {DatasourceService} from "../../datasource/service/datasource.service";
 import {TimezoneService} from "../../data-storage/service/timezone.service";
+import {NodeInformationComponent} from "./component/node-information.component";
 
 @NgModule({
   imports: [
@@ -40,7 +41,8 @@ import {TimezoneService} from "../../data-storage/service/timezone.service";
     SearchComponent,
     RadioComponent,
     TableFilterPipe,
-    TableSortPipe
+    TableSortPipe,
+    NodeInformationComponent
   ],
   providers: [
     EngineService,

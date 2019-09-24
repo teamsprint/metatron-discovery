@@ -12,7 +12,15 @@
  * limitations under the License.
  */
 
-import {AfterViewInit, Component, ElementRef, Injector, OnDestroy, OnInit} from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  Injector,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
 import {AbstractComponent} from '../../common/component/abstract.component';
 import {EngineService} from '../service/engine.service';
 import {Engine} from '../../domain/engine-monitoring/engine';
@@ -20,6 +28,7 @@ import * as _ from 'lodash';
 import {ActivatedRoute} from '@angular/router';
 import {StateService} from '../service/state.service';
 import {filter} from 'rxjs/operators';
+import {NodeInformationComponent} from "./component/node-information.component";
 
 @Component({
   selector: '[overview]',
@@ -48,6 +57,9 @@ export class OverviewComponent extends AbstractComponent implements OnInit, OnDe
   private readonly WARN_CLASS = 'ddp-icon-status-warning';
   private readonly ERROR_CLASS = 'ddp-icon-status-error';
   private readonly NONE_CLASS = '';
+
+  @ViewChild(NodeInformationComponent)
+  private readonly _nodeInformationComponent: NodeInformationComponent;
 
   constructor(protected elementRef: ElementRef,
               protected injector: Injector,
@@ -160,6 +172,10 @@ export class OverviewComponent extends AbstractComponent implements OnInit, OnDe
       default:
         return this.NONE_CLASS;
     }
+  }
+
+  public showNodeInformationModal(monitoring: Engine.Monitoring) {
+    this._nodeInformationComponent.show(monitoring);
   }
 
   /**

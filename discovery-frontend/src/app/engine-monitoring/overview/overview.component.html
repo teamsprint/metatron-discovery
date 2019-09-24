@@ -125,7 +125,7 @@
           </tr>
           </thead>
           <tbody>
-          <tr *ngFor="let monitoring of filteredItems">
+          <tr class="ddp-cursor" *ngFor="let monitoring of filteredItems" (click)="showNodeInformationModal(monitoring);">
             <td>{{ monitoring.hostname }}</td>
             <td>
               <span class="ddp-data-node" [ngClass]="['type-' + monitoring.type]">
@@ -163,3 +163,5 @@
     </div>
   </div>
 </div>
+
+<node-information></node-information>

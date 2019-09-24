@@ -231,13 +231,17 @@ public class EngineMonitoringService {
   }
 
   public Map getSize() {
-    Map<String, Object> sizeMap = Maps.newHashMap();
     Optional<List> historicalNodes = engineRepository.getHistoricalNodes();
+    long currSize = 0L;
+    long maxSize = 0L;
     for (Object o : historicalNodes.get()) {
       Map<String, Object> k = (Map<String, Object>) o;
-      sizeMap.put("currSize", Long.parseLong(String.valueOf(k.get("currSize"))));
-      sizeMap.put("maxSize", Long.parseLong(String.valueOf(k.get("maxSize"))));
+      currSize += Long.parseLong(String.valueOf(k.get("currSize")));
+      maxSize += Long.parseLong(String.valueOf(k.get("maxSize")));
     }
+    Map<String, Object> sizeMap = Maps.newHashMap();
+    sizeMap.put("currSize", currSize);
+    sizeMap.put("maxSize", maxSize);
     return sizeMap;
   }
 
