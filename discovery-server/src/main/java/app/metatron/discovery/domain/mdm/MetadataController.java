@@ -119,7 +119,7 @@ public class MetadataController {
   @RequestMapping(value = "/metadatas", method = RequestMethod.GET)
   public ResponseEntity <?> findMetadatas(
       @RequestParam(value = "keyword", required = false) String keyword,
-      @RequestParam(value = "sourceType", required = false) String sourceType,
+      @RequestParam(value = "sourceType", required = false) List<String> sourceType,
       @RequestParam(value = "catalogId", required = false) String catalogId,
       @RequestParam(value = "tag", required = false) String tag,
       @RequestParam(value = "nameContains", required = false) String nameContains,
@@ -134,9 +134,14 @@ public class MetadataController {
 
 
     // Validate source type.
-    Metadata.SourceType searchSourceType = null;
-    if (StringUtils.isNotEmpty(sourceType)) {
-      searchSourceType = SearchParamValidator.enumUpperValue(Metadata.SourceType.class, sourceType, "sourceType");
+    List<Metadata.SourceType> searchSourceType = null;
+    if(sourceType != null && !sourceType.isEmpty()){
+      searchSourceType = new ArrayList<>();
+      for(String sourceTypeStr : sourceType){
+        if (StringUtils.isNotEmpty(sourceTypeStr)) {
+          searchSourceType.add(SearchParamValidator.enumUpperValue(Metadata.SourceType.class, sourceTypeStr, "sourceType"));
+        }
+      }
     }
 
     // 기본 정렬 조건 셋팅
