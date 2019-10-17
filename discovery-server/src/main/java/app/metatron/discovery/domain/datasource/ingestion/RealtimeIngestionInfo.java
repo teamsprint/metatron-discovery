@@ -14,14 +14,14 @@
 
 package app.metatron.discovery.domain.datasource.ingestion;
 
+import app.metatron.discovery.domain.datasource.ingestion.file.FileFormat;
+import app.metatron.discovery.domain.datasource.ingestion.rule.IngestionRule;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
 import java.util.List;
 import java.util.Map;
-
-import app.metatron.discovery.domain.datasource.ingestion.file.FileFormat;
 
 /**
  * Specify Real-time ingestion
@@ -69,6 +69,11 @@ public class RealtimeIngestionInfo implements IngestionInfo {
    */
   Map<String, Object> tuningOptions;
 
+  /**
+   * Global ingestion rule
+   */
+  List<IngestionRule> rules;
+
   public RealtimeIngestionInfo() {
   }
 
@@ -76,6 +81,7 @@ public class RealtimeIngestionInfo implements IngestionInfo {
   public RealtimeIngestionInfo(@JsonProperty("topic") String topic,
                                @JsonProperty("consumerProperties") Map<String, Object> consumerProperties,
                                @JsonProperty("format") FileFormat format,
+          @JsonProperty("rules") List<IngestionRule> rules,
                                @JsonProperty("rollup") Boolean rollup,
                                @JsonProperty("intervals") List<String> intervals,
                                @JsonProperty("taskOptions") Map<String, Object> taskOptions,
@@ -83,6 +89,7 @@ public class RealtimeIngestionInfo implements IngestionInfo {
     this.topic = topic;
     this.consumerProperties = consumerProperties;
     this.format = format;
+    this.rules = rules;
     this.rollup = rollup == null ? false : rollup;
     this.intervals = intervals;
     this.taskOptions = taskOptions;
@@ -123,6 +130,11 @@ public class RealtimeIngestionInfo implements IngestionInfo {
 
   public Map<String, Object> getTaskOptions() {
     return taskOptions;
+  }
+
+  @Override
+  public List<IngestionRule> getRules() {
+    return rules;
   }
 
   public enum ConsumerType {

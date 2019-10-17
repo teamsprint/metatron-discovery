@@ -14,14 +14,14 @@
 
 package app.metatron.discovery.domain.datasource.ingestion;
 
+import app.metatron.discovery.domain.datasource.ingestion.file.FileFormat;
+import app.metatron.discovery.domain.datasource.ingestion.rule.IngestionRule;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 import java.util.Map;
-
-import app.metatron.discovery.domain.datasource.ingestion.file.FileFormat;
 
 /**
  * Hive 적재 정보
@@ -43,7 +43,7 @@ public class HiveIngestionInfo implements IngestionInfo {
 
   /**
    * 대상 파티션 지정
-   *
+   * <p>
    * [{"column name1" : "partition value", "column name2" : "partition value"...}, {"column name1" :
    * "partition value", "column name2" : "partition value"...}]
    */
@@ -80,15 +80,17 @@ public class HiveIngestionInfo implements IngestionInfo {
   @JsonIgnore
   String typeString;
 
+  List<IngestionRule> rules;
 
   @JsonCreator
   public HiveIngestionInfo(@JsonProperty("format") FileFormat format,
-                           @JsonProperty("source") String source,
-                           @JsonProperty("partitions") List<Map<String, Object>> partitions,
-                           @JsonProperty("tuningOptions") Map<String, Object> tuningOptions,
-                           @JsonProperty("jobProperties") Map<String, Object> jobProperties,
-                           @JsonProperty("intervals") List<String> intervals,
-                           @JsonProperty("context") Map<String, Object> context) {
+          @JsonProperty("rules") List<IngestionRule> rules,
+          @JsonProperty("source") String source,
+          @JsonProperty("partitions") List<Map<String, Object>> partitions,
+          @JsonProperty("tuningOptions") Map<String, Object> tuningOptions,
+          @JsonProperty("jobProperties") Map<String, Object> jobProperties,
+          @JsonProperty("intervals") List<String> intervals,
+          @JsonProperty("context") Map<String, Object> context) {
     this.format = format;
     this.source = source;
     this.partitions = partitions;
@@ -156,5 +158,10 @@ public class HiveIngestionInfo implements IngestionInfo {
 
   public void setTypeString(String typeString) {
     this.typeString = typeString;
+  }
+
+  @Override
+  public List<IngestionRule> getRules() {
+    return rules;
   }
 }

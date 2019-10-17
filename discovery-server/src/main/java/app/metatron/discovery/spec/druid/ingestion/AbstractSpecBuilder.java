@@ -14,18 +14,6 @@
 
 package app.metatron.discovery.spec.druid.ingestion;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-
-import org.apache.commons.lang3.BooleanUtils;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-import org.joda.time.format.DateTimeFormat;
-
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import app.metatron.discovery.common.datasource.DataType;
 import app.metatron.discovery.domain.datasource.DataSource;
 import app.metatron.discovery.domain.datasource.DataSourceIngestionException;
@@ -34,12 +22,7 @@ import app.metatron.discovery.domain.datasource.ingestion.HdfsIngestionInfo;
 import app.metatron.discovery.domain.datasource.ingestion.HiveIngestionInfo;
 import app.metatron.discovery.domain.datasource.ingestion.IngestionInfo;
 import app.metatron.discovery.domain.datasource.ingestion.LocalFileIngestionInfo;
-import app.metatron.discovery.domain.datasource.ingestion.file.CsvFileFormat;
-import app.metatron.discovery.domain.datasource.ingestion.file.ExcelFileFormat;
-import app.metatron.discovery.domain.datasource.ingestion.file.FileFormat;
-import app.metatron.discovery.domain.datasource.ingestion.file.JsonFileFormat;
-import app.metatron.discovery.domain.datasource.ingestion.file.OrcFileFormat;
-import app.metatron.discovery.domain.datasource.ingestion.file.ParquetFileFormat;
+import app.metatron.discovery.domain.datasource.ingestion.file.*;
 import app.metatron.discovery.domain.datasource.ingestion.jdbc.BatchIngestionInfo;
 import app.metatron.discovery.domain.datasource.ingestion.rule.EvaluationRule;
 import app.metatron.discovery.domain.datasource.ingestion.rule.IngestionRule;
@@ -59,6 +42,18 @@ import app.metatron.discovery.spec.druid.ingestion.index.LuceneIndexStrategy;
 import app.metatron.discovery.spec.druid.ingestion.index.LuceneIndexing;
 import app.metatron.discovery.spec.druid.ingestion.index.SecondaryIndexing;
 import app.metatron.discovery.spec.druid.ingestion.parser.*;
+import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.BooleanUtils;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.format.DateTimeFormat;
+
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static app.metatron.discovery.domain.datasource.ingestion.jdbc.BatchIngestionInfo.IngestionScope.ALL;
 
@@ -78,6 +73,21 @@ public class AbstractSpecBuilder {
 
     // Set datasource name
     dataSchema.setDataSource(dataSource.getEngineName());
+
+    // Retrieve ingestion information.
+    IngestionInfo ingestionInfo = Preconditions.checkNotNull(dataSource.getIngestionInfo());
+
+    // Set Global Rules
+    List<IngestionRule> rules = ingestionInfo.getRules();
+    if (CollectionUtils.isNotEmpty(rules)) {
+      for (IngestionRule rule : rules) {
+        if (rule instanceof ValidationRule) {
+          dataSchema.addValidation(((ValidationRule) rule).toValidation(null));
+        } else if (rule instanceof EvaluationRule) {
+          dataSchema.addEvaluation(((EvaluationRule) rule).toEvaluation(null));
+        }
+      }
+    }
 
     // Use ingestion rule and field format
     for (Field field : dataSource.getFields()) {
@@ -128,7 +138,7 @@ public class AbstractSpecBuilder {
       DateTime now = DateTime.now(DateTimeZone.UTC);
       intervals = Lists.newArrayList(now.minusMonths(6) + "/" + now.plusMonths(6));
     } else {
-      intervals = dataSource.getIngestionInfo().getIntervals();
+      intervals = ingestionInfo.getIntervals();
     }
 
     // Set granularity, Default value (granularity : SECOND, segment granularity : DAY)
@@ -141,12 +151,12 @@ public class AbstractSpecBuilder {
     if (useRelay) {
       granularitySpec.setRollup(false);
     } else {
-      granularitySpec.setRollup(dataSource.getIngestionInfo().getRollup());
+      granularitySpec.setRollup(ingestionInfo.getRollup());
     }
 
     // Set Append
-    if (dataSource.getIngestionInfo() instanceof BatchIngestionInfo
-        && ((BatchIngestionInfo) dataSource.getIngestionInfo()).getRange() == ALL) {
+    if (ingestionInfo instanceof BatchIngestionInfo
+            && ((BatchIngestionInfo) ingestionInfo).getRange() == ALL) {
       granularitySpec.setAppend(false);
     }
 

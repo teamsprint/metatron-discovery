@@ -14,12 +14,13 @@
 
 package app.metatron.discovery.domain.datasource.ingestion.jdbc;
 
-import java.util.List;
-import java.util.Map;
-
 import app.metatron.discovery.domain.dataconnection.DataConnection;
 import app.metatron.discovery.domain.datasource.ingestion.IngestionInfo;
 import app.metatron.discovery.domain.datasource.ingestion.file.FileFormat;
+import app.metatron.discovery.domain.datasource.ingestion.rule.IngestionRule;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by kyungtaak on 2017. 4. 30..
@@ -85,6 +86,11 @@ public abstract class JdbcIngestionInfo implements IngestionInfo {
    * JDBC Connection password
    */
   String connectionPassword;
+
+  /**
+   * Global Ingestion Rules
+   */
+  List<IngestionRule> rules;
 
 
   public JdbcIngestionInfo() {
@@ -188,6 +194,15 @@ public abstract class JdbcIngestionInfo implements IngestionInfo {
 
   public void setConnectionPassword(String connectionPassword) {
     this.connectionPassword = connectionPassword;
+  }
+
+  @Override
+  public List<IngestionRule> getRules() {
+    return rules;
+  }
+
+  public void setRules(List<IngestionRule> rules) {
+    this.rules = rules;
   }
 
   public enum DataType {

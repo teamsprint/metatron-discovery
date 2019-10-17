@@ -14,18 +14,6 @@
 
 package app.metatron.discovery.spec.druid.ingestion;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-
-import com.jayway.jsonpath.DocumentContext;
-import com.jayway.jsonpath.JsonPath;
-import com.jayway.jsonpath.PathNotFoundException;
-
-import org.junit.Test;
-
-import java.util.List;
-import java.util.Map;
-
 import app.metatron.discovery.TestUtils;
 import app.metatron.discovery.common.GlobalObjectMapper;
 import app.metatron.discovery.common.datasource.DataType;
@@ -34,14 +22,21 @@ import app.metatron.discovery.domain.datasource.Field;
 import app.metatron.discovery.domain.datasource.ingestion.HiveIngestionInfo;
 import app.metatron.discovery.domain.datasource.ingestion.file.OrcFileFormat;
 import app.metatron.discovery.util.PolarisUtils;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.jayway.jsonpath.DocumentContext;
+import com.jayway.jsonpath.JsonPath;
+import com.jayway.jsonpath.PathNotFoundException;
+import org.junit.Test;
+
+import java.util.List;
+import java.util.Map;
 
 import static app.metatron.discovery.domain.datasource.DataSource.ConnectionType.ENGINE;
 import static app.metatron.discovery.domain.datasource.DataSource.DataSourceType.MASTER;
 import static app.metatron.discovery.domain.datasource.DataSource.GranularityType.DAY;
 import static app.metatron.discovery.domain.datasource.DataSource.SourceType.HIVE;
-import static app.metatron.discovery.domain.datasource.Field.FieldRole.DIMENSION;
-import static app.metatron.discovery.domain.datasource.Field.FieldRole.MEASURE;
-import static app.metatron.discovery.domain.datasource.Field.FieldRole.TIMESTAMP;
+import static app.metatron.discovery.domain.datasource.Field.FieldRole.*;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -78,6 +73,7 @@ public class IndexSpecTest {
 
     HiveIngestionInfo hiveIngestionInfo = new HiveIngestionInfo(
         new OrcFileFormat(), //new CsvFileFormat(),
+            null,
         sourceTable,
         partitions,
         null,

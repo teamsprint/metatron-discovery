@@ -14,12 +14,12 @@
 
 package app.metatron.discovery.domain.datasource.ingestion;
 
+import app.metatron.discovery.domain.datasource.ingestion.file.FileFormat;
+import app.metatron.discovery.domain.datasource.ingestion.rule.IngestionRule;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
 import java.util.List;
 import java.util.Map;
-
-import app.metatron.discovery.domain.datasource.ingestion.file.FileFormat;
 
 /**
  *
@@ -30,6 +30,7 @@ public class LocalFileIngestionInfo implements IngestionInfo {
   String path;
 
   String uploadFileName;
+
   String originalFileName;
 
   Boolean removeFirstRow = false;
@@ -51,7 +52,15 @@ public class LocalFileIngestionInfo implements IngestionInfo {
    */
   Map<String, Object> tuningOptions;
 
+  /**
+   * Character set for local file
+   */
   String charset;
+
+  /**
+   * Global ingestion rule
+   */
+  List<IngestionRule> rules;
 
   public LocalFileIngestionInfo() {
   }
@@ -131,5 +140,16 @@ public class LocalFileIngestionInfo implements IngestionInfo {
     return charset;
   }
 
-  public void setCharset(String charset) { this.charset = charset; }
+  public void setCharset(String charset) {
+    this.charset = charset;
+  }
+
+  @Override
+  public List<IngestionRule> getRules() {
+    return rules;
+  }
+
+  public void setRules(List<IngestionRule> rules) {
+    this.rules = rules;
+  }
 }

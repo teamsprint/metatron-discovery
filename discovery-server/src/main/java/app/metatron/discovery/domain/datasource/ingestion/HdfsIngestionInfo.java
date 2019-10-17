@@ -14,14 +14,14 @@
 
 package app.metatron.discovery.domain.datasource.ingestion;
 
+import app.metatron.discovery.domain.datasource.ingestion.file.FileFormat;
+import app.metatron.discovery.domain.datasource.ingestion.rule.IngestionRule;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
 import java.util.List;
 import java.util.Map;
-
-import app.metatron.discovery.domain.datasource.ingestion.file.FileFormat;
 
 /**
  * Created by kyungtaak on 2017. 4. 30..
@@ -55,22 +55,26 @@ public class HdfsIngestionInfo implements IngestionInfo {
    */
   Map<String, Object> jobProperties;
 
+  List<IngestionRule> rules;
+
   public HdfsIngestionInfo() {
   }
 
   @JsonCreator
   public HdfsIngestionInfo(@JsonProperty("paths") List<String> paths,
-                           @JsonProperty("findRecursive") boolean findRecursive,
-                           @JsonProperty("format") FileFormat format,
-                           @JsonProperty("rollup") Boolean rollup,
-                           @JsonProperty("intervals") List<String> intervals,
-                           @JsonProperty("tuningOptions") Map<String, Object> tuningOptions,
-                           @JsonProperty("jobProperties") Map<String, Object> jobProperties) {
+          @JsonProperty("findRecursive") boolean findRecursive,
+          @JsonProperty("format") FileFormat format,
+          @JsonProperty("rollup") Boolean rollup,
+          @JsonProperty("intervals") List<String> intervals,
+          @JsonProperty("rules") List<IngestionRule> rules,
+          @JsonProperty("tuningOptions") Map<String, Object> tuningOptions,
+          @JsonProperty("jobProperties") Map<String, Object> jobProperties) {
     this.paths = paths;
     this.findRecursive = findRecursive;
     this.format = format;
     this.rollup = rollup;
     this.intervals = intervals;
+    this.rules = rules;
     this.tuningOptions = tuningOptions;
     this.jobProperties = jobProperties;
   }
@@ -131,5 +135,10 @@ public class HdfsIngestionInfo implements IngestionInfo {
 
   public void setJobProperties(Map<String, Object> jobProperties) {
     this.jobProperties = jobProperties;
+  }
+
+  @Override
+  public List<IngestionRule> getRules() {
+    return rules;
   }
 }

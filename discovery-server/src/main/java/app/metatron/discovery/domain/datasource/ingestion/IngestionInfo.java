@@ -14,16 +14,16 @@
 
 package app.metatron.discovery.domain.datasource.ingestion;
 
+import app.metatron.discovery.domain.datasource.ingestion.file.FileFormat;
+import app.metatron.discovery.domain.datasource.ingestion.jdbc.BatchIngestionInfo;
+import app.metatron.discovery.domain.datasource.ingestion.jdbc.LinkIngestionInfo;
+import app.metatron.discovery.domain.datasource.ingestion.jdbc.SingleIngestionInfo;
+import app.metatron.discovery.domain.datasource.ingestion.rule.IngestionRule;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import java.util.List;
 import java.util.Map;
-
-import app.metatron.discovery.domain.datasource.ingestion.file.FileFormat;
-import app.metatron.discovery.domain.datasource.ingestion.jdbc.BatchIngestionInfo;
-import app.metatron.discovery.domain.datasource.ingestion.jdbc.LinkIngestionInfo;
-import app.metatron.discovery.domain.datasource.ingestion.jdbc.SingleIngestionInfo;
 
 /**
  * Created by kyungtaak on 2016. 7. 15..
@@ -39,6 +39,7 @@ import app.metatron.discovery.domain.datasource.ingestion.jdbc.SingleIngestionIn
     @JsonSubTypes.Type(value = HiveIngestionInfo.class, name = "hive")
 })
 public interface IngestionInfo {
+
   FileFormat getFormat();
 
   Boolean getRollup();
@@ -46,4 +47,11 @@ public interface IngestionInfo {
   Map<String, Object> getTuningOptions();
 
   List<String> getIntervals();
+
+  /**
+   * Global Ingestion Rules
+   *
+   * @return
+   */
+  List<IngestionRule> getRules();
 }

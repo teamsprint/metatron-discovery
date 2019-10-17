@@ -1,9 +1,8 @@
 package app.metatron.discovery.domain.datasource.ingestion.rule;
 
+import app.metatron.discovery.spec.druid.ingestion.Validation;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
-import app.metatron.discovery.spec.druid.ingestion.Validation;
 
 public class ExclusionRule extends ValidationRule implements IngestionRule {
 
@@ -20,6 +19,6 @@ public class ExclusionRule extends ValidationRule implements IngestionRule {
 
   @Override
   public Validation toValidation(String name) {
-    return null;
+    return new Validation(name, expr);
   }
 }

@@ -31,6 +31,7 @@ import app.metatron.discovery.domain.datasource.ingestion.jdbc.JdbcIngestionInfo
 import app.metatron.discovery.domain.datasource.ingestion.jdbc.LinkIngestionInfo;
 import app.metatron.discovery.domain.datasource.ingestion.jdbc.SingleIngestionInfo;
 import app.metatron.discovery.domain.datasource.ingestion.rule.DiscardNullRule;
+import app.metatron.discovery.domain.datasource.ingestion.rule.ExclusionRule;
 import app.metatron.discovery.domain.datasource.ingestion.rule.GeoPointRule;
 import app.metatron.discovery.domain.datasource.ingestion.rule.ReplaceNullRule;
 import app.metatron.discovery.domain.scheduling.engine.DataSourceCheckJobIntegrationTest;
@@ -114,16 +115,16 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
   public void dataSourceList() {
     // @formatter:off
     Response createResponse =
-    given()
-      .auth().oauth2(oauth_token)
-      .contentType(ContentType.JSON)
-    .when()
-      .get("/api/datasources");
+            given()
+                    .auth().oauth2(oauth_token)
+                    .contentType(ContentType.JSON)
+                    .when()
+                    .get("/api/datasources");
 
     createResponse.then()
-      .statusCode(HttpStatus.SC_OK)
-//      .body("id", any(String.class))
-    .log().all();
+            .statusCode(HttpStatus.SC_OK)
+            //      .body("id", any(String.class))
+            .log().all();
   }
 
   @Test
@@ -131,16 +132,16 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
   public void dataSourceDetail() {
     // @formatter:off
     Response createResponse =
-    given()
-      .auth().oauth2(oauth_token)
-      .contentType(ContentType.JSON)
-    .when()
-      .get("/api/datasources/{id}", "ds-37");
+            given()
+                    .auth().oauth2(oauth_token)
+                    .contentType(ContentType.JSON)
+                    .when()
+                    .get("/api/datasources/{id}", "ds-37");
 
     createResponse.then()
-      .statusCode(HttpStatus.SC_OK)
-//      .body("id", any(String.class))
-    .log().all();
+            .statusCode(HttpStatus.SC_OK)
+            //      .body("id", any(String.class))
+            .log().all();
     // @formatter:on
   }
 
@@ -153,15 +154,15 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
 
     // @formatter:off
     given()
-      .auth().oauth2(oauth_token)
-      .contentType(ContentType.JSON)
-      .param("status", "running")
-      .log().all()
-    .when()
-      .get("/api/datasources/{id}/histories", dataSourceId)
-    .then()
-      .log().all()
-      .statusCode(HttpStatus.SC_OK);
+            .auth().oauth2(oauth_token)
+            .contentType(ContentType.JSON)
+            .param("status", "running")
+            .log().all()
+            .when()
+            .get("/api/datasources/{id}/histories", dataSourceId)
+            .then()
+            .log().all()
+            .statusCode(HttpStatus.SC_OK);
     // @formatter:on
   }
 
@@ -176,14 +177,14 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
 
     // @formatter:off
     given()
-      .auth().oauth2(oauth_token)
-      .contentType(ContentType.JSON)
-      .param("offset", offset)
-    .when()
-      .get("/api/datasources/{id}/histories/{historyId}/log", dataSourceId, historyId)
-    .then()
-      .log().all()
-      .statusCode(HttpStatus.SC_OK);
+            .auth().oauth2(oauth_token)
+            .contentType(ContentType.JSON)
+            .param("offset", offset)
+            .when()
+            .get("/api/datasources/{id}/histories/{historyId}/log", dataSourceId, historyId)
+            .then()
+            .log().all()
+            .statusCode(HttpStatus.SC_OK);
     // @formatter:on
   }
 
@@ -197,13 +198,13 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
 
     // @formatter:off
     given()
-      .auth().oauth2(oauth_token)
-      .contentType(ContentType.JSON)
-    .when()
-      .post("/api/datasources/{id}/histories/{historyId}/reset", dataSourceId, historyId)
-    .then()
-      .log().all()
-      .statusCode(HttpStatus.SC_OK);
+            .auth().oauth2(oauth_token)
+            .contentType(ContentType.JSON)
+            .when()
+            .post("/api/datasources/{id}/histories/{historyId}/reset", dataSourceId, historyId)
+            .then()
+            .log().all()
+            .statusCode(HttpStatus.SC_OK);
     // @formatter:on
   }
 
@@ -217,13 +218,13 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
 
     // @formatter:off
     given()
-      .auth().oauth2(oauth_token)
-      .contentType(ContentType.JSON)
-    .when()
-      .post("/api/datasources/{id}/histories/{historyId}/stop", dataSourceId, historyId)
-    .then()
-      .log().all()
-      .statusCode(HttpStatus.SC_OK);
+            .auth().oauth2(oauth_token)
+            .contentType(ContentType.JSON)
+            .when()
+            .post("/api/datasources/{id}/histories/{historyId}/stop", dataSourceId, historyId)
+            .then()
+            .log().all()
+            .statusCode(HttpStatus.SC_OK);
     // @formatter:on
   }
 
@@ -242,33 +243,33 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
     Field f2 = new Field("filtering field2", DataType.TEXT, DIMENSION, 1L);
     f2.setFiltering(true);
     f2.setFilteringSeq(1L);
-    f2.setFilteringOptions(new Field.FilterOption("inclusion", "single_list", Lists.newArrayList("single_list", "single_combo")));
+    f2.setFilteringOptions(
+            new Field.FilterOption("inclusion", "single_list", Lists.newArrayList("single_list", "single_combo")));
     Field f3 = new Field("filtering field3", DataType.TEXT, DIMENSION, 2L);
 
-
     DataSource dataSource = new DataSourceBuilder()
-        .name("DataSource")
-        .type(MASTER)
-        .ownerId("polaris")
-        .fields(f1, f2, f3).build();
+            .name("DataSource")
+            .type(MASTER)
+            .ownerId("polaris")
+            .fields(f1, f2, f3).build();
 
     dataSource.setConnType(ENGINE);
     dataSource.setSrcType(NONE);
 
     // @formatter:off
     Response createResponse =
-    given()
-      .auth().oauth2(oauth_token)
-      .contentType(ContentType.JSON)
-      .body(dataSource)
-      .log().all()
-    .when()
-      .post("/api/datasources");
+            given()
+                    .auth().oauth2(oauth_token)
+                    .contentType(ContentType.JSON)
+                    .body(dataSource)
+                    .log().all()
+                    .when()
+                    .post("/api/datasources");
 
     createResponse.then()
-      .statusCode(HttpStatus.SC_CREATED)
-      .body("id", any(String.class))
-    .log().all();
+            .statusCode(HttpStatus.SC_CREATED)
+            .body("id", any(String.class))
+            .log().all();
     // @formatter:on
 
     TestUtils.printTestTitle("2. Update fields ");
@@ -295,7 +296,8 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
     formatMap.put("type", "time_format");
     formatMap.put("format", "yyyy-MM-dd");
     updateField.put("format", formatMap);
-    updateField.put("filteringOptions", new Field.FilterOption("time", "range", Lists.newArrayList("range", "relative")));
+    updateField
+            .put("filteringOptions", new Field.FilterOption("time", "range", Lists.newArrayList("range", "relative")));
 
     Map<String, Object> removeField = Maps.newHashMap();
     removeField.put("op", "remove");
@@ -303,31 +305,31 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
 
     // @formatter:off
     given()
-      .auth().oauth2(oauth_token)
-      .contentType(ContentType.JSON)
-      .body(Lists.newArrayList(addField, updateField, removeField))
-      .log().all()
-    .when()
-      .patch("/api/datasources/{id}/fields", dataSourceId).
-    then()
-      .statusCode(HttpStatus.SC_NO_CONTENT)
-//      .body("name", is(workspace1.getName()))
-    .log().all();
+            .auth().oauth2(oauth_token)
+            .contentType(ContentType.JSON)
+            .body(Lists.newArrayList(addField, updateField, removeField))
+            .log().all()
+            .when()
+            .patch("/api/datasources/{id}/fields", dataSourceId).
+            then()
+            .statusCode(HttpStatus.SC_NO_CONTENT)
+            //      .body("name", is(workspace1.getName()))
+            .log().all();
     // @formatter:on
 
     TestUtils.printTestTitle("3. Result. ");
 
     // @formatter:off
     given()
-      .auth().oauth2(oauth_token)
-      .contentType(ContentType.JSON)
-      .param("projection", "forDetailView")
-    .when()
-      .get("/api/datasources/{id}", dataSourceId).
-    then()
-      .statusCode(HttpStatus.SC_OK)
-//      .body("name", is(workspace1.getName()))
-    .log().all();
+            .auth().oauth2(oauth_token)
+            .contentType(ContentType.JSON)
+            .param("projection", "forDetailView")
+            .when()
+            .get("/api/datasources/{id}", dataSourceId).
+            then()
+            .statusCode(HttpStatus.SC_OK)
+            //      .body("name", is(workspace1.getName()))
+            .log().all();
     // @formatter:on
   }
 
@@ -346,41 +348,41 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
     //field2.setMappedField(Sets.newHashSet(field3, field4));
 
     DataSource dataSource1 = new DataSourceBuilder()
-        .name("datasource1")
-        .fields(
-            field1, field2
-        )
-        .build();
+            .name("datasource1")
+            .fields(
+                    field1, field2
+            )
+            .build();
 
     System.out.println("################\n" + GlobalObjectMapper.writeValueAsString(dataSource1));
 
     // @formatter:off
     Response addResponse =
-    given()
-      .auth().oauth2(oauth_token)
-      .body(GlobalObjectMapper.writeValueAsString(dataSource1))
-      .contentType(ContentType.JSON)
-    .when()
-      .post("/api/datasources");
+            given()
+                    .auth().oauth2(oauth_token)
+                    .body(GlobalObjectMapper.writeValueAsString(dataSource1))
+                    .contentType(ContentType.JSON)
+                    .when()
+                    .post("/api/datasources");
 
     String dataSourceId = from(addResponse.asString()).get("id");
 
     addResponse.then()
-      .statusCode(HttpStatus.SC_CREATED)
-      .log().all();
+            .statusCode(HttpStatus.SC_CREATED)
+            .log().all();
     // @formatter:on
 
     // @formatter:off
     Response createResponse =
-    given()
-      .auth().oauth2(oauth_token)
-      .contentType(ContentType.JSON)
-    .when()
-      .get("/api/datasources/{id}", dataSourceId);
+            given()
+                    .auth().oauth2(oauth_token)
+                    .contentType(ContentType.JSON)
+                    .when()
+                    .get("/api/datasources/{id}", dataSourceId);
 
     createResponse.then()
-      .statusCode(HttpStatus.SC_OK)
-    .log().all();
+            .statusCode(HttpStatus.SC_OK)
+            .log().all();
 
 
   }
@@ -397,17 +399,17 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
 
     // @formatter:off
     Response addResponse =
-    given()
-      .auth().oauth2(oauth_token)
-      .body(GlobalObjectMapper.writeValueAsString(dataSource1))
-      .contentType(ContentType.JSON)
-    .when()
-      .post("/api/datasources");
+            given()
+                    .auth().oauth2(oauth_token)
+                    .body(GlobalObjectMapper.writeValueAsString(dataSource1))
+                    .contentType(ContentType.JSON)
+                    .when()
+                    .post("/api/datasources");
 
     addResponse.then()
-      .statusCode(HttpStatus.SC_CREATED)
-      .body("name", is(dataSource1.getName()))
-      .log().all();
+            .statusCode(HttpStatus.SC_CREATED)
+            .body("name", is(dataSource1.getName()))
+            .log().all();
     // @formatter:on
 
     TestUtils.printTestTitle("2-1. 데이터 소스내 워크스페이스 전체 수정(Replace)");
@@ -418,56 +420,55 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
     // Add Workspace
     // @formatter:off
     given()
-      .auth().oauth2(oauth_token)
-      .body("/api/workspaces/ws-02")
-      .contentType("text/uri-list")
-    .when()
-      .put(workspacesLink)
-    .then()
-      .statusCode(HttpStatus.SC_NO_CONTENT)
-    .log().all();
+            .auth().oauth2(oauth_token)
+            .body("/api/workspaces/ws-02")
+            .contentType("text/uri-list")
+            .when()
+            .put(workspacesLink)
+            .then()
+            .statusCode(HttpStatus.SC_NO_CONTENT)
+            .log().all();
     // @formatter:on
 
     TestUtils.printTestTitle("2-2. 데이터 소스내 워크스페이스 연결 추가");
 
     // @formatter:off
     given()
-      .auth().oauth2(oauth_token)
-      .body("/api/workspaces/ws-03")
-      .contentType("text/uri-list")
-    .when()
-      .patch(workspacesLink)
-    .then()
-      .statusCode(HttpStatus.SC_NO_CONTENT)
-    .log().all();
+            .auth().oauth2(oauth_token)
+            .body("/api/workspaces/ws-03")
+            .contentType("text/uri-list")
+            .when()
+            .patch(workspacesLink)
+            .then()
+            .statusCode(HttpStatus.SC_NO_CONTENT)
+            .log().all();
     // @formatter:on
 
     TestUtils.printTestTitle("2-2. 데이터 소스내 워크스페이스 연결 삭제");
 
     // @formatter:off
     given()
-      .auth().oauth2(oauth_token)
-    .when()
-      .delete(workspacesLink + "/ws-02")
-    .then()
-      .statusCode(HttpStatus.SC_NO_CONTENT)
-    .log().all();
+            .auth().oauth2(oauth_token)
+            .when()
+            .delete(workspacesLink + "/ws-02")
+            .then()
+            .statusCode(HttpStatus.SC_NO_CONTENT)
+            .log().all();
     // @formatter:on
 
     TestUtils.printTestTitle("3. 데이터 소스내 워크스페이스 연결 조회");
 
     // @formatter:off
     given()
-      .auth().oauth2(oauth_token)
-      .contentType(ContentType.JSON)
-    .when()
-      .get(workspacesLink)
-    .then()
-      .statusCode(HttpStatus.SC_OK)
-//      .body("_embedded.workspaces.name", hasItems(workspace1.getName(), workspace2.getName()))
-    .log().all();
+            .auth().oauth2(oauth_token)
+            .contentType(ContentType.JSON)
+            .when()
+            .get(workspacesLink)
+            .then()
+            .statusCode(HttpStatus.SC_OK)
+            //      .body("_embedded.workspaces.name", hasItems(workspace1.getName(), workspace2.getName()))
+            .log().all();
     // @formatter:on
-
 
   }
 
@@ -478,15 +479,15 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
 
     // @formatter:off
     given()
-      .auth().oauth2(oauth_token)
-      .contentType(ContentType.JSON)
-      .param("projection", "forDetailView")
-    .when()
-      .get("/api/datasources/{id}/multiple", "ds-test-03,ds-test-04").
-    then()
-      .statusCode(HttpStatus.SC_OK)
-//      .body("_embedded.dataSources", hasSize(2))
-    .log().all();
+            .auth().oauth2(oauth_token)
+            .contentType(ContentType.JSON)
+            .param("projection", "forDetailView")
+            .when()
+            .get("/api/datasources/{id}/multiple", "ds-test-03,ds-test-04").
+            then()
+            .statusCode(HttpStatus.SC_OK)
+            //      .body("_embedded.dataSources", hasSize(2))
+            .log().all();
     // @formatter:on
   }
 
@@ -497,28 +498,28 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
 
     // @formatter:off
     given()
-      .auth().oauth2(oauth_token)
-      .contentType(ContentType.JSON)
-      .accept(ContentType.JSON)
-      .param("projection", "forDetailView")
-      .param("dsType", "master")
-      .param("connType", "engine")
-      .param("srcType", "jdbc")
-      .param("linkedMetadata", false)
-//      .param("status", "preparing")
-//      .param("published", "false")
-//      .param("nameContains", "real")
-//      .param("searchDateBy", "created")
-//      .param("from", "2017-09-11")
-//      .param("to", "2017-09-12")
-//      .param("sort", "name,asc")
-      .log().all()
-    .when()
-      .get("/api/datasources")
-    .then()
-//      .statusCode(HttpStatus.SC_OK)
-//      .body("_embedded.dataSources", hasSize(2))
-    .log().all();
+            .auth().oauth2(oauth_token)
+            .contentType(ContentType.JSON)
+            .accept(ContentType.JSON)
+            .param("projection", "forDetailView")
+            .param("dsType", "master")
+            .param("connType", "engine")
+            .param("srcType", "jdbc")
+            .param("linkedMetadata", false)
+            //      .param("status", "preparing")
+            //      .param("published", "false")
+            //      .param("nameContains", "real")
+            //      .param("searchDateBy", "created")
+            //      .param("from", "2017-09-11")
+            //      .param("to", "2017-09-12")
+            //      .param("sort", "name,asc")
+            .log().all()
+            .when()
+            .get("/api/datasources")
+            .then()
+            //      .statusCode(HttpStatus.SC_OK)
+            //      .body("_embedded.dataSources", hasSize(2))
+            .log().all();
     // @formatter:on
   }
 
@@ -531,17 +532,17 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
 
     // @formatter:off
     given()
-      .auth().oauth2(oauth_token)
-      .contentType(ContentType.JSON)
-      .accept(ContentType.JSON)
-      .param("projection", "forDetailView")
-      .log().all()
-    .when()
-      .get("/api/datasources/{id}", datasourceId)
-    .then()
-//      .statusCode(HttpStatus.SC_OK)
-//      .body("_embedded.dataSources", hasSize(2))
-    .log().all();
+            .auth().oauth2(oauth_token)
+            .contentType(ContentType.JSON)
+            .accept(ContentType.JSON)
+            .param("projection", "forDetailView")
+            .log().all()
+            .when()
+            .get("/api/datasources/{id}", datasourceId)
+            .then()
+            //      .statusCode(HttpStatus.SC_OK)
+            //      .body("_embedded.dataSources", hasSize(2))
+            .log().all();
     // @formatter:on
   }
 
@@ -552,16 +553,16 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
 
     // @formatter:off
     given()
-      .auth().oauth2(oauth_token)
-      .contentType(ContentType.JSON)
-//      .param("type", "tuning")
-      .param("ingestionType", "batch")
-      .log().all()
-    .when()
-      .get("/api/datasources/ingestion/options")
-    .then()
-//      .statusCode(HttpStatus.SC_OK)
-    .log().all();
+            .auth().oauth2(oauth_token)
+            .contentType(ContentType.JSON)
+            //      .param("type", "tuning")
+            .param("ingestionType", "batch")
+            .log().all()
+            .when()
+            .get("/api/datasources/ingestion/options")
+            .then()
+            //      .statusCode(HttpStatus.SC_OK)
+            .log().all();
     // @formatter:on
   }
 
@@ -577,17 +578,17 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
 
     // @formatter:off
     given()
-      .auth().oauth2(oauth_token)
-      .contentType(ContentType.JSON)
-      .queryParam("limit", 5)
-      .queryParam("intervals", "2011-01-01/2012-01-01")
-      //.body(request)
-      .log().all()
-    .when()
-      .post("/api/datasources/{id}/data", datasourceId)
-    .then()
-//      .statusCode(HttpStatus.SC_OK)
-    .log().all();
+            .auth().oauth2(oauth_token)
+            .contentType(ContentType.JSON)
+            .queryParam("limit", 5)
+            .queryParam("intervals", "2011-01-01/2012-01-01")
+            //.body(request)
+            .log().all()
+            .when()
+            .post("/api/datasources/{id}/data", datasourceId)
+            .then()
+            //      .statusCode(HttpStatus.SC_OK)
+            .log().all();
     // @formatter:on
   }
 
@@ -597,16 +598,16 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
 
     // @formatter:off
     given()
-     .auth().oauth2(oauth_token)
-      .param("workspaceId", "ws-02")
-      .param("dsType", "MASTER")
-      .contentType(ContentType.JSON).
-    when()
-      .get("/api/datasources/search/type").
-    then()
-      .statusCode(HttpStatus.SC_OK)
-//      .body("_embedded.dataSources", hasSize(2))
-    .log().all();
+            .auth().oauth2(oauth_token)
+            .param("workspaceId", "ws-02")
+            .param("dsType", "MASTER")
+            .contentType(ContentType.JSON).
+            when()
+            .get("/api/datasources/search/type").
+            then()
+            .statusCode(HttpStatus.SC_OK)
+            //      .body("_embedded.dataSources", hasSize(2))
+            .log().all();
     // @formatter:on
   }
 
@@ -614,30 +615,30 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
   @OAuthRequest(username = "polaris", value = {"ROLE_SYSTEM_USER", "ROLE_PERM_SYSTEM_MANAGE_DATASOURCE"})
   public void patchDataSource() throws JsonProcessingException {
 
-
     List<JsonPatch> patches = Lists.newArrayList(
-        //new JsonPatch(JsonPatch.Operations.REPLACE, "/name", "test"),
-        new JsonPatch(JsonPatch.Operations.REMOVE, "/fields/0"),
-        new JsonPatch(JsonPatch.Operations.REPLACE, "/fields/1/filteringOptions", "[{\"type\": \"USER_DEFINED\", \"default\": true}]"),
-        new JsonPatch(JsonPatch.Operations.REPLACE, "/fields/2/filteringOptions", "[{\"type\": \"USER_DEFINED\", \"default\": true}]")
+            //new JsonPatch(JsonPatch.Operations.REPLACE, "/name", "test"),
+            new JsonPatch(JsonPatch.Operations.REMOVE, "/fields/0"),
+            new JsonPatch(JsonPatch.Operations.REPLACE, "/fields/1/filteringOptions",
+                    "[{\"type\": \"USER_DEFINED\", \"default\": true}]"),
+            new JsonPatch(JsonPatch.Operations.REPLACE, "/fields/2/filteringOptions",
+                    "[{\"type\": \"USER_DEFINED\", \"default\": true}]")
     );
 
     System.out.println(GlobalObjectMapper.writeValueAsString(patches));
 
     // @formatter:off
     Response connRes =
-    given()
-      .auth().oauth2(oauth_token)
-      .accept(ContentType.JSON)
-      .contentType("application/json-patch+json")
-      .body(patches)
-    .when()
-      .patch("/api/datasources/ds-37");
-
+            given()
+                    .auth().oauth2(oauth_token)
+                    .accept(ContentType.JSON)
+                    .contentType("application/json-patch+json")
+                    .body(patches)
+                    .when()
+                    .patch("/api/datasources/ds-37");
 
     connRes.then()
-//      .statusCode(HttpStatus.SC_OK)
-    .log().all();
+            //      .statusCode(HttpStatus.SC_OK)
+            .log().all();
     // @formatter:on
   }
 
@@ -652,32 +653,32 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
     // 파일업로드
     // @formatter:off
     Response res =
-    given()
-      .auth().oauth2(oauth_token)
-      .accept(ContentType.JSON)
-      .multiPart("file", file)
-    .when()
-      .post("/api/datasources/file/upload");
+            given()
+                    .auth().oauth2(oauth_token)
+                    .accept(ContentType.JSON)
+                    .multiPart("file", file)
+                    .when()
+                    .post("/api/datasources/file/upload");
 
     res.then()
-      .statusCode(HttpStatus.SC_OK)
-      .log().all();
+            .statusCode(HttpStatus.SC_OK)
+            .log().all();
 
     String fileKey = from(res.asString()).getString("filekey");
 
     List<String> sheets = from(res.asString()).get("sheets");
 
     given()
-      .auth().oauth2(oauth_token)
-      .accept(ContentType.JSON)
-      .param("sheet", sheets.get(0))
-      .param("limit", 5)
-      .param("firstHeaderRow", true)
-      .log().all()
-    .when()
-      .get("/api/datasources/file/{fileName}/data", fileKey)
-    .then()
-       .log().all();
+            .auth().oauth2(oauth_token)
+            .accept(ContentType.JSON)
+            .param("sheet", sheets.get(0))
+            .param("limit", 5)
+            .param("firstHeaderRow", true)
+            .log().all()
+            .when()
+            .get("/api/datasources/file/{fileName}/data", fileKey)
+            .then()
+            .log().all();
     // @formatter:on
   }
 
@@ -692,33 +693,33 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
     // 파일업로드
     // @formatter:off
     Response res =
-    given()
-      .auth().oauth2(oauth_token)
-      .accept(ContentType.JSON)
-      .multiPart("file", file)
-      .log().all()
-    .when()
-      .post("/api/datasources/file/upload");
+            given()
+                    .auth().oauth2(oauth_token)
+                    .accept(ContentType.JSON)
+                    .multiPart("file", file)
+                    .log().all()
+                    .when()
+                    .post("/api/datasources/file/upload");
 
     res.then()
-      .statusCode(HttpStatus.SC_OK)
-      .log().all();
+            .statusCode(HttpStatus.SC_OK)
+            .log().all();
 
     String fileKey = from(res.asString()).getString("filekey");
 
     given()
-      .auth().oauth2(oauth_token)
-      .accept(ContentType.JSON)
-//      .param("sheet", sheets.get(0))
-      .param("lineSep", "\n")
-      .param("delimiter", ",")
-      .param("limit", 5)
-      .param("firstHeaderRow", true)
-      .log().all()
-    .when()
-      .get("/api/datasources/file/{fileName}/data", fileKey)
-    .then()
-       .log().all();
+            .auth().oauth2(oauth_token)
+            .accept(ContentType.JSON)
+            //      .param("sheet", sheets.get(0))
+            .param("lineSep", "\n")
+            .param("delimiter", ",")
+            .param("limit", 5)
+            .param("firstHeaderRow", true)
+            .log().all()
+            .when()
+            .get("/api/datasources/file/{fileName}/data", fileKey)
+            .then()
+            .log().all();
     // @formatter:on
   }
 
@@ -729,13 +730,13 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
 
     // @formatter:off
     given()
-      .auth().oauth2(oauth_token)
-      .accept(ContentType.JSON)
-      .contentType(ContentType.JSON)
-    .when()
-      .get("/api/datasources/search/database?name=default&workspaceId=ws-02")
-    .then()
-      .log().all();
+            .auth().oauth2(oauth_token)
+            .accept(ContentType.JSON)
+            .contentType(ContentType.JSON)
+            .when()
+            .get("/api/datasources/search/database?name=default&workspaceId=ws-02")
+            .then()
+            .log().all();
     // @formatter:on
   }
 
@@ -744,36 +745,36 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
   public void searchDataSourceByKeyword() throws JsonProcessingException {
 
     DataSource dataSource1 = new DataSourceBuilder()
-        .name("test1")
-        .description("desc")
-        .build();
+            .name("test1")
+            .description("desc")
+            .build();
 
     // @formatter:off
     Response addResponse =
-    given()
-      .auth().oauth2(oauth_token)
-      .body(GlobalObjectMapper.writeValueAsString(dataSource1))
-      .contentType(ContentType.JSON)
-    .when()
-      .post("/api/datasources");
+            given()
+                    .auth().oauth2(oauth_token)
+                    .body(GlobalObjectMapper.writeValueAsString(dataSource1))
+                    .contentType(ContentType.JSON)
+                    .when()
+                    .post("/api/datasources");
 
     String dataSourceId = from(addResponse.asString()).get("id");
 
     addResponse.then()
-      .statusCode(HttpStatus.SC_CREATED)
-      .log().all();
+            .statusCode(HttpStatus.SC_CREATED)
+            .log().all();
     // @formatter:on
 
     // @formatter:off
     given()
-      .auth().oauth2(oauth_token)
-      .accept(ContentType.JSON)
-      .contentType(ContentType.JSON)
-      .param("q", "*test*")
-    .when()
-      .get("/api/datasources/search/keyword")
-    .then()
-      .log().all();
+            .auth().oauth2(oauth_token)
+            .accept(ContentType.JSON)
+            .contentType(ContentType.JSON)
+            .param("q", "*test*")
+            .when()
+            .get("/api/datasources/search/keyword")
+            .then()
+            .log().all();
     // @formatter:on
   }
 
@@ -782,24 +783,24 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
   public void searchDataSourceByQuery() throws JsonProcessingException {
 
     DataSource dataSource1 = new DataSourceBuilder()
-        .name("test1")
-        .description("desc")
-        .build();
+            .name("test1")
+            .description("desc")
+            .build();
 
     dataSource1.setDsType(MASTER);
 
     // @formatter:off
     Response addResponse =
-    given()
-      .auth().oauth2(oauth_token)
-      .body(GlobalObjectMapper.writeValueAsString(dataSource1))
-      .contentType(ContentType.JSON)
-    .when()
-      .post("/api/datasources");
+            given()
+                    .auth().oauth2(oauth_token)
+                    .body(GlobalObjectMapper.writeValueAsString(dataSource1))
+                    .contentType(ContentType.JSON)
+                    .when()
+                    .post("/api/datasources");
 
     addResponse.then()
-      .statusCode(HttpStatus.SC_CREATED)
-      .log().all();
+            .statusCode(HttpStatus.SC_CREATED)
+            .log().all();
     // @formatter:on
 
     String dataSourceId = from(addResponse.asString()).get("id");
@@ -807,33 +808,32 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
     // Add Workspace
     // @formatter:off
     given()
-      .auth().oauth2(oauth_token)
-      .body("/api/workspaces/ws-02")
-      .contentType("text/uri-list")
-    .when()
-      .put("/api/datasources/" + dataSourceId + "/workspaces")
-    .then()
-      .statusCode(HttpStatus.SC_NO_CONTENT)
-    .log().all();
+            .auth().oauth2(oauth_token)
+            .body("/api/workspaces/ws-02")
+            .contentType("text/uri-list")
+            .when()
+            .put("/api/datasources/" + dataSourceId + "/workspaces")
+            .then()
+            .statusCode(HttpStatus.SC_NO_CONTENT)
+            .log().all();
     // @formatter:on
-
 
     // @formatter:off
     given()
-      .auth().oauth2(oauth_token)
-      .accept(ContentType.JSON)
-      .contentType(ContentType.JSON)
-      .param("projection", "forList")
-//      .param("q", "+(alias:test* AND dsType:MASTER AND workspaces.id:ws-02 AND ownerId:polaris AND createdTime.ymd:[2017-01-02 TO 2017-02-04] AND modifiedTime.ymd:[2017-01-02 TO 2017-02-04])")
-//      .param("q", "+(dsType:MASTER AND (workspaces.id:ws-02 OR published:true))")
-//      .param("q", "+(alias:data~* AND dsType:MASTER)")
-      .param("q", "+(alias:\\~* AND dsType:MASTER)")
-        .param("size", 10)
-        .param("sort","alias,desc")
-    .when()
-      .get("/api/datasources/search/query")
-    .then()
-      .log().all();
+            .auth().oauth2(oauth_token)
+            .accept(ContentType.JSON)
+            .contentType(ContentType.JSON)
+            .param("projection", "forList")
+            //      .param("q", "+(alias:test* AND dsType:MASTER AND workspaces.id:ws-02 AND ownerId:polaris AND createdTime.ymd:[2017-01-02 TO 2017-02-04] AND modifiedTime.ymd:[2017-01-02 TO 2017-02-04])")
+            //      .param("q", "+(dsType:MASTER AND (workspaces.id:ws-02 OR published:true))")
+            //      .param("q", "+(alias:data~* AND dsType:MASTER)")
+            .param("q", "+(alias:\\~* AND dsType:MASTER)")
+            .param("size", 10)
+            .param("sort", "alias,desc")
+            .when()
+            .get("/api/datasources/search/query")
+            .then()
+            .log().all();
     // @formatter:on
   }
 
@@ -865,16 +865,16 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
 
     // @formatter:off
     Response dsRes =
-    given()
-      .auth().oauth2(oauth_token)
-      .contentType(ContentType.JSON)
-      .body(reqBody)
-    .when()
-      .post("/api/datasources");
+            given()
+                    .auth().oauth2(oauth_token)
+                    .contentType(ContentType.JSON)
+                    .body(reqBody)
+                    .when()
+                    .post("/api/datasources");
 
     dsRes.then()
-      .statusCode(HttpStatus.SC_CREATED)
-    .log().all();
+            .statusCode(HttpStatus.SC_CREATED)
+            .log().all();
     // @formatter:on
 
   }
@@ -913,31 +913,30 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
 
     // @formatter:off
     Response dsRes =
-    given()
-      .auth().oauth2(oauth_token)
-      .contentType(ContentType.JSON)
-      .body(reqBody)
-    .when()
-      .post("/api/datasources");
+            given()
+                    .auth().oauth2(oauth_token)
+                    .contentType(ContentType.JSON)
+                    .body(reqBody)
+                    .when()
+                    .post("/api/datasources");
 
     dsRes.then()
-      .statusCode(HttpStatus.SC_CREATED)
-    .log().all();
+            .statusCode(HttpStatus.SC_CREATED)
+            .log().all();
     // @formatter:on
 
     String dataSourceId = from(dsRes.asString()).get("id");
 
-
     // @formatter:off
     given()
-      .auth().oauth2(oauth_token)
-      .contentType(ContentType.JSON)
-      .param("projection", "forDetailView")
-    .when()
-      .get("/api/datasources/{id}", dataSourceId)
-    .then()
-      .statusCode(HttpStatus.SC_OK)
-    .log().all();
+            .auth().oauth2(oauth_token)
+            .contentType(ContentType.JSON)
+            .param("projection", "forDetailView")
+            .when()
+            .get("/api/datasources/{id}", dataSourceId)
+            .then()
+            .statusCode(HttpStatus.SC_OK)
+            .log().all();
     // @formatter:on
 
     TestUtils.printTestTitle("2. DataSource 수정시 Context 수정");
@@ -956,43 +955,43 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
 
     // @formatter:off
     given()
-      .auth().oauth2(oauth_token)
-      .contentType(ContentType.JSON)
-      .body(reqBody)
-      .log().all()
-    .when()
-      .patch("/api/datasources/{id}", dataSourceId)
-    .then()
-      .statusCode(HttpStatus.SC_OK)
-    .log().all();
+            .auth().oauth2(oauth_token)
+            .contentType(ContentType.JSON)
+            .body(reqBody)
+            .log().all()
+            .when()
+            .patch("/api/datasources/{id}", dataSourceId)
+            .then()
+            .statusCode(HttpStatus.SC_OK)
+            .log().all();
     // @formatter:on
 
     // @formatter:off
     given()
-      .auth().oauth2(oauth_token)
-      .contentType(ContentType.JSON)
-      .param("projection", "forDetailView")
-    .when()
-      .get("/api/datasources/{id}", dataSourceId)
-    .then()
-      .statusCode(HttpStatus.SC_OK)
-    .log().all();
+            .auth().oauth2(oauth_token)
+            .contentType(ContentType.JSON)
+            .param("projection", "forDetailView")
+            .when()
+            .get("/api/datasources/{id}", dataSourceId)
+            .then()
+            .statusCode(HttpStatus.SC_OK)
+            .log().all();
     // @formatter:on
 
     TestUtils.printTestTitle("3. Context key/value 값을 통해 Domain(datasource) 값을 로드");
 
     // @formatter:off
     given()
-      .auth().oauth2(oauth_token)
-      .contentType(ContentType.JSON)
-      .param("key", "prop1")
-//      .param("domainProjection", "forDetailView")
-      .log().all()
-    .when()
-      .get("/api/contexts/domains/{domainType}", "datasource")
-    .then()
-      .statusCode(HttpStatus.SC_OK)
-      .log().all();
+            .auth().oauth2(oauth_token)
+            .contentType(ContentType.JSON)
+            .param("key", "prop1")
+            //      .param("domainProjection", "forDetailView")
+            .log().all()
+            .when()
+            .get("/api/contexts/domains/{domainType}", "datasource")
+            .then()
+            .statusCode(HttpStatus.SC_OK)
+            .log().all();
     // @formatter:on
   }
 
@@ -1011,29 +1010,29 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
 
     // @formatter:off
     given()
-      .auth().oauth2(oauth_token)
-      .contentType(ContentType.JSON)
-      .body(patchParams)
-      .log().all()
-    .when()
-      .patch("/api/datasources/{id}", dataSourceId).
-    then()
-      .statusCode(HttpStatus.SC_OK)
-    .log().all();
+            .auth().oauth2(oauth_token)
+            .contentType(ContentType.JSON)
+            .body(patchParams)
+            .log().all()
+            .when()
+            .patch("/api/datasources/{id}", dataSourceId).
+            then()
+            .statusCode(HttpStatus.SC_OK)
+            .log().all();
     // @formatter:on
 
     TestUtils.printTestTitle("2. Check updated metadata column");
 
     // @formatter:off
     given()
-      .auth().oauth2(oauth_token)
-      .contentType(ContentType.JSON)
-      .queryParam("projection", "forDetailView")
-    .when()
-      .post("/api/metadatas/metasources/{dataSourceId}", dataSourceId)
-    .then()
-      .statusCode(HttpStatus.SC_OK)
-    .log().all();
+            .auth().oauth2(oauth_token)
+            .contentType(ContentType.JSON)
+            .queryParam("projection", "forDetailView")
+            .when()
+            .post("/api/metadatas/metasources/{dataSourceId}", dataSourceId)
+            .then()
+            .statusCode(HttpStatus.SC_OK)
+            .log().all();
     // @formatter:on
 
   }
@@ -1066,16 +1065,16 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
 
     // @formatter:off
     Response dsRes =
-    given()
-      .auth().oauth2(oauth_token)
-      .contentType(ContentType.JSON)
-      .body(reqBody)
-      .log().all()
-    .when()
-      .post("/api/datasources");
+            given()
+                    .auth().oauth2(oauth_token)
+                    .contentType(ContentType.JSON)
+                    .body(reqBody)
+                    .log().all()
+                    .when()
+                    .post("/api/datasources");
     dsRes.then()
-      .statusCode(HttpStatus.SC_CREATED)
-    .log().all();
+            .statusCode(HttpStatus.SC_CREATED)
+            .log().all();
     // @formatter:on
 
     String dataSourceId = from(dsRes.asString()).get("id");
@@ -1084,14 +1083,14 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
 
     // @formatter:off
     given()
-      .auth().oauth2(oauth_token)
-      .contentType(ContentType.JSON)
-      .queryParam("projection", "forDetailView")
-    .when()
-      .post("/api/metadatas/metasources/{dataSourceId}", dataSourceId)
-    .then()
-      .statusCode(HttpStatus.SC_OK)
-    .log().all();
+            .auth().oauth2(oauth_token)
+            .contentType(ContentType.JSON)
+            .queryParam("projection", "forDetailView")
+            .when()
+            .post("/api/metadatas/metasources/{dataSourceId}", dataSourceId)
+            .then()
+            .statusCode(HttpStatus.SC_OK)
+            .log().all();
     // @formatter:on
 
   }
@@ -1121,29 +1120,29 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
 
     // @formatter:off
     given()
-      .auth().oauth2(oauth_token)
-      .contentType(ContentType.JSON)
-      .body(Lists.newArrayList(addField, updateField))
-      .log().all()
-    .when()
-      .patch("/api/datasources/{id}/fields", dataSourceId).
-    then()
-      .statusCode(HttpStatus.SC_NO_CONTENT)
-    .log().all();
+            .auth().oauth2(oauth_token)
+            .contentType(ContentType.JSON)
+            .body(Lists.newArrayList(addField, updateField))
+            .log().all()
+            .when()
+            .patch("/api/datasources/{id}/fields", dataSourceId).
+            then()
+            .statusCode(HttpStatus.SC_NO_CONTENT)
+            .log().all();
     // @formatter:on
 
     TestUtils.printTestTitle("2. Check updated metadata column");
 
     // @formatter:off
     given()
-      .auth().oauth2(oauth_token)
-      .contentType(ContentType.JSON)
-      .queryParam("projection", "forDetailView")
-    .when()
-      .post("/api/metadatas/metasources/{dataSourceId}", dataSourceId)
-    .then()
-      .statusCode(HttpStatus.SC_OK)
-    .log().all();
+            .auth().oauth2(oauth_token)
+            .contentType(ContentType.JSON)
+            .queryParam("projection", "forDetailView")
+            .when()
+            .post("/api/metadatas/metasources/{dataSourceId}", dataSourceId)
+            .then()
+            .statusCode(HttpStatus.SC_OK)
+            .log().all();
     // @formatter:on
 
   }
@@ -1193,16 +1192,16 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
 
     // @formatter:off
     Response dsRes =
-    given()
-      .auth().oauth2(oauth_token)
-      .contentType(ContentType.JSON)
-      .body(reqBody)
-    .when()
-      .post("/api/datasources");
+            given()
+                    .auth().oauth2(oauth_token)
+                    .contentType(ContentType.JSON)
+                    .body(reqBody)
+                    .when()
+                    .post("/api/datasources");
 
     dsRes.then()
-      .statusCode(HttpStatus.SC_CREATED)
-    .log().all();
+            .statusCode(HttpStatus.SC_CREATED)
+            .log().all();
     // @formatter:on
 
   }
@@ -1246,17 +1245,17 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
 
     // @formatter:off
     Response dsRes =
-    given()
-      .auth().oauth2(oauth_token)
-      .contentType(ContentType.JSON)
-      .body(reqBody)
-      .log().all()
-    .when()
-      .post("/api/datasources");
+            given()
+                    .auth().oauth2(oauth_token)
+                    .contentType(ContentType.JSON)
+                    .body(reqBody)
+                    .log().all()
+                    .when()
+                    .post("/api/datasources");
 
     dsRes.then()
-      .statusCode(HttpStatus.SC_CREATED)
-    .log().all();
+            .statusCode(HttpStatus.SC_CREATED)
+            .log().all();
     // @formatter:on
 
   }
@@ -1271,8 +1270,10 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
     StompSession session = null;
     try {
       session = stompClient
-          .connect("ws://localhost:{port}/stomp", webSocketHttpHeaders, stompHeaders, new StompSessionHandlerAdapter() {}, serverPort)
-          .get(3, SECONDS);
+              .connect("ws://localhost:{port}/stomp", webSocketHttpHeaders, stompHeaders,
+                      new StompSessionHandlerAdapter() {
+                      }, serverPort)
+              .get(3, SECONDS);
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -1308,17 +1309,17 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
 
     // @formatter:off
     Response dsRes =
-    given()
-      .auth().oauth2(oauth_token)
-      .contentType(ContentType.JSON)
-      .body(reqBody)
-      .log().all()
-    .when()
-      .post("/api/datasources");
+            given()
+                    .auth().oauth2(oauth_token)
+                    .contentType(ContentType.JSON)
+                    .body(reqBody)
+                    .log().all()
+                    .when()
+                    .post("/api/datasources");
 
     dsRes.then()
-      .statusCode(HttpStatus.SC_CREATED)
-    .log().all();
+            .statusCode(HttpStatus.SC_CREATED)
+            .log().all();
     // @formatter:on
 
     String id = from(dsRes.asString()).get("id");
@@ -1385,17 +1386,17 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
 
     // @formatter:off
     Response dsRes =
-    given()
-      .auth().oauth2(oauth_token)
-      .contentType(ContentType.JSON)
-      .body(reqBody)
-      .log().all()
-    .when()
-      .post("/api/datasources");
+            given()
+                    .auth().oauth2(oauth_token)
+                    .contentType(ContentType.JSON)
+                    .body(reqBody)
+                    .log().all()
+                    .when()
+                    .post("/api/datasources");
 
     dsRes.then()
-      .statusCode(HttpStatus.SC_CREATED)
-    .log().all();
+            .statusCode(HttpStatus.SC_CREATED)
+            .log().all();
     // @formatter:on
 
   }
@@ -1410,8 +1411,10 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
     StompSession session = null;
     try {
       session = stompClient
-          .connect("ws://localhost:{port}/stomp", webSocketHttpHeaders, stompHeaders, new StompSessionHandlerAdapter() {}, serverPort)
-          .get(3, SECONDS);
+              .connect("ws://localhost:{port}/stomp", webSocketHttpHeaders, stompHeaders,
+                      new StompSessionHandlerAdapter() {
+                      }, serverPort)
+              .get(3, SECONDS);
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -1460,17 +1463,17 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
 
     // @formatter:off
     Response dsRes =
-    given()
-      .auth().oauth2(oauth_token)
-      .contentType(ContentType.JSON)
-      .body(reqBody)
-      .log().all()
-    .when()
-      .post("/api/datasources");
+            given()
+                    .auth().oauth2(oauth_token)
+                    .contentType(ContentType.JSON)
+                    .body(reqBody)
+                    .log().all()
+                    .when()
+                    .post("/api/datasources");
 
     dsRes.then()
-      .statusCode(HttpStatus.SC_CREATED)
-    .log().all();
+            .statusCode(HttpStatus.SC_CREATED)
+            .log().all();
     // @formatter:on
 
     String id = from(dsRes.asString()).get("id");
@@ -1500,8 +1503,10 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
     StompSession session = null;
     try {
       session = stompClient
-          .connect("ws://localhost:{port}/stomp", webSocketHttpHeaders, stompHeaders, new StompSessionHandlerAdapter() {}, serverPort)
-          .get(3, SECONDS);
+              .connect("ws://localhost:{port}/stomp", webSocketHttpHeaders, stompHeaders,
+                      new StompSessionHandlerAdapter() {
+                      }, serverPort)
+              .get(3, SECONDS);
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -1552,17 +1557,17 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
 
     // @formatter:off
     Response dsRes =
-    given()
-      .auth().oauth2(oauth_token)
-      .contentType(ContentType.JSON)
-      .body(reqBody)
-      .log().all()
-    .when()
-      .post("/api/datasources");
+            given()
+                    .auth().oauth2(oauth_token)
+                    .contentType(ContentType.JSON)
+                    .body(reqBody)
+                    .log().all()
+                    .when()
+                    .post("/api/datasources");
 
     dsRes.then()
-      .statusCode(HttpStatus.SC_CREATED)
-    .log().all();
+            .statusCode(HttpStatus.SC_CREATED)
+            .log().all();
     // @formatter:on
 
     String id = from(dsRes.asString()).get("id");
@@ -1592,8 +1597,10 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
     StompSession session = null;
     try {
       session = stompClient
-          .connect("ws://localhost:{port}/stomp", webSocketHttpHeaders, stompHeaders, new StompSessionHandlerAdapter() {}, serverPort)
-          .get(3, SECONDS);
+              .connect("ws://localhost:{port}/stomp", webSocketHttpHeaders, stompHeaders,
+                      new StompSessionHandlerAdapter() {
+                      }, serverPort)
+              .get(3, SECONDS);
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -1636,17 +1643,17 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
 
     // @formatter:off
     Response dsRes =
-    given()
-      .auth().oauth2(oauth_token)
-      .contentType(ContentType.JSON)
-      .body(reqBody)
-      .log().all()
-    .when()
-      .post("/api/datasources");
+            given()
+                    .auth().oauth2(oauth_token)
+                    .contentType(ContentType.JSON)
+                    .body(reqBody)
+                    .log().all()
+                    .when()
+                    .post("/api/datasources");
 
     dsRes.then()
-      .statusCode(HttpStatus.SC_CREATED)
-    .log().all();
+            .statusCode(HttpStatus.SC_CREATED)
+            .log().all();
     // @formatter:on
 
     String id = from(dsRes.asString()).get("id");
@@ -1677,8 +1684,10 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
     StompSession session = null;
     try {
       session = stompClient
-          .connect("ws://localhost:{port}/stomp", webSocketHttpHeaders, stompHeaders, new StompSessionHandlerAdapter() {}, serverPort)
-          .get(3, SECONDS);
+              .connect("ws://localhost:{port}/stomp", webSocketHttpHeaders, stompHeaders,
+                      new StompSessionHandlerAdapter() {
+                      }, serverPort)
+              .get(3, SECONDS);
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -1718,7 +1727,8 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
     Field locationField = new Field("location", DataType.STRUCT, DIMENSION, 4L);
     locationField.setLogicalType(LogicalType.GEO_POINT);
     locationField.setDerived(true);
-    locationField.setDerivationRule(GlobalObjectMapper.writeValueAsString(new GeoPointRule(null, latField.getName(), lonField.getName())));
+    locationField.setDerivationRule(
+            GlobalObjectMapper.writeValueAsString(new GeoPointRule(null, latField.getName(), lonField.getName())));
     locationField.setIngestionRule(GlobalObjectMapper.writeValueAsString(new DiscardNullRule()));
     locationField.setFormat(GlobalObjectMapper.writeValueAsString(new GeoPointFormat("EPSG:4301", null)));
     fields.add(locationField);
@@ -1729,6 +1739,9 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
     localFileIngestionInfo.setPath(targetFile);
     localFileIngestionInfo.setRemoveFirstRow(false);
     localFileIngestionInfo.setFormat(new CsvFileFormat(",", "\n"));
+    localFileIngestionInfo.setRules(Lists.newArrayList(
+            new ExclusionRule("gu != '강남구'")
+    ));
 
     dataSource.setIngestion(GlobalObjectMapper.writeValueAsString(localFileIngestionInfo));
 
@@ -1738,17 +1751,17 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
 
     // @formatter:off
     Response dsRes =
-    given()
-      .auth().oauth2(oauth_token)
-      .contentType(ContentType.JSON)
-      .body(reqBody)
-      .log().all()
-    .when()
-      .post("/api/datasources");
+            given()
+                    .auth().oauth2(oauth_token)
+                    .contentType(ContentType.JSON)
+                    .body(reqBody)
+                    .log().all()
+                    .when()
+                    .post("/api/datasources");
 
     dsRes.then()
-      .statusCode(HttpStatus.SC_CREATED)
-    .log().all();
+            .statusCode(HttpStatus.SC_CREATED)
+            .log().all();
     // @formatter:on
 
     String id = from(dsRes.asString()).get("id");
@@ -1778,8 +1791,10 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
     StompSession session = null;
     try {
       session = stompClient
-          .connect("ws://localhost:{port}/stomp", webSocketHttpHeaders, stompHeaders, new StompSessionHandlerAdapter() {}, serverPort)
-          .get(3, SECONDS);
+              .connect("ws://localhost:{port}/stomp", webSocketHttpHeaders, stompHeaders,
+                      new StompSessionHandlerAdapter() {
+                      }, serverPort)
+              .get(3, SECONDS);
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -1802,7 +1817,8 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
     fields.add(geoField);
 
     Field timestampField = new Field("OrderDate", DataType.TIMESTAMP, TIMESTAMP, 0L);
-    timestampField.setFormat(GlobalObjectMapper.writeValueAsString(new CustomDateTimeFormat("yyyy-MM-ddTHH:mm:ss.SSSZ")));
+    timestampField
+            .setFormat(GlobalObjectMapper.writeValueAsString(new CustomDateTimeFormat("yyyy-MM-ddTHH:mm:ss.SSSZ")));
     fields.add(timestampField);
 
     fields.add(new Field("Category", DataType.STRING, DIMENSION, 2L));
@@ -1825,17 +1841,17 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
 
     // @formatter:off
     Response dsRes =
-    given()
-      .auth().oauth2(oauth_token)
-      .contentType(ContentType.JSON)
-      .body(reqBody)
-      .log().all()
-    .when()
-      .post("/api/datasources");
+            given()
+                    .auth().oauth2(oauth_token)
+                    .contentType(ContentType.JSON)
+                    .body(reqBody)
+                    .log().all()
+                    .when()
+                    .post("/api/datasources");
 
     dsRes.then()
-      .statusCode(HttpStatus.SC_CREATED)
-    .log().all();
+            .statusCode(HttpStatus.SC_CREATED)
+            .log().all();
     // @formatter:on
 
     String id = from(dsRes.asString()).get("id");
@@ -1865,13 +1881,16 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
     StompSession session = null;
     try {
       session = stompClient
-          .connect("ws://localhost:{port}/stomp", webSocketHttpHeaders, stompHeaders, new StompSessionHandlerAdapter() {}, serverPort)
-          .get(3, SECONDS);
+              .connect("ws://localhost:{port}/stomp", webSocketHttpHeaders, stompHeaders,
+                      new StompSessionHandlerAdapter() {
+                      }, serverPort)
+              .get(3, SECONDS);
     } catch (Exception e) {
       e.printStackTrace();
     }
 
-    String targetFile = getClass().getClassLoader().getResource("ingestion/sample_ingestion_zipcode_polygon.csv").getPath();
+    String targetFile = getClass().getClassLoader().getResource("ingestion/sample_ingestion_zipcode_polygon.csv")
+            .getPath();
 
     DataSource dataSource = new DataSource();
     dataSource.setName("localFileIngestion_geo_" + PolarisUtils.randomString(5));
@@ -1910,17 +1929,17 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
 
     // @formatter:off
     Response dsRes =
-    given()
-      .auth().oauth2(oauth_token)
-      .contentType(ContentType.JSON)
-      .body(reqBody)
-      .log().all()
-    .when()
-      .post("/api/datasources");
+            given()
+                    .auth().oauth2(oauth_token)
+                    .contentType(ContentType.JSON)
+                    .body(reqBody)
+                    .log().all()
+                    .when()
+                    .post("/api/datasources");
 
     dsRes.then()
-      .statusCode(HttpStatus.SC_CREATED)
-    .log().all();
+            .statusCode(HttpStatus.SC_CREATED)
+            .log().all();
     // @formatter:on
 
     String id = from(dsRes.asString()).get("id");
@@ -1944,7 +1963,8 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
   @OAuthRequest(username = "polaris", value = {"SYSTEM_USER", "PERM_SYSTEM_MANAGE_DATASOURCE"})
   public void createDataSourceWithLocalCsvFileIngestion_UnixTimestamp() throws JsonProcessingException {
 
-    String targetFile = getClass().getClassLoader().getResource("ingestion/sample_ingestion_unix_timestamp_millis.csv").getPath();
+    String targetFile = getClass().getClassLoader().getResource("ingestion/sample_ingestion_unix_timestamp_millis.csv")
+            .getPath();
 
     DataSource dataSource = new DataSource();
     dataSource.setName("localFileIngestion_unix_" + PolarisUtils.randomString(5));
@@ -1985,17 +2005,17 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
 
     // @formatter:off
     Response dsRes =
-    given()
-      .auth().oauth2(oauth_token)
-      .contentType(ContentType.JSON)
-      .body(reqBody)
-      .log().all()
-    .when()
-      .post("/api/datasources");
+            given()
+                    .auth().oauth2(oauth_token)
+                    .contentType(ContentType.JSON)
+                    .body(reqBody)
+                    .log().all()
+                    .when()
+                    .post("/api/datasources");
 
     dsRes.then()
-      .statusCode(HttpStatus.SC_CREATED)
-    .log().all();
+            .statusCode(HttpStatus.SC_CREATED)
+            .log().all();
     // @formatter:on
 
   }
@@ -2018,17 +2038,17 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
 
     // @formatter:off
     Response dsRes =
-    given()
-      .auth().oauth2(oauth_token)
-      .contentType(ContentType.JSON)
-      .body(reqBody)
-      .log().all()
-    .when()
-      .put("/api/datasources/{dataSourceId}/data", dataSourceId);
+            given()
+                    .auth().oauth2(oauth_token)
+                    .contentType(ContentType.JSON)
+                    .body(reqBody)
+                    .log().all()
+                    .when()
+                    .put("/api/datasources/{dataSourceId}/data", dataSourceId);
 
     dsRes.then()
-      .statusCode(HttpStatus.SC_NO_CONTENT)
-    .log().all();
+            .statusCode(HttpStatus.SC_NO_CONTENT)
+            .log().all();
     // @formatter:on
 
   }
@@ -2069,17 +2089,17 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
 
     // @formatter:off
     Response dsRes =
-    given()
-      .auth().oauth2(oauth_token)
-      .contentType(ContentType.JSON)
-      .body(reqBody)
-      .log().all()
-    .when()
-      .post("/api/datasources");
+            given()
+                    .auth().oauth2(oauth_token)
+                    .contentType(ContentType.JSON)
+                    .body(reqBody)
+                    .log().all()
+                    .when()
+                    .post("/api/datasources");
 
     dsRes.then()
-      .statusCode(HttpStatus.SC_CREATED)
-    .log().all();
+            .statusCode(HttpStatus.SC_CREATED)
+            .log().all();
     // @formatter:on
 
   }
@@ -2109,11 +2129,12 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
     consumeProperties.put("bootstrap.servers", "localhost:9092");
 
     RealtimeIngestionInfo ingestionInfo = new RealtimeIngestionInfo("test_topic",
-                                                                    consumeProperties,
-                                                                    new JsonFileFormat(),
-                                                                    false,
-                                                                    null,
-                                                                    null, null);
+            consumeProperties,
+            new JsonFileFormat(),
+            null,
+            false,
+            null,
+            null, null);
 
     dataSource.setIngestion(GlobalObjectMapper.writeValueAsString(ingestionInfo));
 
@@ -2121,17 +2142,17 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
 
     // @formatter:off
     Response dsRes =
-    given()
-      .auth().oauth2(oauth_token)
-      .contentType(ContentType.JSON)
-      .body(dataSource)
-      .log().all()
-    .when()
-      .post("/api/datasources");
+            given()
+                    .auth().oauth2(oauth_token)
+                    .contentType(ContentType.JSON)
+                    .body(dataSource)
+                    .log().all()
+                    .when()
+                    .post("/api/datasources");
 
     dsRes.then()
-//      .statusCode(HttpStatus.SC_CREATED)
-    .log().all();
+            //      .statusCode(HttpStatus.SC_CREATED)
+            .log().all();
     // @formatter:on
 
   }
@@ -2146,8 +2167,10 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
     StompSession session = null;
     try {
       session = stompClient
-          .connect("ws://localhost:{port}/stomp", webSocketHttpHeaders, stompHeaders, new StompSessionHandlerAdapter() {}, serverPort)
-          .get(3, SECONDS);
+              .connect("ws://localhost:{port}/stomp", webSocketHttpHeaders, stompHeaders,
+                      new StompSessionHandlerAdapter() {
+                      }, serverPort)
+              .get(3, SECONDS);
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -2177,10 +2200,12 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
     hdfsIngestionInfo.setFindRecursive(false);
 
     Map<String, Object> jobProp = Maps.newHashMap();
-    jobProp.put("mapreduce.reduce.java.opts", "-server -Xmx1024m -Duser.timezone=UTC -Dfile.encoding=UTF-8 -XX:+PrintGCDetails -XX:+PrintGCTimeStamps");
+    jobProp.put("mapreduce.reduce.java.opts",
+            "-server -Xmx1024m -Duser.timezone=UTC -Dfile.encoding=UTF-8 -XX:+PrintGCDetails -XX:+PrintGCTimeStamps");
     jobProp.put("mapreduce.reduce.memory.mb", "1024");
     jobProp.put("mapreduce.reduce.cpu.vcores", "1");
-    jobProp.put("mapreduce.map.java.opts", "-server -Xmx1024m -Duser.timezone=UTC -Dfile.encoding=UTF-8 -XX:+PrintGCDetails -XX:+PrintGCTimeStamps");
+    jobProp.put("mapreduce.map.java.opts",
+            "-server -Xmx1024m -Duser.timezone=UTC -Dfile.encoding=UTF-8 -XX:+PrintGCDetails -XX:+PrintGCTimeStamps");
     jobProp.put("mapreduce.map.memory.mb", "1024");
     jobProp.put("mapreduce.map.cpu.vcores", "1");
     hdfsIngestionInfo.setJobProperties(jobProp);
@@ -2195,16 +2220,16 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
 
     // @formatter:off
     Response dsRes =
-    given()
-      .auth().oauth2(oauth_token)
-      .contentType(ContentType.JSON)
-      .body(reqBody)
-    .when()
-      .post("/api/datasources");
+            given()
+                    .auth().oauth2(oauth_token)
+                    .contentType(ContentType.JSON)
+                    .body(reqBody)
+                    .when()
+                    .post("/api/datasources");
 
     dsRes.then()
-      .statusCode(HttpStatus.SC_CREATED)
-    .log().all();
+            .statusCode(HttpStatus.SC_CREATED)
+            .log().all();
     // @formatter:on
 
     String id = from(dsRes.asString()).get("id");
@@ -2253,10 +2278,12 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
     hdfsIngestionInfo.setFindRecursive(false);
 
     Map<String, Object> jobProp = Maps.newHashMap();
-    jobProp.put("mapreduce.reduce.java.opts", "-server -Xmx1024m -Duser.timezone=UTC -Dfile.encoding=UTF-8 -XX:+PrintGCDetails -XX:+PrintGCTimeStamps");
+    jobProp.put("mapreduce.reduce.java.opts",
+            "-server -Xmx1024m -Duser.timezone=UTC -Dfile.encoding=UTF-8 -XX:+PrintGCDetails -XX:+PrintGCTimeStamps");
     jobProp.put("mapreduce.reduce.memory.mb", "1024");
     jobProp.put("mapreduce.reduce.cpu.vcores", "1");
-    jobProp.put("mapreduce.map.java.opts", "-server -Xmx1024m -Duser.timezone=UTC -Dfile.encoding=UTF-8 -XX:+PrintGCDetails -XX:+PrintGCTimeStamps");
+    jobProp.put("mapreduce.map.java.opts",
+            "-server -Xmx1024m -Duser.timezone=UTC -Dfile.encoding=UTF-8 -XX:+PrintGCDetails -XX:+PrintGCTimeStamps");
     jobProp.put("mapreduce.map.memory.mb", "1024");
     jobProp.put("mapreduce.map.cpu.vcores", "1");
     hdfsIngestionInfo.setJobProperties(jobProp);
@@ -2271,16 +2298,16 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
 
     // @formatter:off
     Response dsRes =
-    given()
-      .auth().oauth2(oauth_token)
-      .contentType(ContentType.JSON)
-      .body(reqBody)
-    .when()
-      .post("/api/datasources");
+            given()
+                    .auth().oauth2(oauth_token)
+                    .contentType(ContentType.JSON)
+                    .body(reqBody)
+                    .when()
+                    .post("/api/datasources");
 
     dsRes.then()
-//      .statusCode(HttpStatus.SC_CREATED)
-    .log().all();
+            //      .statusCode(HttpStatus.SC_CREATED)
+            .log().all();
     // @formatter:on
 
   }
@@ -2295,8 +2322,10 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
     StompSession session = null;
     try {
       session = stompClient
-          .connect("ws://localhost:{port}/stomp", webSocketHttpHeaders, stompHeaders, new StompSessionHandlerAdapter() {}, serverPort)
-          .get(3, SECONDS);
+              .connect("ws://localhost:{port}/stomp", webSocketHttpHeaders, stompHeaders,
+                      new StompSessionHandlerAdapter() {
+                      }, serverPort)
+              .get(3, SECONDS);
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -2324,13 +2353,14 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
     Map<String, Object> context = Maps.newHashMap();
 
     HiveIngestionInfo hiveIngestionInfo = new HiveIngestionInfo(
-        new CsvFileFormat(),
-        sourceTable,
-        null,
-        null,
-        null,
-        null,
-        context);
+            new CsvFileFormat(),
+            null,
+            sourceTable,
+            null,
+            null,
+            null,
+            null,
+            context);
 
     dataSource.setIngestion(GlobalObjectMapper.writeValueAsString(hiveIngestionInfo));
 
@@ -2340,17 +2370,17 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
 
     // @formatter:off
     Response dsRes =
-    given()
-      .auth().oauth2(oauth_token)
-      .contentType(ContentType.JSON)
-      .body(reqBody)
-      .log().all()
-    .when()
-      .post("/api/datasources");
+            given()
+                    .auth().oauth2(oauth_token)
+                    .contentType(ContentType.JSON)
+                    .body(reqBody)
+                    .log().all()
+                    .when()
+                    .post("/api/datasources");
 
     dsRes.then()
-//      .statusCode(HttpStatus.SC_CREATED)
-    .log().all();
+            //      .statusCode(HttpStatus.SC_CREATED)
+            .log().all();
     // @formatter:on
 
     String id = from(dsRes.asString()).get("id");
@@ -2400,13 +2430,14 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
     //    context.put(HiveIngestionInfo.KEY_ORC_SCHEMA, "struct<time:date,d:string,sd:string,m1:double,m2:double>");
 
     HiveIngestionInfo hiveIngestionInfo = new HiveIngestionInfo(
-        new OrcFileFormat(), //new CsvFileFormat(),
-        sourceTable,
-        null,
-        null,
-        null,
-        null,
-        context);
+            new OrcFileFormat(), //new CsvFileFormat(),
+            null,
+            sourceTable,
+            null,
+            null,
+            null,
+            null,
+            context);
     dataSource.setIngestion(GlobalObjectMapper.writeValueAsString(hiveIngestionInfo));
 
     String reqBody = GlobalObjectMapper.writeValueAsString(dataSource);
@@ -2424,7 +2455,7 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
                     .post("/api/datasources");
 
     dsRes.then()
-//      .statusCode(HttpStatus.SC_CREATED)
+            //      .statusCode(HttpStatus.SC_CREATED)
             .log().all();
     // @formatter:on
 
@@ -2564,13 +2595,14 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
     partitions.add(TestUtils.makeMap("ym", "201704"));
 
     HiveIngestionInfo hiveIngestionInfo = new HiveIngestionInfo(
-        new OrcFileFormat(), //new CsvFileFormat(),
-        sourceTable,
-        partitions,
-        null,
-        null,
-        intervals,
-        context);
+            new OrcFileFormat(), //new CsvFileFormat(),
+            null,
+            sourceTable,
+            partitions,
+            null,
+            null,
+            intervals,
+            context);
 
     dataSource.setIngestion(GlobalObjectMapper.writeValueAsString(hiveIngestionInfo));
 
@@ -2580,17 +2612,17 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
 
     // @formatter:off
     Response dsRes =
-    given()
-      .auth().oauth2(oauth_token)
-      .contentType(ContentType.JSON)
-      .body(reqBody)
-      .log().all()
-    .when()
-      .post("/api/datasources");
+            given()
+                    .auth().oauth2(oauth_token)
+                    .contentType(ContentType.JSON)
+                    .body(reqBody)
+                    .log().all()
+                    .when()
+                    .post("/api/datasources");
 
     dsRes.then()
-      .statusCode(HttpStatus.SC_CREATED)
-      .log().all();
+            .statusCode(HttpStatus.SC_CREATED)
+            .log().all();
     // @formatter:on
 
   }
@@ -2609,29 +2641,30 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
     partitions.add(TestUtils.makeMap("ym", "201705"));
 
     HiveIngestionInfo hiveIngestionInfo = new HiveIngestionInfo(
-        new OrcFileFormat(), //new CsvFileFormat(),
-        sourceTable,
-        partitions,
-        null,
-        null,
-        intervals,
-        null);
+            new OrcFileFormat(), //new CsvFileFormat(),
+            null,
+            sourceTable,
+            partitions,
+            null,
+            null,
+            intervals,
+            null);
 
     String reqBody = GlobalObjectMapper.writeValueAsString(hiveIngestionInfo);
 
     // @formatter:off
     Response dsRes =
-    given()
-      .auth().oauth2(oauth_token)
-      .contentType(ContentType.JSON)
-      .body(reqBody)
-      .log().all()
-    .when()
-      .put("/api/datasources/{dataSourceId}/data", dataSourceId);
+            given()
+                    .auth().oauth2(oauth_token)
+                    .contentType(ContentType.JSON)
+                    .body(reqBody)
+                    .log().all()
+                    .when()
+                    .put("/api/datasources/{dataSourceId}/data", dataSourceId);
 
     dsRes.then()
-      .statusCode(HttpStatus.SC_NO_CONTENT)
-    .log().all();
+            .statusCode(HttpStatus.SC_NO_CONTENT)
+            .log().all();
     // @formatter:on
 
   }
@@ -2679,13 +2712,14 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
     partitions.add(TestUtils.makeMap("ym", "201705"));
 
     HiveIngestionInfo hiveIngestionInfo = new HiveIngestionInfo(
-        new OrcFileFormat(), //new CsvFileFormat(),
-        sourceTable,
-        partitions,
-        null,
-        null,
-        null,
-        context);
+            new OrcFileFormat(), //new CsvFileFormat(),
+            null,
+            sourceTable,
+            partitions,
+            null,
+            null,
+            null,
+            context);
 
     dataSource.setIngestion(GlobalObjectMapper.writeValueAsString(hiveIngestionInfo));
 
@@ -2695,17 +2729,17 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
 
     // @formatter:off
     Response dsRes =
-    given()
-      .auth().oauth2(oauth_token)
-      .contentType(ContentType.JSON)
-      .body(reqBody)
-      .log().all()
-    .when()
-      .post("/api/datasources");
+            given()
+                    .auth().oauth2(oauth_token)
+                    .contentType(ContentType.JSON)
+                    .body(reqBody)
+                    .log().all()
+                    .when()
+                    .post("/api/datasources");
 
     dsRes.then()
-//      .statusCode(HttpStatus.SC_CREATED)
-      .log().all();
+            //      .statusCode(HttpStatus.SC_CREATED)
+            .log().all();
     // @formatter:on
 
   }
@@ -2752,17 +2786,17 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
 
     // @formatter:off
     Response dsRes =
-    given()
-      .auth().oauth2(oauth_token)
-      .contentType(ContentType.JSON)
-      .body(reqBody)
-      .log().all()
-    .when()
-      .post("/api/datasources");
+            given()
+                    .auth().oauth2(oauth_token)
+                    .contentType(ContentType.JSON)
+                    .body(reqBody)
+                    .log().all()
+                    .when()
+                    .post("/api/datasources");
 
     dsRes.then()
-      .statusCode(HttpStatus.SC_CREATED)
-    .log().all();
+            .statusCode(HttpStatus.SC_CREATED)
+            .log().all();
     // @formatter:on
 
   }
@@ -2778,8 +2812,10 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
     StompSession session = null;
     try {
       session = stompClient
-          .connect("ws://localhost:{port}/stomp", webSocketHttpHeaders, stompHeaders, new StompSessionHandlerAdapter() {}, serverPort)
-          .get(3, SECONDS);
+              .connect("ws://localhost:{port}/stomp", webSocketHttpHeaders, stompHeaders,
+                      new StompSessionHandlerAdapter() {
+                      }, serverPort)
+              .get(3, SECONDS);
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -2823,17 +2859,17 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
 
     // @formatter:off
     Response dsRes =
-    given()
-      .auth().oauth2(oauth_token)
-      .contentType(ContentType.JSON)
-      .body(reqBody)
-      .log().all()
-    .when()
-      .post("/api/datasources");
+            given()
+                    .auth().oauth2(oauth_token)
+                    .contentType(ContentType.JSON)
+                    .body(reqBody)
+                    .log().all()
+                    .when()
+                    .post("/api/datasources");
 
     dsRes.then()
-      .statusCode(HttpStatus.SC_CREATED)
-    .log().all();
+            .statusCode(HttpStatus.SC_CREATED)
+            .log().all();
     // @formatter:on
 
     String id = from(dsRes.asString()).get("id");
@@ -2871,11 +2907,11 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
 
     Field dimReplaceField = new Field("d", DataType.STRING, DIMENSION, 1L);
     dimReplaceField.setIngestionRule(
-        GlobalObjectMapper.writeValueAsString(new ReplaceNullRule("null_replace_test")));
+            GlobalObjectMapper.writeValueAsString(new ReplaceNullRule("null_replace_test")));
 
     Field dimDiscardField = new Field("sd", DataType.STRING, DIMENSION, 2L);
     dimDiscardField.setIngestionRule(
-        GlobalObjectMapper.writeValueAsString(new DiscardNullRule()));
+            GlobalObjectMapper.writeValueAsString(new DiscardNullRule()));
 
     List<Field> fields = Lists.newArrayList();
     fields.add(new Field("time", DataType.TIMESTAMP, TIMESTAMP, 0L));
@@ -2904,17 +2940,17 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
 
     // @formatter:off
     Response dsRes =
-    given()
-      .auth().oauth2(oauth_token)
-      .contentType(ContentType.JSON)
-      .body(reqBody)
-      .log().all()
-    .when()
-      .post("/api/datasources");
+            given()
+                    .auth().oauth2(oauth_token)
+                    .contentType(ContentType.JSON)
+                    .body(reqBody)
+                    .log().all()
+                    .when()
+                    .post("/api/datasources");
 
     dsRes.then()
-      .statusCode(HttpStatus.SC_CREATED)
-    .log().all();
+            .statusCode(HttpStatus.SC_CREATED)
+            .log().all();
     // @formatter:on
 
   }
@@ -2977,34 +3013,32 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
 
     // @formatter:off
     Response dsRes =
-    given()
-      .auth().oauth2(oauth_token)
-      .contentType(ContentType.JSON)
-      .body(reqBody)
-      .log().all()
-    .when()
-      .post("/api/datasources");
+            given()
+                    .auth().oauth2(oauth_token)
+                    .contentType(ContentType.JSON)
+                    .body(reqBody)
+                    .log().all()
+                    .when()
+                    .post("/api/datasources");
 
     dsRes.then()
-      .statusCode(HttpStatus.SC_CREATED)
-    .log().all();
+            .statusCode(HttpStatus.SC_CREATED)
+            .log().all();
     // @formatter:on
     ///jobs/search/
 
-
     // @formatter:off
     given()
-      .auth().oauth2(oauth_token)
-      .contentType(ContentType.JSON)
-      .param("group", "ingestion")
-      .log().all()
-    .when()
-      .get("/api/jobs/search/key")
-    .then()
-      .statusCode(HttpStatus.SC_OK)
-    .log().all();
+            .auth().oauth2(oauth_token)
+            .contentType(ContentType.JSON)
+            .param("group", "ingestion")
+            .log().all()
+            .when()
+            .get("/api/jobs/search/key")
+            .then()
+            .statusCode(HttpStatus.SC_OK)
+            .log().all();
     // @formatter:on
-
 
     Thread.sleep(5 * 60 * 1000L);
   }
@@ -3020,15 +3054,15 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
 
     // @formatter:off
     given()
-      .auth().oauth2(oauth_token)
-      .contentType(ContentType.JSON)
-      .accept(ContentType.JSON)
-    .when()
-      .post("/api/datasources/connections/{connectionId}/{databaseName}", connectionId, databaseName)
-//      .post("/api/datasources/connections/{connectionId}/", connectionId)
-    .then()
-      .statusCode(HttpStatus.SC_OK)
-    .log().all();
+            .auth().oauth2(oauth_token)
+            .contentType(ContentType.JSON)
+            .accept(ContentType.JSON)
+            .when()
+            .post("/api/datasources/connections/{connectionId}/{databaseName}", connectionId, databaseName)
+            //      .post("/api/datasources/connections/{connectionId}/", connectionId)
+            .then()
+            .statusCode(HttpStatus.SC_OK)
+            .log().all();
     // @formatter:on
   }
 
@@ -3038,14 +3072,14 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
 
     // @formatter:off
     given()
-      .auth().oauth2(oauth_token)
-      .contentType(ContentType.JSON)
-      .log().all()
-    .when()
-      .get("/api/datasources/import/datasources")
-    .then()
-      .statusCode(HttpStatus.SC_OK)
-    .log().all();
+            .auth().oauth2(oauth_token)
+            .contentType(ContentType.JSON)
+            .log().all()
+            .when()
+            .get("/api/datasources/import/datasources")
+            .then()
+            .statusCode(HttpStatus.SC_OK)
+            .log().all();
     // @formatter:on
   }
 
@@ -3055,16 +3089,16 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
 
     // @formatter:off
     given()
-      .auth().oauth2(oauth_token)
-      .contentType(ContentType.JSON)
-      .param("withData", true)
-      .param("limit", 10)
-      .log().all()
-    .when()
-      .get("/api/datasources/import/{datasourceId}/preview", "realtime_ingestion_1519456518315")
-    .then()
-      .statusCode(HttpStatus.SC_OK)
-    .log().all();
+            .auth().oauth2(oauth_token)
+            .contentType(ContentType.JSON)
+            .param("withData", true)
+            .param("limit", 10)
+            .log().all()
+            .when()
+            .get("/api/datasources/import/{datasourceId}/preview", "realtime_ingestion_1519456518315")
+            .then()
+            .statusCode(HttpStatus.SC_OK)
+            .log().all();
     // @formatter:on
   }
 
@@ -3084,16 +3118,16 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
 
     // @formatter:off
     given()
-      .auth().oauth2(oauth_token)
-      .contentType(ContentType.JSON)
-      .accept(ContentType.JSON)
-      //.body(dataSource)
-      .log().all()
-    .when()
-      .post("/api/datasources/import/{datasourceId}", "sales_join_category")
-    .then()
-      .statusCode(HttpStatus.SC_CREATED)
-    .log().all();
+            .auth().oauth2(oauth_token)
+            .contentType(ContentType.JSON)
+            .accept(ContentType.JSON)
+            //.body(dataSource)
+            .log().all()
+            .when()
+            .post("/api/datasources/import/{datasourceId}", "sales_join_category")
+            .then()
+            .statusCode(HttpStatus.SC_CREATED)
+            .log().all();
     // @formatter:on
   }
 
@@ -3138,32 +3172,32 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
 
     // @formatter:off
     Response res =
-    given()
-      .auth().oauth2(oauth_token)
-      .contentType(ContentType.JSON)
-      .accept(ContentType.JSON)
-      .body(dataSource)
-      .log().all()
-    .when()
-      .post("/api/datasources/temporary");
+            given()
+                    .auth().oauth2(oauth_token)
+                    .contentType(ContentType.JSON)
+                    .accept(ContentType.JSON)
+                    .body(dataSource)
+                    .log().all()
+                    .when()
+                    .post("/api/datasources/temporary");
     res.then()
-      .statusCode(HttpStatus.SC_CREATED)
-    .log().all();
+            .statusCode(HttpStatus.SC_CREATED)
+            .log().all();
     // @formatter:on
 
     String temporaryId = from(res.asString()).get("id");
 
     // @formatter:off
     given()
-      .auth().oauth2(oauth_token)
-      .contentType(ContentType.JSON)
-      .param("projection", "forDetailView")
-    .when()
-      .get("/api/datasources/{id}/multiple", temporaryId)
-    .then()
-//      .statusCode(HttpStatus.SC_OK)
-//      .body("id", any(String.class))
-    .log().all();
+            .auth().oauth2(oauth_token)
+            .contentType(ContentType.JSON)
+            .param("projection", "forDetailView")
+            .when()
+            .get("/api/datasources/{id}/multiple", temporaryId)
+            .then()
+            //      .statusCode(HttpStatus.SC_OK)
+            //      .body("id", any(String.class))
+            .log().all();
 
   }
 
@@ -3177,8 +3211,10 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
     StompSession session = null;
     try {
       session = stompClient
-          .connect("ws://localhost:{port}/stomp", webSocketHttpHeaders, stompHeaders, new StompSessionHandlerAdapter() {}, serverPort)
-          .get(3, SECONDS);
+              .connect("ws://localhost:{port}/stomp", webSocketHttpHeaders, stompHeaders,
+                      new StompSessionHandlerAdapter() {
+                      }, serverPort)
+              .get(3, SECONDS);
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -3220,18 +3256,18 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
 
     // @formatter:off
     Response res =
-    given()
-      .auth().oauth2(oauth_token)
-      .contentType(ContentType.JSON)
-      .accept(ContentType.JSON)
-      .queryParam("async", true)
-      .body(dataSource)
-      .log().all()
-    .when()
-      .post("/api/datasources/temporary");
+            given()
+                    .auth().oauth2(oauth_token)
+                    .contentType(ContentType.JSON)
+                    .accept(ContentType.JSON)
+                    .queryParam("async", true)
+                    .body(dataSource)
+                    .log().all()
+                    .when()
+                    .post("/api/datasources/temporary");
     res.then()
-//      .statusCode(HttpStatus.SC_NOT_FOUND)
-    .log().all();
+            //      .statusCode(HttpStatus.SC_NOT_FOUND)
+            .log().all();
     // @formatter:on
 
     String id = from(res.asString()).get("id");
@@ -3260,34 +3296,34 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
     TestUtils.printTestTitle("Create Temporary Datasource.");
     // @formatter:off
     Response res =
-    given()
-      .auth().oauth2(oauth_token)
-      .contentType(ContentType.JSON)
-      .accept(ContentType.JSON)
-      .queryParam("async", false)
-      .log().all()
-    .when()
-      .post("/api/datasources/{id}/temporary", dataSourceId);
+            given()
+                    .auth().oauth2(oauth_token)
+                    .contentType(ContentType.JSON)
+                    .accept(ContentType.JSON)
+                    .queryParam("async", false)
+                    .log().all()
+                    .when()
+                    .post("/api/datasources/{id}/temporary", dataSourceId);
     res.then()
-      .statusCode(HttpStatus.SC_CREATED)
-    .log().all();
+            .statusCode(HttpStatus.SC_CREATED)
+            .log().all();
     // @formatter:on
 
     TestUtils.printTestTitle("Get Temporary Datasource Info.");
     String tempId = from(res.asString()).get("id");
     // @formatter:off
     Response resDetail =
-    given()
-      .auth().oauth2(oauth_token)
-      .contentType(ContentType.JSON)
-      .accept(ContentType.JSON)
-      .queryParam("async", false)
-      .log().all()
-    .when()
-      .get("/api/datasources/{id}", tempId);
+            given()
+                    .auth().oauth2(oauth_token)
+                    .contentType(ContentType.JSON)
+                    .accept(ContentType.JSON)
+                    .queryParam("async", false)
+                    .log().all()
+                    .when()
+                    .get("/api/datasources/{id}", tempId);
     resDetail.then()
-      .statusCode(HttpStatus.SC_OK)
-    .log().all();
+            .statusCode(HttpStatus.SC_OK)
+            .log().all();
     // @formatter:on
 
     String tempEngineName = from(resDetail.asString()).get("engineName");
@@ -3295,29 +3331,29 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
     TestUtils.printTestTitle("Query Temporary Datasource");
 
     // Set Temporary
-    app.metatron.discovery.domain.workbook.configurations.datasource.DataSource queryDataSource = new DefaultDataSource(tempEngineName);
+    app.metatron.discovery.domain.workbook.configurations.datasource.DataSource queryDataSource = new DefaultDataSource(
+            tempEngineName);
     queryDataSource.setTemporary(true);
 
     List<app.metatron.discovery.domain.workbook.configurations.field.Field> projections = Lists.newArrayList(
-        new DimensionField("city", null, null),
-        new MeasureField("m1", MeasureField.AggregationType.SUM)
+            new DimensionField("city", null, null),
+            new MeasureField("m1", MeasureField.AggregationType.SUM)
     );
 
     SearchQueryRequest request = new SearchQueryRequest(queryDataSource, null, projections, null);
 
     // @formatter:off
     given()
-      .auth().oauth2(oauth_token)
-      .body(GlobalObjectMapper.getDefaultMapper().writeValueAsString(request))
-      .contentType(ContentType.JSON)
-      .log().all()
-    .when()
-      .post("/api/datasources/query/search")
-    .then()
-      .statusCode(HttpStatus.SC_OK)
-      .log().all();
+            .auth().oauth2(oauth_token)
+            .body(GlobalObjectMapper.getDefaultMapper().writeValueAsString(request))
+            .contentType(ContentType.JSON)
+            .log().all()
+            .when()
+            .post("/api/datasources/query/search")
+            .then()
+            .statusCode(HttpStatus.SC_OK)
+            .log().all();
     // @formatter:on
-
 
   }
 
@@ -3333,26 +3369,28 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
     StompSession session = null;
     try {
       session = stompClient
-          .connect("ws://localhost:{port}/stomp", webSocketHttpHeaders, stompHeaders, new StompSessionHandlerAdapter() {}, serverPort)
-          .get(3, SECONDS);
+              .connect("ws://localhost:{port}/stomp", webSocketHttpHeaders, stompHeaders,
+                      new StompSessionHandlerAdapter() {
+                      }, serverPort)
+              .get(3, SECONDS);
     } catch (Exception e) {
       e.printStackTrace();
     }
 
     // @formatter:off
     Response res =
-    given()
-      .auth().oauth2(oauth_token)
-      .contentType(ContentType.JSON)
-      .accept(ContentType.JSON)
-      .queryParam("async", true)
-//      .body(dataSource)
-      .log().all()
-    .when()
-      .post("/api/datasources/{id}/temporary", dataSourceId);
+            given()
+                    .auth().oauth2(oauth_token)
+                    .contentType(ContentType.JSON)
+                    .accept(ContentType.JSON)
+                    .queryParam("async", true)
+                    //      .body(dataSource)
+                    .log().all()
+                    .when()
+                    .post("/api/datasources/{id}/temporary", dataSourceId);
     res.then()
-//      .statusCode(HttpStatus.SC_NOT_FOUND)
-    .log().all();
+            //      .statusCode(HttpStatus.SC_NOT_FOUND)
+            .log().all();
     // @formatter:on
 
     String id = from(res.asString()).get("id");
@@ -3393,24 +3431,24 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
     TimeFormatCheckRequest request = new TimeFormatCheckRequest();
     request.setFormat("yyyy.M.dd h:mm:ss aaa");
     request.setSamples(Lists.newArrayList(
-        "2014.4.15 4:07:55 AM",
-        "2014.4.16 4:07:55 PM",
-        "2016.4.16 4:07:55 PM"
+            "2014.4.15 4:07:55 AM",
+            "2014.4.16 4:07:55 PM",
+            "2016.4.16 4:07:55 PM"
     ));
 
     // @formatter:off
     Response connRes =
-    given()
-      .auth().oauth2(oauth_token)
-      .accept(ContentType.JSON)
-      .contentType(ContentType.JSON)
-      .body(request)
-      .log().all()
-    .when()
-      .post("/api/datasources/validation/datetime");
+            given()
+                    .auth().oauth2(oauth_token)
+                    .accept(ContentType.JSON)
+                    .contentType(ContentType.JSON)
+                    .body(request)
+                    .log().all()
+                    .when()
+                    .post("/api/datasources/validation/datetime");
     connRes.then()
-      .statusCode(HttpStatus.SC_OK)
-    .log().all();
+            .statusCode(HttpStatus.SC_OK)
+            .log().all();
     // @formatter:on
   }
 
@@ -3420,25 +3458,24 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
 
     TimeFormatCheckRequest request = new TimeFormatCheckRequest();
     request.setSamples(Lists.newArrayList(
-        "20/07/2016//",
-        "21/08/20161//",
-        "22/08/20171//"
+            "20/07/2016//",
+            "21/08/20161//",
+            "22/08/20171//"
     ));
 
     // @formatter:off
     Response connRes =
-    given()
-      .auth().oauth2(oauth_token)
-      .accept(ContentType.JSON)
-      .contentType(ContentType.JSON)
-      .body(request)
-    .when()
-      .post("/api/datasources/validation/datetime");
-
+            given()
+                    .auth().oauth2(oauth_token)
+                    .accept(ContentType.JSON)
+                    .contentType(ContentType.JSON)
+                    .body(request)
+                    .when()
+                    .post("/api/datasources/validation/datetime");
 
     connRes.then()
-      .statusCode(HttpStatus.SC_OK)
-    .log().all();
+            .statusCode(HttpStatus.SC_OK)
+            .log().all();
     // @formatter:on
   }
 
@@ -3450,18 +3487,17 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
 
     // @formatter:off
     Response connRes =
-    given()
-      .auth().oauth2(oauth_token)
-      .accept(ContentType.JSON)
-      .contentType(ContentType.JSON)
-      .queryParam("expr", cronExpr)
-    .when()
-      .post("/api/datasources/validation/cron");
-
+            given()
+                    .auth().oauth2(oauth_token)
+                    .accept(ContentType.JSON)
+                    .contentType(ContentType.JSON)
+                    .queryParam("expr", cronExpr)
+                    .when()
+                    .post("/api/datasources/validation/cron");
 
     connRes.then()
-      .statusCode(HttpStatus.SC_OK)
-    .log().all();
+            .statusCode(HttpStatus.SC_OK)
+            .log().all();
     // @formatter:on
   }
 
@@ -3476,7 +3512,7 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
 
     //
     List<String> wktList = Lists.newArrayList(
-        "MULTIPOINT((3.5 5.6),(4.8 10.5))"
+            "MULTIPOINT((3.5 5.6),(4.8 10.5))"
     );
 
     // @formatter:off
@@ -3564,16 +3600,17 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
     // REST
     // when, then
     given()
-        .auth().oauth2(oauth_token)
-        .contentType(ContentType.JSON)
-        .when()
-        .patch("/api/datasources/{id}/fields/sync", testDataSourceId)
-        .then()
-        .statusCode(HttpStatus.SC_NO_CONTENT)
-        .log().all();
+            .auth().oauth2(oauth_token)
+            .contentType(ContentType.JSON)
+            .when()
+            .patch("/api/datasources/{id}/fields/sync", testDataSourceId)
+            .then()
+            .statusCode(HttpStatus.SC_NO_CONTENT)
+            .log().all();
   }
 
-  private void setUpTestFixtureSchemaNotMatchedEngineDataSource(String engineDataSourceName) throws InterruptedException {
+  private void setUpTestFixtureSchemaNotMatchedEngineDataSource(String engineDataSourceName)
+          throws InterruptedException {
     final TestEngineIngestion testEngineIngestion = new TestEngineIngestion();
 
     final String workerHost = testEngineIngestion.getEngineWorkerHost();
@@ -3581,92 +3618,92 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
     final String filter = "sample_ingestion_extends.csv";
 
     final String ingestionSpec = "{\n" +
-        "  \"context\": {\n" +
-        "    \"druid.task.runner.dedicated.host\": \"" + workerHost + "\"\n" +
-        "  },\n" +
-        "  \"spec\": {\n" +
-        "    \"dataSchema\": {\n" +
-        "      \"dataSource\": \"" + engineDataSourceName + "\",\n" +
-        "      \"granularitySpec\": {\n" +
-        "        \"intervals\": [\n" +
-        "          \"1970-01-01/2050-01-01\"\n" +
-        "        ],\n" +
-        "        \"queryGranularity\": \"DAY\",\n" +
-        "        \"rollup\": true,\n" +
-        "        \"segmentGranularity\": \"MONTH\",\n" +
-        "        \"type\": \"uniform\"\n" +
-        "      },\n" +
-        "      \"metricsSpec\": [\n" +
-        "        {\n" +
-        "          \"name\": \"count\",\n" +
-        "          \"type\": \"count\"\n" +
-        "        },\n" +
-        "        {\n" +
-        "          \"fieldName\": \"m1\",\n" +
-        "          \"inputType\": \"double\",\n" +
-        "          \"name\": \"m1\",\n" +
-        "          \"type\": \"sum\"\n" +
-        "        },\n" +
-        "        {\n" +
-        "          \"fieldName\": \"m2\",\n" +
-        "          \"inputType\": \"double\",\n" +
-        "          \"name\": \"m2\",\n" +
-        "          \"type\": \"sum\"\n" +
-        "        },\n" +
-        "        {\n" +
-        "          \"fieldName\": \"m3\",\n" +
-        "          \"inputType\": \"double\",\n" +
-        "          \"name\": \"m3\",\n" +
-        "          \"type\": \"sum\"\n" +
-        "        }\n" +
-        "      ],\n" +
-        "      \"parser\": {\n" +
-        "        \"parseSpec\": {\n" +
-        "          \"columns\": [\n" +
-        "            \"time\",\n" +
-        "            \"d\",\n" +
-        "            \"sd\",\n" +
-        "            \"m1\",\n" +
-        "            \"m2\",\n" +
-        "            \"m3\",\n" +
-        "            \"p\"\n" +
-        "          ],\n" +
-        "          \"dimensionsSpec\": {\n" +
-        "            \"dimensionExclusions\": [],\n" +
-        "            \"dimensions\": [\n" +
-        "              \"d\",\n" +
-        "              \"sd\",\n" +
-        "              \"p\"\n" +
-        "            ],\n" +
-        "            \"spatialDimensions\": []\n" +
-        "          },\n" +
-        "          \"format\": \"csv\",\n" +
-        "          \"timestampSpec\": {\n" +
-        "            \"column\": \"time\",\n" +
-        "            \"format\": \"yyyy-MM-dd\",\n" +
-        "            \"replaceWrongColumn\": false\n" +
-        "          }\n" +
-        "        },\n" +
-        "        \"type\": \"string\"\n" +
-        "      }\n" +
-        "    },\n" +
-        "    \"ioConfig\": {\n" +
-        "      \"firehose\": {\n" +
-        "        \"baseDir\": \"" + baseDir + "\",\n" +
-        "        \"filter\": \"" + filter + "\",\n" +
-        "        \"type\": \"local\"\n" +
-        "      },\n" +
-        "      \"type\": \"index\"\n" +
-        "    },\n" +
-        "    \"tuningConfig\": {\n" +
-        "      \"buildV9Directly\": true,\n" +
-        "      \"ignoreInvalidRows\": true,\n" +
-        "      \"maxRowsInMemory\": 75000,\n" +
-        "      \"type\": \"index\"\n" +
-        "    }\n" +
-        "  },\n" +
-        "  \"type\": \"index\"\n" +
-        "}";
+            "  \"context\": {\n" +
+            "    \"druid.task.runner.dedicated.host\": \"" + workerHost + "\"\n" +
+            "  },\n" +
+            "  \"spec\": {\n" +
+            "    \"dataSchema\": {\n" +
+            "      \"dataSource\": \"" + engineDataSourceName + "\",\n" +
+            "      \"granularitySpec\": {\n" +
+            "        \"intervals\": [\n" +
+            "          \"1970-01-01/2050-01-01\"\n" +
+            "        ],\n" +
+            "        \"queryGranularity\": \"DAY\",\n" +
+            "        \"rollup\": true,\n" +
+            "        \"segmentGranularity\": \"MONTH\",\n" +
+            "        \"type\": \"uniform\"\n" +
+            "      },\n" +
+            "      \"metricsSpec\": [\n" +
+            "        {\n" +
+            "          \"name\": \"count\",\n" +
+            "          \"type\": \"count\"\n" +
+            "        },\n" +
+            "        {\n" +
+            "          \"fieldName\": \"m1\",\n" +
+            "          \"inputType\": \"double\",\n" +
+            "          \"name\": \"m1\",\n" +
+            "          \"type\": \"sum\"\n" +
+            "        },\n" +
+            "        {\n" +
+            "          \"fieldName\": \"m2\",\n" +
+            "          \"inputType\": \"double\",\n" +
+            "          \"name\": \"m2\",\n" +
+            "          \"type\": \"sum\"\n" +
+            "        },\n" +
+            "        {\n" +
+            "          \"fieldName\": \"m3\",\n" +
+            "          \"inputType\": \"double\",\n" +
+            "          \"name\": \"m3\",\n" +
+            "          \"type\": \"sum\"\n" +
+            "        }\n" +
+            "      ],\n" +
+            "      \"parser\": {\n" +
+            "        \"parseSpec\": {\n" +
+            "          \"columns\": [\n" +
+            "            \"time\",\n" +
+            "            \"d\",\n" +
+            "            \"sd\",\n" +
+            "            \"m1\",\n" +
+            "            \"m2\",\n" +
+            "            \"m3\",\n" +
+            "            \"p\"\n" +
+            "          ],\n" +
+            "          \"dimensionsSpec\": {\n" +
+            "            \"dimensionExclusions\": [],\n" +
+            "            \"dimensions\": [\n" +
+            "              \"d\",\n" +
+            "              \"sd\",\n" +
+            "              \"p\"\n" +
+            "            ],\n" +
+            "            \"spatialDimensions\": []\n" +
+            "          },\n" +
+            "          \"format\": \"csv\",\n" +
+            "          \"timestampSpec\": {\n" +
+            "            \"column\": \"time\",\n" +
+            "            \"format\": \"yyyy-MM-dd\",\n" +
+            "            \"replaceWrongColumn\": false\n" +
+            "          }\n" +
+            "        },\n" +
+            "        \"type\": \"string\"\n" +
+            "      }\n" +
+            "    },\n" +
+            "    \"ioConfig\": {\n" +
+            "      \"firehose\": {\n" +
+            "        \"baseDir\": \"" + baseDir + "\",\n" +
+            "        \"filter\": \"" + filter + "\",\n" +
+            "        \"type\": \"local\"\n" +
+            "      },\n" +
+            "      \"type\": \"index\"\n" +
+            "    },\n" +
+            "    \"tuningConfig\": {\n" +
+            "      \"buildV9Directly\": true,\n" +
+            "      \"ignoreInvalidRows\": true,\n" +
+            "      \"maxRowsInMemory\": 75000,\n" +
+            "      \"type\": \"index\"\n" +
+            "    }\n" +
+            "  },\n" +
+            "  \"type\": \"index\"\n" +
+            "}";
 
     testEngineIngestion.ingestionLocalFile(engineDataSourceName, ingestionSpec);
 
@@ -3674,6 +3711,7 @@ public class DataSourceRestIntegrationTest extends AbstractRestIntegrationTest {
 
 
   public class DataSourceCreationStompHander extends StompSessionHandlerAdapter {
+
     public void handleFrame(StompHeaders headers, Object payload) {
     }
   }
