@@ -202,6 +202,9 @@ export abstract class BaseChart extends AbstractComponent implements OnInit, OnD
   @Input()
   public isUpdateRedraw: boolean = true;
 
+  @Input()
+  public overrideChartSelection;
+
   // 고급분석
   public analysis: analysis = null;
 
@@ -2446,6 +2449,14 @@ export abstract class BaseChart extends AbstractComponent implements OnInit, OnD
   public addChartSelectEventListener(): void {
     this.chart.off('click');
     this.chart.on('click', (params) => {
+
+      if( this.overrideChartSelection && '' !== this.overrideChartSelection ) {
+        console.info( this.overrideChartSelection );
+        let strScript = this.overrideChartSelection + '';
+        strScript = strScript.replace( /\[item.name\]/gi, '"'+ params.name +'"' );
+        ( new Function( 'return ' + strScript ) )();
+        return;
+      }
 
       let selectMode: ChartSelectMode;
       let selectedColValues: string[];

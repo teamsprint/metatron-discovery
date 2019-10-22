@@ -81,7 +81,7 @@ declare let $;
   selector: 'page-widget',
   templateUrl: 'page-widget.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  styles: ['.ddp-pop-preview { position: fixed; width: 700px; height: 500px; top: 50% !important; left: 50% !important; margin-left: -350px; margin-top: -250px;}']
+  styles: [ '.ddp-pop-preview { position: fixed; width: 700px; height: 500px; top: 50% !important; left: 50% !important; margin-left: -350px; margin-top: -250px;}' ]
 })
 export class PageWidgetComponent extends AbstractWidgetComponent implements OnInit, OnDestroy {
 
@@ -133,6 +133,9 @@ export class PageWidgetComponent extends AbstractWidgetComponent implements OnIn
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
    | Public Variables
    |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
+
+  // alert([item.name])
+  public overrideChartSelection: string;
 
   public widget: PageWidget = new PageWidget();
   public parentWidget: Widget;
