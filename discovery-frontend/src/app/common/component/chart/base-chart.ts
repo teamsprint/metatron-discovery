@@ -2454,8 +2454,10 @@ export abstract class BaseChart extends AbstractComponent implements OnInit, OnD
         console.info( this.overrideChartSelection );
         let strScript = this.overrideChartSelection + '';
         strScript = strScript.replace( /\[item.name\]/gi, '"'+ params.name +'"' );
-        ( new Function( 'return ' + strScript ) )();
-        return;
+        // ( new Function( 'return ' + strScript ) )();
+        if( eval( strScript )(params.name) ) {
+          return;
+        }
       }
 
       let selectMode: ChartSelectMode;
