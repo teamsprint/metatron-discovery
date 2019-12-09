@@ -2,7 +2,7 @@
 
 function help() {
   echo
-  echo "Usage: prep.sh [options] <SRC_URL>"
+  echo "Usage: prep.sh [options]"
   echo
   echo "  -h, --help             Print this message."
   echo "      --hostname         Metatron hostname."
@@ -11,10 +11,10 @@ function help() {
   echo "  -p, --password         Metatron password."
   echo "  -w, --wrangled-ds-id   W.DS ID to apply."
   echo "      --wrangled-ds-name W.DS name to apply. Use 1st W.DS if many DSs have this name."
-  echo "  -s, --src-url          Source URL."
-  echo "  -d, --dest-url         Destination URL."
+  echo "  -s, --src-path         Source pathname."
+  echo "  -d, --dest-path        Destination pathname."
   echo "      --dest-dir         Destination directory."
-  echo "      --download         Download snapshot file. In this case, destination URL is used for downloading."
+  echo "      --download         Download snapshot file. In this case, destination pathname is used for downloading."
   echo "      --datasource-id    Destination Druid Datasource ID to ingest into."
   echo "      --datasource-name  Destination Druid Datasource name to ingest into."
   echo "  -i, --interval         Interval string for ingestion."
@@ -70,13 +70,13 @@ case $key in
   shift # past argument
   shift # past value
   ;;
-  -s|--src-url)
-  SRC_URL="$2"
+  -s|--src-path)
+  SRC_PATH="$2"
   shift # past argument
   shift # past value
   ;;
-  -d|--dest-url)
-  DEST_URL="$2"
+  -d|--dest-path)
+  DEST_PATH="$2"
   shift # past argument
   shift # past value
   ;;
@@ -123,21 +123,25 @@ set -- "${POSITIONAL[@]}" # restore positional parameters
 
 
 ### Set derived parameters
-if [ -z ${SRC_URL} ]; then
-  echo "SRC_URL is mandatory."
+METATRON_URL=http://${METATRON_HOSTNAME}:${METATRON_PORT}
+
+if [ -z ${SRC_PATH} ]; then
+  echo "SRC_PATH is mandatory."
   exit -1
 fi
+SRC_BASENAME=${SRC_PATH##*/}
 
-if [ ! -z ${DEST_URL} ]; then
+if [ ! -z ${DEST_PATH} ]; then
   DEST_DIR=""
 else
   if [ -z ${DEST_DIR} ]; then
     DEST_DIR=$HOME/dataprep/snapshots
   fi
-  DEST_URL=${DEST_DIR}/${SRC_URL##*/}
+  DEST_PATH=${DEST_DIR}/${SRC_BASENAME}
 fi
 
 [ ! -z ${DATASOURCE_ID} ] || DATASOURCE_NAME=""
+
 
 ### Show arguments
 
@@ -145,26 +149,137 @@ echo "METATRON_HOSTNAME = ${METATRON_HOSTNAME}"
 echo "METATRON_PORT     = ${METATRON_PORT}"
 echo "METATRON_USERNAME = ${METATRON_USERNAME}"
 echo "METATRON_PASSWORD = ${METATRON_PASSWORD}"
-echo "SRC_URL           = ${SRC_URL}"
+echo "METATRON_URL      = ${METATRON_URL}"
+echo "SRC_PATH          = ${SRC_PATH}"
+echo "SRC_BASENAME      = ${SRC_BASENAME}"
 
-[ -z ${WDS_ID} ]          || echo "WDS_ID          = ${WDS_ID}"
-[ -z ${WDS_NAME} ]        || echo "WDS_NAME        = ${WDS_NAME}"
-[ -z ${DEST_URL} ]        || echo "DEST_URL        = ${DEST_URL}"
-[ -z ${DEST_DIR} ]        || echo "DEST_DIR        = ${DEST_DIR}"
-[ -z ${DOWNLOAD} ]        || echo "DOWNLOAD        = ${DOWNLOAD}"
-[ -z ${DATASOURCE_ID} ]   || echo "DATASOURCE_ID   = ${DATASOURCE_ID}"
-[ -z ${DATASOURCE_NAME} ] || echo "DATASOURCE_NAME = ${DATASOURCE_NAME}"
+[ -z ${WDS_ID} ]          || echo "WDS_ID            = ${WDS_ID}"
+[ -z ${WDS_NAME} ]        || echo "WDS_NAME          = ${WDS_NAME}"
+[ -z ${DEST_PATH} ]       || echo "DEST_PATH         = ${DEST_PATH}"
+[ -z ${DEST_DIR} ]        || echo "DEST_DIR          = ${DEST_DIR}"
+[ -z ${DOWNLOAD} ]        || echo "DOWNLOAD          = ${DOWNLOAD}"
+[ -z ${DATASOURCE_ID} ]   || echo "DATASOURCE_ID     = ${DATASOURCE_ID}"
+[ -z ${DATASOURCE_NAME} ] || echo "DATASOURCE_NAME   = ${DATASOURCE_NAME}"
+[ -z ${MANUAL_COLCNT} ]   || echo "MANUAL_COLCNT     = ${MANUAL_COLCNT}"
 
+
+function extract_value() {
+  local key=$1
+  local json=$2
+  re='"'${key}'":"([^"]+)".*'
+  if [[ ${json} =~ ${re} ]]; then
+    echo "${BASH_REMATCH[1]}"
+  else
+    echo ""
+  fi
+}
+
+function extract_value_num() {
+    local key=$1
+    local json=$2
+    re='"'${key}'":([^,]+).*'
+    if [[ ${json} =~ ${re} ]]; then
+        echo "${BASH_REMATCH[1]}"
+    else
+        echo ""
+    fi
+}
 
 function connect {
   echo "Connect ..."
-  AUTH_TOKEN="thisisauthtoken"
+
+  echo "In: METATRON_URL=${METATRON_URL}"
+
+  local client_id="polaris_client"
+  local secret="polaris"
+  local auth_key=$( echo -n "${client_id}:${secret}" | base64 )
+
+  local response=$( curl -s POST "${METATRON_URL}/oauth/token" \
+      -H "Content-Type: application/x-www-form-urlencoded" \
+      -H "Origin: ${METATRON_URL}" \
+      -H "Referer: ${METATRON_URL}/app/v2/user/login" \
+      -H "Accept: application/json, text/plain, */*" \
+      -H "Authorization: Basic ${auth_key}" \
+      -d "grant_type=password" \
+      -d "scope=write" \
+      -d "username=admin" \
+      -d "password=admin" )
+
+  AUTH_TOKEN=$( extract_value "access_token" ${response} )
 }
+
+function get_upload_policy() {
+  echo "get_upload_policy ..."
+
+  local response=$( curl -s GET "${METATRON_URL}/api/preparationdatasets/file_upload" \
+      -H "Authorization: bearer ${AUTH_TOKEN}" \
+      -H "Accept: application/json, text/plain, */*" \
+      -H "Content-Type: application/json" )
+
+  UPLOAD_ID=$( extract_value "upload_id" ${response} )
+  if [[ -z "${UPLOAD_ID}" ]]; then
+    echo "Failed to get UPLOAD_ID"
+    exit -1
+  fi
+
+  LIMIT_SIZE=$( extract_value_num "limit_size" ${response} )
+  if [[ -z "${LIMIT_SIZE}" ]]; then
+    echo "Failed to get LIMIT_SIZE"
+    exit -1
+  fi
+}
+
+function post_upload_file() {
+  echo "post_upload_file ..."
+
+  local total_size=$(wc -c ${SRC_PATH} | awk '{print $1}')
+  local params="name=${SRC_BASENAME}&chunk=0&chunks=1&storage_type=LOCAL&upload_id=${UPLOAD_ID}&chunk_size=${LIMIT_SIZE}&total_size=${total_size}"
+
+  response=$( curl -s POST "${METATRON_URL}/api/preparationdatasets/file_upload?${params}" \
+      -H "Authorization: bearer ${AUTH_TOKEN}" \
+      -H "Accept: application/json, text/plain, */*" \
+      -H "Content-Type: multipart/form-data" \
+      -F "file=@${SRC_PATH}" \
+  )
+
+  STORED_URI=$( extract_value "storedUri" ${response} )
+  if [[ -z "$STORED_URI" ]]; then
+      echo "Failed to get stored URI"
+      exit -1
+  fi
+}
+
+function post_create_dataset() {
+  echo "post_create_dataset ..."
+
+  if [ -z ${MANUAL_COLCNT} ]; then
+    local data="{\"delimiter\":\",\",\"quoteChar\":\"\\\"\",\"dsName\":\"${SRC_BASENAME}\",\"dsDesc\":\"\",\"dsType\":\"IMPORTED\",\"importType\":\"UPLOAD\",\"filenameBeforeUpload\":\"${SRC_BASENAME}\",\"storageType\":\"LOCAL\",\"sheetName\":\"\",\"storedUri\":\"${STORED_URI}\",\"fileFormat\":\"CSV\"}"
+  else
+    local data="{\"delimiter\":\",\",\"quoteChar\":\"\\\"\",\"dsName\":\"${SRC_BASENAME}\",\"dsDesc\":\"\",\"dsType\":\"IMPORTED\",\"importType\":\"UPLOAD\",\"filenameBeforeUpload\":\"${SRC_BASENAME}\",\"storageType\":\"LOCAL\",\"sheetName\":\"\",\"storedUri\":\"${STORED_URI}\",\"fileFormat\":\"CSV\",\"manualColumnCount\":${MANUAL_COLCNT}}"
+  fi
+
+  response=$( curl -s -X POST "${METATRON_URL}/api/preparationdatasets" \
+      -H "Authorization: bearer ${AUTH_TOKEN}" \
+      -H "Accept: application/json, text/plain, */*" \
+      -H "Content-Type: application/json" \
+      --data "${data}"
+  )
+
+  IDS_ID=$( extract_value "dsId" ${response} )
+  if [[ -z "$IDS_ID" ]]; then
+    echo "Failed to create dataset"
+    exit -1
+  fi
+}
+
 
 function createIDS {
   echo "Create imported dataset ..."
-  echo "In: SRC_URL=$1"
-  IDS_ID="thisisidsid"
+  echo "In: SRC_PATH=$1"
+
+  get_upload_policy
+  post_upload_file $SRC_PATH
+  post_create_dataset
 }
 
 #function createDataflow {
@@ -189,7 +304,7 @@ function cloneAndSwap {
 
 function createSnapshot {
   if [ -z $2 ]; then
-    echo "Create snapshot to $DEST_URL ..."
+    echo "Create snapshot to $DEST_PATH ..."
   else
     echo "Create snapshot to default directory ..."
   fi
@@ -199,7 +314,7 @@ function createSnapshot {
 }
 
 function downloadSnapshot {
-  echo "Download snapshot to $DEST_URL ..."
+  echo "Download snapshot to $DEST_PATH ..."
   echo "In: SS_ID=$1"
   return 0
 }
@@ -214,7 +329,7 @@ function getFirstDatasource {
 function appendFileDatasource {
   echo "Append file datasource to datasource $1 ..."
   echo "In: DATASOURCE_ID=$1"
-  echo "In: FILE_URL=$2"
+  echo "In: FILE_PATH=$2"
   echo "In: INTERVAL=${INTERVAL}"
 
   if [ -z ${INTERVAL} ]; then
@@ -231,9 +346,11 @@ connect
 echo "Out: AUTH_TOKEN=$AUTH_TOKEN"
 echo
 
-createIDS $SRC_URL
+createIDS $SRC_PATH
 echo "Out: IDS_ID=$IDS_ID"
 echo
+
+exit
 
 #createDataflow $IDS_ID
 #echo "Out: DF_ID=$DF_ID"
@@ -249,7 +366,7 @@ echo
 
 createSnapshot $WDS_ID $DOWNLOAD
 echo "Out: SS_ID=$SS_ID"
-echo "Out: DEST_URL=$DEST_URL"
+echo "Out: DEST_PATH=$DEST_PATH"
 echo
 
 [ -z ${DATASOURCE_ID} ] || getFirstDatasource $DATASOURCE_NAME
@@ -271,7 +388,7 @@ fi
 echo "Out: DATASOURCE_ID=$DATASOURCE_ID"
 echo
 
-appendFileDatasource $DATASOURCE_ID $DEST_URL
+appendFileDatasource $DATASOURCE_ID $DEST_PATH
 echo "Out: $?"
 echo
 
