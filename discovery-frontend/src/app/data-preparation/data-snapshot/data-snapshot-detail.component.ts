@@ -513,16 +513,25 @@ export class DataSnapshotDetailComponent extends AbstractComponent implements On
         this._setRuleList(this.selectedDataSnapshot.ruleStringInfo);
 
         // calculate valid, missing, mismatched
-        const totalLines = this.selectedDataSnapshot.totalLines ? this.selectedDataSnapshot.totalLines : 0;
-        const missingLines = this.selectedDataSnapshot.missingLines ? this.selectedDataSnapshot.missingLines : 0;
-        const mismatchedLines = this.selectedDataSnapshot.mismatchedLines ? this.selectedDataSnapshot.mismatchedLines : 0;
+        let hists = JSON.parse(snapshot.custom).colHists
+        let matched = 0;
+        let missing = 0;
+        let mismatched = 0;
+        hists.map( col => {
+          matched += col.matched?col.matched:0;
+          missing += col.missing?col.missing:0;
+          mismatched += col.mismatched?col.mismatched:0;
+        });
 
+        const totalLines = matched + missing + mismatched;
+        const missingLines = missing;
+        const mismatchedLines = mismatched;
 
         // if denominator is 0, results in NaN
         if (totalLines !== 0) {
-          this.valid = ((totalLines - missingLines - mismatchedLines ) / totalLines) * 100 + '%';
-          this.missing = (missingLines / totalLines) * 100 + '%';
-          this.mismatched = (mismatchedLines / totalLines) * 100 + '%';
+          this.valid = (((totalLines - missingLines - mismatchedLines ) / totalLines) * 100).toFixed(2) + '%';
+          this.missing = ((missingLines / totalLines) * 100).toFixed(2) + '%';
+          this.mismatched = ((mismatchedLines / totalLines) * 100).toFixed(2) + '%';
         }
 
         this.selectedDataSnapshot.displayStatus = this._findDisplayStatus(this.selectedDataSnapshot.status);
