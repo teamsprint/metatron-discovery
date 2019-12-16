@@ -14,18 +14,37 @@
 
 package app.metatron.discovery.domain.dataprep.etl;
 
-import com.google.common.collect.Maps;
+import static app.metatron.discovery.domain.dataprep.PrepProperties.ETL_CORES;
+import static app.metatron.discovery.domain.dataprep.PrepProperties.ETL_LIMIT_ROWS;
+import static app.metatron.discovery.domain.dataprep.PrepProperties.ETL_MAX_FETCH_SIZE;
+import static app.metatron.discovery.domain.dataprep.PrepProperties.ETL_TIMEOUT;
+import static app.metatron.discovery.domain.dataprep.entity.PrSnapshot.STATUS.CANCELED;
+import static app.metatron.discovery.domain.dataprep.entity.PrSnapshot.STATUS.FAILED;
+import static app.metatron.discovery.domain.dataprep.entity.PrSnapshot.STATUS.RUNNING;
+import static app.metatron.discovery.domain.dataprep.entity.PrSnapshot.STATUS.SUCCEEDED;
+import static app.metatron.discovery.domain.dataprep.entity.PrSnapshot.STATUS.WRITING;
+import static app.metatron.discovery.domain.dataprep.exceptions.PrepMessageKey.MSG_DP_ALERT_SNAPSHOT_TYPE_IS_MISSING;
+import static app.metatron.discovery.domain.dataprep.exceptions.PrepMessageKey.MSG_DP_ALERT_SNAPSHOT_TYPE_NOT_SUPPORTED_YET;
+import static app.metatron.discovery.domain.dataprep.util.PrepUtil.snapshotError;
 
+import app.metatron.discovery.common.GlobalObjectMapper;
+import app.metatron.discovery.domain.dataprep.entity.PrSnapshot;
+import app.metatron.discovery.domain.dataprep.entity.PrSnapshot.STATUS;
+import app.metatron.discovery.domain.dataprep.exceptions.PrepException;
+import app.metatron.discovery.domain.dataprep.service.PrSnapshotService;
+import app.metatron.discovery.domain.dataprep.teddy.DataFrame;
+import app.metatron.discovery.domain.dataprep.teddy.DataFrameService;
+import app.metatron.discovery.domain.dataprep.teddy.Row;
+import app.metatron.discovery.domain.dataprep.teddy.exceptions.TeddyException;
+import app.metatron.discovery.domain.dataprep.transform.Histogram;
+import app.metatron.discovery.domain.dataprep.transform.PrepTransformService;
+import app.metatron.discovery.domain.dataprep.util.DbInfo;
+import app.metatron.discovery.prep.parser.exceptions.RuleException;
+import app.metatron.discovery.prep.parser.preparation.RuleVisitorParser;
+import app.metatron.discovery.prep.parser.preparation.rule.Join;
+import app.metatron.discovery.prep.parser.preparation.rule.Rule;
 import com.fasterxml.jackson.core.JsonProcessingException;
-
-import org.apache.commons.io.FilenameUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.AsyncResult;
-import org.springframework.stereotype.Service;
-
+import com.google.common.collect.Maps;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.sql.SQLException;
@@ -39,34 +58,13 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-
-import app.metatron.discovery.common.GlobalObjectMapper;
-import app.metatron.discovery.domain.dataprep.entity.PrSnapshot;
-import app.metatron.discovery.domain.dataprep.entity.PrSnapshot.STATUS;
-import app.metatron.discovery.domain.dataprep.exceptions.PrepException;
-import app.metatron.discovery.domain.dataprep.service.PrSnapshotService;
-import app.metatron.discovery.domain.dataprep.teddy.DataFrame;
-import app.metatron.discovery.domain.dataprep.teddy.DataFrameService;
-import app.metatron.discovery.domain.dataprep.teddy.Row;
-import app.metatron.discovery.domain.dataprep.teddy.exceptions.TeddyException;
-import app.metatron.discovery.domain.dataprep.util.DbInfo;
-import app.metatron.discovery.prep.parser.exceptions.RuleException;
-import app.metatron.discovery.prep.parser.preparation.RuleVisitorParser;
-import app.metatron.discovery.prep.parser.preparation.rule.Join;
-import app.metatron.discovery.prep.parser.preparation.rule.Rule;
-
-import static app.metatron.discovery.domain.dataprep.PrepProperties.ETL_CORES;
-import static app.metatron.discovery.domain.dataprep.PrepProperties.ETL_LIMIT_ROWS;
-import static app.metatron.discovery.domain.dataprep.PrepProperties.ETL_MAX_FETCH_SIZE;
-import static app.metatron.discovery.domain.dataprep.PrepProperties.ETL_TIMEOUT;
-import static app.metatron.discovery.domain.dataprep.entity.PrSnapshot.STATUS.CANCELED;
-import static app.metatron.discovery.domain.dataprep.entity.PrSnapshot.STATUS.FAILED;
-import static app.metatron.discovery.domain.dataprep.entity.PrSnapshot.STATUS.RUNNING;
-import static app.metatron.discovery.domain.dataprep.entity.PrSnapshot.STATUS.SUCCEEDED;
-import static app.metatron.discovery.domain.dataprep.entity.PrSnapshot.STATUS.WRITING;
-import static app.metatron.discovery.domain.dataprep.exceptions.PrepMessageKey.MSG_DP_ALERT_SNAPSHOT_TYPE_IS_MISSING;
-import static app.metatron.discovery.domain.dataprep.exceptions.PrepMessageKey.MSG_DP_ALERT_SNAPSHOT_TYPE_NOT_SUPPORTED_YET;
-import static app.metatron.discovery.domain.dataprep.util.PrepUtil.snapshotError;
+import org.apache.commons.io.FilenameUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.AsyncResult;
+import org.springframework.stereotype.Service;
 
 @Service
 public class TeddyExecutor {
@@ -92,6 +90,9 @@ public class TeddyExecutor {
 
   @Autowired
   TeddyStagingDbService stagingDbService;
+
+  @Autowired
+  PrepTransformService transformService;
 
   public Integer timeout;
   public Integer cores;
@@ -191,7 +192,9 @@ public class TeddyExecutor {
     }
 
     String jsonColDescs = GlobalObjectMapper.getDefaultMapper().writeValueAsString(df.colDescs);
-    callback.updateSnapshot(ssId, "custom", "{'colDescs':" + jsonColDescs + "}");
+    String jsonColHists = getJsonColHists(df);
+    callback.updateSnapshot(ssId, "custom",
+            String.format("{\"colDescs\":%s,\"colHists\":%s}", jsonColDescs, jsonColHists));
 
     // Remove all full datasets from cache.
     for (String fullDsId : reverseMap.keySet()) {
@@ -405,4 +408,30 @@ public class TeddyExecutor {
   private void removeJob(String key) {
     jobList.remove(key);
   }
+
+  private String getJsonColHists(DataFrame df) throws JsonProcessingException {
+    List<Integer> colnos = new ArrayList();
+    List<Integer> colWidths = new ArrayList();
+
+    for (int i = 0; i < df.getColCnt(); i++) {
+      colnos.add(i);
+      colWidths.add(100);
+    }
+
+    List<Histogram> colHists = transformService.createHistsWithColWidths(df, colnos, colWidths);
+
+    for (int i = 0; i < df.getColCnt(); i++) {
+      colHists.get(i).colWidth = null;
+      colHists.get(i).barCnt = null;
+      colHists.get(i).barIdx = null;
+      colHists.get(i).rownos = null;
+      colHists.get(i).matchedRows = null;
+      colHists.get(i).missingRows = null;
+      colHists.get(i).mismatchedRows = null;
+    }
+
+    return GlobalObjectMapper.getDefaultMapper().writeValueAsString(colHists);
+  }
+
+
 }

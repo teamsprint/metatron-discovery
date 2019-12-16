@@ -26,7 +26,6 @@ import static app.metatron.discovery.domain.dataprep.transform.Histogram.Granule
 import static app.metatron.discovery.domain.dataprep.transform.Histogram.Granule.YEAR;
 import static app.metatron.discovery.domain.dataprep.util.PrepUtil.transformError;
 
-import app.metatron.discovery.common.GlobalObjectMapper;
 import app.metatron.discovery.domain.dataprep.teddy.ColumnType;
 import app.metatron.discovery.domain.dataprep.teddy.DataFrame;
 import app.metatron.discovery.domain.dataprep.teddy.Row;
@@ -63,9 +62,9 @@ public class Histogram implements Serializable {
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   // Members
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  public int colWidth;
-  public int barCnt;                  // colWidth에 따른 barCnt (말하자면 최대값) cf. 실제로 그려지는 bar의 개수는 count.size()
-  public int barIdx;                  // 원래 local 변수감인데, java stream을 쓰기 위해 멤버 변수 이용
+  public Integer colWidth;
+  public Integer barCnt;                  // colWidth에 따른 barCnt (말하자면 최대값) cf. 실제로 그려지는 bar의 개수는 count.size()
+  public Integer barIdx;                  // 원래 local 변수감인데, java stream을 쓰기 위해 멤버 변수 이용
   public String colName;              // only for debugging
 
   public List<String> labels;
