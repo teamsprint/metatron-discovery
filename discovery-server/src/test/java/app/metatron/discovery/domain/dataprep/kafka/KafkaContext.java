@@ -20,11 +20,18 @@ import app.metatron.discovery.domain.dataprep.teddy.DataFrame;
 import app.metatron.discovery.domain.dataprep.teddy.Row;
 import app.metatron.discovery.domain.dataprep.teddy.exceptions.TeddyException;
 import java.net.URISyntaxException;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.Properties;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.common.PartitionInfo;
+import org.apache.kafka.common.TopicPartition;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,6 +43,8 @@ public class KafkaContext {
 
   private KafkaProducer producer;
   private KafkaConsumer consumer;
+
+  List<TopicPartition> topicPartitions = new ArrayList();
 
   private DataFrame df;
   private int dfOffset;
@@ -54,11 +63,18 @@ public class KafkaContext {
     prop = new Properties();
     prop.put("bootstrap.servers", "localhost:9092");
     prop.put("session.timeout.ms", "10000");
-    prop.put("group.id", "consumerGroup1");
+    prop.put("max.poll.records", 10000);
     prop.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");    // key deserializer
     prop.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");  // value deserializer
     consumer = new KafkaConsumer(prop);
-    consumer.subscribe(Arrays.asList(TOPIC));
+
+    // Use assign() instead of subscribe() to seek easy.
+
+    List<PartitionInfo> partitionInfos = consumer.partitionsFor(TOPIC);
+    for (PartitionInfo partitionInfo : partitionInfos) {
+      topicPartitions.add(new TopicPartition(partitionInfo.topic(), partitionInfo.partition()));
+    }
+    consumer.assign(topicPartitions);
 
     String strUri = "file://" + System.getProperty("user.dir") + "/src/test/resources/test_dataprep.csv";
     loadCsvFile(strUri, ",", null, 10000);
@@ -80,7 +96,7 @@ public class KafkaContext {
     LOGGER.debug("loadCsvFile(): done");
   }
 
-  public int addCsvMessages(int cnt) {
+  public int addMessages(int cnt) {
     for (int i = 0; i < cnt; i++) {
       if (dfOffset == df.rows.size()) {
         dfOffset = 0;
@@ -88,7 +104,7 @@ public class KafkaContext {
 
       Row row = df.rows.get(dfOffset++);
 
-      StringBuilder sb = new StringBuilder(i + ",");
+      StringBuilder sb = new StringBuilder(i + "," + DateTime.now().toString() + ",");
       for (int colno = 0; colno < row.size(); colno++) {
         sb.append(row.get(colno)).append(",");
       }
@@ -99,5 +115,18 @@ public class KafkaContext {
 
     producer.flush();
     return dfOffset;
+  }
+
+  public void printMessages(int cnt) {
+    Map<TopicPartition, Long> offsets = consumer.endOffsets(topicPartitions);
+    for (TopicPartition key : offsets.keySet()) {
+      long offset = offsets.get(key);
+      consumer.seek(key, offset - cnt);
+    }
+
+    ConsumerRecords<String, String> records = consumer.poll(500);
+    for (ConsumerRecord<String, String> record : records) {
+      System.out.println(String.format("key=%s value=%s", record.key(), record.value()));
+    }
   }
 }
