@@ -62,8 +62,6 @@ public class KafkaContext {
 
     String strUri = "file://" + System.getProperty("user.dir") + "/src/test/resources/test_dataprep.csv";
     loadCsvFile(strUri, ",", null, 10000);
-//    df = TeddyTest.apply_rule(df, "window value: row_number()");
-//    df = TeddyTest.apply_rule(df, "rename col: window1_row_number to: 'seq'");
   }
 
   public void loadCsvFile(String strUri, String strDelim, String quoteChar, int limitRows) throws URISyntaxException {
