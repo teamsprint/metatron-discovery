@@ -67,7 +67,8 @@ public class PrDataset extends AbstractHistoryEntity {
     URI,
     DATABASE,
     STAGING_DB,
-    DRUID;
+    DRUID,
+    KAFKA;
 
     @JsonValue
     public String toJson() {

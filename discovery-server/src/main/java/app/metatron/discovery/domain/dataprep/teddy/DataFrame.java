@@ -409,15 +409,15 @@ public class DataFrame implements Serializable, Transformable {
     setByGrid(result.grid, result.colNames);
   }
 
-  public void setByGrid(List<String[]> strGrid, List<String> colNames) {
+  public DataFrame setByGrid(List<String[]> strGrid, List<String> colNames) {
     if (strGrid == null) {
       LOGGER.warn("setByGrid(): null grid");
-      return;
+      return this;
     }
 
     if (strGrid.size() == 0) {
       LOGGER.warn("setByGrid(): empty grid");
-      return;
+      return this;
     }
 
     assert getColCnt() == 0 : getColCnt();
@@ -440,6 +440,7 @@ public class DataFrame implements Serializable, Transformable {
       }
       rows.add(row);
     }
+    return this;
   }
 
   // column 순서가 중요해서 JdbcConnectionService를 그대로 쓰기가 어려움. customize가 필요.

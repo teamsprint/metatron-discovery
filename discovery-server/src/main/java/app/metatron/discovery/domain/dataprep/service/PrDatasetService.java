@@ -26,6 +26,7 @@ import app.metatron.discovery.domain.dataconnection.DataConnectionRepository;
 import app.metatron.discovery.domain.dataprep.PrepDatasetDatabaseService;
 import app.metatron.discovery.domain.dataprep.PrepDatasetFileService;
 import app.metatron.discovery.domain.dataprep.PrepDatasetStagingDbService;
+import app.metatron.discovery.domain.dataprep.PrepKafkaService;
 import app.metatron.discovery.domain.dataprep.PrepPreviewLineService;
 import app.metatron.discovery.domain.dataprep.entity.PrDataset;
 import app.metatron.discovery.domain.dataprep.exceptions.PrepException;
@@ -61,14 +62,15 @@ public class PrDatasetService {
   private PrepDatasetStagingDbService datasetStagingDbPreviewService;
 
   @Autowired
+  private PrepKafkaService kafkaService;
+
+  @Autowired
   private PrepDatasetDatabaseService datasetJdbcPreviewService;
 
   @Autowired
   private DataConnectionRepository dataConnectionRepository;
 
-  private String filePreviewSize = "50";
-  private String hivePreviewSize = "50";
-  private String jdbcPreviewSize = "50";
+  private String previewSize = "50";
 
   public DataFrame getImportedPreview(PrDataset dataset) throws IOException, SQLException, TeddyException {
     DataFrame dataFrame;
@@ -78,13 +80,16 @@ public class PrDatasetService {
     switch (dataset.getImportType()) {
       case UPLOAD:
       case URI:
-        dataFrame = prepDatasetFileService.getPreviewLinesFromFileForDataFrame(dataset, filePreviewSize);
+        dataFrame = prepDatasetFileService.getPreviewLinesFromFileForDataFrame(dataset, previewSize);
         break;
       case DATABASE:
-        dataFrame = datasetJdbcPreviewService.getPreviewLinesFromJdbcForDataFrame(dataset, jdbcPreviewSize);
+        dataFrame = datasetJdbcPreviewService.getPreviewLinesFromJdbcForDataFrame(dataset, previewSize);
         break;
       case STAGING_DB:
-        dataFrame = datasetStagingDbPreviewService.getPreviewLinesFromStagedbForDataFrame(dataset, hivePreviewSize);
+        dataFrame = datasetStagingDbPreviewService.getPreviewLinesFromStagedbForDataFrame(dataset, previewSize);
+        break;
+      case KAFKA:
+        dataFrame = kafkaService.createDataFrame(dataset, Integer.valueOf(previewSize));
         break;
       default:
         throw datasetError(MSG_DP_ALERT_IMPORT_TYPE_IS_WRONG, dataset.getImportType().name());

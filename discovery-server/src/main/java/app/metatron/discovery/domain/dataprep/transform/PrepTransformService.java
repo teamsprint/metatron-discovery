@@ -1288,6 +1288,10 @@ public class PrepTransformService {
         gridResponse = teddyImpl.loadStageDBDataset(wrangledDsId, queryStmt, wrangledDataset.getDsName());
         break;
 
+      case KAFKA:
+        gridResponse = teddyImpl.loadKafkaDataset(wrangledDataset, importedDataset);
+        break;
+
       default:
         throw new IllegalArgumentException(
                 "invalid import type: createWrangledDataset\nimportedDataset: " + importedDataset.toString());

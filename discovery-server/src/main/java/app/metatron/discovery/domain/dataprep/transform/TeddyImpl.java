@@ -18,7 +18,9 @@ import static app.metatron.discovery.domain.dataprep.exceptions.PrepErrorCodes.P
 
 import app.metatron.discovery.domain.dataconnection.DataConnection;
 import app.metatron.discovery.domain.dataconnection.DataConnectionHelper;
+import app.metatron.discovery.domain.dataprep.PrepKafkaService;
 import app.metatron.discovery.domain.dataprep.PrepProperties;
+import app.metatron.discovery.domain.dataprep.entity.PrDataset;
 import app.metatron.discovery.domain.dataprep.exceptions.PrepException;
 import app.metatron.discovery.domain.dataprep.file.PrepCsvUtil;
 import app.metatron.discovery.domain.dataprep.file.PrepJsonUtil;
@@ -74,6 +76,9 @@ public class TeddyImpl {
 
   @Autowired(required = false)
   StorageProperties storageProperties;
+
+  @Autowired
+  PrepKafkaService kafkaService;
 
   public void checkNonAlphaNumericalColNames(String dsId) throws IllegalColumnNameForHiveException {
     Revision rev = getCurRev(dsId);
@@ -157,8 +162,7 @@ public class TeddyImpl {
   // APPEND *AFTER* stageIdx
   public DataFrame append(String dsId, int stageIdx, String ruleString, String jsonRuleString,
           boolean suppress) {
-    Revision rev = getCurRev(
-            dsId);     // rule apply == revision generate, so always use the last one.
+    Revision rev = getCurRev(dsId);     // rule apply == revision generate, so always use the last one.
     Revision newRev = new Revision(rev, stageIdx + 1);
     DataFrame newDf = null;
     boolean suppressed = false;
@@ -336,6 +340,11 @@ public class TeddyImpl {
     }
 
     return createStage0(dsId, df);
+  }
+
+  public DataFrame loadKafkaDataset(PrDataset wrangledDataset, PrDataset importedDataset) throws PrepException {
+    DataFrame df = kafkaService.createDataFrame(importedDataset, prepProperties.getSamplingLimitRows());
+    return createStage0(wrangledDataset.getDsId(), df);
   }
 
   public DataFrame loadJdbcDataFrame(DataConnection dataConnection, String sql, int limit, String dsName) {
