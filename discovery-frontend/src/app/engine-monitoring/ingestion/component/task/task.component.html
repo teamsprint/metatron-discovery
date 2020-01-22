@@ -13,17 +13,15 @@
   -->
 <div class="ddp-wrap-top-filtering">
   <!-- filter search -->
-  <div class="ddp-filter-search ddp-fright">
-    <div class="ddp-form-filter-search">
-      <component-input
-        [autoFocus]="false"
-        [isEnableDelete]="true"
-        [value]="searchKeyword"
-        [placeHolder]="'msg.engine.monitoring.ph.task.search' | translate"
-        [immediately]="true"
-        (changeValue)="onChangedSearchKeyword($event)">
-      </component-input>
-    </div>
+  <div class="ddp-wrap-type-search ddp-fright">
+    <component-input
+      [autoFocus]="false"
+      [isEnableDelete]="true"
+      [value]="searchKeyword"
+      [placeHolder]="'msg.engine.monitoring.ph.task.search' | translate"
+      [immediately]="true"
+      (changeValue)="onChangedSearchKeyword($event)">
+    </component-input>
     <!-- form -->
   </div>
   <!-- //filter search -->

@@ -1,30 +1,30 @@
  <em class="ddp-bg-back type-bg"></em>
-  <div class="ddp-ui-contents-in ddp-pad0 ddp-scroll">
+ <div class="ddp-ui-contents-in">
+
     <!-- top -->
-    <div class="ddp-layout-top-menu ddp-clear">
+    <div class="ddp-ui-contents-top">
       <!-- label -->
-      <div class="ddp-top-label">
+      <div class="ddp-ui-title">
         {{ 'msg.comm.menu.explore-data.favorite.creator' | translate }}
       </div>
       <!-- //label -->
     </div>
     <!-- //top -->
+
     <div class="ddp-ui-contents-list type-list">
 
       <div class="ddp-wrap-list-create">
         <div class="ddp-type-top-option ddp-clear ">
           <!-- 검색 -->
-          <div class="ddp-form-search ddp-fleft">
-            <em class="ddp-icon-search"></em>
-            <component-input
-              [autoFocus]="false"
-              [isEnableDelete]="true"
-              [value]="searchedKeyword"
-              [placeHolder]="'msg.storage.ph.source.search' | translate"
-              (changeValue)="onChangedSearchKeyword($event)">
-            </component-input>
-            <a href="javascript:" class="ddp-btn-delete"></a>
-          </div>
+          <component-input
+            [compType]="'search'"
+            [autoFocus]="false"
+            [isEnableDelete]="true"
+            [value]="searchedKeyword"
+            [optionalClass]="'ddp-fleft'"
+            [placeHolder]="'msg.storage.ph.source.search' | translate"
+            (changeValue)="onChangedSearchKeyword($event)">
+          </component-input>
           <!-- //검색 -->
         </div>
         <span *ngIf="dataCreatorList.length === 0">No Data Creator</span>
