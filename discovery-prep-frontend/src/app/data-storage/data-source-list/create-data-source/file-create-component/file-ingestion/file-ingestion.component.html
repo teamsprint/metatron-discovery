@@ -1,0 +1,50 @@
+<!--
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<div class="ddp-layout-pop-fix popup-datasource">
+  <!-- 닫기 버튼 -->
+  <a href="javascript:" class="ddp-btn-close" (click)="close()"></a>
+  <!-- //닫기 버튼 -->
+  <div class="ddp-layout-popup">
+    <!-- top -->
+    <div class="ddp-pop-top">
+      <div class="ddp-pop-title">{{getTitle}}</div>
+      <div class="ddp-pop-sub">{{'msg.storage.create-dsource-sel.sub.title' | translate}}</div>
+      <!-- step -->
+      <div class="ddp-pop-step">
+        <span class="">1</span>
+        <span class="">2</span>
+        <span class="">3</span>
+        <span class="ddp-selected">4</span>
+        <span class="">5</span>
+      </div>
+      <!-- //step -->
+    </div>
+    <!-- //top -->
+
+    <!-- import -->
+    <ingestion-setting (prevStep)="onChangedPage('PREV')" (nextStep)="onChangedPage('NEXT')"></ingestion-setting>
+    <!-- //import -->
+
+    <!-- buttons -->
+    <div class="ddp-ui-buttons">
+      <a href="javascript:" class="ddp-btn-type-popup"
+         (click)="onClickPageChange('PREV')">{{'msg.comm.btn.previous' | translate}}</a>
+      <a href="javascript:" class="ddp-btn-type-popup  ddp-bg-black"
+         (click)="onClickPageChange('NEXT')">{{'msg.comm.btn.next' | translate}}</a>
+    </div>
+    <!-- //buttons -->
+
+  </div>
+</div>

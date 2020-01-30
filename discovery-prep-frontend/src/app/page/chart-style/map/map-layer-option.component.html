@@ -1,0 +1,833 @@
+<!--
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<!-- 레이어 설정 -->
+<div *ngFor="let item of shelf.layers; let layerIndex = index">
+  <div class="ddp-ui-chart-side" [ngClass]="{'ddp-show': rnbMenu == ('mapLayer'+(layerIndex+1)) }">
+    <div class="ddp-filter">
+      <!-- title -->
+      <div class="ddp-ui-side-title">
+        {{'msg.page.layer.map' | translate}}
+      </div>
+      <!-- //title -->
+      <div class="ddp-wrap-downmenu">
+        <div class="ddp-box-down">
+
+          <div class="ddp-wrap-divide">
+            <!-- divide -->
+            <div *ngIf="uiOption['analysis'] == null || uiOption['analysis']['use'] == false" class="ddp-divide2">
+              <div class="ddp-list-label">{{'msg.page.layer.map.name' | translate}}</div>
+              <component-input
+                [value]="uiOption.layers[layerIndex].name"
+                [inputClass]="'ddp-input-typebasic'"
+                [maxLen]="100"
+                (changeValue)="uiOption.layers[layerIndex].name = $event; changeLayerName(uiOption.layers[layerIndex].name, layerIndex);"></component-input>
+            </div>
+            <!-- //divide -->
+            <!-- [point, heatmap, hexagon, line, polygon] -->
+            <div class="ddp-type-map-chart">
+              <!-- TODO layer type divide -->
+              <div
+                *ngIf="(uiOption['analysis'] == null || uiOption['analysis']['use'] == false) && 'line' !== uiOption.layers[layerIndex].type.toString() && 'polygon' !== uiOption.layers[layerIndex].type.toString()"
+                class="ddp-divide2 ">
+                <div class="ddp-list-label">{{'msg.page.layer.map.type' | translate}}</div>
+                <div class="ddp-wrap-tab-type2">
+                  <ul class="ddp-list-tab-type2 ddp-clear">
+                    <li *ngFor="let item of symbolLayerTypes"
+                        [ngClass]="{'ddp-selected' : item.value ===  uiOption.layers[layerIndex].type}"
+                        (click)="changeSymbolLayerType(item['value'], layerIndex)">
+                      <a href="javascript:">
+                        <em [ngClass]="{'ddp-icon-map-point' : 'symbol' === item.value.toString(),
+                                        'ddp-icon-map-heatmap': 'heatmap' === item.value.toString(),
+                                        'ddp-icon-map-hexagon': 'tile' === item.value.toString(),
+                                        'ddp-icon-map-cluster': 'cluster' === item.value.toString()}">
+                        </em>
+                      </a>
+                      <span class="ddp-txt-type">{{item['name'].toString()}}</span>
+                      <!--&lt;!&ndash; tooltip &ndash;&gt;-->
+                      <!--<div class="ddp-ui-tooltip-info">-->
+                      <!--<em class="ddp-icon-view-top"></em>-->
+                      <!--<span *ngIf="'symbol' === item['value'].toString()"-->
+                      <!--class="ddp-txt-tooltip">{{'msg.page.layer.map.type.point' | translate}}</span>-->
+                      <!--<span *ngIf="'heatmap' === item['value'].toString()"-->
+                      <!--class="ddp-txt-tooltip">{{'msg.page.layer.map.type.heatmap' | translate}}</span>-->
+                      <!--<span *ngIf="'tile' === item['value'].toString()"-->
+                      <!--class="ddp-txt-tooltip">{{'msg.page.layer.map.type.tile' | translate}}</span>-->
+                      <!--</div>-->
+                      <!--&lt;!&ndash; //tooltip &ndash;&gt;-->
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <!-- //divide -->
+
+              <!-- 레이어 유형 contents -->
+              <div class="ddp-ui-layer-type">
+                <div class="ddp-ui-type-contents">
+                  <div class="ddp-wrap-divide">
+                    <!-- symbol layer : point type -->
+                    <div class="ddp-divide2"
+                         *ngIf="'symbol' === uiOption.layers[layerIndex].type.toString()
+                                || 'cluster' === uiOption.layers[layerIndex].type.toString()">
+                      <div class="ddp-list-label">{{'msg.page.layer.map.point' | translate}}</div>
+                      <ul class="ddp-list-express ddp-tab6 ddp-type2">
+                        <li *ngFor="let item of symbolLayerSymbols"
+                            [ngClass]="{'ddp-selected' : uiOption.layers[layerIndex].symbol === item.value}"
+                            (click)="changeSymbolType(item['value'], layerIndex)">
+                          <em [ngClass]="{'ddp-icon-circle' : 'CIRCLE' === item.value.toString(),
+                                          'ddp-icon-square' : 'SQUARE' === item.value.toString(),
+                                          'ddp-icon-triangle' : 'TRIANGLE' === item.value.toString()}"></em> {{item.name}}
+                        </li>
+                      </ul>
+                    </div>
+                    <!-- //symbol layer : point type -->
+
+                    <!-- symbol, heatmap, hexagon, line, polygon : color, transparency -->
+                    <div class="ddp-divide2 ">
+                      <div class="ddp-list-label">{{'msg.page.layer.map.color' | translate}}</div>
+                      <div [ngClass]="{'ddp-list-sub2' : 'heatmap' !== uiOption.layers[layerIndex].type.toString()}">
+                        <div [ngClass]="{'ddp-wrap-disabled' : 'MEASURE' === uiOption.layers[layerIndex].color.by.toString() && uiOption.layers[layerIndex].color['settingUseFl']}">
+
+                          <div *ngIf="'cluster' == uiOption.layers[layerIndex].type.toString()" class="ddp-divide2">
+                            <div class="ddp-list-label">{{'msg.page.layer.map.color.by' | translate}}</div>
+                            <component-select
+                              [array]="fieldMeasureList"
+                              [defaultIndex]="findIndex(fieldMeasureList, 'name', uiOption.layers[layerIndex].color.column, 'color', 'aggregationType', uiOption.layers[layerIndex].color.aggregationType)"
+                              [viewKey]="'alias'"
+                              [isIconType]="true"
+                              (onSelected)="changeColorBy($event, layerIndex)">
+                            </component-select>
+                          </div>
+                          <div *ngIf="'cluster' !== uiOption.layers[layerIndex].type.toString() && 'heatmap' !== uiOption.layers[layerIndex].type.toString() && 'tile' !== uiOption.layers[layerIndex].type.toString() && ('DIMENSION' === uiOption.layers[layerIndex].color.by.toString() || 'NONE' === uiOption.layers[layerIndex].color.by.toString())" class="ddp-divide2">
+                            <div class="ddp-list-label">{{'msg.page.layer.map.color.by' | translate}}</div>
+                            <component-select
+                              [array]="fieldList[layerIndex]"
+                              [defaultIndex]="findIndex(fieldList[layerIndex], 'name', uiOption.layers[layerIndex].color.column, 'color')"
+                              [viewKey]="'alias'"
+                              [isIconType]="true"
+                              (onSelected)="changeColorBy($event, layerIndex)">
+                            </component-select>
+                          </div>
+                          <div *ngIf="'cluster' !== uiOption.layers[layerIndex].type.toString() && 'heatmap' !== uiOption.layers[layerIndex].type.toString() && 'tile' !== uiOption.layers[layerIndex].type.toString() && 'MEASURE' === uiOption.layers[layerIndex].color.by.toString()" class="ddp-divide2">
+                            <div class="ddp-list-label">{{'msg.page.layer.map.color.by' | translate}}</div>
+                            <component-select
+                              [array]="fieldList[layerIndex]"
+                              [defaultIndex]="findIndex(fieldList[layerIndex], 'name', uiOption.layers[layerIndex].color.column, 'color', 'aggregationType', uiOption.layers[layerIndex].color.aggregationType)"
+                              [viewKey]="'alias'"
+                              [isIconType]="true"
+                              (onSelected)="changeColorBy($event, layerIndex)">
+                            </component-select>
+                          </div>
+                          <div *ngIf="'tile' == uiOption.layers[layerIndex].type.toString()" class="ddp-divide2">
+                            <div class="ddp-list-label">{{'msg.page.layer.map.color.by' | translate}}</div>
+                            <component-select
+                              [array]="fieldMeasureList"
+                              [defaultIndex]="findIndex(fieldMeasureList, 'name', uiOption.layers[layerIndex].color.column, 'color', 'aggregationType', uiOption.layers[layerIndex].color.aggregationType)"
+                              [viewKey]="'alias'"
+                              [isIconType]="true"
+                              (onSelected)="changeColorBy($event, layerIndex)">
+                            </component-select>
+                          </div>
+
+                          <div class="ddp-divide2">
+                            <!-- color by none -->
+                            <div
+                              *ngIf="'heatmap' !== uiOption.layers[layerIndex].type.toString() && 'NONE' === uiOption.layers[layerIndex].color.by.toString()"
+                              class="ddp-ui-colorby ddp-box-color">
+                              <!-- colorby button -->
+                              <div class="ddp-wrap-colorby-button ddp-solid-color">
+                                <!-- 클릭시 ddp-selected 추가 -->
+                                <color-picker [showAlpha]="true" [color]="uiOption.layers[layerIndex].color.schema"
+                                              [showInitial]="true"
+                                              [showInput]="true" [showUserColor]="true"
+                                              (selected)="changeByNoneColor($event, layerIndex)"></color-picker>
+                              </div>
+                              <!-- //colorby button -->
+                            </div>
+                            <!-- color by none -->
+                            <!-- color by dimension / measure -->
+                            <div
+                              *ngIf="'heatmap' === uiOption.layers[layerIndex].type.toString() || ('heatmap' !== uiOption.layers[layerIndex].type.toString() && 'NONE' !== uiOption.layers[layerIndex].color.by.toString())"
+                              class="ddp-ui-colorby">
+                              <!-- colorby button -->
+                              <div class="ddp-wrap-colorby-button"
+                                   (click)="$event.stopPropagation(); toggleColorPalette(true)"
+                                   (clickOutside)="toggleColorPalette(false)">
+                                <em class="ddp-icon-colorby"></em>
+                                <!-- 클릭시 ddp-selected 추가 -->
+                                <button
+                                  *ngIf="'heatmap' !== uiOption.layers[layerIndex].type.toString() && 'DIMENSION' === uiOption.layers[layerIndex].color.by.toString()"
+                                  class="ddp-btn-color-series{{findColorIndex(colorTemplate?.defaultColorList, layerIndex)}} ddp-type"></button>
+                                <button
+                                  *ngIf="'heatmap' !== uiOption.layers[layerIndex].type.toString() && 'MEASURE' === uiOption.layers[layerIndex].color.by.toString()"
+                                  class="ddp-btn-color-type{{findMeasureColorIndex(layerIndex)}} ddp-type" [ngClass]="{'sys-inverted': isChartColorInverted(layerIndex)}"></button>
+                                <button *ngIf="'heatmap' === uiOption.layers[layerIndex].type.toString()"
+                                        class="ddp-btn-color-heatmap{{findColorIndex(colorTemplate?.mapHeatmapColorList, layerIndex)}}"></button>
+                              </div>
+                              <!-- //colorby button -->
+                              <!-- popup -->
+                              <color-template #colorTemplate [layerType]="uiOption.layers[layerIndex].type.toString()"
+                                              [colorType]="uiOption.layers[layerIndex].color.by.toString()"
+                                              [show]="colorListFlag"
+                                              [schema]="uiOption.layers[layerIndex].color.schema"
+                                              (notiChangeColor)="changeColor($event, layerIndex)"></color-template>
+                              <!-- //popup -->
+                            </div>
+                            <!-- //color by dimension / measure -->
+                          </div>
+                        </div>
+
+                        <!-- custom color setting -->
+                        <ng-container
+                          *ngIf="'heatmap' !== uiOption.layers[layerIndex].type.toString() && 'MEASURE' === uiOption.layers[layerIndex].color.by.toString()">
+
+                          <!-- on/off custom color setting -->
+                          <div class="ddp-wrap-option-slider">
+                            <span
+                              class="ddp-label-slider">{{'msg.page.chart.color.series.color.setting' | translate}}</span>
+                            <!-- Slide THREE -->
+                            <div class="ddp-checkbox-slide ddp-checkbox-automatic2">
+                              <input type="checkbox" [checked]="uiOption.layers[layerIndex].color['settingUseFl']"
+                                     (click)="changeColorRange(layerIndex)">
+                              <label><span class="ddp-slide"></span></label>
+                            </div>
+                            <!-- //Slide THREE -->
+                          </div>
+                          <!-- //on/off custom color setting -->
+
+                          <!-- color by measure custom color setting -->
+                          <div *ngIf="uiOption.layers[layerIndex].color['settingUseFl']" class="ddp-user-color">
+
+                            <div *ngFor="let item of rangesViewList; let rangeIndex = index" class="ddp-wrap-usercolor">
+                              <!-- blank -->
+                              <div *ngIf="0 !== rangeIndex" (click)="addNewRange(rangeIndex, layerIndex)"
+                                   class="ddp-list-blank">
+                                {{'msg.page.chart.color.measure.new.range.add.description' | translate}}
+                              </div>
+                              <!-- //blank -->
+                              <!-- list usercolor -->
+                              <div class="ddp-list-usercolor">
+                                <div class="ddp-box-color">
+                                  <color-picker [showAlpha]="true" [color]="item['color']" [showInitial]="true"
+                                                [showInput]="true" [showUserColor]="true" #colorPicker
+                                                (selected)="colorPaletteSelected(layerIndex, $event, item)"></color-picker>
+                                </div>
+                                <div class="ddp-data-range ddp-clear">
+                                  <div class="ddp-input-range">
+                                    <!-- 말줄임 -->
+                                    <!-- 클릭시 is-selected 추가 -->
+                                    <div class="ddp-ng-ellipsis" [ngClass]="{'ddp-selected' : item['minInputShow']}">
+                                      <span [ngStyle]="{'visibility' : null == item.fixMin ? 'hidden' : 'visible'}"
+                                            class="ddp-data-ellipsis ddp-txt-right"
+                                            (click)="showMinInputColorRange(item, true, minInput, rangeIndex)"> {{item['gt']}}</span>
+                                      <input #minInput
+                                             [ngStyle]="{'visibility' : null == item.fixMin ? 'hidden' : 'visible'}"
+                                             type="text" class="ddp-input-typebasic ddp-txt-right"
+                                             [(ngModel)]="item['gt']"
+                                             (mouseenter)="item['minInputShow'] = true;"
+                                             (mouseleave)="item['minInputShow'] = false;"
+                                             (keyup.enter)="changeRangeMinInput(item, rangeIndex, layerIndex)">
+                                      <!-- tooltip -->
+                                      <div class="ddp-ui-tooltip-info">
+                                        <em class="ddp-icon-view-down"></em>
+                                        {{'msg.page.chart.color.measure.new.range.add.available.range' | translate}} {{availableRangeValue}}
+                                      </div>
+                                      <!-- //tooltip -->
+                                    </div>
+                                    <!-- //말줄임 -->
+                                  </div>
+                                  <div class="ddp-bar ">
+                                    ~
+                                  </div>
+                                  <div class="ddp-input-range">
+                                    <!-- 말줄임 -->
+                                    <!-- 클릭시 is-selected 추가 -->
+                                    <div class="ddp-ng-ellipsis" [ngClass]="{'ddp-selected' : item['maxInputShow']}">
+                                      <span [ngStyle]="{'visibility' : null == item.fixMax ? 'hidden' : 'visible'}"
+                                            class="ddp-data-ellipsis ddp-txt-right"
+                                            (click)="showMaxInputColorRange(item, true, maxInput, rangeIndex)">{{item['lte']}}</span>
+                                      <input #maxInput
+                                             [ngStyle]="{'visibility' : null == item.fixMax ? 'hidden' : 'visible'}"
+                                             type="text" class="ddp-input-typebasic ddp-txt-right"
+                                             [(ngModel)]="item['lte']"
+                                             (mouseenter)="item['maxInputShow'] = true;"
+                                             (mouseleave)="item['maxInputShow'] = false;"
+                                             (keyup.enter)="changeRangeMaxInput(item, rangeIndex, layerIndex)">
+                                      <!-- tooltip -->
+                                      <div class="ddp-ui-tooltip-info">
+                                        <em class="ddp-icon-view-down"></em>
+                                        {{'msg.page.chart.color.measure.new.range.add.available.range' | translate}} {{availableRangeValue}}
+                                      </div>
+                                      <!-- //tooltip -->
+                                    </div>
+                                    <!-- 말줄임 -->
+                                  </div>
+                                </div>
+
+                                <em
+                                  *ngIf="uiOption.layers[layerIndex].color['ranges']?.length - 1 !== rangeIndex && 0 !== rangeIndex && uiOption.layers[layerIndex].color['ranges']?.length > 3"
+                                  (click)="removeColorRange(item, rangeIndex, layerIndex)"
+                                  class="ddp-icon-listdelete"></em>
+                              </div>
+                            </div>
+                            <!-- //list usercolor -->
+
+                          </div>
+
+                          <div *ngIf="uiOption.layers[layerIndex].color['settingUseFl']" class="ddp-data-sum">
+                            {{'msg.page.chart.color.measure.new.range.min' | translate}} : {{minValue}}
+                            ~ {{'msg.page.chart.color.measure.new.range.max' | translate}} : {{maxValue}}
+                          </div>
+                          <a *ngIf="uiOption.layers[layerIndex].color['settingUseFl']"
+                             (click)="equalColorRange(layerIndex)" href="javascript:" class="ddp-btn-set">
+                            {{'msg.page.chart.color.measure.new.range.split.equal' | translate}}
+                          </a>
+                          <!-- //color by measure custom color setting -->
+                        </ng-container>
+                        <!-- custom color setting -->
+
+                        <!-- transparency -->
+                        <div class="ddp-divide2">
+                          <div class="ddp-list-label type-label">{{'msg.page.layer.map.color.transparency' | translate}}</div>
+                          <div class="ddp-form-slider">
+                            <div class="ddp-ui-slider-type type-per ddp-slider-bg ddp-grid">
+                              <range-slider-component [hideFromTo]="false"
+                                                      [hideMinMax]="true"
+                                                      [keyboard]="false"
+                                                      [min]="0"
+                                                      [max]="100"
+                                                      [from]="uiOption.layers[layerIndex].color.transparency"
+                                                      [type]="'single'"
+                                                      [step]="1"
+                                                      (onFinish)="changeTransparency({}, $event, layerIndex)">
+                              </range-slider-component>
+                            </div>
+                            <div class="ddp-box-option-input ddp-type ddp-inline">
+                              <span class="ddp-txt-input">%</span>
+                              <span class="ddp-txt-input"></span>
+                              <input type="number"
+                                     [ngModel]="uiOption.layers[layerIndex].color.transparency"
+                                     (keyup.enter)="changeTransparencyText($event, layerIndex);">
+                            </div>
+                          </div>
+                        </div>
+                        <!-- //heatmap : transparency -->
+                      </div>
+                    </div>
+                    <!-- //point, heatmap, hexagon, line, polygon : color, transparency -->
+                  </div>
+
+                  <!-- symbol : size -->
+                  <div class="ddp-wrap-divide"
+                       *ngIf="'symbol' === uiOption.layers[layerIndex].type.toString()" >
+                              <!--|| 'cluster' === uiOption.layers[layerIndex].type.toString()">-->
+                    <!-- divide -->
+                    <div class="ddp-divide2 ">
+                      <div class="ddp-list-label">{{'msg.page.layer.map.size' | translate}}</div>
+                      <div class="ddp-list-sub2">
+                        <div class="ddp-divide2">
+                          <div class="ddp-list-label">{{'msg.page.layer.map.size.by' | translate}}</div>
+                          <component-select
+                            [array]="fieldMeasureList"
+                            [isIconType]="true"
+                            [defaultIndex]="findIndex(fieldMeasureList, 'name', uiOption.layers[layerIndex].size.column, 'size', 'aggregationType')"
+                            [viewKey]="'alias'"
+                            (onSelected)="changeSizeBy($event, layerIndex)"
+                          ></component-select>
+                        </div>
+                        <!-- TODO radius range by none -->
+                        <!--<div *ngIf="false && uiOption.layers[layerIndex].size.radiusRange?.length > 0" class="ddp-divide2">-->
+                        <!--<div class="ddp-form-slider">-->
+                        <!--<div class="ddp-ui-slider-type type-per ddp-slider-bg ddp-grid">-->
+                        <!--<range-slider-component [hideFromTo]="false"-->
+                        <!--[hideMinMax]="true"-->
+                        <!--[keyboard]="false"-->
+                        <!--[min]="1"-->
+                        <!--[max]="100"-->
+                        <!--[from]="uiOption.layers[layerIndex].size.radiusRange[0]"-->
+                        <!--[type]="'single'"-->
+                        <!--[step]="1"-->
+                        <!--(onFinish)="changeNoneRadiusRange({}, $event, layerIndex)">-->
+                        <!--</range-slider-component>-->
+                        <!--</div>-->
+                        <!--<div class="ddp-box-option-input ddp-type ddp-inline">-->
+                        <!--<span class="ddp-txt-input">px</span>-->
+                        <!--<span class="ddp-txt-input"></span>-->
+                        <!--<input type="number" input-mask="number" [ngModel]="uiOption.layers[layerIndex].size.radiusRange[0]"-->
+                        <!--(keyup.enter)="changeNoneRadiusRangeText($event, layerIndex);">-->
+                        <!--</div>-->
+                        <!--</div>-->
+                        <!--</div>-->
+                        <!--// radius range by none -->
+                        <!-- TODO radius range by measure -->
+                        <!--<div *ngIf="false && uiOption.layers[layerIndex].size.radiusRange?.length > 1" class="ddp-divide2">-->
+                        <!--<div class="ddp-list-label">{{'msg.page.layer.map.size.by.radius.range' | translate}}</div>-->
+
+                        <!--<div class="ddp-wrap-range">-->
+                        <!--<div class="ddp-ui-slider-type type-per ddp-slider-bg ddp-grid">-->
+                        <!--<range-slider-component [hideFromTo]="false"-->
+                        <!--[hideMinMax]="true"-->
+                        <!--[keyboard]="false"-->
+                        <!--[min]="1"-->
+                        <!--[max]="100"-->
+                        <!--[from]="uiOption.layers[layerIndex].size.radiusRange[0]"-->
+                        <!--[to]="uiOption.layers[layerIndex].size.radiusRange[1]"-->
+                        <!--[type]="'double'"-->
+                        <!--[step]="1"-->
+                        <!--(onFinish)="changeMeasureRadiusRange({}, $event, layerIndex)">-->
+                        <!--</range-slider-component>-->
+                        <!--</div>-->
+
+                        <!--<div class="ddp-data-range ddp-clear">-->
+                        <!--<input type="number" class="ddp-input-typebasic ddp-txt-center" (key.enter)="changeMeasureRadiusRangeText($event, 0, layerIndex)"-->
+                        <!--[ngModel]="uiOption.layers[layerIndex].size.radiusRange[0]">-->
+                        <!--<div class="ddp-bar ">-->
+                        <!--~-->
+                        <!--</div>-->
+                        <!--<input type="number" class="ddp-input-typebasic ddp-txt-center" (key.enter)="changeMeasureRadiusRangeText($event, 1, layerIndex)"-->
+                        <!--[ngModel]="uiOption.layers[layerIndex].size.radiusRange[1]">-->
+                        <!--</div>-->
+                        <!--</div>-->
+                        <!--</div>-->
+                        <!-- //radius range by measure -->
+                      </div>
+
+                      <!-- 크기반경 -->
+                      <div class="ddp-list-sub2"
+                           *ngIf="uiOption.layers[layerIndex]['pointRadiusTo'] == null && uiOption.layers[layerIndex]['type'] == 'symbol'">
+                        <div class="ddp-divide2">
+                          <div class="ddp-list-label type-label">{{'msg.page.layer.map.size' | translate}}</div>
+                          <div class="ddp-form-slider">
+                            <div class="ddp-ui-slider-type type-per ddp-slider-bg ddp-grid">
+                              <range-slider-component [hideFromTo]="false"
+                                                      [hideMinMax]="true"
+                                                      [keyboard]="false"
+                                                      [min]="1"
+                                                      [max]="200"
+                                                      [from]="uiOption.layers[layerIndex]['pointRadiusFrom']"
+                                                      [type]="'single'"
+                                                      [step]="1"
+                                                      (onFinish)="changePointSize({}, $event, layerIndex, true)">
+                              </range-slider-component>
+                            </div>
+                            <div class="ddp-box-option-input ddp-type ddp-inline">
+                              <span class="ddp-txt-input">px</span>
+                              <input type="text" [ngModel]="uiOption.layers[layerIndex]['pointRadiusFrom']"
+                                     (keyup.enter)="changePointSizeText($event, layerIndex, 'pointRadiusFrom');">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="ddp-list-sub2"
+                           *ngIf="uiOption.layers[layerIndex]['pointRadiusTo'] != null && uiOption.layers[layerIndex]['type'] == 'symbol'">
+                        <div class="ddp-divide2">
+                          <div class="ddp-list-label">{{'msg.page.layer.map.size.by.radius.range' | translate}}</div>
+                          <div class="ddp-wrap-range">
+                            <div class="ddp-ui-slider-type type-per ddp-slider-bg ddp-grid">
+                              <range-slider-component [hideFromTo]="false"
+                                                      [hideMinMax]="true"
+                                                      [keyboard]="false"
+                                                      [min]="1"
+                                                      [max]="200"
+                                                      [from]="uiOption.layers[layerIndex]['pointRadiusFrom']"
+                                                      [to]="uiOption.layers[layerIndex]['pointRadiusTo']"
+                                                      [type]="'double'"
+                                                      [step]="1"
+                                                      (onFinish)="changePointSize({}, $event, layerIndex, false)">
+                              </range-slider-component>
+                            </div>
+                            <div class="ddp-data-range ddp-clear">
+                              <div class="ddp-box-option-input ddp-type">
+                                <span class="ddp-txt-input">px</span>
+                                <input type="text" [ngModel]="uiOption.layers[layerIndex]['pointRadiusFrom']"
+                                       (keyup.enter)="changePointSizeText($event, layerIndex, 'pointRadiusFrom');">
+                              </div>
+                              <div class="ddp-bar">
+                                ~
+                              </div>
+                              <div class="ddp-box-option-input ddp-type">
+                                <span class="ddp-txt-input">px</span>
+                                <input type="text" [ngModel]="uiOption.layers[layerIndex]['pointRadiusTo']"
+                                       (keyup.enter)="changePointSizeText($event, layerIndex, 'pointRadiusTo');">
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- // 크기반경 -->
+                    </div>
+                    <!-- //divide -->
+                  </div>
+                  <!-- symbol : size -->
+
+                  <!-- symbol, polygon : outline -->
+                  <div
+                    *ngIf="'symbol' === uiOption.layers[layerIndex].type.toString()
+                            || 'polygon' === uiOption.layers[layerIndex].type.toString()
+                            || 'cluster' === uiOption.layers[layerIndex].type.toString()"
+                    class="ddp-wrap-divide">
+                    <!-- divide -->
+                    <div class="ddp-divide2 ">
+                      <div class="ddp-wrap-option-slider">
+                        <span class="ddp-label-slider">{{'msg.page.layer.map.outline' | translate}}</span>
+                        <!-- Slide THREE -->
+                        <div class="ddp-checkbox-slide ddp-checkbox-automatic2">
+                          <input type="checkbox" name="check" [ngModel]="uiOption.layers[layerIndex].outline"
+                                 (click)="toggleOutline(uiOption.layers[layerIndex].outline, layerIndex)">
+                          <label><span class="ddp-slide"></span></label>
+                        </div>
+                        <!-- //Slide THREE -->
+
+                      </div>
+
+                      <div *ngIf="uiOption.layers[layerIndex].outline" class="ddp-wrap-option-multy ddp-clear">
+                        <div class="ddp-col-7">
+                          <span class="ddp-label-txt">{{'msg.page.layer.map.color' | translate}}</span>
+                        </div>
+                        <div class="ddp-col-5 ddp-txt-right">
+                          <!-- selectbox -->
+                          <div class="ddp-type-selectbox ddp-color-selectbox2">
+                            <color-picker [showAlpha]="true" [color]="uiOption.layers[layerIndex].outline.color"
+                                          [showInitial]="true"
+                                          [showInput]="true" [showUserColor]="true"
+                                          (selected)="changeOutlineColor($event, layerIndex)"></color-picker>
+                          </div>
+                          <!-- //selectbox -->
+                        </div>
+                      </div>
+
+                      <!-- multy -->
+                      <div *ngIf="uiOption.layers[layerIndex].outline" class="ddp-wrap-option-multy ddp-clear">
+                        <div class="ddp-col-6">
+                          <span class="ddp-label-txt">{{'msg.page.layer.map.outline.thickness' | translate}}</span>
+                        </div>
+                        <div class="ddp-col-6 ddp-txt-right">
+                          <ul class="ddp-list-express ddp-tab3 ddp-type">
+                            <li *ngFor="let item of thicknessList"
+                                [ngClass]="{'ddp-selected' : uiOption.layers[layerIndex].outline.thickness === item.value}"
+                                (click)="changeThick(item['value'], layerIndex)">
+                              <em [ngClass]="{'ddp-line-bold1' : 'THIN' === item.value.toString(),
+                                              'ddp-line-bold2' : 'NORMAL' === item.value.toString(),
+                                              'ddp-line-bold3' : 'THICK' === item.value.toString()}"></em>
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                      <!-- //multy -->
+                    </div>
+                  </div>
+                  <!-- //symbol, polygon : outline -->
+
+                  <!--&lt;!&ndash; symbol : cluster &ndash;&gt;-->
+                  <!--<div class="ddp-wrap-divide" *ngIf="(uiOption['analysis'] == null || uiOption['analysis']['use'] == false) && 'symbol' === uiOption.layers[layerIndex].type.toString()">-->
+                  <!--&lt;!&ndash; divide &ndash;&gt;-->
+                  <!--<div class="ddp-divide2 ">-->
+                  <!--<div class="ddp-wrap-option-slider">-->
+                  <!--<span class="ddp-label-slider">{{'msg.page.layer.map.cluster' | translate}}</span>-->
+                  <!--&lt;!&ndash; Slide THREE &ndash;&gt;-->
+                  <!--<div class="ddp-checkbox-slide ddp-checkbox-automatic2">-->
+                  <!--<input type="checkbox" value="None" id="check2" name="check"-->
+                  <!--[ngModel]="uiOption.layers[layerIndex]['clustering']"-->
+                  <!--(click)="isEnableClustering(layerIndex);">-->
+                  <!--<label for="check2"><span class="ddp-slide"></span></label>-->
+                  <!--</div>-->
+                  <!--&lt;!&ndash; //Slide THREE &ndash;&gt;-->
+                  <!--</div>-->
+                  <!--<div class="ddp-list-sub2" *ngIf="uiOption.layers[layerIndex]['clustering']">-->
+                  <!--&lt;!&ndash; divide &ndash;&gt;-->
+                  <!--<div class="ddp-divide2">-->
+                  <!--<div class="ddp-wrap-option-multy ddp-clear">-->
+                  <!--<div class="ddp-col-8">-->
+                  <!--<span class="ddp-label-txt">{{'msg.page.layer.map.cluster.coverage' | translate}}</span>-->
+                  <!--</div>-->
+                  <!--</div>-->
+                  <!--&lt;!&ndash; divide &ndash;&gt;-->
+                  <!--<div class="ddp-divide2">-->
+                  <!--<div class="ddp-form-slider">-->
+                  <!--<div class="ddp-ui-slider-type type-per ddp-slider-bg ddp-grid">-->
+                  <!--<range-slider-component [hideFromTo]="false"-->
+                  <!--[hideMinMax]="true"-->
+                  <!--[keyboard]="false"-->
+                  <!--[min]="0"-->
+                  <!--[max]="100"-->
+                  <!--[from]="uiOption.layers[layerIndex]['coverage']"-->
+                  <!--[type]="'single'"-->
+                  <!--[step]="1"-->
+                  <!--(onFinish)="changeClustering({}, $event, layerIndex)">-->
+                  <!--</range-slider-component>-->
+                  <!--</div>-->
+                  <!--<div class="ddp-box-option-input ddp-type ddp-inline">-->
+                  <!--<span class="ddp-txt-input">%</span>-->
+                  <!--<input type="number"-->
+                  <!--[ngModel]="uiOption.layers[layerIndex]['coverage']"-->
+                  <!--(keyup.enter)="changeClusteringText($event, layerIndex);">-->
+                  <!--</div>-->
+                  <!--</div>-->
+                  <!--</div>-->
+                  <!--&lt;!&ndash; //divide &ndash;&gt;-->
+                  <!--</div>-->
+                  <!--&lt;!&ndash; //divide &ndash;&gt;-->
+                  <!--</div>-->
+                  <!--</div>-->
+                  <!--&lt;!&ndash; //divide &ndash;&gt;-->
+                  <!--</div>-->
+                  <!--&lt;!&ndash; //symbol : cluster &ndash;&gt;-->
+
+                  <!-- symbol : cluster -->
+                  <div class="ddp-wrap-divide"
+                       *ngIf="((uiOption['analysis'] == null || uiOption['analysis']['use'] == false) && 'cluster' === uiOption.layers[layerIndex].type.toString())">
+                    <!-- divide -->
+                    <div class="ddp-divide2 ">
+                      <div class="ddp-list-label type-label">{{'msg.page.layer.map.cluster.distance' | translate}}</div>
+                      <div class="ddp-form-slider">
+                        <div class="ddp-ui-slider-type type-per ddp-slider-bg ddp-grid">
+                          <range-slider-component [hideFromTo]="false"
+                                                  [hideMinMax]="true"
+                                                  [keyboard]="false"
+                                                  [min]="0"
+                                                  [max]="100"
+                                                  [from]="uiOption.layers[layerIndex]['coverage']"
+                                                  [type]="'single'"
+                                                  [step]="1"
+                                                  (onFinish)="changeClustering({}, $event, layerIndex)">
+                          </range-slider-component>
+                        </div>
+                        <div class="ddp-box-option-input ddp-type ddp-inline">
+                          <span class="ddp-txt-input">%</span>
+                          <input type="number"
+                                 [ngModel]="uiOption.layers[layerIndex]['coverage']"
+                                 (keyup.enter)="changeClusteringText($event, layerIndex);">
+                        </div>
+                      </div>
+                      <!-- //divide -->
+                    </div>
+                  </div>
+                  <!-- //symbol : cluster -->
+
+                  <!-- symbol : view original data -->
+                  <!--<div *ngIf="'symbol' === uiOption.layers[layerIndex].type.toString()" class="ddp-wrap-divide">-->
+                  <!--<div class="ddp-part-check-b ">-->
+                  <!--<label class="ddp-label-checkbox ddp-position">-->
+                  <!--<input type="checkbox" [ngModel]="uiOption.layers[layerIndex].viewRawData" (click)="toggleViewRawData(!uiOption.layers[layerIndex].viewRawData)">-->
+                  <!--<i class="ddp-icon-checkbox"></i>-->
+                  <!--<span class="ddp-txt-checkbox">{{'msg.page.layer.map.view' | translate}}</span>-->
+                  <!--</label>-->
+                  <!--</div>-->
+                  <!--</div>-->
+                  <!-- //symbol : view original data -->
+
+                  <!-- TODO symbol : link -->
+                  <!-- //TODO symbol : link -->
+
+                  <!-- heatmap : blur, radius -->
+                  <div *ngIf="'heatmap' === uiOption.layers[layerIndex].type.toString()" class="ddp-wrap-divide">
+                    <!-- heatmap : blur -->
+                    <div class="ddp-divide2">
+                      <div class="ddp-list-label">{{'msg.page.layer.map.blur' | translate}}</div>
+                      <div class="ddp-form-slider">
+                        <div class="ddp-ui-slider-type type-per ddp-slider-bg ddp-grid">
+                          <range-slider-component [hideFromTo]="false"
+                                                  [hideMinMax]="true"
+                                                  [keyboard]="false"
+                                                  [min]="0"
+                                                  [max]="100"
+                                                  [from]="uiOption.layers[layerIndex]['blur']"
+                                                  [type]="'single'"
+                                                  [step]="1"
+                                                  (onFinish)="changeBlur({}, $event, layerIndex)">
+                          </range-slider-component>
+                        </div>
+                        <div class="ddp-box-option-input ddp-type ddp-inline">
+                          <span class="ddp-txt-input">%</span>
+                          <span class="ddp-txt-input"></span>
+                          <input type="number" [ngModel]="uiOption.layers[layerIndex]['blur']"
+                                 (keyup.enter)="changeBlurText($event,layerIndex)">
+                        </div>
+                      </div>
+                    </div>
+                    <!-- //heatmap : blur -->
+                    <!-- heatmap : radius -->
+                    <div class="ddp-divide2">
+                      <div class="ddp-list-label">{{'msg.page.layer.map.radius' | translate}}</div>
+                      <div class="ddp-form-slider">
+                        <div class="ddp-ui-slider-type type-per ddp-slider-bg ddp-grid">
+                          <range-slider-component [hideFromTo]="false"
+                                                  [hideMinMax]="true"
+                                                  [keyboard]="false"
+                                                  [min]="0"
+                                                  [max]="100"
+                                                  [from]="uiOption.layers[layerIndex]['radius']"
+                                                  [type]="'single'"
+                                                  [step]="1"
+                                                  (onFinish)="changeRadius({}, $event, layerIndex)">
+                          </range-slider-component>
+                        </div>
+                        <div class="ddp-box-option-input ddp-type ddp-inline">
+                          <!--<span class="ddp-txt-input">%</span>-->
+                          <span class="ddp-txt-input"></span>
+                          <input type="number" [ngModel]="uiOption.layers[layerIndex]['radius']"
+                                 (keyup.enter)="changeRadiusText($event,layerIndex)">
+                        </div>
+                      </div>
+                    </div>
+                    <!-- //heatmap : radius -->
+                  </div>
+                  <!-- heatmap : blur, radius -->
+
+                  <!-- hexagon : radius, coverage -->
+                  <div *ngIf="'tile' === uiOption.layers[layerIndex].type.toString()" class="ddp-wrap-divide">
+                    <!-- hexagon : radius -->
+                    <div class="ddp-divide2">
+                      <div class="ddp-list-label">{{'msg.page.layer.map.radius' | translate}}</div>
+                      <div class="ddp-form-slider">
+                        <div class="ddp-ui-slider-type type-per ddp-slider-bg ddp-grid">
+                          <range-slider-component [hideFromTo]="false"
+                                                  [hideMinMax]="true"
+                                                  [keyboard]="false"
+                                                  [min]="0"
+                                                  [max]="100"
+                                                  [from]="uiOption.layers[layerIndex]['radius']"
+                                                  [type]="'single'"
+                                                  [step]="1"
+                                                  (onFinish)="changeHexagonRadius({}, $event, layerIndex)">
+                          </range-slider-component>
+                        </div>
+                        <div class="ddp-box-option-input ddp-type ddp-inline">
+                          <!--<span class="ddp-txt-input">%</span>-->
+                          <span class="ddp-txt-input"></span>
+                          <input type="number" [ngModel]="uiOption.layers[layerIndex]['radius']"
+                                 (keyup.enter)="changeHexagonRadiusText($event, layerIndex)">
+                        </div>
+                      </div>
+                    </div>
+                    <!-- //hexagon : radius -->
+                    <!-- hexagon : coverage -->
+                    <!--<div class="ddp-divide2">-->
+                    <!--<div class="ddp-list-label">{{'msg.page.layer.map.coverage' | translate}}</div>-->
+                    <!--<div class="ddp-form-slider">-->
+                    <!--<div class="ddp-ui-slider-type type-per ddp-slider-bg ddp-grid">-->
+                    <!--<range-slider-component [hideFromTo]="false"-->
+                    <!--[hideMinMax]="true"-->
+                    <!--[keyboard]="false"-->
+                    <!--[min]="0.1"-->
+                    <!--[max]="1"-->
+                    <!--[from]="uiOption.layers[layerIndex]['coverage']"-->
+                    <!--[type]="'single'"-->
+                    <!--[step]="0.1"-->
+                    <!--(onFinish)="changeCoverage({}, $event, layerIndex)">-->
+                    <!--</range-slider-component>-->
+                    <!--</div>-->
+                    <!--<div class="ddp-box-option-input ddp-type ddp-inline">-->
+                    <!--<span class="ddp-txt-input"></span>-->
+                    <!--<input type="number" input-mask="number" [ngModel]="uiOption.layers[layerIndex]['coverage']"-->
+                    <!--(keyup.enter)="changeCoverageText($event,layerIndex)">-->
+                    <!--</div>-->
+                    <!--</div>-->
+                    <!--</div>-->
+                    <!-- //hexagon : coverage -->
+                  </div>
+                  <!-- //hexagon : radius, coverage -->
+
+                  <!-- line : stroke, line type -->
+                  <div *ngIf="'line' === uiOption.layers[layerIndex].type.toString()" class="ddp-wrap-divide">
+                    <!-- line : stroke -->
+                    <div class="ddp-wrap-divide">
+                      <div class="ddp-divide2">
+                        <div class="ddp-list-label">{{'msg.page.layer.map.stroke' | translate}}</div>
+                        <div class="ddp-list-sub2">
+                          <div class="ddp-divide2">
+                            <div class="ddp-list-label">{{'msg.page.layer.map.stroke.by' | translate}}</div>
+                            <component-select
+                              [array]="fieldMeasureList"
+                              [defaultIndex]="findIndex(fieldMeasureList, 'name', uiOption.layers[layerIndex].thickness.column, 'thickness', 'aggregationType', uiOption.layers[layerIndex].thickness.aggregationType)"
+                              [isIconType]="true"
+                              [viewKey]="'alias'"
+                              (onSelected)="changeStrokeBy($event, layerIndex)"
+                            ></component-select>
+                          </div>
+                          <div class="ddp-divide2">
+                            <div class="ddp-wrap-option-multy ddp-clear">
+                              <div class="ddp-col-8">
+                                <span
+                                  class="ddp-label-txt">{{'msg.page.layer.map.stroke.max.width' | translate}}
+                                  (pt)</span>
+                              </div>
+                              <div class="ddp-col-4">
+                                <input type="number" class="ddp-input-typebasic ddp-txt-right"
+                                       [ngModel]="uiOption.layers[layerIndex].thickness.maxValue"
+                                       (keyup.enter)="changeThickMaxValue($event, layerIndex)">
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- //line : stroke -->
+
+                    <!-- line : line type -->
+                    <div class="ddp-wrap-divide">
+                      <!-- divide -->
+                      <div class="ddp-divide2 ">
+                        <div class="ddp-wrap-option-multy ddp-clear">
+                          <div class="ddp-col-6">
+
+                            <span class="ddp-label-txt">{{'msg.page.layer.map.line.type' | translate}}</span>
+                          </div>
+                          <div class="ddp-col-6 ddp-txt-right">
+                            <ul class="ddp-list-express ddp-tab3 ddp-type">
+                              <li *ngFor="let item of lineStyleList" (click)="changeLineStyle(item['value'], layerIndex)"
+                                  [ngClass]="{'ddp-selected' : item.value === uiOption.layers[layerIndex].lineStyle}">
+                                <em [ngClass]="{'ddp-line-bold1' : 'SOLID' === item.value,
+                                              'ddp-line-dotted' : 'DOTTED' === item.value,
+                                              'ddp-line-dashed' : 'DASHED' === item.value}"></em>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- //divide -->
+                    </div>
+                    <!-- //line : line type -->
+                  </div>
+                  <!-- //line : stroke, line type -->
+
+                  <!-- 공간연산 visible (비교 레이어 영역 ) -->
+                  <div *ngIf="uiOption['analysis'] != null && uiOption['analysis']['use'] == true" class="ddp-wrap-divide">
+                    <!-- divide -->
+                    <div class="ddp-divide2 ">
+                      <div class="ddp-wrap-option-slider">
+                        <span class="ddp-label-slider">{{'msg.page.chart.map.spatial.comparelayer.area' | translate}}</span>
+                        <!-- Slide THREE -->
+                        <div class="ddp-checkbox-slide ddp-checkbox-automatic2">
+                          <input type="checkbox" name="check" [ngModel]="uiOption['analysis']['includeCompareLayer']" (click)="analysisVisibilityBtn()">
+                          <label><span class="ddp-slide"></span></label>
+                        </div>
+                        <!-- //Slide THREE -->
+                      </div>
+                    </div>
+                  </div>
+                  <!-- // 공간연산 visible (비교 레이어 영역 ) -->
+
+                </div>
+              </div>
+              <!-- //레이어 유형 contents -->
+            </div>
+            <!-- //[point, heatmap, hexagon, line, polygon] -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- //레이어 설정 -->
+</div>

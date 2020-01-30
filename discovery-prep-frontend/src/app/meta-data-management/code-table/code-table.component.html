@@ -1,0 +1,116 @@
+<!--
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<div class="ddp-ui-contents-list">
+  <div class="ddp-wrap-option">
+    <!-- option -->
+    <div class="ddp-ui-option ddp-clear">
+      <!-- edit -->
+      <component-period
+        [startDateDefault]="defaultDate?.startDate"
+        [endDateDefault]="defaultDate?.endDate"
+        [defaultType]="defaultDate?.type"
+        [dateType]="false"
+        [roundSecond]="true"
+        [startPlaceholder]="'msg.storage.ui.criterion.time.past' | translate"
+        [endPlaceholder]="'msg.storage.ui.criterion.time.current' | translate"
+        (changeDate)="onChangeData($event)"
+        [title]="'msg.metadata.ui.codetable.updated.date' | translate"
+      ></component-period>
+      <!-- //edit -->
+      <div class="ddp-ui-rightoption">
+        <a href="javascript:" class="ddp-link-reset" (click)="onClickResetFilters()"><em class="ddp-btn-reset3"></em>{{'msg.mem.btn.refresh' | translate}}</a>
+      </div>
+    </div>
+    <!-- //option -->
+    <!-- option -->
+    <div class="ddp-ui-option ddp-optiontype ddp-clear">
+      <!-- 검색 -->
+      <div class="ddp-form-search ddp-fleft">
+        <component-input
+          [autoFocus]="false"
+          [compType]="'search'"
+          [value]="searchText"
+          [placeHolder]="'msg.metadata.ui.codetable.search.ph' | translate"
+          (changeValue)="searchText = $event; onSearchText();">
+        </component-input>
+      </div>
+      <!-- //검색 -->
+      <!-- right -->
+      <div class="ddp-ui-rightoption">
+        <span class="ddp-data-total" [innerHTML]="'msg.metadata.ui.codetable.lists' | translate : { value : getTotalContentsCount }"></span>
+        <component-sorting [sortList]="sortList"
+                           [selectedSort]="selectedSort"
+                           (changedSort)="changeSort($event)">
+        </component-sorting>
+        <a href="javascript:" class="ddp-btn-link" (click)="onClickCreateCodeTable()"><em class="ddp-icon-link-add"></em>{{'msg.metadata.ui.codetable.create.btn' | translate}}</a>
+      </div>
+      <!-- //right -->
+    </div>
+    <!-- //option -->
+  </div>
+  <table class="ddp-table-form ddp-table-type3" *ngIf="codeTableList.length > 0">
+    <colgroup>
+      <col width="20%">
+      <col width="*">
+      <col width="290px">
+    </colgroup>
+    <thead>
+    <tr>
+      <th>
+        {{'msg.metadata.th.codetable.table.name' | translate}}
+      </th>
+      <th>
+        {{'msg.metadata.th.codetable.description' | translate}}
+      </th>
+      <th>
+        {{'msg.metadata.th.codetable.updated' | translate}}
+      </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let codeTable of codeTableList" (click)="onClickDetailCodeTable(codeTable.id)">
+      <td>
+        <span class="ddp-txt-long">{{codeTable.name}}</span>
+      </td>
+      <td>
+        <span class="ddp-txt-long">{{codeTable.description}}</span>
+      </td>
+      <td>
+        <span style="width:90%;display: inline-block;">
+          {{codeTable.modifiedTime | mdate:'YYYY-MM-DD HH:mm'}} by {{ codeTable.modifiedBy.fullName }}
+        </span>
+        <div class="ddp-btn-control" (click)="onClickDeleteCodeTable(codeTable)">
+          <em class="ddp-icon-control-cut"></em>
+        </div>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+  <div class="ddp-data-source-none" *ngIf="codeTableList.length === 0; else yesCt">
+    {{'msg.metadata.ui.no.code.table' | translate}}
+  </div>
+  <!-- //데이터 없음 -->
+
+  <ng-template #yesCt>
+    <component-pagination [info]="pageResult" (changePageData)="changePage($event)"></component-pagination>
+  </ng-template>
+</div>
+<!-- 코드 테이블 생성 컴포넌트 -->
+<app-create-code-table (createComplete)="onCreateComplete($event)"></app-create-code-table>
+<!-- //코드 테이블 생성 컴포넌트 -->
+<!-- 코드 테이블 삭제 모달 -->
+<app-delete-modal (deleteConfirm)="deleteCodeTable($event)"></app-delete-modal>
+<!-- //컬코드 테이블 삭제 모달 -->

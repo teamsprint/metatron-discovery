@@ -1,0 +1,178 @@
+<!--
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<em class="ddp-bg-back"></em>
+<div class="ddp-ui-contents-in">
+  <!-- top -->
+  <div class="ddp-ui-contents-top">
+    <div class="ddp-ui-title">
+      {{'msg.comm.menu.manage.model' | translate}}
+    </div>
+
+    <!-- tab -->
+    <ul class="ddp-list-top-tab">
+      <li class="ddp-selected">
+        <a [routerLink]="['/management/model/notebook']">{{'msg.comm.menu.manage.model.notebook' | translate}}</a>
+      </li>
+    </ul>
+    <!-- //tab -->
+
+  </div>
+  <!-- //top -->
+
+  <div class="ddp-ui-contents-list">
+    <div class="ddp-wrap-option">
+      <!-- option -->
+      <div class="ddp-ui-option ddp-clear">
+
+        <!-- edit -->
+        <div class="ddp-wrap-edit">
+          <label class="ddp-label-type">{{'msg.comm.th.type' | translate}}</label>
+          <!-- edit option -->
+          <div class="ddp-ui-edit-option">
+            <!-- selectbox -->
+            <!-- 선택시 : ddp-selected 추가 -->
+            <component-select [array]="notebookServerType"
+                              [defaultIndex]="typeDefaultIndex"
+                              [viewKey]="'value'"
+                              (onSelected)="selectedLanguage($event)">
+            </component-select>
+            <!-- //selectbox -->
+          </div>
+          <!-- //edit option -->
+        </div>
+        <!-- //edit -->
+
+      </div>
+      <!-- //option -->
+
+      <!-- option -->
+      <div class="ddp-ui-option ddp-clear">
+        <!-- 검색 -->
+        <div class="ddp-form-search ddp-fleft">
+          <em class="ddp-icon-search"></em>
+          <input type="text" placeholder="{{'msg.nbook.ui.search.server.ph' | translate}}"
+                 [(ngModel)]="searchText" (keypress)="searchNotebookServer($event)">
+          <em *ngIf="searchText !== ''" class="ddp-btn-search-close" (click)="refreshSearch();"></em>
+        </div>
+        <!-- //검색 -->
+        <!-- right -->
+        <div class="ddp-ui-rightoption">
+          <span class="ddp-data-total">{{'msg.nbook.ui.num.lists' | translate : {value : pageResult.totalElements} }}</span>
+          <a href="javascript:" class="ddp-btn-link" (click)="addServer()"><em class="ddp-icon-link-add" ></em>{{'msg.nbook.btn.add.server' | translate}}</a>
+          <a href="javascript:" class="ddp-btn-link" (click)="confirmDeleteAll()" [ngClass]="{'ddp-disabled': deleteAvailable()}" ><em class="ddp-icon-link-cut"></em>{{'msg.comm.ui.sel.del' | translate}}</a>
+        </div>
+        <!-- //right -->
+      </div>
+      <!-- //option -->
+    </div>
+
+
+    <table class="ddp-table-form ddp-table-type3" *ngIf="resultData.length > 0">
+      <colgroup>
+        <col width="51px">
+        <col width="*">
+        <col width="130px">
+        <col width="300px">
+        <col width="200px">
+        <col width="250px">
+      </colgroup>
+      <thead>
+      <tr>
+        <th class="ddp-txt-center" >
+          <div class="ddp-ui-checkbox">
+            <input type="checkbox" class="ddp-checkbox-form" (click)="allCheckClick()">
+            <i class="ddp-icon-checkbox"></i>
+          </div>
+        </th>
+        <th>
+          {{'msg.nbook.th.server' | translate}}
+        </th>
+        <th>
+          {{'msg.nbook.th.type' | translate}}
+        </th>
+        <th>
+          {{'msg.comm.th.url' | translate}}
+        </th>
+        <th (click)="onClickSort('modifiedTime')">
+          {{'msg.comm.ui.list.updated' | translate}}
+          <em class="ddp-icon-array-default2" *ngIf="selectedContentSort.key !== 'modifiedTime' || selectedContentSort.sort === 'default'"></em>
+          <em class="ddp-icon-array-asc2" *ngIf="selectedContentSort.key === 'modifiedTime' && selectedContentSort.sort === 'asc'"></em>
+          <em class="ddp-icon-array-des2" *ngIf="selectedContentSort.key === 'modifiedTime' && selectedContentSort.sort === 'desc'"></em>
+        </th>
+
+        <th (click)="onClickSort('createdTime')">
+          {{'msg.comm.ui.list.created' | translate}}
+          <em class="ddp-icon-array-default2" *ngIf="selectedContentSort.key !== 'createdTime' || selectedContentSort.sort === 'default'"></em>
+          <em class="ddp-icon-array-asc2" *ngIf="selectedContentSort.key === 'createdTime' && selectedContentSort.sort === 'asc'"></em>
+          <em class="ddp-icon-array-des2" *ngIf="selectedContentSort.key === 'createdTime' && selectedContentSort.sort === 'desc'"></em>
+        </th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let item of resultData; let index = index" (click)="connectorItemRowClick(item);">
+        <td class="ddp-txt-center" (click)="checkColumn($event)">
+          <div class="ddp-ui-checkbox" >
+            <input type="checkbox" class="ddp-checkbox-form" value="{{item.id}}" (click)="checkClick($event, index)">
+            <i class="ddp-icon-checkbox"></i>
+          </div>
+        </td>
+        <td title="{{ item.hasOwnProperty('description') && item.description != '' ? item.name+'-'+item.description : item.name}}">
+          <div class=" ddp-txt-long">{{item.name}}<span class="ddp-txt-colortype" *ngIf="item.hasOwnProperty('description') == false"></span>
+            <span class="ddp-txt-colortype" *ngIf="item.hasOwnProperty('description') && item.description != ''">-{{item.description}}</span>
+          </div>
+        </td>
+        <td>
+          <span class="ddp-data-jupyter" *ngIf="item.type == 'jupyter'">
+            {{item.type}}
+          </span>
+          <span class="ddp-data-zeppelin" *ngIf="item.type == 'zeppelin'">
+            {{item.type}}
+          </span>
+        </td>
+        <td class="ddp-txt-ellipsis" title="{{item.url}}">
+          {{item.url}}
+        </td>
+        <td class="ddp-txt-ellipsis" title="{{item.modifiedTime | mdate: 'YYYY-MM-DD HH:mm'}} {{'msg.nbook.ui.by' | translate}} {{item.modifiedBy.fullName}}">
+          {{item.modifiedTime | mdate: 'YYYY-MM-DD HH:mm'}}  <em class="ddp-icon-by">{{'msg.nbook.ui.by' | translate}}</em>{{item.modifiedBy.fullName}}
+
+        </td>
+        <td>
+          <div class="ddp-txt-ellipsis" style="padding-right:20px;" title="{{item.createdTime | mdate: 'YYYY-MM-DD HH:mm'}} {{'msg.nbook.ui.by' | translate}} {{item.createdBy.fullName}}">
+            {{item.createdTime | mdate: 'YYYY-MM-DD HH:mm'}}  <em class="ddp-icon-by">{{'msg.nbook.ui.by' | translate}}</em>{{item.createdBy.fullName}}
+          </div>
+          <div class="ddp-btn-control">
+            <em class="ddp-icon-control-cut" (click)="confirmDelete($event, item.id)"></em>
+          </div>
+        </td>
+      </tr>
+      </tbody>
+
+    </table>
+
+    <div class="ddp-data-source-none" *ngIf="resultData && resultData.length === 0; else yesNb">
+      {{'msg.nbook.ui.no.nb' | translate}}
+    </div>
+    <!-- //데이터 없음 -->
+
+    <ng-template #yesNb>
+      <component-pagination [info]="pageResult" (changePageData)="changePage($event)"></component-pagination>
+    </ng-template>
+  </div>
+
+
+</div>
+
+<app-add-notebook-server (createComplete)="reloadPage()"></app-add-notebook-server>
+<app-delete-modal (deleteConfirm)="deleteNotebookServer()"></app-delete-modal>

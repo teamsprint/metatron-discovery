@@ -245,7 +245,7 @@
 
         <dependency>
             <groupId>app.metatron.discovery</groupId>
-            <artifactId>discovery-frontend</artifactId>
+            <artifactId>discovery-prep-frontend</artifactId>
             <version>${project.version}</version>
         </dependency>
 

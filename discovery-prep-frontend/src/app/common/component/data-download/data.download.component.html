@@ -1,0 +1,31 @@
+<!--
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<div *ngIf="isShow" class="ddp-box-layout4 ddp-download" >
+  <a (click)="close()" href="javascript:" class="ddp-btn-close"></a>
+  <div class="ddp-data-title">
+    {{ title ? title : 'msg.board.download.title-org' | translate }}
+    <span > </span>
+    <span *ngIf="isOriginDown && preview" class="ddp-data">
+      {{ commonUtil.numberWithCommas( preview.count ) }} {{'msg.storage.ui.dsource.preview.rows' | translate}} /
+      {{ commonUtil.formatBytes( preview.size, 1 ) }} </span>
+    <span *ngIf="'WIDGET' === mode && isOriginDown && !preview" class="ddp-data">{{ 'msg.board.download.calc-size' | translate }}</span>
+  </div>
+
+  <div class="ddp-wrap-data-detail">
+    <a (click)="downloadCSV()" href="javascript:" class="ddp-btn-down"><em class="ddp-icon-csv"></em>CSV</a>
+    <a (click)="downloadExcel()" href="javascript:" class="ddp-btn-down"><em class="ddp-icon-xlsx"></em>Excel</a>
+    <div *ngIf="preview && 1000000 <= preview.count" class="ddp-txt-det" [innerHTML]="'msg.board.download.desc' | translate" ></div>
+  </div>
+</div>

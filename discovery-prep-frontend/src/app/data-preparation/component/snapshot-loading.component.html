@@ -1,0 +1,66 @@
+<!--
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<div class="ddp-wrap-loading ddp-table" *ngIf="isShow">
+
+  <!-- box -->
+  <div class="ddp-box-loading ddp-pop" [ngClass]="{'ddp-disabled':snapshotCancel}" *ngIf="inProgress">
+    <span class="ddp-data-loading">{{'msg.dp.ui.creating.snapshot' | translate }} <strong *ngIf="snapshot.ruleCntDone && snapshot.ruleCntTotal">({{snapshot.ruleCntDone}}/{{snapshot.ruleCntTotal}})</strong></span>
+    <a href="javascript:" class="ddp-btn-cancel" (click)="openCancelSnapshotPopup()">{{'msg.comm.btn.cancl' | translate }}</a>
+    <!-- bar -->
+    <div class="ddp-type-progressbar2">
+      <em class="ddp-data-progressbar" [ngStyle]="{'width': progressPercentage + '%'}"></em>
+    </div>
+    <!-- //bar -->
+    <span class="ddp-data-date">{{snapshot.ssName}}</span>
+    <!-- button -->
+    <div class="ddp-pop-buttons" *ngIf="!snapshotCancel">
+      <a href="javascript:" class="ddp-btn-line" (click)="close()">{{'msg.comm.btn.close' | translate }}</a>
+
+      <a href="javascript:" class="ddp-btn-solid ddp-bg-black" (click)="goToSnapshotList()">{{'msg.dp.btn.snapshot-list' | translate}}</a>
+    </div>
+
+    <div class="ddp-pop-buttons" *ngIf="snapshotCancel">
+      <div class="ddp-txt-info">{{'msg.dp.ui.snapshot.cancel.confirm' | translate}}</div>
+      <a href="javascript:" class="ddp-btn-line" (click)="snapshotCancel = false; getSnapshotDetailWithInterval()">{{'msg.dp.ui.no' | translate }}</a>
+
+      <a href="javascript:" class="ddp-btn-solid ddp-bg-black " (click)="cancelSnapshot()">{{'msg.dp.ui.yes' | translate }}</a>
+    </div>
+    <!-- //button -->
+  </div>
+  <!-- //box -->
+
+  <!-- Canceled, Created, Failed -->
+  <div class="ddp-view-loading" *ngIf="isFinishPopupOpen">
+    <div class="ddp-box-loading ddp-box-s ddp-pop" >
+      <div class="ddp-box-in">
+        <a href="javascript:" class="ddp-btn-close" (click)="close()"></a>
+        <em class="ddp-icon-{{statusClass}}"></em>
+        <div class="ddp-txt-info">
+          <span class="ddp-txt-{{statusClass}}">{{snapshot.displayStatus}}</span>
+          <span class="ddp-data-date">{{snapshot.ssName}}</span>
+        </div>
+        <!-- button -->
+        <div class="ddp-pop-buttons">
+          <a href="javascript:" class="ddp-btn-line" (click)="close()">{{'msg.comm.btn.close' | translate }}</a>
+          <a href="javascript:" class="ddp-btn-solid ddp-bg-black" (click)="goToSnapshotList()">{{'msg.dp.btn.snapshot-list' | translate}}</a>
+        </div>
+        <!-- //button -->
+      </div>
+    </div>
+  </div>
+  <!-- // Canceled, Created, Failed -->
+
+</div>
+

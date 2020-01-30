@@ -1,0 +1,142 @@
+/*
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import {EventBroadcaster} from '../common/event/event.broadcaster';
+import {NgModule} from '@angular/core';
+import {MetaDataManagementComponent} from './meta-data-management.component';
+import {RouterModule} from '@angular/router';
+import {CommonModule} from '../common/common.module';
+import {ColumnDictionaryComponent} from './column-dictionary/column-dictionary.component';
+import {DetailColumnDictionaryComponent} from './column-dictionary/detail-column-dictionary/detail-column-dictionary.component';
+import {CreateColumnDictionaryComponent} from './column-dictionary/create-column-dictionary/create-column-dictionary.component';
+import {CodeTableComponent} from './code-table/code-table.component';
+import {DetailCodeTableComponent} from './code-table/detail-code-table/detail-code-table.component';
+import {CreateCodeTableComponent} from './code-table/create-code-table/create-code-table.component';
+import {CodeTableService} from './code-table/service/code-table.service';
+
+import {LineageComponent} from './lineage/lineage.component';
+import {DetailLineageComponent} from './lineage/detail-lineage/detail-lineage.component';
+import {LineageService} from './lineage/service/lineage.service';
+import {EditLineagePopup} from './lineage/component/edit-lineage-popup.component';
+import {CreateLineageComponent} from './lineage/component/create-lineage.component';
+import {CreateLineageUploadFileComponent} from './lineage/component/create-lineage-upload-file.component';
+import {CreateLineageConfirmGridComponent} from './lineage/component/create-lineage-confirm-grid.component';
+
+import {ColumnDictionaryService} from './column-dictionary/service/column-dictionary.service';
+import {LinkedColumnDictionaryComponent} from './component/linked-column-dictionary/linked-column-dictionary.component';
+import {LinkedMetadataComponent} from './component/linked-metadata-columns/linked-metadata.component';
+import {ChooseCodeTableComponent} from './component/choose-code-table/choose-code-table.component';
+import {MetadataComponent} from './metadata/metadata.component';
+import {MetadataService} from './metadata/service/metadata.service';
+import {MetadataDetailComponent} from './metadata/metadata-detail.component';
+import {SelectCatalogComponent} from './metadata/component/select-catalog.component';
+import {DatasourceService} from '../datasource/service/datasource.service';
+import {DatasourceShareModule} from '../datasource/datasource-share.module';
+import {MetadataModelService} from './metadata/service/metadata.model.service';
+import {DataconnectionService} from '../dataconnection/service/dataconnection.service';
+import {CatalogService} from './catalog/service/catalog.service';
+import {ChooseColumnDictionaryComponent} from './component/choose-column-dictionary/choose-column-dictionary.component';
+import {CatalogComponent} from './catalog/catalog.component';
+import {MetadataManagementGuard} from '../common/gaurd/metadata-management.guard';
+import {DetailModule} from './detail/detail.module';
+import {DatasourceMetadataSharedModule} from '../shared/datasource-metadata/datasource-metadata-shared.module';
+import {CreateMetadataModule} from "./metadata/create-metadata/create-metadata.module";
+import {SortingComponent} from "./component/sorting.component";
+import {MetadataDetailInformationComponent} from "./metadata/component/metadata-detail-information.component";
+import {MetadataDetailTopComponent} from "./metadata/component/metadata-detail-top.component";
+import {LayoutModule} from "../layout/layout/layout.module";
+import {PopupCodeTableComponent} from "./code-table/popup/popup-code-table.component";
+
+@NgModule({
+  imports: [
+    CommonModule,
+    DetailModule,
+    DatasourceShareModule,
+    DatasourceMetadataSharedModule,
+    CreateMetadataModule,
+    LayoutModule,
+    RouterModule.forChild([
+      {path: '', component: MetaDataManagementComponent, canActivate: [MetadataManagementGuard]},
+      {path: ':tabId', component: MetaDataManagementComponent, canActivate: [MetadataManagementGuard]},
+      {path: 'metadata/:metadataId', component: MetadataDetailComponent, canActivate: [MetadataManagementGuard]},
+      {
+        path: 'column-dictionary/:dictionaryId',
+        component: DetailColumnDictionaryComponent,
+        canActivate: [MetadataManagementGuard],
+      },
+      {path: 'code-table/:codeTableId', component: DetailCodeTableComponent, canActivate: [MetadataManagementGuard]},
+      {path: 'lineage/:lineageId', component: DetailLineageComponent, canActivate: [MetadataManagementGuard]},
+    ]),
+  ],
+  declarations: [
+    SortingComponent,
+    // 메타데이터 매니지먼트
+    MetaDataManagementComponent,
+    // 메타데이터
+    MetadataComponent,
+    MetadataDetailComponent,
+    // 컬럼 사전
+    ColumnDictionaryComponent,
+    DetailColumnDictionaryComponent,
+    CreateColumnDictionaryComponent,
+    // 코드 테이블
+    CodeTableComponent,
+    DetailCodeTableComponent,
+    CreateCodeTableComponent,
+    // 연결된 컬럼 사전 목록
+    LinkedColumnDictionaryComponent,
+    // 연결된 메타데이터 목록
+    LinkedMetadataComponent,
+    // 코드 테이블 선택 컴포넌트
+    ChooseCodeTableComponent,
+    // 컬럼 사전 선택 텀포넌트
+    ChooseColumnDictionaryComponent,
+    //리니지
+    LineageComponent,
+    DetailLineageComponent,
+    EditLineagePopup,
+    CreateLineageComponent,
+    CreateLineageUploadFileComponent,
+    CreateLineageConfirmGridComponent,
+    SelectCatalogComponent,
+    CatalogComponent,
+    // Metadata Detail
+    MetadataDetailTopComponent,
+    // Metadata Detail Tabs
+    MetadataDetailInformationComponent
+  ],
+  providers: [
+    // 코드 테이블 서비스
+    CodeTableService,
+    // 컬럼 사전 서비스
+    ColumnDictionaryService,
+    // 리니지 서비스
+    LineageService,
+    // 메타데이터 서비스
+    MetadataService,
+    // 데이터소스 서비스
+    DatasourceService,
+    // 데이터 커넥션 서비스
+    DataconnectionService,
+    // 매니지먼트 가드
+    MetadataManagementGuard,
+    MetadataModelService,
+    CatalogService
+  ],
+})
+export class MetaDataManagementModule {
+  constructor(private broadCaster: EventBroadcaster) {
+    this.broadCaster.broadcast('ENTER_LAYOUT_MODULE');
+  }
+}

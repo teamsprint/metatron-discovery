@@ -1,0 +1,163 @@
+<!--
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<div class="ddp-wrap-tab-popup" *ngIf="isShow" >
+  <div class="ddp-ui-tab-popup">
+    <!-- Title -->
+    <div class="ddp-ui-title">
+      {{'msg.space.ui.ds' | translate}}
+      <div class="ddp-ui-rightoption">
+        <!-- 검색 -->
+        <div class="ddp-form-search ddp-selected">
+          <em class="ddp-icon-search"></em>
+          <input type="text" placeholder="{{'msg.comm.search.ds' | translate}}"
+                 [(ngModel)]="searchText"
+                 (keypress)="searchDatasourceEvent($event);"
+                 (keyup.esc)="searchEvent(false);">
+          <em class="ddp-btn-search-close" *ngIf="'' !== searchText" (click)="searchText='';searchEvent(true);"
+              href="javascript:"></em>
+        </div>
+        <!-- // 검색 -->
+        <!-- 공개 -->
+        <label class="ddp-label-checkbox"
+               (click)="togglePublished(); $event.defaultPrevented">
+          <input type="checkbox" [checked]="searchPublished !== 'all'">
+          <i class="ddp-icon-checkbox"></i>
+          <span class="ddp-txt-checkbox">{{'msg.space.th.allowance' | translate}}</span>
+        </label>
+        <!-- //공개 -->
+
+        <!-- form -->
+        <div class="ddp-form-label2">
+          <label class="ddp-label-type">{{'msg.comm.th.type' | translate}}</label>
+          <div class="ddp-wrap-dropdown">
+            <!-- select box -->
+            <component-select
+              [array]="typeFilter"
+              [viewKey]="'label'"
+              (onSelected)="onChangeType($event)">
+            </component-select>
+            <!-- //select box -->
+          </div>
+        </div>
+        <!-- //form -->
+      </div>
+    </div>
+    <!-- // Title -->
+
+    <div class="ddp-popup-dashboard">
+      <div class="ddp-wrap-grid" [ngClass]="{'ddp-selected' : datasourceId != ''}">
+        <div class="ddp-wrap-viewtable">
+        <!-- 테이블 -->
+        <div class="ddp-box-viewtable">
+          <!-- gridhead -->
+          <div class="ddp-ui-gridhead">
+            <table class="ddp-table-form ddp-table-type2">
+              <colgroup>
+                <col width="*">
+                <col width="130px">
+                <col width="10%">
+                <col width="13%">
+              </colgroup>
+              <thead>
+              <tr>
+                <th class="ddp-cursor" (click)="changeOrder('name')">
+                  {{'msg.comm.th.ds' | translate}}
+                  <em class="ddp-icon-array-default2" *ngIf="selectedContentSort.key !== 'name' || selectedContentSort.sort === 'default'"></em>
+                  <em class="ddp-icon-array-asc2" *ngIf="selectedContentSort.key === 'name' && selectedContentSort.sort === 'asc'"></em>
+                  <em class="ddp-icon-array-des2" *ngIf="selectedContentSort.key === 'name' && selectedContentSort.sort === 'desc'"></em>
+                </th>
+                <th>
+                  {{'msg.comm.th.type' | translate}}
+                </th>
+                <th>
+                  {{'msg.comm.th.full.size' | translate}}
+                </th>
+                <th class="ddp-cursor" (click)="changeOrder('modifiedTime')">
+                  {{'msg.comm.th.updated' | translate}}
+                  <em class="ddp-icon-array-default2" *ngIf="selectedContentSort.key !== 'modifiedTime' || selectedContentSort.sort === 'default'"></em>
+                  <em class="ddp-icon-array-asc2" *ngIf="selectedContentSort.key === 'modifiedTime' && selectedContentSort.sort === 'asc'"></em>
+                  <em class="ddp-icon-array-des2" *ngIf="selectedContentSort.key === 'modifiedTime' && selectedContentSort.sort === 'desc'"></em>
+                </th>
+              </tr>
+              </thead>
+
+            </table>
+          </div>
+          <!--// gridhead -->
+
+          <!-- gridbody -->
+          <div class="ddp-ui-gridbody">
+            <table class="ddp-table-form ddp-table-type2 ddp-table-select">
+              <colgroup>
+                <col width="*">
+                <col width="130px">
+                <col width="10%">
+                <col width="13%">
+              </colgroup>
+              <tbody>
+                <tr *ngFor="let datasource of datasourceList; let i = index"
+                    [ngClass]="{'ddp-selected' : datasourceId == datasource.id,
+                    'type-disabled' : ( dsStatus.DISABLED === datasource.status || dsStatus.FAILED === datasource.status ) }"
+                    (click)="selectDatasource(datasource)">
+                  <td>
+                    <div class=" ddp-txt-long" [ngClass]="{' ddp-global': datasource.published}">
+                      {{datasource.name}}
+                      <span class="ddp-txt-colortype" *ngIf="datasource.description">- {{datasource.description}}</span>
+                      <em class="ddp-tag-global" *ngIf="datasource.published">{{'msg.comm.ui.list.ds.opendata' | translate}}</em>
+                    </div>
+                  </td>
+                  <td>
+                    {{datasource.connType.toString() == 'ENGINE' ? typeFilter[1].label : typeFilter[2].label}}
+                  </td>
+                  <td>
+                    <span *ngIf="datasource.summary">{{datasource.summary.size | fileSize:2}}</span>
+                  </td>
+                  <td>
+                    {{datasource.modifiedTime | mdate: 'YYYY-MM-DD'}}
+                    <div class="ddp-ui-disabled">
+                      <em class="ddp-icon-disabled"></em>
+                      <div *ngIf="dsStatus.DISABLED === datasource.status" class="ddp-ui-tooltip-info ddp-down">
+                        <em class="ddp-icon-view-top"></em>
+                        {{'msg.storage.ui.ds.disabled' | translate}}
+                      </div>
+                      <div *ngIf="dsStatus.FAILED === datasource.status" class="ddp-ui-tooltip-info ddp-down">
+                        <em class="ddp-icon-view-top"></em>
+                        {{'msg.storage.ui.ds.failed' | translate}}
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <!--// gridbody -->
+        </div>
+        <!-- //테이블 -->
+        <div class="ddp-box-add-link3" [ngClass]="{'ddp-disabled' : !(page.page < pageResult.totalPages)}" (click)="getMoreList()">
+          <span class="ddp-link-type">{{'msg.comm.ui.more' | translate}} <em class="ddp-icon-view"></em></span>
+        </div>
+      </div>
+      </div>
+      <app-datasource-summary *ngIf="datasourceId !== ''"
+                              [datasource]="datasourceId" [showMetadataName]="false"
+                              (close)="onCloseSummary()"></app-datasource-summary>
+      <!-- //스키마 리스트 -->
+    </div>
+
+    <div class="ddp-popup-tabbottom">
+      <a href="javascript:" class="ddp-btn-type-popup ddp-bg-black" (click)="close()">{{'msg.comm.btn.close' | translate}}</a>
+    </div>
+  </div>
+</div>
