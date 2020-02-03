@@ -37,11 +37,10 @@ import {Folder, Hirearchies} from '../domain/workspace/folder';
 import {CommonUtil} from '../common/util/common.util';
 import {Workbook} from '../domain/workbook/workbook';
 import {CommonConstant} from '../common/constant/common.constant';
-import {CreateNotebookComponent} from '../notebook/component/create-notebook/create-notebook.component';
 import {SharedMemberManageComponent} from './component/permission/shared-member-manage.component';
 import {SubscribeArg} from '../common/domain/subscribe-arg';
 import {PopupService} from '../common/service/popup.service';
-import {SetNotebookServerComponent} from './component/etc/set-notebook-server.component';
+//import {SetNotebookServerComponent} from './component/etc/set-notebook-server.component';
 import {isNullOrUndefined} from 'util';
 import {CookieConstant} from '../common/constant/cookie.constant';
 import {DashboardService} from '../dashboard/service/dashboard.service';
@@ -96,13 +95,9 @@ export class WorkspaceComponent extends AbstractComponent implements OnInit, OnD
   @ViewChild(WorkspaceListComponent)
   private workspaceListComponent: WorkspaceListComponent;
 
-  // 노트북 생성 컴포넌트
-  @ViewChild(CreateNotebookComponent)
-  private createNotebookComponent: CreateNotebookComponent;
-
   // 노트북 서버 설정 컴포넌트
-  @ViewChild(SetNotebookServerComponent)
-  private setNotebookServerComponent: SetNotebookServerComponent;
+  //@ViewChild(SetNotebookServerComponent)
+  //private setNotebookServerComponent: SetNotebookServerComponent;
 
   // 퍼미션 스키마 설정 컴포넌트
   @ViewChild(WorkspacePermissionSchemaSetComponent)
@@ -819,7 +814,7 @@ export class WorkspaceComponent extends AbstractComponent implements OnInit, OnD
    * 노트북 서버 설정 페이지
    */
   public setNotebookServer() {
-    this.setNotebookServerComponent.init(this.workspaceId, this.workspace.connectors);
+    //this.setNotebookServerComponent.init(this.workspaceId, this.workspace.connectors);
   } // function - setNotebookServer
 
   /**
@@ -925,59 +920,6 @@ export class WorkspaceComponent extends AbstractComponent implements OnInit, OnD
       this.workbenchStep = 'workbench-create-select';
     }
   } // function - createWorkbench
-
-  /**
-   * 노트북 생성
-   */
-  public createNotebook() {
-    if (this.permissionChecker
-      && (this.permissionChecker.isManageNotebook()
-        || this.permissionChecker.isEditNotebook(this.loginUserId))
-      && this.isSetNotebookServer) {
-      if (this.isRoot) {
-        this.createNotebookComponent.init(this.workspaceId);
-      } else {
-        this.createNotebookComponent.init(this.workspaceId, this.folder.id);
-      }
-      /*
-            this.loadingShow();
-            this.workspaceService.getNotebookServers(this.workspaceId).then((result) => {
-              // 데이터가 없다면
-              if (!result['_embedded'] || result['_embedded'].connectors.length === 0) {
-                const modal = new Modal();
-                if (this.permissionChecker && this.permissionChecker.isManageWorkspace()) {
-                  // 관리자
-                  modal.name = this.translateService.instant('msg.space.ui.set.notebook.title');
-                  modal.description = this.translateService.instant('msg.space.ui.create.notebook.warning');
-                  modal.btnName = this.translateService.instant('msg.space.btn.set.notebook');
-                  modal.data = {eventType: 'CREATE_NOTEBOOK_SET_SERVER'};
-                  modal.afterConfirm = () => {
-                    // 노트북 서버 설정 팝업 오픈
-                    this.setNotebookServer();
-                  };
-                } else {
-                  // 열람자
-                  modal.name = this.translateService.instant('msg.space.ui.no.notebook.server');
-                  modal.description = this.translateService.instant('msg.space.ui.create.notebook.warning');
-                  modal.subDescription = this.translateService.instant('msg.space.ui.ask.space.admin');
-                  modal.isShowCancel = false;
-                  modal.data = {eventType: 'CREATE_NOTEBOOK'};
-                }
-
-                CommonUtil.confirm(modal);
-
-              } else {
-                if (this.isRoot) {
-                  this.createNotebookComponent.init(this.workspaceId);
-                } else {
-                  this.createNotebookComponent.init(this.workspaceId, this.folder.id);
-                }
-              }
-              this.loadingHide();
-            }).catch(err => this.commonExceptionHandler(err));
-      */
-    }
-  } // function - createNotebook
 
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
    | 권한 체크 관련 Method

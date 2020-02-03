@@ -38,10 +38,9 @@ const layoutRoutes: Routes = [
   {
     path: '', component: LayoutComponent, canActivate: [StagedbEnabledGuard, ConnectionListGuard],
     children: [
-      {path: '', redirectTo: 'workspace', pathMatch: 'full'},
+      {path: '', redirectTo: 'management/datapreparation', pathMatch: 'full'},
       {path: 'workspace', loadChildren: 'app/workspace/workspace.module#WorkspaceModule'},
       {path: 'workbook', loadChildren: 'app/workbook/workbook.module#WorkbookModule'},
-      {path: 'notebook', loadChildren: 'app/notebook/notebook.module#NotebookModule'},
       {path: 'page', loadChildren: 'app/page/page.module#PageModule'},
       {path: 'workbench', loadChildren: 'app/workbench/workbench.module#WorkbenchModule'},
       {path: 'exploredata', loadChildren: 'app/explore-data/explore-data.module#ExploreDataModule'},
@@ -58,11 +57,6 @@ const layoutRoutes: Routes = [
       {
         path: 'management/model',
         loadChildren: 'app/model-management/model-management.module#ModelManagementModule',
-        canActivate: [DatasourceManagementGuard]
-      },
-      {
-        path: 'management/monitoring',
-        loadChildren: 'app/monitoring/monitoring.module#MonitoringModule',
         canActivate: [DatasourceManagementGuard]
       },
       {

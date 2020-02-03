@@ -26,11 +26,10 @@ import { DeleteWorkspaceComponent } from './component/management/delete-workspac
 import { DatasourceService } from '../datasource/service/datasource.service';
 import { DatasourceShareModule } from '../datasource/datasource-share.module';
 import { WorkspaceShareModule } from './workspace-share.module';
-import { CreateNotebookComponent } from '../notebook/component/create-notebook/create-notebook.component';
+//import { CreateNotebookComponent } from '../notebook/component/create-notebook/create-notebook.component';
 import { PopupService } from '../common/service/popup.service';
 import { WorkbenchShareModule } from '../workbench/workbench-share.module';
-import { NotebookShareModule } from '../notebook/notebook-share.module';
-import { SetNotebookServerComponent } from './component/etc/set-notebook-server.component';
+//import { SetNotebookServerComponent } from './component/etc/set-notebook-server.component';
 import { NotebookServerService } from '../model-management/notebook-server/service/notebook-server.service';
 import { GroupsService } from '../admin/user-management/service/groups.service';
 import { SharedMemberManageComponent } from './component/permission/shared-member-manage.component';
@@ -49,7 +48,6 @@ const workspaceRoutes: Routes = [
     CommonModule,
     DatasourceShareModule,
     WorkspaceShareModule,
-    NotebookShareModule,
     WorkbenchShareModule,
     RouterModule.forChild(workspaceRoutes),
   ],
@@ -61,8 +59,8 @@ const workspaceRoutes: Routes = [
     DatasourceComponent,
     UpdateWorkspaceComponent,
     DeleteWorkspaceComponent,
-    CreateNotebookComponent,
-    SetNotebookServerComponent,
+    //CreateNotebookComponent,
+    //SetNotebookServerComponent,
     ChangeOwnerWorkspaceComponent,
     WorkspacePermissionSchemaSetComponent
   ],

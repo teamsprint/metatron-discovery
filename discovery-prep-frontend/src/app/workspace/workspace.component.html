@@ -693,10 +693,6 @@
          draggable="false" href="javascript:" class="ddp-btn-solid2 ddp-bg-black" (click)="createWorkbook()">
         <em class="ddp-icon-btnplus"></em>{{'msg.space.btn.workbook' | translate}}
       </a>
-      <a *ngIf="isSetNotebookServer && permissionChecker && permissionChecker.isWriteNotebook()"
-         draggable="false" href="javascript:" class="ddp-btn-solid2 ddp-bg-black" (click)="createNotebook()">
-        <em class="ddp-icon-btnplus"></em>{{'msg.space.btn.notebook' | translate}}
-      </a>
       <a *ngIf="permissionChecker && permissionChecker.isWriteWorkbench()"
          draggable="false" href="javascript:" class="ddp-btn-solid2 ddp-bg-black" (click)="createWorkbench()">
         <em class="ddp-icon-btnplus"></em>{{'msg.space.btn.workbench' | translate}}
@@ -725,11 +721,7 @@
 <app-workspace-permission-schema-set (afterUpdate)="loadWorkspace(true)"></app-workspace-permission-schema-set>
 <!-- 워크스페이스 리스트 -->
 <app-workspace-list (updateComplete)="loadWorkspace($event)"></app-workspace-list>
-<!-- 노트북 생성 -->
-<app-create-notebook (createComplete)="detailPage($event, 'notebook')" [step]="notebookStep"></app-create-notebook>
 <!-- 워크벤치 생성 -->
 <app-create-workbench *ngIf="workbenchStep" [workspaceId]="workspaceId" [folderId]="currentFolderId" [step]="workbenchStep"></app-create-workbench>
-<!-- 노트북 서버 설정 -->
-<app-set-notebook-server (updateComplete)="loadWorkspace($event)"></app-set-notebook-server>
 <!-- 소유자 변경 -->
 <app-change-workspace-owner (afterChange)="loadWorkspace($event)"></app-change-workspace-owner>

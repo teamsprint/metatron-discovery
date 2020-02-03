@@ -79,18 +79,18 @@ export class LNBComponent extends AbstractComponent implements OnInit, OnDestroy
 
   // 메뉴 권한
   public permission = {
-    // myWorkspace: false,
-    // workspace: false,
-    // exploreData: true,
-    // exploreDataView: true,
-    // exploreFavorite: true,
+     myWorkspace: false,
+     workspace: false,
+     exploreData: true,
+     exploreDataView: true,
+     exploreFavorite: true,
     management: false,
     managementDatasource: false,
-    // managementMetadata: false,
+     managementMetadata: false,
     // TODO: 추후에 엔진 모니터링 메뉴에 대한 권한이 있는지 검사하는 로직 추가 필요 ( 임시 작업 )
-    // managementEngineMonitoring: false,
+     managementEngineMonitoring: false,
     userAdmin: false,
-    // workspaceAdmin: false,
+     workspaceAdmin: false,
     lineage: false
   };
 
@@ -98,10 +98,10 @@ export class LNBComponent extends AbstractComponent implements OnInit, OnDestroy
   public isShow = false;
 
   // // 개인 워크스페이스
-  // public privateWorkspace: Workspace = new Workspace;
+  public privateWorkspace: Workspace = new Workspace;
 
   // 공유 워크스페이스 리스트
-  // public sharedWorkspace: Workspace[] = [];
+  public sharedWorkspace: Workspace[] = [];
 
   // 폴더 네비게이션 관련
   public isShowFolderNavi: boolean = false;  // 폴더 네비게이션 표시 여부
@@ -121,12 +121,12 @@ export class LNBComponent extends AbstractComponent implements OnInit, OnDestroy
     // 매니지먼트
     management: {
       fold: true,
-      // metadata: {fold: true},
+      metadata: {fold: true},
       dataStorage: {fold: true},
       dataPreparation: {fold: true},
       dataMonitoring: {fold: true},
-      // modelManager: {fold: true},
-      // engineMonitoring: { fold: true }
+      modelManager: {fold: true},
+      engineMonitoring: { fold: true }
     },
     // 어드민
     administration: {
@@ -371,7 +371,7 @@ export class LNBComponent extends AbstractComponent implements OnInit, OnDestroy
     this.lnbManager.management.dataPreparation.fold = true;
     this.lnbManager.management.dataMonitoring.fold = true;
     this.lnbManager.management.modelManager.fold = true;
-    this.lnbManager.management.engineMonitoring.fold = foldtrue;
+    this.lnbManager.management.engineMonitoring.fold = true;
     this.getExtensions('management').forEach(item => {
       this.lnbManager.management[item.name]['fold'] = true;
     });
