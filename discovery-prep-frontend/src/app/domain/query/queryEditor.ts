@@ -13,7 +13,6 @@
  */
 
 import { AbstractHistoryEntity } from '../common/abstract-history-entity';
-import { Workbench } from '../workbench/workbench';
 import { QueryHistory } from './queryHistory';
 
 export class QueryEditor extends AbstractHistoryEntity {
@@ -21,6 +20,5 @@ export class QueryEditor extends AbstractHistoryEntity {
   public name: string;
   public order: number;
   public query: string;
-  public workbench: Workbench;
   public queryHistories: QueryHistory[];
 }

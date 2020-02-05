@@ -23,7 +23,6 @@ import { JoinCompleteComponent } from './login/component/join-complete/join-comp
 import { ResetPasswordComponent } from './login/component/reset-password/reset-password.component';
 import { FileModule } from '../common/file.module';
 import { StompService } from '@stomp/ng2-stompjs';
-import { WorkspaceService } from '../workspace/service/workspace.service';
 import { KorPolicyComponent } from './login/kor-policy.component';
 import { EngPolicyComponent } from './login/eng-policy.component';
 import { PermissionService } from './service/permission.service';
@@ -52,7 +51,6 @@ const userRoutes: Routes = [
     UserService,
     PermissionService,
     CookieService,
-    WorkspaceService,
     StompService
   ],
 })

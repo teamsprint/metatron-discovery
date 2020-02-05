@@ -37,7 +37,6 @@ import {Alert} from '../../../../../common/util/alert.util';
 import {Modal} from '../../../../../common/domain/modal';
 import {PreparationAlert} from '../../../../util/preparation-alert.util';
 import {DataflowService} from '../../../service/dataflow.service';
-import {Field} from '../../../../../domain/workbook/configurations/field/field';
 import {header, SlickGridHeader} from '../../../../../common/component/grid/grid.header';
 import {GridComponent} from '../../../../../common/component/grid/grid.component';
 import {GridOption} from 'app/common/component/grid/grid.option';
@@ -815,78 +814,7 @@ export class DatasetInfoPopupComponent extends AbstractComponent implements OnIn
    */
   private updateGrid(data: any) {
 
-    const maxDataLen: any = {};
-    let fields: Field[] = data.fields;
-    let rows: any[] = data.data.splice(0,50); // preview는 50 rows 까지만
-    const maxLength = 500;
-    if (rows.length > 0) {
-      rows.forEach((row: any, idx: number) => {
-        // 컬럼 길이 측정
-        fields.forEach((field: Field) => {
-          let colWidth: number = 0;
-          if (typeof row[field.name] === 'string') {
-            colWidth = Math.floor((row[field.name]).length * 12);
-          }
-          if (!maxDataLen[field.name] || (maxDataLen[field.name] < colWidth)) {
-            if (colWidth > 500) {
-              maxDataLen[field.name] = maxLength;
-            } else {
-              maxDataLen[field.name] = colWidth;
-            }
-          }
-        });
-        // row id 설정
-        (row.hasOwnProperty('id')) || (row.id = idx);
 
-      });
-    }
-
-    // 헤더정보 생성
-    const headers: header[] = fields.map((field: Field) => {
-
-      /* 72 는 CSS 상의 padding 수치의 합산임 */
-      const headerWidth: number = Math.floor(pixelWidth(field.name, { size: 12 })) + 72;
-
-      return new SlickGridHeader()
-        .Id(field.name)
-        .Name('<span style="padding-left:20px;"><em class="' + this.getFieldTypeIconClass(field.type) + '"></em>' + field.name + '</span>')
-        .Field(field.name)
-        .Behavior('select')
-        .Selectable(false)
-        .CssClass('cell-selection')
-        .Width(headerWidth > maxDataLen[field.name] ? headerWidth : isUndefined(maxDataLen[field.name]) ? headerWidth : maxDataLen[field.name])
-        .MinWidth(100)
-        .CannotTriggerInsert(true)
-        .Resizable(true)
-        .Unselectable(true)
-        .Sortable(false)
-        .ColumnType(field.type)
-        .Formatter((row, cell, value, columnDef) => {
-          const colDescs = (this.selectedDataSet.gridResponse && this.selectedDataSet.gridResponse.colDescs) ? this.selectedDataSet.gridResponse.colDescs[cell] : {};
-          value = PreparationCommonUtil.setFieldFormatter(value, columnDef.columnType, colDescs);
-
-          if (isNull(value)) {
-            return '<div style=\'position:absolute; top:0; left:0; right:0; bottom:0; line-height:30px; padding:0 10px; font-style: italic ; color:#b8bac2;\'>' + '(null)' + '</div>';
-          } else {
-            return value;
-          }
-        }).build();
-    });
-
-    // 헤더 필수
-    // 로우 데이터 필수
-    // 그리드 옵션은 선택
-    if (!isNullOrUndefined(this.gridComponent)) {
-      this.gridComponent.create(headers, rows, new GridOption()
-        .EnableHeaderClick(false)
-        .SyncColumnCellResize(true)
-        .NullCellStyleActivate(true)
-        .RowHeight(32)
-        .EnableColumnReorder(false)
-        .NullCellStyleActivate(true)
-        .build()
-      );
-    }
   }
 
 

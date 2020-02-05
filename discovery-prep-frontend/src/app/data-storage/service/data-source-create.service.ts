@@ -12,7 +12,6 @@ import {
   SourceType
 } from "../../domain/datasource/datasource";
 import {PageResult} from "../../domain/common/page";
-import {GranularityObject, GranularityService} from "./granularity.service";
 import {HiveFileFormat, PrDataSnapshot, SsType} from "../../domain/data-preparation/pr-snapshot";
 import * as _ from "lodash";
 import {CommonConstant} from "../../common/constant/common.constant";
@@ -27,11 +26,9 @@ export class DataSourceCreateService {
 
   private _translateService: TranslateService;
 
-  private _granularityService: GranularityService;
 
   constructor(injector: Injector) {
     this._translateService = injector.get(TranslateService);
-    this._granularityService = injector.get(GranularityService);
   }
 
   /**
@@ -198,8 +195,6 @@ export class DataSourceCreateService {
     const result: CreateSourceParams = {
       name: sourceInfo.completeData.sourceName.trim(),
       description: StringUtil.isEmpty(sourceInfo.completeData.sourceDescription) ? '' : sourceInfo.completeData.sourceDescription,
-      granularity: sourceInfo.ingestionData.selectedQueryGranularity.value,
-      segGranularity: sourceInfo.ingestionData.selectedSegmentGranularity.value,
       dsType: sourceInfo.dsType,
       srcType: sourceInfo.type,
       connType: sourceInfo.connType,
@@ -231,7 +226,6 @@ export class DataSourceCreateService {
     sourceInfo.ingestionData.tuningConfig.some(item => StringUtil.isNotEmpty(item.key) && StringUtil.isNotEmpty(item.value)) && (result.tuningOptions = this._toObject(sourceInfo.ingestionData.tuningConfig.filter(item => StringUtil.isNotEmpty(item.key) && StringUtil.isNotEmpty(item.value))));
     // if not used current_time TIMESTAMP, set intervals
     if (sourceInfo.schemaData.selectedTimestampType !== DataStorageConstant.Datasource.TimestampType.CURRENT) {
-      result.intervals =  [this._granularityService.getIntervalUsedParam(sourceInfo.ingestionData.startIntervalText, sourceInfo.ingestionData.selectedSegmentGranularity) + '/' + this._granularityService.getIntervalUsedParam(sourceInfo.ingestionData.endIntervalText, sourceInfo.ingestionData.selectedSegmentGranularity)];
     }
     // DB
     if (sourceInfo.type === SourceType.JDBC) {
@@ -515,11 +509,8 @@ export interface QueryDataResult {
 export interface CreateSourceParams {
   name: string;
   description?: string;
-  dsType: DataSourceType;
   connType: ConnectionType;
   srcType: SourceType;
-  granularity: GranularityType;
-  segGranularity: GranularityType;
   fields: Field[];
   ingestion: CreateSourceIngestionParams;
   // only SNAPSHOT
