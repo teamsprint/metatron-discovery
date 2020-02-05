@@ -23,7 +23,6 @@ import { UpdateUserManagementMembersComponent } from '../update-member/update-us
 import { PermissionService } from '../../../../../user/service/permission.service';
 import { CommonUtil } from '../../../../../common/util/common.util';
 import { Group } from '../../../../../domain/user/group';
-import { ChangeWorkspaceOwnerModalComponent } from '../change-workspace-owner-modal/change-workspace-owner-modal.component';
 import { Location } from "@angular/common";
 
 @Component({
@@ -84,9 +83,6 @@ export class DetailUserManagementMembersComponent extends AbstractUserManagement
 
   // status flag
   public statusShowFl: boolean = false;
-
-  @ViewChild(ChangeWorkspaceOwnerModalComponent)
-  private changeWorkspaceOwnerModal: ChangeWorkspaceOwnerModalComponent;
 
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   | Constructor
@@ -287,12 +283,6 @@ export class DetailUserManagementMembersComponent extends AbstractUserManagement
     this._confirmModalComponent.init(modal);
   }
 
-  /**
-   * 사용자 삭제 클릭
-   */
-  public onClickDeleteUser(): void {
-    this.changeWorkspaceOwnerModal.show(this._userId);
-  }
 
   /**
    * 사용자 삭제 컨펌 보여주기

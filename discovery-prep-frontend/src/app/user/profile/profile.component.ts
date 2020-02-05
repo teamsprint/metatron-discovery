@@ -27,8 +27,6 @@ import {CommonUtil} from '../../common/util/common.util';
 import {StringUtil} from '../../common/util/string.util';
 import {ChangePasswordComponent} from './change-password/change-password.component';
 import {Group} from '../../domain/user/group';
-import {WorkspaceService} from '../../workspace/service/workspace.service';
-import {Workspace} from '../../domain/workspace/workspace';
 import {CookieConstant} from '../../common/constant/cookie.constant';
 import {Modal} from '../../common/domain/modal';
 import {ConfirmModalComponent} from '../../common/component/modal/confirm/confirm.component';
@@ -92,9 +90,6 @@ export class ProfileComponent extends AbstractComponent implements OnInit, OnDes
   // 사용자 권한
   public permissions: string;
 
-  // 워크스페이스 정보
-  public privateWorkspace: Workspace;
-  public sharedWorkspaces: Workspace[] = [];
 
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   | Public Variables - 파일 업로드 관련
@@ -122,7 +117,6 @@ export class ProfileComponent extends AbstractComponent implements OnInit, OnDes
   // 생성자
   constructor(private broadCaster: EventBroadcaster,
               private userService: UserService,
-              private workspaceService: WorkspaceService,
               protected element: ElementRef,
               protected injector: Injector) {
     super(element, injector);
@@ -536,9 +530,6 @@ export class ProfileComponent extends AbstractComponent implements OnInit, OnDes
         this._imageUrl = isNullOrUndefined(result.imageUrl) ? '' : result.imageUrl.trim();
 
         this.safelyDetectChanges();
-
-        // 워크스페이스 정보 조회
-        this._getWorkspace();
       })
       .catch(() => {
         // 로딩 hide
@@ -585,75 +576,5 @@ export class ProfileComponent extends AbstractComponent implements OnInit, OnDes
     // });
   }
 
-  /**
-   * 개인 워크스페이스 조회
-   */
-  private _getWorkspace() {
-    // 로딩 show
-    this.loadingShow();
-
-    // 워크스페이스 정보 초기화
-    this.privateWorkspace = null;
-    this.sharedWorkspaces = [];
-
-    // 개인 워크스페이스 조회
-    this.workspaceService.getMyWorkspace('forDetailView').then((workspace) => {
-
-      // 개인 워크스페이스 정보 저장
-      (workspace) && (this.privateWorkspace = workspace);
-
-      // 공유 워크스페이스 조회
-      this.workspaceService.getSharedFavoriteWorkspaces('default').then((workspaces) => {
-
-        // 데이터 존재 시 데이터 저장
-        (workspaces['_embedded']) && (this.sharedWorkspaces = workspaces['_embedded']['workspaces']);
-
-        this.safelyDetectChanges();
-
-        // 로딩 hide
-        this.loadingHide();
-
-      });
-
-    });
-  } // function - _getWorkspace
-
-  /**
-   * 워크스페이스로 이동
-   */
-  public moveToWorkspace(workspace?: Workspace) {
-    if (workspace && !workspace.active) {
-      const modal = new Modal();
-      modal.name = this.translateService.instant('msg.space.alert.workspace.disabled');
-      modal.description = this.translateService.instant('msg.space.alert.workspace.disabled.desc');
-      modal.subDescription = this.translateService.instant('msg.space.alert.workspace.disabled.desc.sub');
-      modal.isShowCancel = false;
-      modal.btnName = this.translateService.instant('msg.comm.ui.ok');
-      modal.data = {
-        type: 'INACTIVE',
-        afterConfirm: function () {
-        }
-      };
-      this._confirmModalComp.init(modal);
-    } else {
-      const workspaceId: string = (workspace) ? workspace.id : 'my';
-      let navigateInfo: string[] = [];
-      if (workspaceId) {
-        navigateInfo = ['/workspace', workspaceId];
-      } else {
-        navigateInfo = ['/workspace'];
-      }
-
-      this.cookieService.delete(CookieConstant.KEY.CURRENT_WORKSPACE, '/');  // 쿠키 삭제
-      if (navigateInfo.includes('/workspace') && this.router.url === navigateInfo.join('/')) {
-        this.broadCaster.broadcast('moveFromLnb', workspaceId);
-      } else {
-        this.router.navigate(navigateInfo).then(); // 이동
-      }
-
-      // 프로필 닫음
-      this.close();
-    }
-  } // function - moveToWorkspace
 
 }

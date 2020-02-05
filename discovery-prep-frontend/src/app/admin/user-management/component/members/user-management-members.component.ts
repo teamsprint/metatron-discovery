@@ -22,7 +22,6 @@ import { CreateUserManagementMembersComponent } from './create-member/create-use
 import { ConfirmModalComponent } from '../../../../common/component/modal/confirm/confirm.component';
 import { Modal } from '../../../../common/domain/modal';
 import { Alert } from '../../../../common/util/alert.util';
-import { ChangeWorkspaceOwnerModalComponent } from './change-workspace-owner-modal/change-workspace-owner-modal.component';
 import { ActivatedRoute } from "@angular/router";
 import { isNullOrUndefined } from "util";
 
@@ -45,8 +44,6 @@ export class UserManagementMembersComponent extends AbstractUserManagementCompon
   @ViewChild(ConfirmModalComponent)
   private _confirmModalComponent: ConfirmModalComponent;
 
-  @ViewChild(ChangeWorkspaceOwnerModalComponent)
-  private changeWorkspaceOwnerModal: ChangeWorkspaceOwnerModalComponent;
 
   private _selectedUser: User;
 
@@ -265,7 +262,6 @@ export class UserManagementMembersComponent extends AbstractUserManagementCompon
     event.stopImmediatePropagation();
 
     this._selectedUser = user;
-    this.changeWorkspaceOwnerModal.show(this._selectedUser.id);
   }
 
   /**

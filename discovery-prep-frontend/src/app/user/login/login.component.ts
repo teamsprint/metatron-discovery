@@ -22,7 +22,6 @@ import { JoinCompleteComponent } from './component/join-complete/join-complete.c
 import { ResetPasswordComponent } from './component/reset-password/reset-password.component';
 import { Alert } from '../../common/util/alert.util';
 import { ActivatedRoute } from '@angular/router';
-import { WorkspaceService } from '../../workspace/service/workspace.service';
 import { PermissionService } from '../service/permission.service';
 import { ConfirmSmallComponent } from '../../common/component/modal/confirm-small/confirm-small.component';
 import { Modal } from '../../common/domain/modal';
@@ -79,7 +78,6 @@ export class LoginComponent extends AbstractComponent implements OnInit, OnDestr
    |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
   constructor(private userService: UserService,
-              private workspaceService: WorkspaceService,
               private permissionService: PermissionService,
               private activatedRoute: ActivatedRoute,
               protected elementRef: ElementRef,
@@ -110,7 +108,7 @@ export class LoginComponent extends AbstractComponent implements OnInit, OnDestr
       if (this.forwardURL !== 'NONE') {
         this.router.navigate([this.forwardURL]).then();
       } else {
-        this.router.navigate(['/workspace']).then();
+        this.router.navigate(['/']).then();
       }
     }
   }
@@ -183,32 +181,6 @@ export class LoginComponent extends AbstractComponent implements OnInit, OnDestr
           this.cookieService.delete(CookieConstant.KEY.SAVE_USER_ID, '/');
         }
 
-        // 유저 권한 조회
-        this.permissionService.getPermissions('SYSTEM').then((permission) => {
-          if (permission && 0 < permission.length) {
-            this.cookieService.set(CookieConstant.KEY.PERMISSION, permission.join('=='), 0, '/');
-
-            // 내 워크스페이스 정보 조회
-            this.workspaceService.getMyWorkspace().then(wsInfo => {
-              // 내 워크스페이스 정보 저장
-              this.cookieService.set(CookieConstant.KEY.MY_WORKSPACE, JSON.stringify(wsInfo), 0, '/');
-
-              // 페이지 이동
-              if (this.forwardURL !== 'NONE') {
-                this.router.navigate([this.forwardURL]).then();
-              } else {
-                this.router.navigate(['/workspace']).then();
-              }
-            }).catch(() => {
-              this._logout();
-              Alert.error(this.translateService.instant('login.ui.failed'));
-              this.loadingHide();
-            });
-          } else {
-            this.router.navigate(['/workspace']).then();
-          }
-        });
-
       } else {
         this._logout();
         Alert.error(this.translateService.instant('login.ui.failed'));
@@ -243,8 +215,6 @@ export class LoginComponent extends AbstractComponent implements OnInit, OnDestr
       this.cookieService.delete(CookieConstant.KEY.LOGIN_TOKEN_TYPE, '/');
       this.cookieService.delete(CookieConstant.KEY.LOGIN_USER_ID, '/');
       this.cookieService.delete(CookieConstant.KEY.REFRESH_LOGIN_TOKEN, '/');
-      this.cookieService.delete(CookieConstant.KEY.CURRENT_WORKSPACE, '/');
-      this.cookieService.delete(CookieConstant.KEY.MY_WORKSPACE, '/');
       this.cookieService.delete(CookieConstant.KEY.PERMISSION, '/');
     }
   } // function - _logout

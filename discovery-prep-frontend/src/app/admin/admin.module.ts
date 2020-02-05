@@ -16,7 +16,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '../common/common.module';
 import { RouterModule, Routes } from '@angular/router';
 import { UserAdminGuard } from '../common/gaurd/userAdmin.guard';
-import { WorkspaceAdminGuard } from '../common/gaurd/workspaceAdmin.guard';
 
 const adminRoutes: Routes = [
   { path: '', redirectTo: 'user' },
@@ -24,11 +23,6 @@ const adminRoutes: Routes = [
     path: 'user',
     loadChildren: 'app/admin/user-management/user-management.module#UserManagementModule',
     canActivate: [UserAdminGuard]
-  },
-  {
-    path: 'workspaces',
-    loadChildren: 'app/admin/workspace-management/workspace-management.module#WorkspaceManagementModule',
-    canActivate: [WorkspaceAdminGuard]
   }
 ];
 
@@ -38,7 +32,7 @@ const adminRoutes: Routes = [
     CommonModule,
     RouterModule.forChild(adminRoutes)
   ],
-  providers: [UserAdminGuard, WorkspaceAdminGuard]
+  providers: [UserAdminGuard]
 })
 export class AdminModule {
 }

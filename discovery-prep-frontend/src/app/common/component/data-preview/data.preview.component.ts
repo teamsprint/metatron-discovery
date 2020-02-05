@@ -24,13 +24,8 @@ import {
   ViewChild,
   ViewChildren
 } from '@angular/core';
-import {
-  BoardDataSource,
-  Dashboard,
-  JoinMapping,
-  QueryParam
-} from '../../../domain/dashboard/dashboard';
-import {DatasourceService} from 'app/datasource/service/datasource.service';
+
+
 import {
   ConnectionType,
   Datasource,
@@ -51,24 +46,15 @@ import {Covariance} from '../../../domain/datasource/covariance';
 import * as _ from 'lodash';
 import {DataconnectionService} from '../../../dataconnection/service/dataconnection.service';
 import {CommonUtil} from '../../util/common.util';
-import {DataDownloadComponent, PreviewResult} from '../data-download/data.download.component';
-import {MetadataColumn} from '../../../domain/meta-data-management/metadata-column';
-import {DashboardUtil} from '../../../dashboard/util/dashboard.util';
 import {
   AuthenticationType,
   Dataconnection,
   ImplementorType
 } from '../../../domain/dataconnection/dataconnection';
 import {PeriodData} from "../../value/period.data.value";
-import {TimeRangeFilter} from "../../../domain/workbook/configurations/filter/time-range-filter";
-import {Filter} from "../../../domain/workbook/configurations/filter/filter";
-import {DIRECTION, Sort} from "../../../domain/workbook/configurations/sort";
 import {TimezoneService} from "../../../data-storage/service/timezone.service";
 import {StringUtil} from "../../util/string.util";
 import {StorageService} from "../../../data-storage/service/storage.service";
-import {TimeAllFilter} from "../../../domain/workbook/configurations/filter/time-all-filter";
-import {BoundFilter} from "../../../domain/workbook/configurations/filter/bound-filter";
-import {InclusionFilter} from "../../../domain/workbook/configurations/filter/inclusion-filter";
 
 declare let echarts: any;
 
@@ -99,8 +85,6 @@ export class DataPreviewComponent extends AbstractPopupComponent implements OnIn
   @ViewChildren('covariance')
   private covariance: ElementRef;
 
-  @ViewChild(DataDownloadComponent)
-  private _dataDownComp: DataDownloadComponent;
 
   private gridData: any[];
 
@@ -110,9 +94,6 @@ export class DataPreviewComponent extends AbstractPopupComponent implements OnIn
 
   private _zIndex: string;
 
-  private _filters: Filter[] = [];
-
-  private _queryParams = new QueryParam();
 
   private _isGridDataDown:boolean = true;
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
@@ -122,9 +103,6 @@ export class DataPreviewComponent extends AbstractPopupComponent implements OnIn
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
    | Public Variables
    |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
-
-  @Input()
-  public source: Dashboard | Datasource;
 
   // 필드 디테일 single data
   @Input()
@@ -161,11 +139,7 @@ export class DataPreviewComponent extends AbstractPopupComponent implements OnIn
   public colTypes: { type: string, cnt: number }[] = [];
   public roles: any = {};
 
-  // Datasource
-  public datasources: Datasource[] = [];
-  public mainDatasource: Datasource;
-  public joinMappings: JoinMapping[] = [];
-  public joinDataSources: Datasource[] = [];
+
 
   // 메인 그리드 rows 개수
   public rowNum: number = 100;
@@ -194,7 +168,6 @@ export class DataPreviewComponent extends AbstractPopupComponent implements OnIn
 
   public timestampField: Field;
 
-  public downloadPreview: PreviewResult;
 
   // is exist derived column
   public isExistDerivedField: boolean;
@@ -204,8 +177,7 @@ export class DataPreviewComponent extends AbstractPopupComponent implements OnIn
    |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
   // 생성자
-  constructor(private datasourceService: DatasourceService,
-              private connectionService: DataconnectionService,
+  constructor(private connectionService: DataconnectionService,
               private timezoneService: TimezoneService,
               private storageService: StorageService,
               protected elementRef: ElementRef,
@@ -232,28 +204,6 @@ export class DataPreviewComponent extends AbstractPopupComponent implements OnIn
     this.initView();
 
     // set columns info
-    if (this.source['configuration']) {
-      this.isDashboard = true;
-      const dashboardInfo: Dashboard = (<Dashboard>this.source);
-      //this.datasources = _.cloneDeep(DashboardUtil.getMainDataSources(dashboardInfo));
-      this.datasources = _.cloneDeep(dashboardInfo.dataSources);
-    } else {
-      this.isDashboard = false;
-      this.datasources.push(<Datasource>_.cloneDeep(this.source));
-    }
-    // 데이터소스 array에 메타데이터가 존재하는경우 merge
-    this.datasources.forEach((source) => {
-      source.fields.forEach((field, index, object) => {
-        // set meta data information
-        this._setMetaDataField(field, source);
-        //  if current time in fields, hide
-        if (DashboardUtil.isCurrentDateTime(field)) {
-          object.splice(index, 1);
-        }
-      });
-    });
-
-    this.selectDataSource( ( this.initial ) ? this.datasources.find( item => item.id === this.initial.id ) : this.datasources[0] );
 
   } // function - ngOnInit
 
@@ -305,24 +255,7 @@ export class DataPreviewComponent extends AbstractPopupComponent implements OnIn
         };
       });
 
-      this.datasourceService.getFieldStats(params)
-        .then((result) => {
-          // stats 리스트 저장
-          if (!_.isNil(result[0])) {
-            // for loop
-            for (const property in result[0]) {
-              // if not exist property in statsData, push property in statsData
-              if (!this.statsData.hasOwnProperty(property)) {
-                this.statsData[property] = result[0][property];
-              }
-            }
-          }
-          resolve(result);
-        })
-        .catch((error) => {
-          reject(error);
-        });
-    });
+
   }
 
   /**
@@ -343,14 +276,7 @@ export class DataPreviewComponent extends AbstractPopupComponent implements OnIn
         // TODO datasource에 커스텀필드 걸려있을 경우만 집어넣음
       };
 
-      this.datasourceService.getFieldCovariance(params)
-        .then((result) => {
-          resolve(result);
-        })
-        .catch((error) => {
-          reject(error);
-        });
-    });
+
   }
 
   /**
@@ -387,25 +313,7 @@ export class DataPreviewComponent extends AbstractPopupComponent implements OnIn
       params.filters = (this._filters && 0 < this._filters.length) ? this._filters : [];
 
       this.loadingShow();
-      this.datasourceService.getDatasourceQuery(params).then(gridData => {
 
-        // 쿼리 조건 저장
-        params.limits.limit = 10000000;
-        this._queryParams = _.cloneDeep(params);
-
-        params.metaQuery = true;
-        this.datasourceService.getDatasourceQuery(params).then(metaData => {
-          this.downloadPreview = new PreviewResult(metaData.estimatedSize, metaData.totalCount);
-          (this.rowNum > this.downloadPreview.count) && (this.rowNum = this.downloadPreview.count);
-        }).catch((err) => {
-        });
-        res(gridData);
-        this.loadingHide();
-      }).catch((err) => {
-        console.error(err);
-        rej(err);
-        this.loadingHide();
-      });
     });
   } // function - queryData
 
@@ -560,9 +468,6 @@ export class DataPreviewComponent extends AbstractPopupComponent implements OnIn
 
     if( !this._isGridDataDown ) {
       // 다운로드 파라메터 설정 -> Linked Data Source 데이터를 Druid에서 받아서 다운로드 할 경우에는 아래의 코드가 필요
-      const downloadParams = this._getDashboardQueryParam( source, (<Dashboard>this.source) );
-      downloadParams.limits.limit = 10000000;
-      this._queryParams = _.cloneDeep(downloadParams);
     }
 
     params.filters = (this._filters && 0 < this._filters.length) ? this._filters : [];
@@ -580,39 +485,6 @@ export class DataPreviewComponent extends AbstractPopupComponent implements OnIn
       .catch(error => this.commonExceptionHandler(error));
   }
 
-  /**
-   * 대시보드 타입에 대한 데이터 조회 파라메터 생성
-   * @param {Datasource} dataSource
-   * @param {Dashboard} board
-   * @param {QueryParam} params
-   * @return {QueryParam}
-   * @private
-   */
-  private _getDashboardQueryParam(dataSource:Datasource, board:Dashboard, params?:QueryParam):QueryParam {
-    ( params ) || ( params = new QueryParam() );
-    if (this.timestampField) {
-      const sortInfo: Sort = new Sort();
-      sortInfo.field = this.timestampField.name;
-      sortInfo.direction = DIRECTION.DESC;
-      params.limits.sort.push(sortInfo);
-    }
-
-    let boardDs: BoardDataSource = board.configuration.dataSource;
-    if ('multi' === boardDs.type) {
-      boardDs = boardDs.dataSources.find(item => DashboardUtil.isSameDataSource(item, dataSource));
-    }
-
-    params.dataSource = _.cloneDeep(boardDs);
-    params.dataSource.name = boardDs.engineName;
-    const joins = boardDs.joins;
-    if (joins && joins.length > 0) {
-      this.isJoin = true;
-      this.joinMappings = joins;
-      params.dataSource.type = 'mapping';
-      params.dataSource['joins'] = joins;
-    }
-    return params;
-  } // function - _getDashboardQueryParam
 
   // noinspection JSMethodCanBeStatic
   /**
@@ -655,19 +527,7 @@ export class DataPreviewComponent extends AbstractPopupComponent implements OnIn
     return params;
   }
 
-  /**
-   * Get timezone label
-   * @param {FieldFormat} format
-   * @return {string}
-   * @private
-   */
-  private _getTimezoneLabel(format: FieldFormat): string {
-    if (format.type === FieldFormatType.UNIX_TIME) {
-      return 'Unix time';
-    } else {
-      return this.timezoneService.getConvertedTimezoneUTCLabel(this.timezoneService.getTimezoneObject(format).utc);
-    }
-  }
+
 
   // ui init
   private initView() {
@@ -678,7 +538,6 @@ export class DataPreviewComponent extends AbstractPopupComponent implements OnIn
       {label: this.translateService.instant('msg.storage.ui.list.integer'), value: 'INTEGER'},
       {label: this.translateService.instant('msg.storage.ui.list.double'), value: 'DOUBLE'},
       {label: this.translateService.instant('msg.storage.ui.list.date'), value: 'TIMESTAMP'},
-      {label: this.translateService.instant('msg.storage.ui.list.array'), value: 'ARRAY'},
       {label: this.translateService.instant('msg.storage.ui.list.lnt'), value: 'LNT'},
       {label: this.translateService.instant('msg.storage.ui.list.lng'), value: 'LNG'},
       {label: this.translateService.instant('msg.storage.ui.list.geo.point'), value: 'GEO_POINT', derived: true},
@@ -1206,122 +1065,6 @@ export class DataPreviewComponent extends AbstractPopupComponent implements OnIn
 
   } // function - onChangeDate
 
-  /**
-   * 데이터소스 선택
-   * @param {Datasource} dataSource
-   */
-  public selectDataSource(dataSource: Datasource) {
-
-    // initialize data
-    this.mainDatasource = dataSource;
-    this.rowNum = 100;
-    this.isExistDerivedField = dataSource.fields.some(field => field.derived);
-    // seletedfield init
-    this.selectedField = null;
-    this.timestampField = null;
-    this.columns = [];
-    this.colTypes = [];
-    this.roles = {};
-
-    this.joinMappings = [];
-    this.joinDataSources = [];
-
-    this.safelyDetectChanges();
-
-    // set columns info
-    if (this.isDashboard) {
-
-      this.mainDsSummary = (this.mainDatasource && this.mainDatasource.summary) ? this.mainDatasource.summary : undefined;
-      this.columns = this.mainDatasource.fields;
-      if (this.mainDsSummary) {
-        this.downloadPreview = new PreviewResult(this.mainDsSummary.size, this.mainDsSummary.count);
-        if (this.rowNum > this.mainDsSummary.count) {
-          this.rowNum = this.mainDsSummary.count;
-        }
-      }
-
-      // Column Type & Role 타입별 수량 정리 - 대시보드 정보 레이어용
-      let tempColType: any = {};
-      this.columns.forEach((item: Field) => {
-        if (tempColType[item.logicalType]) {
-          tempColType[item.logicalType] += 1;
-        } else {
-          tempColType[item.logicalType] = 1;
-        }
-        if (this.roles[item.role]) {
-          this.roles[item.role] += 1;
-        } else {
-          this.roles[item.role] = 1;
-        }
-      });
-      Object.keys(tempColType).forEach(key => this.colTypes.push({type: key, cnt: tempColType[key]}));
-
-      const boardDs: BoardDataSource = (<Dashboard>this.source).configuration.dataSource;
-      if ('multi' === boardDs.type) {
-        const masterBoardDs: BoardDataSource
-          = boardDs.dataSources.find(item => DashboardUtil.isSameDataSource(item, dataSource));
-        this.joinDataSources = [dataSource];
-        if (masterBoardDs.joins && 0 < masterBoardDs.joins.length) {
-          this.joinDataSources = this.joinDataSources.concat(
-            (<Dashboard>this.source).dataSources.filter(item => {
-              return masterBoardDs.joins.some((joinItem: JoinMapping) => {
-                return (joinItem.join && joinItem.join.id === item.id) || (joinItem.id === item.id);
-              });
-            })
-          );
-        }
-      } else {
-        this.joinDataSources = this.datasources;
-      }
-
-    } else {
-      this.joinDataSources = this.datasources;
-      this.columns = this.mainDatasource.fields;
-    }
-
-    // 타임스탬프 필드 설정
-    this.timestampField = this.columns.find(item => item.role === 'TIMESTAMP');
-
-    // 마스터 소스 타입
-    this.connType = this.mainDatasource.hasOwnProperty('connType') ? this.mainDatasource.connType.toString() : 'ENGINE';
-
-    // singleTab
-    const field = this.singleTab ? this.field : this.columns[0];
-    this.isShowDataGrid = !this.singleTab;
-
-    // linked인 경우
-    if (this.connType === 'LINK') {
-      // TODO 마스터 데이터소스만 해당되는지 join된 소스까지 해당되는지 확인하기
-      this._getQueryDataInLinked(this.mainDatasource);
-    } else {
-      // Query Data
-      this.queryData(this.mainDatasource)
-        .then(data => {
-          if (data && 0 < data.length) {
-            this.gridData = data;
-
-            // single tab 이 아닌경우에만 그리드
-            if (!this.singleTab) {
-              this.updateGrid(data, this.columns);
-            } else {
-              // gird data를 name으로 검색
-              const data = [];
-              this.gridData.forEach((item) => {
-                if (item.hasOwnProperty(field.name) && item[field.name]) {
-                  data.push(item[field.name]);
-                }
-              });
-              this.selectedColumnData = data;
-              // 필드 선택
-              this.onSelectedField(field, this.mainDatasource);
-            }
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    }
-  } // function - selectDataSource
 
   /**
    * value list
@@ -1788,29 +1531,5 @@ export class DataPreviewComponent extends AbstractPopupComponent implements OnIn
     return roleStr;
   } // function - getRoleStr
 
-  /**
-   * 데이터소스 개수 반환
-   * @returns {number}
-   */
-  public getDatasourceCnt(): number {
-    const dsInfo: Dashboard = <Dashboard>this.source;
-    return dsInfo.dataSources.length;
-  } // function - getDatasourceCnt
-
-  /**
-   * 데이터 소스 이름
-   * @returns {string}
-   */
-  public getDatasourceNames(): string {
-    const dsInfo: Dashboard = <Dashboard>this.source;
-    if (dsInfo.dataSources.length > 0) {
-      let names = this.mainDatasource.name;
-      if (dsInfo.dataSources.length > 1) {
-        names += ` and ${dsInfo.dataSources.length - 1} more`;
-      }
-      return names;
-    }
-    return '';
-  } // function - getDastasourceNames
 
 }

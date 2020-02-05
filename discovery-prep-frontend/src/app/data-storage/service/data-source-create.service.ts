@@ -1,11 +1,9 @@
 import {Injectable, Injector} from "@angular/core";
 import {TranslateService} from '@ngx-translate/core';
 import {StringUtil} from "../../common/util/string.util";
-import {GranularityType} from "../../domain/workbook/configurations/field/timestamp-field";
 import {
   ConnectionType,
   DatasourceInfo,
-  DataSourceType,
   Field,
   FieldFormatType,
   FieldRole,
@@ -159,11 +157,6 @@ export class DataSourceCreateService {
         value: LogicalType.TIMESTAMP
       },
       {
-        label: this._translateService.instant('msg.storage.ui.list.array'),
-        icon: 'ddp-icon-type-array',
-        value: LogicalType.ARRAY
-      },
-      {
         label: this._translateService.instant('msg.storage.ui.list.lnt'),
         icon: 'ddp-icon-type-latitude',
         value: LogicalType.LNT
@@ -257,13 +250,13 @@ export class DataSourceCreateService {
    */
   public getFileFormatParams(fileFormat: string, fileData: any): object {
     const format = {
-      type: fileFormat
+      type: fileFormat,
     };
     // if file format is csv, add delimiter and lineSeparator
     if (fileFormat === 'csv') {
       format['delimiter'] = fileData.delimiter;
       format['lineSeparator'] = fileData.separator;
-    } else if (fileFormat === 'excel') {
+    } else {
       // add sheetIndex
       format['sheetIndex'] = fileData.fileResult.sheets.findIndex(sheet => sheet === fileData.fileResult.selectedSheet);
       format['sheetName'] = fileData.fileResult.selectedSheet.sheetName;
@@ -605,73 +598,6 @@ export class CreateSnapShotData {
   public errorSnapshotIdList: string[] = [];
 }
 
-// create data source configure step data
-export class CreateSourceConfigureData {
-  // origin field & data list
-  public _originFieldList: Field[];
-  public _originFieldData: any;
-  // filtered field list
-  public filteredFieldList: Field[];
-  // timestamp field list
-  public timestampFieldList: Field[];
-  // selected field
-  public selectedField: Field;
-  // selected data list in field
-  public selectedFieldDataList: any;
-  // selected timestamp field
-  public selectedTimestampField: Field;
-  // selected timestamp Type
-  public selectedTimestampType: DataStorageConstant.Datasource.TimestampType;
-  // search text
-  public searchText: string;
-  // selected filter type
-  public selectedLogicalTypeFilter: TypeFilterObject ;
-  public selectedRoleTypeFilter: TypeFilterObject;
-  // field data list in timestamp field
-  public timestampFieldData: any;
-  // selected action
-  public selectedAction: {selectedType: string, selectedRoleType: TypeFilterObject, selectedLogicalType: TypeFilterObject};
-}
-
-// create data source ingestion step data
-export class CreateSourceIngestionData {
-  // common
-  // query granularity list
-  public queryGranularityList: GranularityObject[];
-  // save selected segment granularity
-  public selectedSegmentGranularity: GranularityObject;
-  // save query granularity
-  public selectedQueryGranularity: GranularityObject;
-  // save selected rollup type
-  public selectedRollUpType: any;
-  // save tuning configuration
-  public tuningConfig: any[];
-  // isShowAdvancedSetting
-  public isShowAdvancedSetting: boolean;
-  // interval text
-  public startIntervalText: string;
-  public endIntervalText: string;
-  // interval valid message
-  public intervalValidMessage: string;
-  // interval valid
-  public intervalValid: boolean;
-  // granularity unit
-  public granularityUnit: number;
-}
-
-// create data source complete step data
-export class CreateSourceCompleteData {
-  // source name
-  public sourceName: string;
-  // source description
-  public sourceDescription: string;
-  // valid
-  public isInvalidName: boolean;
-  public isInvalidDesc: boolean;
-  // valid message
-  public nameInvalidMessage: string;
-  public descInvalidMessage: string;
-}
 
 export class KafkaData {
   public bootstrapServer: string;

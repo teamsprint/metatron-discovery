@@ -19,7 +19,6 @@ import { PrDataSnapshot, SsType } from '../../../domain/data-preparation/pr-snap
 import { CommonUtil } from '../../../common/util/common.util';
 import { CookieConstant } from '../../../common/constant/cookie.constant';
 import { Observable } from 'rxjs';
-import {LogicalType} from "../../../domain/datasource/datasource";
 import {isNullOrUndefined} from "util";
 import * as _ from 'lodash';
 
@@ -211,32 +210,32 @@ export class DataSnapshotService extends AbstractService {
     let url = `${this._baseUrl}${data.ssId}`;
     return this.patch(url,{ssName : data.ssName});
   }
-
-  /**
-   * Get logical type (only create source)
-   * @param {string} type
-   * @return {LogicalType}
-   * @private
-   */
-  public getConvertTypeToLogicalType(type: string): LogicalType {
-    switch (type) {
-      case 'STRING':
-        return LogicalType.STRING;
-      case 'INTEGER':
-      case 'LONG':
-        return LogicalType.INTEGER;
-      case 'DOUBLE':
-        return LogicalType.DOUBLE;
-      case 'TIMESTAMP':
-        return LogicalType.TIMESTAMP;
-      case 'BOOLEAN':
-        return LogicalType.BOOLEAN;
-      case 'ARRAY':
-        return LogicalType.ARRAY;
-      case 'MAP':
-        return LogicalType.MAP;
-      default:
-        return LogicalType.STRING;
-    }
-  }
+  //
+  // /**
+  //  * Get logical type (only create source)
+  //  * @param {string} type
+  //  * @return {LogicalType}
+  //  * @private
+  //  */
+  // public getConvertTypeToLogicalType(type: string): LogicalType {
+  //   switch (type) {
+  //     case 'STRING':
+  //       return LogicalType.STRING;
+  //     case 'INTEGER':
+  //     case 'LONG':
+  //       return LogicalType.INTEGER;
+  //     case 'DOUBLE':
+  //       return LogicalType.DOUBLE;
+  //     case 'TIMESTAMP':
+  //       return LogicalType.TIMESTAMP;
+  //     case 'BOOLEAN':
+  //       return LogicalType.BOOLEAN;
+  //     case 'ARRAY':
+  //       return LogicalType.ARRAY;
+  //     case 'MAP':
+  //       return LogicalType.MAP;
+  //     default:
+  //       return LogicalType.STRING;
+  //   }
+  // }
 }

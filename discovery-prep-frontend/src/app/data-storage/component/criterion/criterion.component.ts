@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-import {Criteria} from "../../../domain/datasource/criteria";
+import {Criteria} from "../../../domain/dataconnection/criteria";
 import {Component, ElementRef, EventEmitter, Injector, Input, Output} from "@angular/core";
 import {AbstractComponent} from "../../../common/component/abstract.component";
 import * as _ from 'lodash';

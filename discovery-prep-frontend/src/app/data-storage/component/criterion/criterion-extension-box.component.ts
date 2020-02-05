@@ -15,7 +15,7 @@
 
 
 import {Component, ElementRef, EventEmitter, Injector, Input, Output} from "@angular/core";
-import {Criteria} from "../../../domain/datasource/criteria";
+import {Criteria} from "../../../domain/dataconnection/criteria";
 import {AbstractComponent} from "../../../common/component/abstract.component";
 
 @Component({

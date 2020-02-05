@@ -13,7 +13,6 @@
  */
 
 import { AbstractHistoryEntity } from '../../common/abstract-history-entity';
-import { Workspace } from '../../workspace/workspace';
 import { Role } from './role';
 import { WORKSPACE_PERMISSION } from '../../../common/permission/permission';
 
@@ -23,7 +22,6 @@ export class RoleSet extends AbstractHistoryEntity {
   public description: string;
   public scope: RoleSetScope;      // RoleSet 범위(Workspace 내 PRIVATE, 공통 사용가능한 PUBLIC)
   public linkedWorkspaces: number;
-  public workspaces: Workspace[] = [];
   public roles: Role[] = [];
   public predefined: boolean;
   public readOnly: boolean;

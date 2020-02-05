@@ -49,13 +49,8 @@ import { MomentDatePipe } from './pipe/moment.date.pipe';
 import { PagingSearchSelectComponent } from './component/paging-search-select/paging-search-select.component';
 import { UserInformationComponent } from './component/user-information/user-information.component';
 import { ConfirmSmallComponent } from './component/modal/confirm-small/confirm-small.component';
-import { PermissionSchemaComponent } from 'app/workspace/component/permission/permission-schema.component';
-import { PermissionSchemaSetComponent } from '../workspace/component/permission/permission-schema-set.component';
-import { PermissionSchemaChangeComponent } from '../workspace/component/permission/permission-schema-change.component';
-import { RoleSchemaComponent } from '../workspace/component/permission/role-schema.component';
 import { ColorPickerComponent } from './component/color-picker/color.picker.component';
 import { GradationGeneratorComponent } from './component/gradation/gradation-generator.component';
-import { DashboardDatasourceComboComponent } from '../dashboard/component/dashboard-datasource-combo.component';
 import { ColorTemplateComponent } from './component/color-picker/color-template.component';
 import {InputComponent} from "./component/input/input.component";
 import {SvgIconComponent} from "./component/icon/svg-icon.component";
@@ -67,7 +62,6 @@ import {StompConfig, StompService} from '@stomp/ng2-stompjs';
 import * as SockJS from 'sockjs-client';
 import {FilterSelectBoxComponent} from "./component/select/filter-select-box.component";
 import {ConfirmRefModalComponent} from "./component/modal/confirm/confirm-ref.component";
-import {MetadataTypeBoxTagComponent} from "../explore-data/explore-data/component/metadata-type-box-tag.component";
 
 
 export function socketProvider() {
@@ -121,18 +115,12 @@ const stompConfig: StompConfig = {
     LogComponent,
     UserInformationComponent,
     ConfirmSmallComponent,
-    RoleSchemaComponent,
-    PermissionSchemaComponent,
-    PermissionSchemaSetComponent,
-    PermissionSchemaChangeComponent,
     ColorPickerComponent,
     GradationGeneratorComponent,
-    DashboardDatasourceComboComponent,
     ColorTemplateComponent,
     SvgIconComponent,
     InputComponent,
-    PaginationComponent,
-    MetadataTypeBoxTagComponent
+    PaginationComponent
   ],
   exports: [
     AngularCommonModule,
@@ -170,18 +158,12 @@ const stompConfig: StompConfig = {
     LogComponent,
     UserInformationComponent,
     ConfirmSmallComponent,
-    RoleSchemaComponent,
-    PermissionSchemaComponent,
-    PermissionSchemaSetComponent,
-    PermissionSchemaChangeComponent,
     ColorPickerComponent,
     GradationGeneratorComponent,
-    DashboardDatasourceComboComponent,
     ColorTemplateComponent,
     SvgIconComponent,
     InputComponent,
-    PaginationComponent,
-    MetadataTypeBoxTagComponent
+    PaginationComponent
   ],
   providers: [
     {

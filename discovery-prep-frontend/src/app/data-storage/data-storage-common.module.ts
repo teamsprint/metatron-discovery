@@ -14,17 +14,10 @@
 
 import { NgModule } from '@angular/core';
 import {CommonModule} from "../common/common.module";
-import {StorageFilterSelectBoxComponent} from "./data-source-list/component/storage-filter-select-box.component";
 
 @NgModule({
   imports: [
     CommonModule
-  ],
-  declarations: [
-    StorageFilterSelectBoxComponent
-  ],
-  exports: [
-    StorageFilterSelectBoxComponent
   ],
   providers: [
   ]

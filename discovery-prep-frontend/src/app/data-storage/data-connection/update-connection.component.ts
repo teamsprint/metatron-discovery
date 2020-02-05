@@ -15,7 +15,6 @@
 import {Component, ElementRef, EventEmitter, Injector, Output, ViewChild} from '@angular/core';
 import {DataconnectionService} from '../../dataconnection/service/dataconnection.service';
 import {DeleteModalComponent} from '../../common/component/modal/delete/delete.component';
-import {SetWorkspacePublishedComponent} from '../component/set-workspace-published/set-workspace-published.component';
 import {CommonUtil} from '../../common/util/common.util';
 import {StringUtil} from '../../common/util/string.util';
 import {AuthenticationType, Dataconnection} from '../../domain/dataconnection/dataconnection';
@@ -34,9 +33,6 @@ export class UpdateConnectionComponent extends AbstractComponent {
   @ViewChild('connection_name_element')
   private readonly CONNECTION_NAME_ELEMENT: ElementRef;
 
-  // workspace set component
-  @ViewChild(SetWorkspacePublishedComponent)
-  private readonly _setWorkspaceComponent: SetWorkspacePublishedComponent;
 
   // connection component
   @ViewChild(ConnectionComponent)

@@ -37,7 +37,6 @@ import {Alert} from '../../../../../common/util/alert.util';
 import {Modal} from '../../../../../common/domain/modal';
 import {PreparationAlert} from '../../../../util/preparation-alert.util';
 import {DataflowService} from '../../../service/dataflow.service';
-import {Field} from '../../../../../domain/workbook/configurations/field/field';
 import {header, SlickGridHeader} from '../../../../../common/component/grid/grid.header';
 import {GridComponent} from '../../../../../common/component/grid/grid.component';
 import {GridOption} from 'app/common/component/grid/grid.option';

@@ -15,9 +15,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from './common.module';
 import { DataPreviewComponent } from './component/data-preview/data.preview.component';
-import { DatasourceAliasService } from '../datasource/service/datasource-alias.service';
-import { DataDownloadComponent } from './component/data-download/data.download.component';
-import { WidgetService } from '../dashboard/service/widget.service';
 import {TimezoneService} from "../data-storage/service/timezone.service";
 
 @NgModule({
@@ -25,16 +22,12 @@ import {TimezoneService} from "../data-storage/service/timezone.service";
     CommonModule
   ],
   declarations: [
-    DataPreviewComponent,
-    DataDownloadComponent
+    DataPreviewComponent
   ],
   exports: [
-    DataPreviewComponent,
-    DataDownloadComponent
+    DataPreviewComponent
   ],
   providers: [
-    DatasourceAliasService,
-    WidgetService,
     TimezoneService
   ]
 })

@@ -17,8 +17,7 @@ import { AbstractComponent } from '../../../common/component/abstract.component'
 import { Component, ElementRef, EventEmitter, Injector, Input, Output } from '@angular/core';
 import { StringUtil } from '../../../common/util/string.util';
 import * as _ from 'lodash';
-import { ConnectionType, DataSourceType, SourceType, Status } from '../../../domain/datasource/datasource';
-import {Criteria} from "../../../domain/datasource/criteria";
+import {Criteria} from "../../../domain/dataconnection/criteria";
 
 @Component({
   selector: 'criterion-checkbox-component',
@@ -108,26 +107,26 @@ export class CriterionCheckboxListComponent extends AbstractComponent {
     // if start with msg.*, translate label
     return -1 !== label.indexOf('msg.');
   }
-
-  /**
-   * Get translated filter name
-   * @param {ListFilter} filter
-   * @returns {string}
-   */
-  public getTranslateFilterName(filter: Criteria.ListFilter): string {
-    switch (filter.criterionKey) {
-      case Criteria.ListCriterionKey.STATUS:
-        return this._getDatasourceStatusTranslate(filter.filterName);
-      case Criteria.ListCriterionKey.DATASOURCE_TYPE:
-        return this._getDataSourceTypeTranslate(filter.filterName);
-      case Criteria.ListCriterionKey.SOURCE_TYPE:
-        return this._getSourceTypeTranslate(filter.filterName);
-      case Criteria.ListCriterionKey.CONNECTION_TYPE:
-        return this._getConnectionTypeTranslate(filter.filterName);
-      default:
-        return this.isRequireTranslate(filter.filterName) ? this.translateService.instant(filter.filterName): filter.filterName;
-    }
-  }
+  //
+  // /**
+  //  * Get translated filter name
+  //  * @param {ListFilter} filter
+  //  * @returns {string}
+  //  */
+  // public getTranslateFilterName(filter: Criteria.ListFilter): string {
+  //   switch (filter.criterionKey) {
+  //     case Criteria.ListCriterionKey.STATUS:
+  //       return this._getDatasourceStatusTranslate(filter.filterName);
+  //     case Criteria.ListCriterionKey.DATASOURCE_TYPE:
+  //       return this._getDataSourceTypeTranslate(filter.filterName);
+  //     case Criteria.ListCriterionKey.SOURCE_TYPE:
+  //       return this._getSourceTypeTranslate(filter.filterName);
+  //     case Criteria.ListCriterionKey.CONNECTION_TYPE:
+  //       return this._getConnectionTypeTranslate(filter.filterName);
+  //     default:
+  //       return this.isRequireTranslate(filter.filterName) ? this.translateService.instant(filter.filterName): filter.filterName;
+  //   }
+  // }
 
   /**
    * Item check event
@@ -179,94 +178,94 @@ export class CriterionCheckboxListComponent extends AbstractComponent {
       list.filters = list.filters.filter(item => -1 !== (this.isRequireTranslate(item.filterName) ? this.translateService.instant(item.filterName) : item.filterName).toUpperCase().indexOf(this.searchKeyword.trim().toUpperCase()));
     });
   }
-
-  /**
-   * Get datasource type translated label
-   * @param {string} filterName
-   * @returns {string}
-   * @private
-   */
-  private _getDataSourceTypeTranslate(filterName: string): string {
-    switch (filterName) {
-      case DataSourceType.JOIN.toString():
-        return this.translateService.instant('msg.storage.ui.source.type.join');
-      case DataSourceType.MASTER.toString():
-        return this.translateService.instant('msg.storage.ui.source.type.master');
-      case DataSourceType.VOLATILITY.toString():
-        return this.translateService.instant('msg.storage.ui.source.type.volatility');
-      default:
-        return this.isRequireTranslate(filterName) ? this.translateService.instant(filterName): filterName;
-    }
-  }
-
-  /**
-   * Get connection type translated label
-   * @param {string} filterName
-   * @returns {string}
-   * @private
-   */
-  private _getConnectionTypeTranslate(filterName: string): string {
-    switch (filterName) {
-      case ConnectionType.ENGINE.toString():
-        return this.translateService.instant('msg.storage.ui.list.ingested.data');
-      case ConnectionType.LINK.toString():
-        return this.translateService.instant('msg.storage.ui.list.linked.data');
-      default:
-        return this.isRequireTranslate(filterName) ? this.translateService.instant(filterName): filterName;
-    }
-  }
-
-  /**
-   * Get datasource status translated label
-   * @param {string} filterName
-   * @returns {string}
-   * @private
-   */
-  private _getDatasourceStatusTranslate(filterName: string): string {
-    switch (filterName) {
-      case Status.ENABLED.toString():
-        return 'Enabled';
-      case Status.PREPARING.toString():
-        return 'Preparing';
-      case Status.DISABLED.toString():
-        return 'Disabled';
-      case Status.FAILED.toString():
-        return 'Failed';
-      case Status.BAD.toString():
-        return 'Bad';
-      default:
-        return 'Disabled';
-    }
-  }
-
-  /**
-   * Get source type translated label
-   * @param {string} filterName
-   * @returns {string}
-   * @private
-   */
-  private _getSourceTypeTranslate(filterName: string): string {
-    switch (filterName) {
-      case SourceType.IMPORT.toString():
-        return this.translateService.instant('msg.storage.li.druid');
-      case SourceType.FILE.toString():
-        return this.translateService.instant('msg.storage.li.file');
-      case SourceType.JDBC.toString():
-        return this.translateService.instant('msg.storage.li.db');
-      case SourceType.HIVE.toString():
-        return this.translateService.instant('msg.storage.li.hive');
-      case SourceType.REALTIME.toString():
-        return this.translateService.instant('msg.storage.li.stream');
-      case SourceType.SNAPSHOT.toString():
-        return this.translateService.instant('msg.storage.li.ss');
-      case SourceType.HDFS.toString():
-        return filterName;
-      case SourceType.ENGINE.toString():
-        return this.translateService.instant('msg.storage.li.engine');
-      case SourceType.STAGEDB.toString():
-        return this.translateService.instant('msg.storage.li.stagedb');
-      default:
-        return this.isRequireTranslate(filterName) ? this.translateService.instant(filterName): filterName;
-    }
-  }
+  //
+  // /**
+  //  * Get datasource type translated label
+  //  * @param {string} filterName
+  //  * @returns {string}
+  //  * @private
+  //  */
+  // private _getDataSourceTypeTranslate(filterName: string): string {
+  //   switch (filterName) {
+  //     case DataSourceType.JOIN.toString():
+  //       return this.translateService.instant('msg.storage.ui.source.type.join');
+  //     case DataSourceType.MASTER.toString():
+  //       return this.translateService.instant('msg.storage.ui.source.type.master');
+  //     case DataSourceType.VOLATILITY.toString():
+  //       return this.translateService.instant('msg.storage.ui.source.type.volatility');
+  //     default:
+  //       return this.isRequireTranslate(filterName) ? this.translateService.instant(filterName): filterName;
+  //   }
+  // }
+  //
+  // /**
+  //  * Get connection type translated label
+  //  * @param {string} filterName
+  //  * @returns {string}
+  //  * @private
+  //  */
+  // private _getConnectionTypeTranslate(filterName: string): string {
+  //   switch (filterName) {
+  //     case ConnectionType.ENGINE.toString():
+  //       return this.translateService.instant('msg.storage.ui.list.ingested.data');
+  //     case ConnectionType.LINK.toString():
+  //       return this.translateService.instant('msg.storage.ui.list.linked.data');
+  //     default:
+  //       return this.isRequireTranslate(filterName) ? this.translateService.instant(filterName): filterName;
+  //   }
+  // }
+  //
+  // /**
+  //  * Get datasource status translated label
+  //  * @param {string} filterName
+  //  * @returns {string}
+  //  * @private
+  //  */
+  // private _getDatasourceStatusTranslate(filterName: string): string {
+  //   switch (filterName) {
+  //     case Status.ENABLED.toString():
+  //       return 'Enabled';
+  //     case Status.PREPARING.toString():
+  //       return 'Preparing';
+  //     case Status.DISABLED.toString():
+  //       return 'Disabled';
+  //     case Status.FAILED.toString():
+  //       return 'Failed';
+  //     case Status.BAD.toString():
+  //       return 'Bad';
+  //     default:
+  //       return 'Disabled';
+  //   }
+  // }
+  //
+  // /**
+  //  * Get source type translated label
+  //  * @param {string} filterName
+  //  * @returns {string}
+  //  * @private
+  //  */
+  // private _getSourceTypeTranslate(filterName: string): string {
+  //   switch (filterName) {
+  //     case SourceType.IMPORT.toString():
+  //       return this.translateService.instant('msg.storage.li.druid');
+  //     case SourceType.FILE.toString():
+  //       return this.translateService.instant('msg.storage.li.file');
+  //     case SourceType.JDBC.toString():
+  //       return this.translateService.instant('msg.storage.li.db');
+  //     case SourceType.HIVE.toString():
+  //       return this.translateService.instant('msg.storage.li.hive');
+  //     case SourceType.REALTIME.toString():
+  //       return this.translateService.instant('msg.storage.li.stream');
+  //     case SourceType.SNAPSHOT.toString():
+  //       return this.translateService.instant('msg.storage.li.ss');
+  //     case SourceType.HDFS.toString():
+  //       return filterName;
+  //     case SourceType.ENGINE.toString():
+  //       return this.translateService.instant('msg.storage.li.engine');
+  //     case SourceType.STAGEDB.toString():
+  //       return this.translateService.instant('msg.storage.li.stagedb');
+  //     default:
+  //       return this.isRequireTranslate(filterName) ? this.translateService.instant(filterName): filterName;
+  //   }
+  // }
 }

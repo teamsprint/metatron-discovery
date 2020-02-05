@@ -15,7 +15,6 @@
 import {Component, ElementRef, EventEmitter, Injector, Output, ViewChild} from '@angular/core';
 import {DataconnectionService} from '../../dataconnection/service/dataconnection.service';
 import {Alert} from '../../common/util/alert.util';
-import {SetWorkspacePublishedComponent} from '../component/set-workspace-published/set-workspace-published.component';
 import {CommonUtil} from '../../common/util/common.util';
 import {CookieConstant} from '../../common/constant/cookie.constant';
 import {StringUtil} from '../../common/util/string.util';
@@ -34,10 +33,6 @@ export class CreateConnectionComponent extends AbstractComponent {
 
   @ViewChild('connection_name_element')
   private readonly CONNECTION_NAME_ELEMENT: ElementRef;
-
-  // workspace set component
-  @ViewChild(SetWorkspacePublishedComponent)
-  private readonly _setWorkspaceComponent: SetWorkspacePublishedComponent;
 
   // connection component
   @ViewChild(ConnectionComponent)
@@ -108,12 +103,6 @@ export class CreateConnectionComponent extends AbstractComponent {
     this.isShowPopup = undefined;
   }
 
-  /**
-   * Click workspace setting open
-   */
-  public onClickSetWorkspace(): void {
-    this._setWorkspaceComponent.init('connection', 'create', {addWorkspaces: this.addWorkspaces});
-  }
 
   /**
    * Is enable create connection

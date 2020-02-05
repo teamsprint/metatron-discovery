@@ -23,7 +23,7 @@ import {StringUtil} from '../../common/util/string.util';
 import {CreateConnectionComponent} from "./create-connection.component";
 import {UpdateConnectionComponent} from "./update-connection.component";
 import {CriterionComponent} from "../component/criterion/criterion.component";
-import {Criteria} from "../../domain/datasource/criteria";
+import {Criteria} from "../../domain/dataconnection/criteria";
 import {ActivatedRoute} from "@angular/router";
 import {Alert} from "../../common/util/alert.util";
 import {isNullOrUndefined} from "util";

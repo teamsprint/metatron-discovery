@@ -17,7 +17,7 @@ import { AbstractComponent } from '../../../common/component/abstract.component'
 import { Component, ElementRef, EventEmitter, Injector, Input, Output, ViewChild } from '@angular/core';
 import { PickerSettings } from '../../../domain/common/datepicker.settings';
 import {StringUtil} from "../../../common/util/string.util";
-import {Criteria} from "../../../domain/datasource/criteria";
+import {Criteria} from "../../../domain/dataconnection/criteria";
 
 declare let moment: any;
 declare let $: any;

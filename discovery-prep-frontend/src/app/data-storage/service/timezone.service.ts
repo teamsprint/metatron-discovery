@@ -16,7 +16,6 @@
 import { Injectable, Injector } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { StringUtil } from "../../common/util/string.util";
-import {FieldFormat} from "../../domain/datasource/datasource";
 import * as _ from 'lodash';
 declare let moment: any;
 
@@ -67,14 +66,7 @@ export class TimezoneService {
     return StringUtil.isEmpty(searchKeyword) ? this.getTimezoneList() : this.getTimezoneList().filter(timezone => timezone.label.toUpperCase().includes(searchKeyword.toUpperCase()));
   }
 
-  /**
-   * Get timezone object
-   * @param {FieldFormat} format
-   * @return {TimeZoneObject}
-   */
-  public getTimezoneObject(format: FieldFormat): TimeZoneObject {
-    return format && format.timeZone ? (this.getTimezoneList().find(timezone => timezone.momentName === format.timeZone) || this.getBrowserTimezone()) : this.getBrowserTimezone();
-  }
+
 
   /**
    * Get converted timezone UTC label
@@ -87,15 +79,6 @@ export class TimezoneService {
       result += utc.slice(3,6);
     }
     return result;
-  }
-
-  /**
-   * Is enable timezone in date format
-   * @param {FieldFormat} format
-   * @return {boolean}
-   */
-  public isEnableTimezoneInDateFormat(format: FieldFormat): boolean {
-    return format && format.format && format.format.toUpperCase().indexOf('H') !== -1;
   }
 
   /**

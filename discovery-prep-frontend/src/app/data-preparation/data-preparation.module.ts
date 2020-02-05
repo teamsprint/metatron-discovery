@@ -33,7 +33,6 @@ import { FileModule } from '../common/file.module';
 import { CreateDatasetDbSelectComponent } from './dataset/create-dataset/create-dataset-db-select.component';
 import { CreateDatasetDbQueryComponent } from './dataset/create-dataset/create-dataset-db-query.component';
 import { SplitPaneModule } from 'ng2-split-pane/lib/ng2-split-pane';
-import { WorkbenchEditorModule } from '../workbench/workbench.editor.module';
 import { DataflowDetailComponent } from './dataflow/dataflow-detail/dataflow-detail.component';
 import { RuleJoinPopupComponent } from './dataflow/dataflow-detail/component/edit-dataflow-rule/rule-join-popup/rule-join-popup.component';
 import { RuleUnionPopupComponent } from './dataflow/dataflow-detail/component/edit-dataflow-rule/rule-union-popup/rule-union-popup.component';
@@ -84,7 +83,6 @@ import {LongUpdatePopupComponent} from "./component/long-update-popup.component"
 import {RadioSelectDatasetComponent} from "./component/radio-select-dataset.component";
 import {AddDatasetDataflowComponent} from "./dataset/add-dataset-dataflow.component";
 import {MultipleRenamePopupComponent} from "./dataflow/dataflow-detail/component/edit-dataflow-rule/multiple-rename-popup.component";
-import {DataSourceCreateModule} from "../data-storage/data-source-list/create-data-source/data-source-create.module";
 import {DataconnectionService} from "../dataconnection/service/dataconnection.service";
 import {DataflowDetail2Component} from "./dataflow/dataflow-detail/dataflow-detail2.component";
 import {DataStorageShareModule} from "../data-storage/data-storage-share.module";
@@ -107,8 +105,6 @@ const dataPreparationRoutes: Routes = [
     FileModule,
     RouterModule.forChild(dataPreparationRoutes),
     SplitPaneModule,
-    WorkbenchEditorModule,
-    DataSourceCreateModule,
     DataStorageShareModule
   ],
   declarations: [

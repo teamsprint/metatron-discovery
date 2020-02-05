@@ -43,14 +43,14 @@ import * as pixelWidth from 'string-pixel-width';
 import {AbstractComponent} from '../../common/component/abstract.component';
 import * as $ from "jquery";
 import {PreparationCommonUtil} from "../util/preparation-common.util";
-import {
-  ConnectionType,
-  DatasourceInfo,
-  DataSourceType,
-  FieldRole,
-  SourceType
-} from "../../domain/datasource/datasource";
-import {CreateSnapShotData} from "../../data-storage/service/data-source-create.service";
+// import {
+//   ConnectionType,
+//   DatasourceInfo,
+//   DataSourceType,
+//   FieldRole,
+//   SourceType
+// } from "../../domain/datasource/datasource";
+// import {CreateSnapShotData} from "../../data-storage/service/data-source-create.service";
 import {DataflowModelService} from "../dataflow/service/dataflow.model.service";
 
 declare let moment: any;
@@ -108,7 +108,7 @@ export class DataSnapshotDetailComponent extends AbstractComponent implements On
   // is used datasource flag
   public isEnableCreateDatasource: boolean;
   // source data
-  public sourceData: DatasourceInfo;
+  // public sourceData: DatasourceInfo;
   // is create source flag
   public isCreateSourceMode: boolean;
 
@@ -233,23 +233,23 @@ export class DataSnapshotDetailComponent extends AbstractComponent implements On
     this.snapshotDetailCloseEvent.emit();
   } // end of method close
 
-  /**
-   * Create datasource
-   */
-  public createDatasource(): void {
-    // set source data
-    this.sourceData = new DatasourceInfo();
-    this.sourceData.isDisableDataSelect = true;
-    this.sourceData.snapshotData = new CreateSnapShotData();
-    this.sourceData.snapshotData.selectedSnapshot = this.selectedDataSnapshot;
-    this.sourceData.fieldList = this.selectedDataSnapshot.gridData.fields;
-    this.sourceData.fieldData = this.selectedDataSnapshot.gridData.data.slice(0,50);
-    this.sourceData.type = SourceType.SNAPSHOT;
-    this.sourceData.connType = ConnectionType.ENGINE;
-    this.sourceData.dsType = DataSourceType.MASTER;
-    // show create datasource popup
-    this.isCreateSourceMode = true;
-  }
+  // /**
+  //  * Create datasource
+  //  */
+  // public createDatasource(): void {
+  //   // set source data
+  //   this.sourceData = new DatasourceInfo();
+  //   this.sourceData.isDisableDataSelect = true;
+  //   this.sourceData.snapshotData = new CreateSnapShotData();
+  //   this.sourceData.snapshotData.selectedSnapshot = this.selectedDataSnapshot;
+  //   this.sourceData.fieldList = this.selectedDataSnapshot.gridData.fields;
+  //   this.sourceData.fieldData = this.selectedDataSnapshot.gridData.data.slice(0,50);
+  //   this.sourceData.type = SourceType.SNAPSHOT;
+  //   this.sourceData.connType = ConnectionType.ENGINE;
+  //   this.sourceData.dsType = DataSourceType.MASTER;
+  //   // show create datasource popup
+  //   this.isCreateSourceMode = true;
+  // }
 
   /**
    * Closed source create popup
@@ -322,23 +322,23 @@ export class DataSnapshotDetailComponent extends AbstractComponent implements On
     }
   } // function - navigateDataflow
 
-  /**
-   * Get role type (only create source)
-   * @param {string} type
-   * @return {FieldRole}
-   * @private
-   */
-  private _getRoleType(type: string): FieldRole {
-    switch (type) {
-      case 'INTEGER':
-      case 'FLOAT':
-      case 'LONG':
-      case 'DOUBLE':
-        return FieldRole.MEASURE;
-      default:
-        return FieldRole.DIMENSION;
-    }
-  }
+  // /**
+  //  * Get role type (only create source)
+  //  * @param {string} type
+  //  * @return {FieldRole}
+  //  * @private
+  //  */
+  // private _getRoleType(type: string): FieldRole {
+  //   switch (type) {
+  //     case 'INTEGER':
+  //     case 'FLOAT':
+  //     case 'LONG':
+  //     case 'DOUBLE':
+  //       return FieldRole.MEASURE;
+  //     default:
+  //       return FieldRole.DIMENSION;
+  //   }
+  // }
 
   /**
    * 데이터셋 아이디 저장
@@ -492,7 +492,6 @@ export class DataSnapshotDetailComponent extends AbstractComponent implements On
         this.loadingHide();
 
         this.selectedDataSnapshot = snapshot;
-        // set Only success enable create datasource
         this.isEnableCreateDatasource !== false && (this.isEnableCreateDatasource = snapshot.status === Status.SUCCEEDED);
 
         // set file format
@@ -692,7 +691,7 @@ export class DataSnapshotDetailComponent extends AbstractComponent implements On
             name: colNames[idx],
             type: colTypes[idx].type,
             logicalType: this.datasnapshotservice.getConvertTypeToLogicalType(colTypes[idx].type),
-            role: this._getRoleType(colTypes[idx].type),
+            // role: this._getRoleType(colTypes[idx].type),
             seq: idx
           });
         }

@@ -18,7 +18,7 @@ import {CommonUtil} from '../../common/util/common.util';
 import {Page} from '../../domain/common/page';
 import {isNullOrUndefined} from "util";
 import {Observable} from "rxjs/Observable";
-import {Criteria} from "../../domain/datasource/criteria";
+import {Criteria} from "../../domain/dataconnection/criteria";
 
 @Injectable()
 export class DataconnectionService extends AbstractService {
@@ -209,22 +209,6 @@ export class DataconnectionService extends AbstractService {
   // 커넥션 수정
   public updateConnection(connectionId: string, param: any): Promise<any> {
     return this.patch(this.API_URL + `connections/${connectionId}`, param);
-  }
-
-  // 커넥션에 워크스페이스 추가
-  public addConnectionWorkspaces(connectionId: string, param: any): Promise<any> {
-    const connIds = param.map((id) => {
-      return '/api/workspaces/' + id;
-    }).join('\n');
-    return this.patch(this.API_URL + `connections/${connectionId}/workspaces`, connIds,'text/uri-list');
-  }
-
-  // 커넥션에 워크스페이스 제거
-  public deleteConnectionWorkspaces(connectionId: string, param: any): Promise<any> {
-    const connIds = param.map((connection) => {
-      return connection;
-    }).join(',');
-    return this.delete(this.API_URL + `connections/${connectionId}/workspaces/${connIds}`);
   }
 
   // 커넥션 삭제

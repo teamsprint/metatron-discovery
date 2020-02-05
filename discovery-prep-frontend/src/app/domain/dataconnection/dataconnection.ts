@@ -46,7 +46,6 @@ export class Dataconnection extends AbstractHistoryEntity {
 
   // workbench 일경우 추가됨
   public published: boolean;
-  public workspaces: any[];
 
   public linkedWorkspaces: number;
 

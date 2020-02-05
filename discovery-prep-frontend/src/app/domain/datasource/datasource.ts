@@ -13,9 +13,7 @@
  */
 
 import {AbstractHistoryEntity} from '../common/abstract-history-entity';
-import {GranularityType} from '../workbook/configurations/field/timestamp-field';
 import {Dataconnection} from '../dataconnection/dataconnection';
-import {MetadataColumn} from '../meta-data-management/metadata-column';
 import {
   CreateConnectionData,
   CreateSnapShotData,
@@ -26,8 +24,6 @@ import {
 import {PrDataSnapshot} from "../data-preparation/pr-snapshot";
 import {isNullOrUndefined} from "util";
 import {TimezoneService} from "../../data-storage/service/timezone.service";
-import {AggregationType} from "../workbook/configurations/field/measure-field";
-import {Type} from "../../shared/datasource-metadata/domain/type";
 import {StringUtil} from "../../common/util/string.util";
 
 export class Datasource extends AbstractHistoryEntity {
@@ -39,8 +35,6 @@ export class Datasource extends AbstractHistoryEntity {
   dsType: string;         // <== DataSourceType 이어야 하지만... Notebook 에서 본 클래스를 사용하므로.. string으로 놔둠
   connType: ConnectionType;
   srcType: SourceType;
-  granularity: GranularityType;
-  segGranularity: GranularityType;
   partitionKeys: string;       // 파티션을 구성하는 필드 명 목록 (,) 구분자 사용
   partitionSeparator: string;  // 파티션을 구성하는 구분자 format : {datasource name}{partitionSeparator}{key1}{partitionSeparator}{key2}...
   status: Status;
@@ -64,7 +58,6 @@ export class Datasource extends AbstractHistoryEntity {
   // for UI
   num?: number;
   temporary?: TemporaryDatasource;
-  uiMetaData?: { name: string, id: string, description: string, columns: MetadataColumn[] };
 
   public static getConnection(datasource: Datasource) {
     return datasource.connection || datasource.ingestion.connection;
@@ -161,8 +154,6 @@ export class Field {
   // 필터링 옵션
   filteringOptions;
 
-  aggrType?: AggregationType;
-  // Whether to exclude what to load to engine
   unloaded?: boolean;
   seq: number;
   // is create field (optional)
@@ -193,8 +184,6 @@ export class Field {
   // pivotAlias?: string;   // Pivot에서 수정된 Alias
   headerKey?: string;       // join 시 그리드 헤더 키로 사용할 키
   dsName?: string;          // 필드의 데이터소스 이름
-  granularity?: GranularityType;     // granularity
-  segGranularity?: GranularityType;  // segGranularity
 
   // [UI] for Create Datasource
   isValidType?: boolean;
@@ -216,7 +205,6 @@ export class Field {
   valueAlias?: FieldValueAlias;   // 데이터소스 필드 값 별칭 정보
 
   // for MetaData
-  uiMetaData?: MetadataColumn;
   physicalName?: string;
 
   // for Datasource detail
@@ -317,10 +305,6 @@ export class Field {
     return field.logicalType === LogicalType.GEO_LINE || field.logicalType === LogicalType.GEO_POINT || field.logicalType === LogicalType.GEO_POLYGON;
   }
 
-  public static isStringBaseType(field): boolean {
-    return field.type === Type.Logical.STRING;
-  }
-
   public static isExpressionField(field): boolean {
     return this.isCreatedField(field) && field.logicalType === LogicalType.STRING;
   }
@@ -365,8 +349,6 @@ export class Field {
         return 'ddp-icon-type-line';
       case LogicalType.GEO_POLYGON:
         return 'ddp-icon-type-polygon';
-      case LogicalType.ARRAY:
-        return 'ddp-icon-type-array'
       default:
         return '';
     }
@@ -394,8 +376,6 @@ export class Field {
       return 'ddp-icon-dimension-sharp';
     } else if ('BOOLEAN' === logicalType) {
       return 'ddp-icon-dimension-tf';
-    } else if ('ARRAY' === logicalType) {
-      return 'ddp-icon-dimension-array';
     } else if ('GEO_POINT' === logicalType) {
       return 'ddp-icon-map-view ddp-icon-dimension-point';
     } else if ('GEO_LINE' === logicalType) {
@@ -425,8 +405,6 @@ export class Field {
       return 'ddp-icon-measure-sharp';
     } else if ('BOOLEAN' === logicalType) {
       return 'ddp-icon-measure-tf';
-    } else if ('ARRAY' === logicalType) {
-      return 'ddp-icon-measure-array';
     } else if ('GEO_POINT' === logicalType) {
       return 'ddp-icon-map-view ddp-icon-measure-point';
     } else if ('GEO_LINE' === logicalType) {
