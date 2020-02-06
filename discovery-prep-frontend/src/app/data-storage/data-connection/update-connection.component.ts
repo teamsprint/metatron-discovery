@@ -150,7 +150,6 @@ export class UpdateConnectionComponent extends AbstractComponent {
    * Click workspace setting open
    */
   public onClickSetWorkspace(): void {
-    this._setWorkspaceComponent.init('connection', 'update', this._connectionId);
   }
 
   /**

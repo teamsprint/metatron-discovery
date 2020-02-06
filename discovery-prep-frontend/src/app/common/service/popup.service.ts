@@ -15,7 +15,6 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 import { SubscribeArg } from '../domain/subscribe-arg';
-import { Dashboard, PresentationDashboard } from '../../domain/dashboard/dashboard';
 
 @Injectable()
 export class PopupService {
@@ -38,10 +37,6 @@ export class PopupService {
     // 공통 전체팝업 호출 알림
     this.filterSource.next(data);
   }
-
-  // 프레젠테이션 뷰에서 사용하는 데이터
-  public ptDashboards:Dashboard[];
-  public ptStartDashboard:PresentationDashboard;
 
   constructor() { }
 

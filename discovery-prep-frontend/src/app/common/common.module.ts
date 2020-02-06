@@ -62,6 +62,7 @@ import {StompConfig, StompService} from '@stomp/ng2-stompjs';
 import * as SockJS from 'sockjs-client';
 import {FilterSelectBoxComponent} from "./component/select/filter-select-box.component";
 import {ConfirmRefModalComponent} from "./component/modal/confirm/confirm-ref.component";
+import {FilterPipe} from "./pipe/filter.pipe";
 
 
 export function socketProvider() {
@@ -120,6 +121,7 @@ const stompConfig: StompConfig = {
     ColorTemplateComponent,
     SvgIconComponent,
     InputComponent,
+    FilterPipe,
     PaginationComponent
   ],
   exports: [

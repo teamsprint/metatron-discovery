@@ -21,11 +21,10 @@ import {UpdateConnectionComponent} from './data-connection/update-connection.com
 import {DndModule} from 'ng2-dnd';
 import {CanDeactivateGuard} from '../common/gaurd/can.deactivate.guard';
 import {DataConnectionCreateService} from "./service/data-connection-create.service";
-import {FieldConfigService} from "./service/field-config.service";
 import {DataStorageCommonModule} from "./data-storage-common.module";
 import {DataStorageShareModule} from "./data-storage-share.module";
 import {DataStorageCriteriaModule} from "./data-storage-criteria.module";
-import {SchedulingService} from "./service/scheduling.service";
+import {TimeComponent} from "./component/time-compoent/time.component";
 
 const storageRoutes: Routes = [
   { path: 'data-connection', component: DataConnectionComponent }
@@ -44,13 +43,12 @@ const storageRoutes: Routes = [
     // data connection
     DataConnectionComponent,
     CreateConnectionComponent,
+    TimeComponent,
     UpdateConnectionComponent
   ],
 
   providers: [
-    DataConnectionCreateService,
-    FieldConfigService,
-    SchedulingService
+    DataConnectionCreateService
   ]
 })
 export class DataStorageModule {

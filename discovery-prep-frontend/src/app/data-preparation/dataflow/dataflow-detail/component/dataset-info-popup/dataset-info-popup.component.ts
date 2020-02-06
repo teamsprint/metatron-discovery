@@ -815,13 +815,13 @@ export class DatasetInfoPopupComponent extends AbstractComponent implements OnIn
   private updateGrid(data: any) {
 
     const maxDataLen: any = {};
-    let fields: Field[] = data.fields;
+    let fields: any[] = data.fields;
     let rows: any[] = data.data.splice(0,50); // preview는 50 rows 까지만
     const maxLength = 500;
     if (rows.length > 0) {
       rows.forEach((row: any, idx: number) => {
         // 컬럼 길이 측정
-        fields.forEach((field: Field) => {
+        fields.forEach((field: any) => {
           let colWidth: number = 0;
           if (typeof row[field.name] === 'string') {
             colWidth = Math.floor((row[field.name]).length * 12);
@@ -841,7 +841,7 @@ export class DatasetInfoPopupComponent extends AbstractComponent implements OnIn
     }
 
     // 헤더정보 생성
-    const headers: header[] = fields.map((field: Field) => {
+    const headers: header[] = fields.map((field: any) => {
 
       /* 72 는 CSS 상의 padding 수치의 합산임 */
       const headerWidth: number = Math.floor(pixelWidth(field.name, { size: 12 })) + 72;

@@ -26,6 +26,7 @@ import { StompService } from '@stomp/ng2-stompjs';
 import { KorPolicyComponent } from './login/kor-policy.component';
 import { EngPolicyComponent } from './login/eng-policy.component';
 import { PermissionService } from './service/permission.service';
+import { ProfileComponent } from './profile/profile.component';
 
 const userRoutes: Routes = [
   {
@@ -45,6 +46,7 @@ const userRoutes: Routes = [
     JoinCompleteComponent,
     ResetPasswordComponent,
     KorPolicyComponent,
+    ProfileComponent,
     EngPolicyComponent
   ],
   providers: [

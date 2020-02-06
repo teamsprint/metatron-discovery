@@ -49,7 +49,6 @@ export const appTranslateModule: ModuleWithProviders = TranslateModule.forRoot({
 const appRoutes: Routes = [
   {path: 'sso', loadChildren: 'app/sso/sso.module#SsoModule'},
   {path: 'user', loadChildren: 'app/layout/none-layout/none-layout.module#NoneLayoutModule'},
-  {path: 'dashboard', loadChildren: 'app/embedded/embedded-view.module#EmbeddedViewModule'},
   {path: '', loadChildren: 'app/layout/layout/layout.module#LayoutModule', canActivate: [SsoGuard]},
   // 존재하지 않는 URL
   {path: '**', redirectTo: '/user/login', pathMatch: 'full'}

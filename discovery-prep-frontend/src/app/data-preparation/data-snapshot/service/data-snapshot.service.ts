@@ -210,32 +210,33 @@ export class DataSnapshotService extends AbstractService {
     let url = `${this._baseUrl}${data.ssId}`;
     return this.patch(url,{ssName : data.ssName});
   }
-  //
-  // /**
-  //  * Get logical type (only create source)
-  //  * @param {string} type
-  //  * @return {LogicalType}
-  //  * @private
-  //  */
-  // public getConvertTypeToLogicalType(type: string): LogicalType {
-  //   switch (type) {
-  //     case 'STRING':
-  //       return LogicalType.STRING;
-  //     case 'INTEGER':
-  //     case 'LONG':
-  //       return LogicalType.INTEGER;
-  //     case 'DOUBLE':
-  //       return LogicalType.DOUBLE;
-  //     case 'TIMESTAMP':
-  //       return LogicalType.TIMESTAMP;
-  //     case 'BOOLEAN':
-  //       return LogicalType.BOOLEAN;
-  //     case 'ARRAY':
-  //       return LogicalType.ARRAY;
-  //     case 'MAP':
-  //       return LogicalType.MAP;
-  //     default:
-  //       return LogicalType.STRING;
-  //   }
-  // }
+
+  /**
+    * Get logical type (only create source)
+    * @param {string} type
+    * @return {LogicalType}
+    * @private
+    */
+   public getConvertTypeToLogicalType(type: string): string  {
+     switch (type) {
+       case 'STRING':
+         return 'STRING';
+       case 'INTEGER':
+       case 'LONG':
+         return 'INTEGER';
+       case 'DOUBLE':
+         return 'DOUBLE';
+       case 'TIMESTAMP':
+         return 'TIMESTAMP';
+       case 'BOOLEAN':
+         return 'BOOLEAN';
+       case 'ARRAY':
+         return 'ARRAY';
+       case 'MAP':
+         return 'MAP';
+       default:
+         return 'STRING';
+     }
+
+   }
 }

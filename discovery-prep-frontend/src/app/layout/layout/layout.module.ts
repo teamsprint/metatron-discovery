@@ -37,7 +37,6 @@ const layoutRoutes: Routes = [
     path: '', component: LayoutComponent, canActivate: [StagedbEnabledGuard, ConnectionListGuard],
     children: [
       {path: '', redirectTo: 'workspace', pathMatch: 'full'},
-      {path: 'page', loadChildren: 'app/page/page.module#PageModule'},
       {
         path: 'management/storage',
         loadChildren: 'app/data-storage/data-storage.module#DataStorageModule',

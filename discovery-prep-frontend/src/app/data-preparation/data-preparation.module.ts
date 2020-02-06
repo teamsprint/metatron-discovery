@@ -21,6 +21,7 @@ import { CommonModule } from '../common/common.module';
 import { DataflowComponent } from './dataflow/dataflow.component';
 import { DatasetComponent } from './dataset/dataset.component';
 import { DataSnapshotComponent } from './data-snapshot/data-snapshot.component';
+import { DataSnapshotDetailComponent } from './data-snapshot/data-snapshot-detail.component';
 import { DataflowService } from './dataflow/service/dataflow.service';
 import { CreateDatasetComponent } from './dataset/create-dataset/create-dataset.component';
 import { CreateDatasetDataTypeComponent } from './dataset/create-dataset/create-dataset-datatype.component';
@@ -118,6 +119,7 @@ const dataPreparationRoutes: Routes = [
     CreateDatasetSelecturlComponent,
     CreateDatasetStagingSelectdataComponent,
     DataSnapshotComponent,
+    DataSnapshotDetailComponent,
     CreateDatasetDbSelectComponent,
     CreateDatasetDbQueryComponent,
     DatasetDetailComponent,

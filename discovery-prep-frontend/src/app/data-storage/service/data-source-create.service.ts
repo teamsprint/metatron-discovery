@@ -4,6 +4,7 @@ import {StringUtil} from "../../common/util/string.util";
 import {
   ConnectionType,
   DatasourceInfo,
+  DataSourceType,
   Field,
   FieldFormatType,
   FieldRole,
@@ -517,6 +518,7 @@ export interface CreateSourceParams {
   snapshot?: string;
   // only DB
   connection?: string;
+  dsType: DataSourceType;
 }
 
 export interface CreateSourceIngestionParams {
@@ -589,6 +591,16 @@ export class CreateSnapShotData {
   public errorSnapshotIdList: string[] = [];
 }
 
+
+export class CreateSourceCompleteData {
+  public sourceName: string;
+  public sourceDescription: string;
+
+}
+
+export class CreateSourceConfigureData {
+
+}
 
 export class KafkaData {
   public bootstrapServer: string;
