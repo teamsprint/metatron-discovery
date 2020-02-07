@@ -176,7 +176,6 @@ const dataPreparationRoutes: Routes = [
     DataflowDetail2Component
   ],
   providers: [
-    DataconnectionService,
     DataPreparationService,
     DataflowService,
     DatasetService,

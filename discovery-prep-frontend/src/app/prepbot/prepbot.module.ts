@@ -85,10 +85,20 @@ import {AddDatasetDataflowComponent} from "./dataset/add-dataset-dataflow.compon
 import {PrepListComponent} from "./prep/prep-list.component";
 import {EditorComponent} from "./component/editor.component";
 
+import {DatasetService} from './dataset/service/dataset.service';
+import {DataflowService} from './dataflow/service/dataflow.service';
+import { DataflowModelService } from "./dataflow/service/dataflow.model.service";
+import {DataconnectionService} from "../dataconnection/service/dataconnection.service";
 
 const dataPreparationRoutes: Routes = [
-  { path: '', component: PrepbotComponent },
-  { path: 'prepbot', component: PrepbotComponent }
+{ path: '', component: DatasetComponent },
+{ path: 'dataflow', component: DataflowComponent },
+{ path: 'dataflow/:id', component: DataflowDetail2Component, canDeactivate: [PrepbotGuard] },
+{ path: 'dataflow/:dfId/rule/:dsId', component: EditDataflowRule2Component, canDeactivate: [PrepbotGuard] },
+{ path: 'dataset', component: DatasetComponent },
+{ path: 'dataset/new', component: DatasetComponent },
+{ path: 'dataset/:id', component: DatasetDetailComponent },
+{ path: 'datasnapshot', component: DataSnapshotComponent }
 ];
 
 @NgModule({
@@ -164,7 +174,12 @@ const dataPreparationRoutes: Routes = [
     CreateSnapshotPopup
   ],
   providers: [
-    PrepbotService
+    PrepbotService,
+    DataflowService,
+    DatasetService,
+    PrepbotGuard,
+    DataflowModelService,
+    DataconnectionService
   ],
   exports: [
   ]
