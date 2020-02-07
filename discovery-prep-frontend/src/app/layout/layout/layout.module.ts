@@ -34,17 +34,24 @@ import { PrepbotModule } from '../../prepbot/prepbot.module';
 
 const layoutRoutes: Routes = [
   {
-    path: '', component: LayoutComponent,
+    path: '', component: LayoutComponent, canActivate: [StagedbEnabledGuard, ConnectionListGuard],
     children: [
       {path: '', redirectTo: 'management/prepbot', pathMatch: 'full'},
       {
         path: 'management/storage',
-        loadChildren: 'app/data-storage/data-storage.module#DataStorageModule'
+        loadChildren: 'app/data-storage/data-storage.module#DataStorageModule',
+        canActivate: [DatasourceManagementGuard]
       },
       {
-        path: 'management/prepbot',
-loadChildren: 'app/prepbot/prepbot.module#PrepbotModule'
+        path: 'management/datapreparation',
+        loadChildren: 'app/data-preparation/data-preparation.module#DataPreparationModule',
+        canActivate: [DatasourceManagementGuard]
       },
+    {
+    path: 'management/prepbot',
+    loadChildren: 'app/prepbot/prepbot.module#PrepbotModule',
+    canActivate: [DatasourceManagementGuard]
+    },
       {path: 'admin', loadChildren: 'app/admin/admin.module#AdminModule'},
       {path: 'external', loadChildren: 'app/external/external-view.module#ExternalViewModule'},
       {
