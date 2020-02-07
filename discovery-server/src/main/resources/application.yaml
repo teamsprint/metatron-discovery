@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: local,h2-default-db,logging-console-debug,scheduling , initial #, bcrypt-encoder, encode-password-initial, datasource-filter-sample
+    active: local,h2-default-db,logging-console-debug,scheduling #, initial #, bcrypt-encoder, encode-password-initial, datasource-filter-sample
   application:
     name: ${METATRON_NAME:metatron}
   datasource:

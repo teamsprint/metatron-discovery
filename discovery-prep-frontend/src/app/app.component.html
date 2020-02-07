@@ -12,27 +12,27 @@
   ~ limitations under the License.
   -->
 
-<!-- 로그인 하기전 웰컴 페이지 -->
-<div class="ddp-wrap-login sso-loading" *ngIf="!isLoggedIn">
-  <em class="ddp-blur"></em>
-  <!-- sso loading -->
-  <div class="ddp-sso-loading">
-    <div class="ddp-wrap-logo">
-      <em class="ddp-icon-logo"></em>
-    </div>
-    <!-- loading -->
-    <div class="ddp-icon-loading">
-      <div class="lds-wedges">
-        <div><div><div></div></div><div><div></div></div><div><div></div></div><div><div></div></div></div>
-      </div>
-    </div>
-    <!-- //loading -->
-    <div class="ddp-txt-welcome">{{ 'msg.sso.ui.welcome.title' | translate }}</div>
-    <div class="ddp-txt-message">{{ 'msg.sso.ui.loading' | translate }}</div>
-  </div>
-  <!-- // sso loading -->
-</div>
-<!-- // 로그인 하기전 웰컴 페이지 -->
+<!--&lt;!&ndash; 로그인 하기전 웰컴 페이지 &ndash;&gt;-->
+<!--<div class="ddp-wrap-login sso-loading" *ngIf="!isLoggedIn">-->
+  <!--<em class="ddp-blur"></em>-->
+  <!--&lt;!&ndash; sso loading &ndash;&gt;-->
+  <!--<div class="ddp-sso-loading">-->
+    <!--<div class="ddp-wrap-logo">-->
+      <!--<em class="ddp-icon-logo"></em>-->
+    <!--</div>-->
+    <!--&lt;!&ndash; loading &ndash;&gt;-->
+    <!--<div class="ddp-icon-loading">-->
+      <!--<div class="lds-wedges">-->
+        <!--<div><div><div></div></div><div><div></div></div><div><div></div></div><div><div></div></div></div>-->
+      <!--</div>-->
+    <!--</div>-->
+    <!--&lt;!&ndash; //loading &ndash;&gt;-->
+    <!--<div class="ddp-txt-welcome">{{ 'msg.sso.ui.welcome.title' | translate }}</div>-->
+    <!--<div class="ddp-txt-message">{{ 'msg.sso.ui.loading' | translate }}</div>-->
+  <!--</div>-->
+  <!--&lt;!&ndash; // sso loading &ndash;&gt;-->
+<!--</div>-->
+<!--&lt;!&ndash; // 로그인 하기전 웰컴 페이지 &ndash;&gt;-->
 
 <!-- 로그인 후 로딩 레이어 -->
 <div class="ddp-loading" *ngIf="isLoggedIn" [style.display]="routerLoading ? 'block' : 'none'">

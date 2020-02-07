@@ -1,0 +1,10 @@
+@charset "utf-8";
+
+/***********************************************************************
+     Page : Noti
+ *************************************************************************/
+.pb-wrap-noti {position:fixed; right:8px; top:60px; min-height:106px;padding:20px 0 21px 109px; width:520px; background-color:#3d3d49; border-radius:4px; z-index:100}
+.pb-wrap-noti .pb-noti-title {font-size:18px; font-weight:bold; color:#fff;}
+.pb-wrap-noti .pb-noti-title .pb-data-day {display:inline-block; padding:0 0 0 18px; margin-left:18px; color:rgba(255,255,255,0.5); font-size:12px;border-left:1px solid rgba(255,255,255,0.5);}
+.pb-wrap-noti .pb-noti-det {padding:8px 0 0 0;color:#fff; font-size:15px;}
+.pb-wrap-noti .pb-img-noti {display:inline-block; position:absolute; top:50%; left:33px; width:61px; height:59px; margin-top:-25px; background:url(../../images/img_noti.png) no-repeat;}

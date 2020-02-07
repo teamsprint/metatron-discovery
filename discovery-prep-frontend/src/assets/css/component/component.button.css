@@ -1,0 +1,14 @@
+@charset "utf-8";
+
+/***********************************************************************
+     Compontent : button
+ *************************************************************************/
+.pb-component-btn {display:inline-block; min-width:131px; padding:7px 35px; border-radius:3px; font-size:16px; font-weight:600; text-align:center;}
+.pb-component-btn.type-bg { color:#fff; background-color:#f77115;border:1px solid #f77115;}
+.pb-component-btn.type-bg2 {color:#ff6701; border:1px solid #ffac5b; background-color:#fff2b7;}
+.pb-component-btn.type-line {border:1px solid rgba(127,126,124,0.4); color:#000;}
+.pb-component-btn.type-dark {background-color:#71706d; color:#fff;}
+.pb-component-btn em[class*="pb-icon-"] {display:inline-block; margin-right:9px;  background:url(../../images/icon_buttons.png) no-repeat; vertical-align:middle;}
+.pb-component-btn em.pb-icon-analytics {width:27px; height:20px;}
+.pb-component-btn em.pb-icon-add{width:13px; height:13px; background-position:left -20px;}
+.pb-component-btn.is-disabled {opacity:0.4; cursor:no-drop;}

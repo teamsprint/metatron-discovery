@@ -91,7 +91,7 @@ import { DataflowModelService } from "./dataflow/service/dataflow.model.service"
 import {DataconnectionService} from "../dataconnection/service/dataconnection.service";
 
 const dataPreparationRoutes: Routes = [
-{ path: '', component: DatasetComponent },
+{ path: '', component: PrepListComponent },
 { path: 'dataflow', component: DataflowComponent },
 { path: 'dataflow/:id', component: DataflowDetail2Component, canDeactivate: [PrepbotGuard] },
 { path: 'dataflow/:dfId/rule/:dsId', component: EditDataflowRule2Component, canDeactivate: [PrepbotGuard] },
