@@ -1,96 +1,104 @@
-<!--
-  ~ Licensed under the Apache License, Version 2.0 (the "License");
-  ~ you may not use this file except in compliance with the License.
-  ~ You may obtain a copy of the License at
-  ~
-  ~      http://www.apache.org/licenses/LICENSE-2.0
-  ~
-  ~ Unless required by applicable law or agreed to in writing, software
-  ~ distributed under the License is distributed on an "AS IS" BASIS,
-  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  ~ See the License for the specific language governing permissions and
-  ~ limitations under the License.
-  -->
+<div class="pb-layout-gnb">
+  <!-- left -->
+  <div class="pb-gnb-left">
+    <!-- lnb -->
+    <!--
+        메뉴 클릭시 is-selected 추가
+    -->
+    <div class="pb-wrap-lnb ">
+      <a href="javascript:" class="pb-btn-menu"></a>
+      <div class="pb-layout-lnb">
+        <a href="javascript:" class="pb-btn-menu"></a>
+        <span class="pb-lnb-logo">METATRON</span>
 
-<div class="ddp-ui-headright">
-  <!--<a href="javascript:" class="ddp-btn-search"></a>-->
-  <div class="ddp-wrap-myinfo" [ngClass]="{'ddp-selected' : isMyInfoShow}" (click)="isMyInfoShow = !isMyInfoShow;" (clickOutside)="isMyInfoShow=false;">
-    <a href="javascript:" class="ddp-data-photo">
-      <img [src]="getUserImage()" />
-    </a>
-    <!-- my info -->
-    <div class="ddp-ui-sub-myinfo">
-      <div class="ddp-wrap-data">
-        <span class="ddp-data-name">{{user.fullName}}</span>
-        <span class="ddp-data-mail">{{user.email}}</span>
+        <!-- menu -->
+        <ul class="pb-list-menu">
+          <li class="is-selected">
+            <a href="javascript:">
+              Workflow
+            </a>
+          </li>
+          <li>
+            <a href="javascript:">
+              Analytic
+            </a>
+          </li>
+          <li>
+            <a href="javascript:">
+              Dashboard
+            </a>
+          </li>
+          <li>
+            <a href="javascript:">
+              Report
+            </a>
+          </li>
+          <li>
+            <a href="javascript:">
+              Notebook
+            </a>
+          </li>
+        </ul>
+        <!-- //menu -->
+
+        <!-- box menu -->
+        <div class="pb-box-menu">
+          <ul class="pb-list-box-menu">
+            <li>
+              <a href="javascript:">
+                <em class="pb-icon-lnb-explorer"></em>
+                Metatron
+                <span class="pb-txt-menu">Explorer</span>
+              </a>
+            </li>
+            <li>
+              <a href="javascript:">
+                <em class="pb-icon-lnb-builder"></em>
+                Metatron
+                <span class="pb-txt-menu">Explorer</span>
+              </a>
+            </li>
+            <li>
+              <a href="javascript:">
+                <em class="pb-icon-lnb-manager"></em>
+                Metatron
+                <span class="pb-txt-menu">Explorer</span>
+              </a>
+            </li>
+            <li>
+              <a href="javascript:">
+                <em class="pb-icon-lnb-notebook"></em>
+                Metatron
+                <span class="pb-txt-menu">Explorer</span>
+              </a>
+            </li>
+
+
+
+          </ul>
+        </div>
+        <!-- //box menu -->
       </div>
-
-      <ul class="ddp-list-sub-myinfo">
-        <li>
-          <a href="javscript:" (click)="userProfile()">
-            <span class="ddp-txt-list">
-                <em class="ddp-icon-info-profile"></em>{{'msg.comm.menu.profile' | translate}}
-            </span>
-          </a>
-        </li>
-        <li>
-          <a href="javscript:" class="ddp-cursor-default" (click)="$event.stopImmediatePropagation();">
-            <span class="ddp-txt-list">
-                <em class="ddp-icon-info-language"></em>{{'msg.comm.menu.lang' | translate}}
-            </span>
-          </a>
-          <div class="ddp-hover-status" [ngClass]="{'ddp-selected' : isLanguageShow}">
-            <!-- inactive 일때 ddp-inactive 추가 -->
-            <span class="ddp-status-active ddp-inactive" (click)="isLanguageShow = !isLanguageShow;$event.stopImmediatePropagation();" (clickOutside)="isLanguageShow=false;">{{'msg.comm.menu.lang.' + getCurrentLang() | translate}}<em class="ddp-icon-view"></em></span>
-            <!-- popup -->
-            <div class="ddp-wrap-popup2">
-              <ul class="ddp-list-popup">
-                <li [ngClass]="{'ddp-selected' : getCurrentLang() == 'ko'}" (click)="changeLanguage('ko');$event.preventDefault();">
-                  <a href="#">
-                    {{'msg.comm.menu.lang.ko' | translate}}
-                    <em class="ddp-icon-check"></em>
-                  </a>
-                </li>
-                <li [ngClass]="{'ddp-selected' : getCurrentLang() == 'en'}" (click)="changeLanguage('en');$event.preventDefault();">
-                  <a href="#">
-                    {{'msg.comm.menu.lang.en' | translate}}
-                    <em class="ddp-icon-check"></em>
-                  </a>
-                </li>
-                <li [ngClass]="{'ddp-selected' : getCurrentLang() == 'zh'}" (click)="changeLanguage('zh');$event.preventDefault();">
-                  <a href="#">
-                    {{'msg.comm.menu.lang.zh' | translate}}
-                    <em class="ddp-icon-check"></em>
-                  </a>
-                </li>
-              </ul>
-            </div>
-            <!-- //popup -->
-          </div>
-        </li>
-        <li>
-          <a href="javascript:" class="ddp-cursor-default" (click)="$event.stopImmediatePropagation();">
-            <span class="ddp-txt-list">
-                <em class="ddp-icon-info-theme"></em>
-                {{'msg.comm.menu.theme' | translate}}
-            </span>
-          </a>
-          <div class="ddp-theme-check">
-            <label class="theme-check ">
-              <input type="checkbox" [checked]="!isThemeDark()">
-              <i (click)="themeCheckboxClick(constTheme.WHITE);$event.preventDefault();"></i>
-            </label>
-            <label class="theme-check type-dark">
-              <input type="checkbox" [checked]="isThemeDark()">
-              <i (click)="themeCheckboxClick(constTheme.DARK);$event.preventDefault();"></i>
-            </label>
-          </div>
-        </li>
-      </ul>
-      <div class="ddp-ui-part"><a href="javascript:" (click)="logout();">{{'msg.comm.menu.logout' | translate}}</a></div>
     </div>
-    <!-- //my info -->
+    <!-- //lnb -->
+    <span class="pb-img-logo">METATRON <em>PREP-BOT</em></span>
   </div>
+  <!-- //left -->
+  <!-- user -->
+  <div class="pb-data-user">
+    Good morning
+    <span class="pb-data-photo">
+                <img src="../images/@img_photo.png">
+            </span>
+    John Smith
+  </div>
+  <!-- //user -->
+  <!-- menu -->
+  <div class="pb-ui-gnb-menu">
+    <a href="javascript:" class="pb-icon-live"></a>
+    <a href="javascript:" class="pb-icon-noti"></a>
+    <a href="javascript:" class="pb-icon-message"></a>
 
+  </div>
+  <!-- //menu -->
 </div>
-

@@ -38,6 +38,9 @@ export class AppComponent implements AfterContentChecked {
   public isLoggedIn:boolean = false;
   public routerLoading: boolean = false;
 
+  // 프로필 기본 이미지 경로src="../images/@img_photo.png"
+  public defaultProfileImageSrc = '/assets/images/img_photo.png';
+
   // Change Detect
   public changeDetect: ChangeDetectorRef;
 

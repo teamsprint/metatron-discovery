@@ -16,7 +16,7 @@
   <!-- intro menu -->
   <div class="pb-intro-menu">
     <div class="pb-ui-menu">
-      <a href="javascript:" class="pb-menu-create-data is-disabled">
+      <a href="javascript:" class="pb-menu-create-data">
         <em class="pb-icon-create-data"></em>
         Create <strong>Dataset</strong>
       </a>
@@ -121,7 +121,7 @@
     <div class="pb-intro-contents-in">
       <div class="pb-wrap-box">
         <!-- box -->
-        <div class="pb-box-intro">
+        <div class="pb-box-intro" (click)="goToDetail();">
           <span class="pb-tag-new">NEW</span>
           <div class="pb-ui-graph" style="background-color:red;">
             그래프 영역
@@ -129,7 +129,7 @@
           <!-- data intro -->
           <div class="pb-data-intro">
             <div class="pb-data-det">
-              Chart 01 is created in the working folder.
+              DataFlow 01 is created in the working folder.
             </div>
             <div class="pb-data-day">JAN04  07:25 am</div>
             <a href="javascript:" class="pb-icon-pin"></a>
@@ -139,9 +139,9 @@
           <div class="pb-data-bottom">
             <!-- user -->
             <div class="pb-box-user">
-                                <span class="pb-data-photo">
-                                    <img src="../images/@img_photo.png">
-                                </span>
+              <span class="pb-data-photo">
+                  <img src="{{defaultProfileImageSrc}}" #profileImage>
+              </span>
               Jorge Phillips
             </div>
             <!-- //user -->
@@ -196,7 +196,7 @@
           <!-- board -->
           <div class="pb-intro-board">
                             <span class="pb-data-photo">
-                                <img src="../images/@img_photo.png">
+                                <img src="{{defaultProfileImageSrc}}" #profileImage>
                             </span>
             <div class="pb-data-message">
               <span class="pb-data-name">Olivia Brown</span>
@@ -221,51 +221,7 @@ date when we make the change.
         </div>
         <!-- //box -->
       </div>
-      <div class="pb-wrap-box">
-        <!-- box -->
-        <div class="pb-box-intro">
-          <span class="pb-tag-new">NEW</span>
-          <div class="pb-ui-graph" style="background-color:red;">
-            그래프 영역
-          </div>
-          <!-- data intro -->
-          <div class="pb-data-intro">
-            <div class="pb-data-det">
-              Chart 01 is created in the working folder.
-            </div>
-            <div class="pb-data-day">JAN04  07:25 am</div>
-            <a href="javascript:" class="pb-icon-pin"></a>
-          </div>
-          <!-- //data intro -->
-          <!-- bottom -->
-          <div class="pb-data-bottom">
-            <!-- user -->
-            <div class="pb-box-user">
-                                <span class="pb-data-photo">
-                                    <img src="../images/@img_photo.png">
-                                </span>
-              Jorge Phillips
-            </div>
-            <!-- //user -->
-            <!-- right -->
-            <div class="pb-data-right">
-                                <span class="pb-data-num">
-                                    <em class="pb-icon-data1"></em>5
-                                </span>
-              <span class="pb-data-num">
-                                    <em class="pb-icon-data2"></em>5
-                                </span>
-              <span class="pb-data-num">
-                                    <em class="pb-icon-data3"></em>5
-                                </span>
-            </div>
-            <!-- //right -->
-
-          </div>
-          <!-- //bottom -->
-        </div>
-        <!-- //box -->
-      </div>
+      
     </div>
 
   </div>

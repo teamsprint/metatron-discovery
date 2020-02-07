@@ -16,6 +16,7 @@ import { Component, ElementRef, Injector } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import * as _ from 'lodash';
 import { AbstractComponent } from '../../common/component/abstract.component';
+import {DataflowService} from '../dataflow/service/dataflow.service';
 
 @Component({
   selector: 'prep-list',
@@ -35,33 +36,33 @@ export class PrepListComponent extends AbstractComponent {
    | Public Variables
    |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
-  // 선택된 탭 아이디
-  public tabId: string = 'shared';
+  // 프로필 기본 이미지 경로
+  public defaultProfileImageSrc = '../../assets/images/img_photo.png';
 
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
    | Constructor
    |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
   // 생성자
-  constructor(protected elementRef: ElementRef,
+    constructor(private dataflowService: DataflowService,
+              protected elementRef: ElementRef,
               protected injector: Injector,
               private activatedRoute: ActivatedRoute) {
 
     super(elementRef, injector);
 
     // pathVariable
-    this.activatedRoute.params.subscribe((params) => {
-
-      // tabId가 tabList에 없는경우
-      // if (-1 === _.findIndex(this.tabList, { id: params['tabId'] })) {
-
-        // members페이지로 redirect
-        // this.router.navigateByUrl('/admin/workspaces/shared');
-      // }
-
-      // 탭 아이디를 설정
-      this.tabId = params['tabId'];
-    });
+    // this.activatedRoute.params.subscribe((params) => {
+    //
+    //   // tabId가 tabList에 없는경우
+    //   // if (-1 === _.findIndex(this.tabList, { id: params['tabId'] })) {
+    //
+    //     // members페이지로 redirect
+    //     // this.router.navigateByUrl('/admin/workspaces/shared');
+    //   // }
+    //
+    //   // 탭 아이디를 설정
+    // });
   }
 
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
@@ -87,17 +88,13 @@ export class PrepListComponent extends AbstractComponent {
    |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
   /**
-   * 해당 tab으로 이동
-   * @param tabId 탭 아이디
+   * detail로 이동
+   * @param event
    */
-  public gotoTab(tabId: string) {
-
-    // 선택된 탭 아이디 설정
-    this.tabId = tabId;
-
-    // 페이지 이동
-    this.router.navigateByUrl('/admin/workspaces/' + tabId);
-
+  public goToDetail() {
+      this.router.navigate(
+          ['/prepbot/dataflow'])
+          .then();
   }
 
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=

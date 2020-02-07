@@ -12,14 +12,51 @@
   ~ limitations under the License.
   -->
 
-<!-- header -->
-<div class="ddp-layout-header">
-  <app-lnb></app-lnb>
-  <app-gnb></app-gnb>
-</div>
+<!--&lt;!&ndash; header &ndash;&gt;-->
+<!--<div class="ddp-layout-header">-->
+  <!--<app-lnb></app-lnb>-->
+  <!--<app-gnb></app-gnb>-->
+<!--</div>-->
 
-<!-- contents -->
-<div class="ddp-layout-contents" id="layout-contents">
+<!--&lt;!&ndash; contents &ndash;&gt;-->
+<!--<div class="ddp-layout-contents" id="layout-contents">-->
+  <!--<router-outlet></router-outlet>-->
+<!--</div>-->
+<!--&lt;!&ndash; //contents &ndash;&gt;-->
+
+
+<div class="pb-wrap-layout">
+  <!-- gnb -->
+  <div class="pb-layout-gnb">
+    <!-- left -->
+    <div class="pb-gnb-left">
+      <!-- lnb -->
+      <app-lnb></app-lnb>
+      <!-- //lnb -->
+      <span class="pb-img-logo">METATRON <em>PREP-BOT</em></span>
+    </div>
+    <!-- //left -->
+    <!-- user -->
+    <div class="pb-data-user">
+      Good morning
+      <span class="pb-data-photo">
+        <img src="../images/@img_photo.png">
+      </span>
+      John Smith
+    </div>
+    <!-- //user -->
+    <!-- menu -->
+    <div class="pb-ui-gnb-menu">
+      <a href="javascript:" class="pb-icon-live"></a>
+      <a href="javascript:" class="pb-icon-noti"></a>
+      <a href="javascript:" class="pb-icon-message"></a>
+
+    </div>
+    <!-- //menu -->
+  </div>
+  <!-- //gnb -->
+  <!-- intro -->
   <router-outlet></router-outlet>
+  <!-- //intro -->
+
 </div>
-<!-- //contents -->

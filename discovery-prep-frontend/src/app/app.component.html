@@ -35,55 +35,168 @@
 <!--&lt;!&ndash; // 로그인 하기전 웰컴 페이지 &ndash;&gt;-->
 
 <!-- 로그인 후 로딩 레이어 -->
-<div class="ddp-loading" *ngIf="isLoggedIn" [style.display]="routerLoading ? 'block' : 'none'">
-  <div style="width:100%;height:100%" class="lds-wedges">
-    <div>
-      <div>
-        <div></div>
+<!--<div class="ddp-loading" *ngIf="isLoggedIn" [style.display]="routerLoading ? 'block' : 'none'">-->
+  <!--<div style="width:100%;height:100%" class="lds-wedges">-->
+    <!--<div>-->
+      <!--<div>-->
+        <!--<div></div>-->
+      <!--</div>-->
+      <!--<div>-->
+        <!--<div></div>-->
+      <!--</div>-->
+      <!--<div>-->
+        <!--<div></div>-->
+      <!--</div>-->
+      <!--<div>-->
+        <!--<div></div>-->
+      <!--</div>-->
+    <!--</div>-->
+  <!--</div>-->
+<!--</div>-->
+<!--&lt;!&ndash; // 로그인 후 로딩 레이어 &ndash;&gt;-->
+
+<!--<router-outlet></router-outlet>-->
+
+<!--&lt;!&ndash; 공통 확인 팝업 &ndash;&gt;-->
+<!--<div class="sys-global-confirm-popup ddp-wrap-layout-popup" style="display: none;">-->
+  <!--&lt;!&ndash; 스크롤 팝업 : ddp-box-popup-type3 / 고정 팝업 : ddp-box-popup-type1 &ndash;&gt;-->
+  <!--<div class="ddp-box-popup">-->
+    <!--<a href="javascript:" class="ddp-btn-close" ></a>-->
+    <!--&lt;!&ndash; title &ndash;&gt;-->
+    <!--<div class="ddp-pop-title"></div>-->
+    <!--&lt;!&ndash; //title &ndash;&gt;-->
+
+    <!--<div class="ddp-pop-detail" ></div>-->
+    <!--<div style="display:none" class="ddp-box-detail">-->
+      <!--<div class="ddp-box-detail-in">-->
+        <!--<div class="ddp-txt-detail ddp-word-break"></div>-->
+      <!--</div>-->
+    <!--</div>-->
+
+    <!--&lt;!&ndash; button &ndash;&gt;-->
+    <!--<div class="ddp-ui-buttons">-->
+      <!--<a style="display:none" href="javascript:" class="ddp-btn-type-popup"-->
+         <!--attr.data-defaultMsg="{{'msg.comm.btn.cancl' | translate}}"></a>-->
+      <!--&lt;!&ndash; disabled 시 ddp-disabled 추가 &ndash;&gt;-->
+      <!--<a href="javascript:" class="ddp-btn-type-popup ddp-bg-black"-->
+         <!--attr.data-defaultMsg="{{'msg.comm.btn.done' | translate}}"></a>-->
+    <!--</div>-->
+    <!--&lt;!&ndash; //button &ndash;&gt;-->
+  <!--</div>-->
+<!--</div>-->
+<!--&lt;!&ndash; // 공통 확인 팝업 &ndash;&gt;-->
+
+
+
+<div class="pb-wrap-layout" style="background:#f1f1ee;">
+  <!-- gnb -->
+  <div class="pb-layout-gnb">
+    <!-- left -->
+    <div class="pb-gnb-left">
+      <!-- lnb -->
+      <!--
+          메뉴 클릭시 is-selected 추가
+      -->
+      <div class="pb-wrap-lnb ">
+        <a href="javascript:" class="pb-btn-menu"></a>
+        <div class="pb-layout-lnb">
+          <a href="javascript:" class="pb-btn-menu"></a>
+          <span class="pb-lnb-logo">METATRON</span>
+
+          <!-- menu -->
+          <ul class="pb-list-menu">
+            <li class="is-selected">
+              <a href="javascript:">
+                Workflow
+              </a>
+            </li>
+            <li>
+              <a href="javascript:">
+                Analytic
+              </a>
+            </li>
+            <li>
+              <a href="javascript:">
+                Dashboard
+              </a>
+            </li>
+            <li>
+              <a href="javascript:">
+                Report
+              </a>
+            </li>
+            <li>
+              <a href="javascript:">
+                Notebook
+              </a>
+            </li>
+          </ul>
+          <!-- //menu -->
+
+          <!-- box menu -->
+          <div class="pb-box-menu">
+            <ul class="pb-list-box-menu">
+              <li>
+                <a href="javascript:">
+                  <em class="pb-icon-lnb-explorer"></em>
+                  Metatron
+                  <span class="pb-txt-menu">Explorer</span>
+                </a>
+              </li>
+              <li>
+                <a href="javascript:">
+                  <em class="pb-icon-lnb-builder"></em>
+                  Metatron
+                  <span class="pb-txt-menu">Explorer</span>
+                </a>
+              </li>
+              <li>
+                <a href="javascript:">
+                  <em class="pb-icon-lnb-manager"></em>
+                  Metatron
+                  <span class="pb-txt-menu">Explorer</span>
+                </a>
+              </li>
+              <li>
+                <a href="javascript:">
+                  <em class="pb-icon-lnb-notebook"></em>
+                  Metatron
+                  <span class="pb-txt-menu">Explorer</span>
+                </a>
+              </li>
+
+
+
+            </ul>
+          </div>
+          <!-- //box menu -->
+        </div>
       </div>
-      <div>
-        <div></div>
-      </div>
-      <div>
-        <div></div>
-      </div>
-      <div>
-        <div></div>
-      </div>
+      <!-- //lnb -->
+      <span class="pb-img-logo">METATRON <em>PREP-BOT</em></span>
     </div>
+    <!-- //left -->
+    <!-- user -->
+    <div class="pb-data-user">
+      Good morning
+      <span class="pb-data-photo">
+        <img src="{{defaultProfileImageSrc}}" #profileImage>
+      </span>
+      John Smith
+    </div>
+    <!-- //user -->
+    <!-- menu -->
+    <div class="pb-ui-gnb-menu">
+      <a href="javascript:" class="pb-icon-live"></a>
+      <a href="javascript:" class="pb-icon-noti"></a>
+      <a href="javascript:" class="pb-icon-message"></a>
+
+    </div>
+    <!-- //menu -->
   </div>
+  <!-- //gnb -->
+  <!-- intro -->
+  <router-outlet></router-outlet>
+  <!-- //intro -->
+
 </div>
-<!-- // 로그인 후 로딩 레이어 -->
-
-<router-outlet></router-outlet>
-
-<!-- 공통 확인 팝업 -->
-<div class="sys-global-confirm-popup ddp-wrap-layout-popup" style="display: none;">
-  <!-- 스크롤 팝업 : ddp-box-popup-type3 / 고정 팝업 : ddp-box-popup-type1 -->
-  <div class="ddp-box-popup">
-    <a href="javascript:" class="ddp-btn-close" ></a>
-    <!-- title -->
-    <div class="ddp-pop-title"></div>
-    <!-- //title -->
-
-    <div class="ddp-pop-detail" ></div>
-    <div style="display:none" class="ddp-box-detail">
-      <div class="ddp-box-detail-in">
-        <div class="ddp-txt-detail ddp-word-break"></div>
-      </div>
-    </div>
-
-    <!-- button -->
-    <div class="ddp-ui-buttons">
-      <a style="display:none" href="javascript:" class="ddp-btn-type-popup"
-         attr.data-defaultMsg="{{'msg.comm.btn.cancl' | translate}}"></a>
-      <!-- disabled 시 ddp-disabled 추가 -->
-      <a href="javascript:" class="ddp-btn-type-popup ddp-bg-black"
-         attr.data-defaultMsg="{{'msg.comm.btn.done' | translate}}"></a>
-    </div>
-    <!-- //button -->
-  </div>
-</div>
-<!-- // 공통 확인 팝업 -->
-
-
