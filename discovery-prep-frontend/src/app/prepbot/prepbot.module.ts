@@ -83,6 +83,7 @@ import {PrepSelectBoxComponent} from "./util/prep-select-box.component";
 import {PrepSelectBoxCustomComponent} from "./util/prep-select-box-custom.component";
 import {AddDatasetDataflowComponent} from "./dataset/add-dataset-dataflow.component";
 import {PrepListComponent} from "./prep/prep-list.component";
+import {EditorComponent} from "./component/editor.component";
 
 
 const dataPreparationRoutes: Routes = [
@@ -92,9 +93,11 @@ const dataPreparationRoutes: Routes = [
 
 @NgModule({
   imports: [
-    CommonModule
+    CommonModule,
+    RouterModule.forChild(dataPreparationRoutes)
   ],
   declarations: [
+  EditorComponent,
     PrepbotComponent,
     RuleListComponent,
    RuleContextMenuComponent ,

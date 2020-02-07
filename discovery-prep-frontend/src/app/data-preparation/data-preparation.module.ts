@@ -87,6 +87,7 @@ import {MultipleRenamePopupComponent} from "./dataflow/dataflow-detail/component
 import {DataconnectionService} from "../dataconnection/service/dataconnection.service";
 import {DataflowDetail2Component} from "./dataflow/dataflow-detail/dataflow-detail2.component";
 import {DataStorageShareModule} from "../data-storage/data-storage-share.module";
+import {EditorComponent} from "./component/editor.component";
 
 
 const dataPreparationRoutes: Routes = [
@@ -109,6 +110,7 @@ const dataPreparationRoutes: Routes = [
     DataStorageShareModule
   ],
   declarations: [
+    EditorComponent,
     DataPreparationComponent,
     DataflowComponent,
     DatasetComponent,
