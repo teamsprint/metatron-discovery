@@ -16,17 +16,13 @@
   <!-- intro menu -->
   <div class="pb-intro-menu">
     <div class="pb-ui-menu">
-      <a href="javascript:" class="pb-menu-create-data">
-        <em class="pb-icon-create-data"></em>
-        Create <strong>Dataset</strong>
-      </a>
-      <a href="javascript:" class="pb-menu-dashboard blinking">
+      <a href="javascript:" class="pb-menu-dashboard">
         <em class="pb-icon-dashboard"></em>
         Create <strong>Dataflow</strong>
       </a>
-      <a href="javascript:" class="pb-menu-report">
-        <em class="pb-icon-report"></em>
-        Create <strong>Datasnapshot</strong>
+      <a href="javascript:" class="pb-menu-create-data">
+        <em class="pb-icon-create-data"></em>
+        Create <strong>Dataset</strong>
       </a>
       <a href="javascript:" class="pb-menu-manage-data">
         <em class="pb-icon-manage-data"></em>
@@ -97,27 +93,27 @@
       <div class="pb-set-right">
         <!-- toggle list -->
         <ul class="pb-list-toggle">
-          <li>
+          <li [class.is-selected]="viewMode === 'LIST'" (click)="toggleViewMode('LIST')">
             <a href="javascript:"><em class="pb-icon-list"></em></a>
           </li>
-          <li class="is-selected">
+          <li [class.is-selected]="viewMode === 'CARD'" (click)="toggleViewMode('CARD')">
             <a href="javascript:"><em class="pb-icon-grid"></em></a>
           </li>
         </ul>
+
         <!-- //toggle list -->
         <!-- search -->
         <div class="pb-wrap-search">
-          <input type="text" placeholder="Search by title or keyword">
+          <input type="text" placeholder="Search by title or keyword" [(ngModel)]="searchText" (keypress)="searchDataflows($event);">
         </div>
         <!-- //search -->
-
       </div>
       <!-- //right -->
     </div>
   </div>
   <!-- //intro setting -->
   <!-- intro contents -->
-  <div class="pb-intro-contents">
+  <div class="pb-intro-contents" *ngIf="viewMode == 'CARD'">
     <div class="pb-intro-contents-in">
       <div class="pb-wrap-box">
         <!-- box -->
@@ -190,6 +186,10 @@
 
     </div>
 
+  </div>
+  <div class="pb-intro-contents" *ngIf="viewMode == 'LIST'">
+    <div class="pb-intro-contents-in">
+    </div>
   </div>
   <!-- //intro contents -->
 </div>
