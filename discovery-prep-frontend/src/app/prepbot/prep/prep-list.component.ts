@@ -26,13 +26,13 @@ import {AbstractComponent} from '../../common/component/abstract.component';
 import {DataflowService} from '../dataflow/service/dataflow.service';
 import {PrDataflow} from '../../domain/data-preparation/pr-dataflow';
 import {Modal} from '../../common/domain/modal';
-import {DeleteModalComponent} from '../../common/component/modal/delete/delete.component';
 import {Alert} from '../../common/util/alert.util';
 import {MomentDatePipe} from '../../common/pipe/moment.date.pipe';
 import {isNullOrUndefined} from "util";
 import {StringUtil} from "../../common/util/string.util";
 import {ActivatedRoute} from "@angular/router";
 import * as _ from 'lodash';
+import {CreateDataflowNameDescComponent} from "../dataflow/create-dataflow-name-desc.component";
 
 
 const DEFAULT_VIEW_TYPE = 'CARD';
@@ -71,6 +71,9 @@ export class PrepListComponent extends AbstractComponent {
   // 정렬
   public selectedContentSort: Order = new Order();
 
+  @ViewChild(CreateDataflowNameDescComponent)
+  public createDataflowComponent : CreateDataflowNameDescComponent;
+
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
    | Constructor
    |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
@@ -101,12 +104,51 @@ export class PrepListComponent extends AbstractComponent {
    | Override Method
    |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
-  // Init
-  public ngOnInit() {
+    public ngOnInit() {
 
-    // Init
-    super.ngOnInit();
-  }
+        super.ngOnInit();
+
+        this._initView();
+
+        this.subscriptions.push(
+            // Get query param from url
+            this.activatedRoute.queryParams.subscribe((params) => {
+
+                if (!_.isEmpty(params)) {
+
+                    if (!isNullOrUndefined(params['backFromDetail'])) {
+                        if( params['backFromDetail']==='true' ) {
+                            params = this.dataflowService.getParamsForDataflowList();
+                        }
+                    }
+
+                    if (!isNullOrUndefined(params['size'])) {
+                        this.page.size = params['size'];
+                    }
+
+                    if (!isNullOrUndefined(params['page'])) {
+                        this.page.page = params['page'];
+                    }
+
+
+                    if (!isNullOrUndefined(params['dfName'])) {
+                        this.searchText = params['dfName'];
+                    }
+
+                    const sort = params['sort'];
+                    if (!isNullOrUndefined(sort)) {
+                        const sortInfo = decodeURIComponent(sort).split(',');
+                        this.selectedContentSort.key = sortInfo[0];
+                        this.selectedContentSort.sort = sortInfo[1];
+                    }
+                }
+
+                this.getDataflows();
+            })
+        );
+
+    }
+
 
   // Destory
   public ngOnDestroy() {
@@ -214,6 +256,18 @@ export class PrepListComponent extends AbstractComponent {
 
 
     /**
+     * Move to dataflow detail
+     * @param dfId
+     */
+    public goToDfDetail(dfId) {
+        const params = this._getDfParams();
+        this.dataflowService.setParamsForDataflowList(params);
+        this.router.navigate(
+            ['/management/datapreparation/dataflow',dfId])
+            .then();
+    }
+
+    /**
    * Change order of list
    * @param key
    */
@@ -239,13 +293,21 @@ export class PrepListComponent extends AbstractComponent {
           }
       }
   }
-      /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-       | Protected Method
-       |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
-      /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-       | Private Method
-       |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
+    /**
+     * Create new dataflow
+     */
+    public createDataflow() {
+        this.createDataflowComponent.init();
+    }
+
+    /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     | Protected Method
+     |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
+
+  /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+   | Private Method
+   |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
 
     /**

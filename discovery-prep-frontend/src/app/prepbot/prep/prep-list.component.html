@@ -16,7 +16,7 @@
   <!-- intro menu -->
   <div class="pb-intro-menu">
     <div class="pb-ui-menu">
-      <a href="javascript:" class="pb-menu-dashboard">
+      <a href="javascript:" class="pb-menu-dashboard" (click)="createDataflow()">
         <em class="pb-icon-dashboard"></em>
         Create <strong>Dataflow</strong>
       </a>
@@ -91,17 +91,14 @@
       <!-- //left -->
       <!-- right -->
       <div class="pb-set-right">
-        <!-- toggle list -->
         <ul class="pb-list-toggle">
-          <li [class.is-selected]="viewMode === 'LIST'" (click)="toggleViewMode('LIST')">
-            <a href="javascript:"><em class="pb-icon-list"></em></a>
-          </li>
           <li [class.is-selected]="viewMode === 'CARD'" (click)="toggleViewMode('CARD')">
             <a href="javascript:"><em class="pb-icon-grid"></em></a>
           </li>
+          <li [class.is-selected]="viewMode === 'LIST'" (click)="toggleViewMode('LIST')">
+            <a href="javascript:"><em class="pb-icon-list"></em></a>
+          </li>
         </ul>
-
-        <!-- //toggle list -->
         <!-- search -->
         <div class="pb-wrap-search">
           <input type="text" placeholder="Search by title or keyword" [(ngModel)]="searchText" (keypress)="searchDataflows($event);">
@@ -115,16 +112,16 @@
   <!-- intro contents -->
   <div class="pb-intro-contents" *ngIf="viewMode == 'CARD'">
     <div class="pb-intro-contents-in">
-      <div class="pb-wrap-box">
+      <div class="pb-wrap-box" *ngIf="dataflows.length > 0">
         <!-- box -->
-        <div class="pb-box-intro" (click)="goToDetail();">
+        <div class="pb-box-intro" *ngFor="let item of dataflows; let i = index" [attr.data-index]="i" (click)="goToDfDetail(item.dfId)">
           <span class="pb-tag-new">NEW</span>
           <!-- data intro -->
           <div class="pb-data-intro">
             <div class="pb-data-det">
-              DataFlow 01 is created in the working folder.
+              {{item.dfName}}
             </div>
-            <div class="pb-data-day">JAN04  07:25 am</div>
+            <div class="pb-data-day">{{'msg.comm.th.created' | translate}}</div>
             <a href="javascript:" class="pb-icon-pin"></a>
           </div>
           <!-- //data intro -->
@@ -135,20 +132,20 @@
               <span class="pb-data-photo">
                   <img src="{{defaultProfileImageSrc}}" #profileImage>
               </span>
-              Jorge Phillips
+              {{item.createdBy.fullName}}
             </div>
             <!-- //user -->
             <!-- right -->
             <div class="pb-data-right">
-                                <span class="pb-data-num">
-                                    <em class="pb-icon-data1"></em>5
-                                </span>
               <span class="pb-data-num">
-                                    <em class="pb-icon-data2"></em>5
-                                </span>
+                  <em class="pb-icon-data1"></em>5
+              </span>
               <span class="pb-data-num">
-                                    <em class="pb-icon-data3"></em>5
-                                </span>
+                  <em class="pb-icon-data2"></em>5
+              </span>
+              <span class="pb-data-num">
+                  <em class="pb-icon-data3"></em>5
+              </span>
             </div>
             <!-- //right -->
 
@@ -187,10 +184,82 @@
     </div>
 
   </div>
+  <!-- //list -->
   <div class="pb-intro-contents" *ngIf="viewMode == 'LIST'">
     <div class="pb-intro-contents-in">
+
+      <!-- new table -->
+      <div class="pb-ui-data-expression" *ngIf="dataflows.length > 0">
+        <!-- option -->
+        <!--<div class="pb-ui-grid-option">-->
+          <!--&lt;!&ndash; left &ndash;&gt;-->
+          <!--<div class="pb-fleft">-->
+            <!--<a href="javascript:" class="pb-icon-grid"></a>-->
+            <!--<a href="javascript:" class="pb-icon-grid-set"></a>-->
+            <!--<input type="text" class="pb-grid-input">-->
+          <!--</div>-->
+          <!--&lt;!&ndash; //left &ndash;&gt;-->
+          <!--&lt;!&ndash; left &ndash;&gt;-->
+          <!--<div class="pb-fright">-->
+            <!--<a href="javascript:" class="pb-icon-grid-search"></a>-->
+            <!--<a href="javascript:" class="pb-icon-grid-pause"></a>-->
+            <!--<a href="javascript:" class="pb-icon-grid-refresh"></a>-->
+
+
+            <!--<div class="pb-wrap-slider3">-->
+              <!--<a href="javascript:" class="pb-btn-minus"></a>-->
+              <!--<a href="javascript:" class="pb-btn-plus"></a>-->
+              <!--<span class="irs js-irs-0"><span class="irs"><span class="irs-line" tabindex="-1"><span class="irs-line-left"></span><span class="irs-line-mid"></span><span class="irs-line-right"></span></span><span class="irs-min" style="visibility: visible;">0</span><span class="irs-max" style="visibility: visible;">100</span><span class="irs-from" style="visibility: hidden;">0</span><span class="irs-to" style="visibility: hidden;">0</span><span class="irs-single" style="left: 27.7397%;">50</span></span><span class="irs-grid"></span><span class="irs-bar" style="left: 3.08219%; width: 46.9178%;"></span><span class="irs-bar-edge"></span><span class="irs-shadow shadow-single" style="display: none;"></span><span class="irs-slider single" style="left: 46.9178%;"></span></span><input type="text" id="rangeslider3" class="irs-hidden-input" readonly="">-->
+            <!--</div>-->
+            <!--<a href="javascript:" class="pb-icon-grid-resize"></a>-->
+          <!--</div>-->
+          <!--&lt;!&ndash; //left &ndash;&gt;-->
+        <!--</div>-->
+        <!-- //option -->
+        <!-- grid -->
+        <div class="pb-ui-grid">
+          <table class="pb-table-grid">
+            <colgroup>
+              <col width="">
+              <col width="">
+              <col width="">
+              <col width="">
+            </colgroup>
+            <thead>
+            <tr>
+              <th (click)="changeOrder('dfName')">
+                <span class="pb-data-txt">{{'msg.comm.ui.name' | translate}}</span>
+              </th>
+              <th>
+                <span class="pb-data-txt">{{'msg.comm.menu.manage.prep.set' | translate}}</span>
+              </th>
+              <th>
+                <span class="pb-data-txt">{{'msg.comm.menu.manage.prep.set' | translate}}</span>
+              </th>
+              <th (click)="changeOrder('createdTime')">
+                <span class="pb-data-txt">{{'msg.comm.th.created' | translate}}</span>
+              </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let item of dataflows; let i = index" [attr.data-index]="i" (click)="goToDfDetail(item.dfId)">
+              <td>{{item.dfName}} - {{item.dfDesc}}</td>
+              <td>{{item.importedDsCount}}</td>
+              <td>{{item.wrangledDsCount}}</td>
+              <td>{{item.createdTime | mdate:'YYYY-MM-DD HH:mm'}} <em class="ddp-icon-by">{{'msg.dp.ui.by' | translate}}</em>{{item.createdBy.fullName}}</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+        <!-- //grid -->
+      </div>
+
+
+
+
     </div>
   </div>
+  <!-- //list -->
   <!-- //intro contents -->
 </div>
 <!-- //intro -->
