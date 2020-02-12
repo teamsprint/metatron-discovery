@@ -93,7 +93,7 @@ import {PrepDetailComponent} from "./prep/prep-detail.component";
 import {PrepPopCreateComponent} from "./prep/prep-pop-create.component";
 
 const dataPreparationRoutes: Routes = [
-{ path: '', component: PrepListComponent },
+{ path: '', redirectTo: 'dataflow', pathMatch: 'full' },
 { path: 'dataflow', component: PrepListComponent },
     { path: 'dataflow/:id', component: PrepDetailComponent },
 //{ path: 'dataflow/:id', component: DataflowDetail2Component },
