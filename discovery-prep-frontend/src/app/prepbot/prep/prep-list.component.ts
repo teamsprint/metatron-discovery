@@ -32,7 +32,7 @@ import {isNullOrUndefined} from "util";
 import {StringUtil} from "../../common/util/string.util";
 import {ActivatedRoute} from "@angular/router";
 import * as _ from 'lodash';
-import {CreateDataflowNameDescComponent} from "../dataflow/create-dataflow-name-desc.component";
+import {PrepPopCreateComponent} from "./prep-pop-create.component";
 
 
 const DEFAULT_VIEW_TYPE = 'CARD';
@@ -71,8 +71,8 @@ export class PrepListComponent extends AbstractComponent {
   // 정렬
   public selectedContentSort: Order = new Order();
 
-  @ViewChild(CreateDataflowNameDescComponent)
-  public createDataflowComponent : CreateDataflowNameDescComponent;
+  @ViewChild(PrepPopCreateComponent)
+  public prepPopCreateComponent : PrepPopCreateComponent;
 
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
    | Constructor
@@ -263,7 +263,7 @@ export class PrepListComponent extends AbstractComponent {
         const params = this._getDfParams();
         this.dataflowService.setParamsForDataflowList(params);
         this.router.navigate(
-            ['/management/datapreparation/dataflow',dfId])
+            ['/management/prepbot/dataflow',dfId])
             .then();
     }
 
@@ -298,7 +298,7 @@ export class PrepListComponent extends AbstractComponent {
      * Create new dataflow
      */
     public createDataflow() {
-        this.createDataflowComponent.init();
+        this.prepPopCreateComponent.init();
     }
 
     /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=

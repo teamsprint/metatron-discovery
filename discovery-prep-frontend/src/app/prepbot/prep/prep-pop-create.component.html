@@ -1,7 +1,7 @@
-<div class="pb-layout-popup">
+<div class="pb-layout-popup" *ngIf="isShow">
     <!-- box popup -->
     <div class="pb-box-popup">
-        <a href="javascript:" class="pb-btn-pop-close"></a>
+        <a href="javascript:" class="pb-btn-pop-close" (click)="isShow = false"></a>
         <!-- top -->
         <div class="pb-popup-top">
             <div class="pb-txt-title">DATA CONNECT</div>

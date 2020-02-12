@@ -48,11 +48,11 @@ const layoutRoutes: Routes = [
         loadChildren: 'app/data-preparation/data-preparation.module#DataPreparationModule',
         canActivate: [PrepbotGuard]
       },
-    {
-    path: 'management/prepbot',
-    loadChildren: 'app/prepbot/prepbot.module#PrepbotModule',
-    canActivate: [PrepbotGuard]
-    },
+      {
+      path: 'management/prepbot',
+      loadChildren: 'app/prepbot/prepbot.module#PrepbotModule',
+      canActivate: [PrepbotGuard]
+      },
       {path: 'admin', loadChildren: 'app/admin/admin.module#AdminModule'},
       {path: 'external', loadChildren: 'app/external/external-view.module#ExternalViewModule'},
       {
@@ -67,7 +67,6 @@ const layoutRoutes: Routes = [
   imports: [
     CommonModule,
     ClickOutsideModule,
-    PrepbotModule,
     //TODO common 으로 올릴것인지 확인
     FileModule,
     RouterModule.forChild(layoutRoutes)
@@ -88,7 +87,8 @@ const layoutRoutes: Routes = [
     CommonService,
     StorageService,
     StagedbEnabledGuard,
-    ConnectionListGuard
+    ConnectionListGuard,
+    PrepbotGuard
   ]
 })
 export class LayoutModule {

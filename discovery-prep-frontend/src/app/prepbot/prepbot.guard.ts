@@ -12,21 +12,19 @@
  * limitations under the License.
  */
 
-import { CanDeactivate } from '@angular/router';
+import {
+    ActivatedRouteSnapshot,
+    CanActivate,
+    RouterStateSnapshot
+} from '@angular/router';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-export interface ComponentCanDeactivate {
-  canDeactive: () => boolean | Observable<boolean>;
-}
-
 @Injectable()
-export class PrepbotGuard implements CanDeactivate<ComponentCanDeactivate> {
-  canDeactivate(component: ComponentCanDeactivate): boolean | Observable<boolean> {
-      if(component.canDeactive) {
-        return component.canDeactive() ? true : false; //confirm('WARNING: Press Cancel to stay or OK to leave.');
-      } else {
+export class PrepbotGuard implements CanActivate {
+    canActivate(next: ActivatedRouteSnapshot,
+                state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
+        // 권한 체크하지 않음
         return true;
-      }
-  }
+    }
 }

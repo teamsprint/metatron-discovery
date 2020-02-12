@@ -29,6 +29,8 @@ export class LayoutComponent extends AbstractComponent implements OnInit, OnDest
     super(elementRef, injector);
   }
 
+  public defaultProfileImageSrc = '/assets/images/img_photo.png';
+
   ngOnInit() {
     super.ngOnInit();
   }
