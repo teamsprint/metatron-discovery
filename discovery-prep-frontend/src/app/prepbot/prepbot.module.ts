@@ -93,8 +93,8 @@ import {DataconnectionService} from "../dataconnection/service/dataconnection.se
 const dataPreparationRoutes: Routes = [
 { path: '', component: PrepListComponent },
 { path: 'dataflow', component: DataflowComponent },
-{ path: 'dataflow/:id', component: DataflowDetail2Component, canDeactivate: [PrepbotGuard] },
-{ path: 'dataflow/:dfId/rule/:dsId', component: EditDataflowRule2Component, canDeactivate: [PrepbotGuard] },
+{ path: 'dataflow/:id', component: DataflowDetail2Component },
+{ path: 'dataflow/:dfId/rule/:dsId', component: EditDataflowRule2Component},
 { path: 'dataset', component: DatasetComponent },
 { path: 'dataset/new', component: DatasetComponent },
 { path: 'dataset/:id', component: DatasetDetailComponent },
@@ -149,6 +149,7 @@ const dataPreparationRoutes: Routes = [
     LongUpdatePopupComponent,
     RadioSelectDatasetComponent,
     SnapshotLoadingComponent,
+
     DataSnapshotComponent,
     DataSnapshotDetailComponent,
     DataflowComponent,

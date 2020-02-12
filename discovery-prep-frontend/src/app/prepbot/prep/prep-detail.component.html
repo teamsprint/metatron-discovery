@@ -1,10 +1,13 @@
-
 <div class="pb-layout-contents">
     <!-- navi -->
-    <div class="pb-layout-navi">
+    <!--
+        navi 클릭시 is-selected 추가
+        navi 확대시 type-open 추가
+    -->
+    <div class="pb-layout-navi is-selected ">
         <a href="javascript:" class="pb-btn-navi"></a>
-
-        <div class="pb-lnb-navigation ">
+        <!-- lnb navi -->
+        <div class="pb-lnb-navigation">
             <a href="javascript:" class="pb-btn-resize"></a>
             <div class="pb-top-title">
                 <em class="pb-icon-navi"></em>
@@ -15,6 +18,108 @@
                 <input type="text">
             </div>
             <!-- //search -->
+            <!-- navi 확대 -->
+            <div class="pb-contents-navi-open">
+                <!-- navi buttons -->
+                <div class="pb-ui-navi-buttons">
+                    <a href="javascript:" class="pb-btn-menu type-folder">
+                        Folder
+                    </a>
+                    <a href="javascript:" class="pb-btn-menu type-dashboard">
+                        Dashboard
+                    </a>
+                    <a href="javascript:" class="pb-btn-menu type-report">
+                        Report
+                    </a>
+
+                    <div class="pb-ui-part">
+                        <a href="javascript:" class="pb-btn-menu type-link">
+                            Link
+                        </a>
+                        <a href="javascript:" class="pb-btn-menu type-copy">
+                            Copy
+                        </a>
+                        <a href="javascript:" class="pb-btn-menu type-delete">
+                            Delete
+                        </a>
+                        <a href="javascript:" class="pb-btn-menu type-share">
+                            Share
+                        </a>
+                    </div>
+
+                </div>
+                <!-- //navi buttons -->
+                <!-- contents open file -->
+                <div class="pb-contents-open-file">
+                    <!-- list open file -->
+                    <ul class="pb-list-open-file">
+                        <li>
+                            <div class="pb-img-folder">
+                                <a href="javascript:" class="pb-btn-pin is-selected"></a>
+
+                            </div>
+                            <span class="pb-data-file-name">Manufacturing A</span>
+                        </li>
+                        <li>
+                            <div class="pb-img-folder">
+                                <a href="javascript:" class="pb-btn-pin"></a>
+
+                            </div>
+                            <span class="pb-data-file-name">Manufacturing A</span>
+                        </li>
+                        <li>
+                            <div class="pb-box-file">
+                                <div class="pb-ui-graph" style="background-color:#ccc">
+                                    그래프영역
+                                </div>
+
+                                <a href="javascript:" class="pb-btn-pin"></a>
+
+                            </div>
+                            <span class="pb-data-file-name">Manufacturing A</span>
+                        </li>
+                        <li>
+                            <div class="pb-box-file">
+                                <div class="pb-ui-graph" style="background-color:#ccc">
+                                    그래프영역
+                                </div>
+
+                                <a href="javascript:" class="pb-btn-pin is-selected"></a>
+
+                            </div>
+                            <span class="pb-data-file-name">Manufacturing A</span>
+                        </li>
+                    </ul>
+                    <!-- //list open file -->
+                </div>
+                <!-- //contents open file -->
+                <!-- bottom open file -->
+                <div class="pb-bottom-open-file">
+                    <div class="pb-data-total">Total 54 files</div>
+                    <!-- right -->
+                    <div class="pb-fright">
+                        <!-- slider -->
+                        <div class="pb-wrap-slider2">
+                            <a href="javascript:" class="pb-btn-minus"></a>
+                            <a href="javascript:" class="pb-btn-plus"></a>
+                            <input type="text" id="rangeslider2">
+                        </div>
+                        <!-- //slider -->
+                        <!-- type -->
+                        <div class="pb-type-file">
+                            <a href="javascript:" class="pb-btn-folder"></a>
+                            <a href="javascript:" class="pb-btn-grid"></a>
+                        </div>
+                        <!-- //type -->
+                    </div>
+                    <!-- //right -->
+
+
+                </div>
+                <!-- //bottom open file -->
+            </div>
+            <!-- //navi 확대 -->
+            <!-- navi tab -->
             <div class="pb-wrap-navi-tab">
                 <!-- tab -->
                 <ul class="pb-list-navi-tab pb-clear">
@@ -131,265 +236,55 @@
                 </div>
                 <!-- //lnb navi bottom -->
             </div>
+            <!-- //navi tab -->
         </div>
+        <!-- //lnb navi -->
     </div>
     <!-- //navi -->
     <!-- wrap contents -->
     <div class="pb-wrap-contents">
+        <!-- top -->
         <div class="pb-contents-top">
-            <!-- button -->
+            <!-- right -->
             <div class="pb-ui-buttons">
-                <!-- icon button -->
-                <div class="pb-btn-icons">
-                    <a href="javascript:" class="pb-icon-top-prev"></a>
-                    <a href="javascript:" class="pb-icon-top-next"></a>
+                <a href="javascript:" class="pb-component-btn type-line"><em class="pb-icon-add"></em>ADD CHART</a>
+                <a href="javascript:" class="pb-component-btn type-line">MEMO</a>
+                <a href="javascript:" class="pb-component-btn type-line">REPORT</a>
+                <a href="javascript:" class="pb-component-btn type-line">SHARE</a>
+                <a href="javascript:" class="pb-component-btn type-line">SETTING</a>
+                <div class="pb-ui-part">
+                    <a href="javascript:" class="pb-component-btn type-bg">SAVE</a>
                 </div>
-                <!-- //icon button -->
-                <a href="javascript:" class="pb-component-btn type-line">CANCEL</a>
-                <a href="javascript:" class="pb-component-btn type-bg">SAVE</a>
             </div>
-            <!-- //button -->
+            <!-- //right -->
             <!-- txt navi -->
             <div class="pb-txt-navi">
-                <em class="pb-icon-dashboard"></em>
-                Data Flow 01 > Dataset 01
+                <span class="pb-txt-name"><em class="pb-icon-dashboard"></em>Dashboard 01</span>
+                <span class="pb-txt-super"><em class="pb-icon-super"></em>SuSuperper store_02</span>
             </div>
             <!-- //txt navi -->
+
         </div>
-        <div class="pb-wrap-box-rule">
-            <div class="pb-box-rule type-rule">
-                <!-- top -->
-                <!--                     <div class="pb-box-top">
-                                        <div class="pb-fleft"> -->
-                <!--                             <em class="pb-icon-top-analysis1"></em> -->
-                <!-- <span class="pb-box-data-analysis">Derive A Column</span>
-                <span class="pb-box-data-analysis">Substring A Column and B Column</span>
-                <span class="pb-box-data-analysis">Derive A Column</span>
-            </div>
-            <a href="javascript:" class="pb-icon-top-edit"></a>
-        </div> -->
-                <!-- //top -->
-                <div class="pb-ui-graph" style="background-color:#ccc">
+        <!-- //top -->
+
+        <!-- contents navi -->
+        <div class="pb-wrap-box-navigation">
+            <!-- box navi -->
+            <div class="pb-box-navigation">
+                <div class="pb-box-title">
+                    Sales Forecast by State
+                </div>
+                <div class="pb-ui-graph" style="background-color:#ccc;">
                     그래프 영역
                 </div>
-
-
             </div>
+            <!-- //box navi -->
 
         </div>
+
+        <!-- //contents navi -->
     </div>
     <!-- //wrap contents -->
 
-    <!-- rnb -->
-    <!--
-        펼칠때 is-selected 추가
-    -->
-    <div class="pb-rnb-menu is-selected">
-        <a href="javascript:" class="pb-btn-menu-close"></a>
-        <ul class="pb-list-rnb">
-            <li>
-                <a href="javascript:">
-                    <em class="pb-icon-analysis"></em>
-                    <span class="pb-txt-rnb">Rule</span>
-                </a>
-                <!-- list -->
-                <!-- <ul class="pb-list-rnb-sub ">
-                    <li>
-                        <a href="javascript:">
-                            <em class="pb-icon-top-menu5"></em>
-                        </a>
-                    </li>
-                    <li class="is-disabled">
-                        <a href="javascript:">
-                            <em class="pb-icon-top-menu6"></em>
-                        </a>
-                    </li>
-                    <li class="is-disabled">
-                        <a href="javascript:">
-                            <em class="pb-icon-top-menu7"></em>
-                        </a>
-                    </li>
-                    <li class="is-disabled">
-                        <a href="javascript:">
-                            <em class="pb-icon-top-menu8"></em>
-                        </a>
-                    </li>
-                </ul> -->
-                <!-- //list -->
-                <!-- sub -->
-                <div class="pb-rnb-sub ">
-                    <!-- part -->
-                    <div class="pb-part-sub">
-                        <div class="pb-sub-title">Prediction Line Options</div>
-                        <!-- form option -->
-                        <div class="pb-form-option">
-                            <label class="pb-label-form">Forcasting period</label>
-                            <!-- clear -->
-                            <div class="pb-clear">
-                                <div class="pb-col-5">
-                                    <!-- selectbox -->
-                                    <!--
-                                        클릭시 : is-selected 추가
-                                        값 입력시 : is-value 추가
 
-                                    -->
-                                    <div class="pb-component-selectbox type-gray is-value">
-                                        <span class="pb-txt-selectbox">2</span>
-                                        <!-- popup -->
-                                        <div class="pb-select-popup">
-                                            <ul class="pb-list-selectbox">
-                                                <li>
-                                                    <a href="javascript:">1</a>
-                                                </li>
-                                                <li>
-                                                    <a href="javascript:">1</a>
-                                                </li>
-                                                <li>
-                                                    <a href="javascript:">1</a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                        <!-- //popup -->
-                                    </div>
-                                    <!-- //selectbox -->
-                                </div>
-                                <div class="pb-col-7">
-                                    <!-- selectbox -->
-                                    <!--
-                                        클릭시 : is-selected 추가
-                                        값 입력시 : is-value 추가
-
-                                    -->
-                                    <div class="pb-component-selectbox type-gray is-value">
-                                        <span class="pb-txt-selectbox">Month</span>
-                                        <!-- popup -->
-                                        <div class="pb-select-popup">
-                                            <ul class="pb-list-selectbox">
-                                                <li>
-                                                    <a href="javascript:">1</a>
-                                                </li>
-                                                <li>
-                                                    <a href="javascript:">1</a>
-                                                </li>
-                                                <li>
-                                                    <a href="javascript:">1</a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                        <!-- //popup -->
-                                    </div>
-                                    <!-- //selectbox -->
-                                </div>
-                            </div>
-                            <!-- //clear -->
-                        </div>
-                        <!-- //form option -->
-                    </div>
-                    <!-- //part -->
-                    <!-- part -->
-                    <div class="pb-part-sub">
-                        <!-- form toggle -->
-                        <div class="pb-form-option type-toggle">
-
-                            <label class="pb-label-form ">Forcasting period</label>
-                            <!-- toggle -->
-                            <label class="pb-component-toggle">
-                                <input type="checkbox">
-                                <span></span>
-                                <i></i>
-                            </label>
-                            <!-- //toggle -->
-                        </div>
-                        <!-- //form toggle -->
-                        <script>
-                            $(function(){
-                                $("#rangeslider").ionRangeSlider({
-                                    min: 0,
-                                    max: 100,
-                                    from: 55
-                                });
-                            })
-                        </script>
-                        <!-- form slider -->
-                        <div class="pb-form-option type-slider">
-
-                            <label class="pb-label-form ">Confidence interval</label>
-                            <div class="pb-wrap-slider">
-                                <input type="text" id="rangeslider">
-                            </div>
-                        </div>
-                        <!-- //form slider -->
-                    </div>
-                    <!-- //part -->
-                    <!-- part -->
-                    <div class="pb-part-sub">
-                        <!-- form toggle -->
-                        <div class="pb-form-option type-toggle">
-
-                            <label class="pb-label-form ">Notification</label>
-                            <!-- toggle -->
-                            <label class="pb-component-toggle">
-                                <input type="checkbox" checked="checked">
-                                <span></span>
-                                <i></i>
-                            </label>
-                            <!-- //toggle -->
-                        </div>
-                        <!-- //form toggle -->
-                        <!-- form default -->
-                        <div class="pb-form-option type-default">
-
-                            <label class="pb-label-form ">Time of notification</label>
-                            <div class="pb-clear">
-                                <div class="pb-col-3">
-                                    <!-- selectbox -->
-                                    <!--
-                                        클릭시 : is-selected 추가
-                                        값 입력시 : is-value 추가
-
-                                    -->
-                                    <div class="pb-component-selectbox type-gray is-value">
-                                        <span class="pb-txt-selectbox">30</span>
-                                        <!-- popup -->
-                                        <div class="pb-select-popup">
-                                            <ul class="pb-list-selectbox">
-                                                <li>
-                                                    <a href="javascript:">1</a>
-                                                </li>
-                                                <li>
-                                                    <a href="javascript:">1</a>
-                                                </li>
-                                                <li>
-                                                    <a href="javascript:">1</a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                        <!-- //popup -->
-                                    </div>
-                                    <!-- //selectbox -->
-                                </div>
-
-
-                            </div>
-                            <!-- //form default -->
-
-                        </div>
-                        <!-- //part -->
-                    </div>
-                    <!-- //sub -->
-            </li>
-            <li>
-                <a href="javascript:">
-                    <em class="pb-icon-algorithm"></em>
-                    <span class="pb-txt-rnb">Recommendation</span>
-                </a>
-            </li>
-        </ul>
-        <!-- bottom -->
-        <div class="pb-btn-bottom">
-            <a href="javascript:" class="pb-component-btn type-dark">DATA MANAGER</a>
-        </div>
-        <!-- //bottom -->
-    </div>
-    <!-- //rnb -->
 </div>

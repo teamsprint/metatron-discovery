@@ -30,7 +30,8 @@ import {CommonService} from "../../common/service/common.service";
 import {StagedbEnabledGuard} from '../../common/gaurd/stagedb-enabled.guard';
 import {StorageService} from '../../data-storage/service/storage.service';
 import {ConnectionListGuard} from "../../common/gaurd/connection-list.guard";
-import { PrepbotModule } from '../../prepbot/prepbot.module';
+import {PrepbotModule} from '../../prepbot/prepbot.module';
+import {PrepbotGuard} from "../../prepbot/prepbot.guard";
 
 const layoutRoutes: Routes = [
   {
@@ -45,12 +46,12 @@ const layoutRoutes: Routes = [
       {
         path: 'management/datapreparation',
         loadChildren: 'app/data-preparation/data-preparation.module#DataPreparationModule',
-        canActivate: [DatasourceManagementGuard]
+        canActivate: [PrepbotGuard]
       },
     {
     path: 'management/prepbot',
     loadChildren: 'app/prepbot/prepbot.module#PrepbotModule',
-    canActivate: [DatasourceManagementGuard]
+    canActivate: [PrepbotGuard]
     },
       {path: 'admin', loadChildren: 'app/admin/admin.module#AdminModule'},
       {path: 'external', loadChildren: 'app/external/external-view.module#ExternalViewModule'},

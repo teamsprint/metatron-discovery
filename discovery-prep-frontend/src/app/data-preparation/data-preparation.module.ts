@@ -93,8 +93,8 @@ import {EditorComponent} from "./component/editor.component";
 const dataPreparationRoutes: Routes = [
   { path: '', component: DatasetComponent },
   { path: 'dataflow', component: DataflowComponent },
-  { path: 'dataflow/:id', component: DataflowDetail2Component, canDeactivate: [DataPreparationGuard] },
-  { path: 'dataflow/:dfId/rule/:dsId', component: EditDataflowRule2Component, canDeactivate: [DataPreparationGuard] },
+  { path: 'dataflow/:id', component: DataflowDetail2Component },
+  { path: 'dataflow/:dfId/rule/:dsId', component: EditDataflowRule2Component },
   { path: 'dataset', component: DatasetComponent },
   { path: 'dataset/new', component: DatasetComponent },
   { path: 'dataset/:id', component: DatasetDetailComponent },

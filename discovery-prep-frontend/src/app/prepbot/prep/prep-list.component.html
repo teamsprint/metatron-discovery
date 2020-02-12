@@ -114,7 +114,7 @@
     <div class="pb-intro-contents-in">
       <div class="pb-wrap-box" *ngIf="dataflows.length > 0">
         <!-- box -->
-        <div class="pb-box-intro" *ngFor="let item of dataflows; let i = index" [attr.data-index]="i" (click)="goToDfDetail(item.dfId)">
+        <div class="pb-box-intro" *ngFor="let item of dataflows; let i = index" [attr.data-index]="i" (click)="goToDfDetail(item.dfId)" style="cursor: pointer;">
           <span class="pb-tag-new">NEW</span>
           <!-- data intro -->
           <div class="pb-data-intro">
@@ -226,7 +226,7 @@
               <col width="">
             </colgroup>
             <thead>
-            <tr>
+            <tr style="background:#fff;">
               <th (click)="changeOrder('dfName')">
                 <span class="pb-data-txt">{{'msg.comm.ui.name' | translate}}</span>
               </th>

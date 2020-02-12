@@ -5,7 +5,7 @@
  *************************************************************************/
 table.pb-table-grid {width:100%; border-collapse: collapse}
 table.pb-table-grid tr th {padding:20px 17px; background-color:#edf4f8; text-align:left; font-weight:normal; border:1px solid rgba(144,150,156,0.25); border-top:3px solid #426895;}
-table.pb-table-grid tr th .pb-data-txt {display:block; color:#424242; font-size:17px; }
+table.pb-table-grid tr th .pb-data-txt {display:block; color:#424242; font-size:15px; }
 table.pb-table-grid tr th .pb-data-txt2 {display:block; color:rgba(66,66,66,0.7); font-size:15px;}
 table.pb-table-grid tr th .pb-data-name {display:block; color:#424242; font-size:15px; font-weight:600;}
-table.pb-table-grid tr td {padding:15px 17px; color:#000; font-size:11px; border:1px solid rgba(144,150,156,0.25);}
+table.pb-table-grid tr td {padding:15px 17px; color:#000; font-size:13px; border:1px solid rgba(144,150,156,0.25);}
