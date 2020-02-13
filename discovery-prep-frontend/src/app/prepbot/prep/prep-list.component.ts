@@ -39,7 +39,8 @@ const DEFAULT_VIEW_TYPE = 'CARD';
 
 @Component({
   selector: 'prep-list',
-  templateUrl: './prep-list.component.html'
+  templateUrl: './prep-list.component.html',
+  host: { '[class.pb-page-intro]': 'true' }
 })
 export class PrepListComponent extends AbstractComponent {
 
