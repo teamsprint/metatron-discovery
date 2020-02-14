@@ -3,7 +3,7 @@
 /***********************************************************************
      Page : Intro
  *************************************************************************/
-.pb-page-intro {display:flex; flex:auto; flex-direction:column; background-color:#f1f1ee; overflow:auto;}
+.pb-page-intro {display:flex; flex:auto; flex-direction:column; overflow:auto;}
 .pb-intro-menu {min-height:130px; background-color:#5f7591; text-align:center;}
 .pb-intro-menu .pb-ui-menu {display:inline-block;}
 .pb-intro-menu .pb-ui-menu [class*="pb-menu-"] {display:inline-block; position:relative; float:left; min-width:200px; padding:81px 0 0 0;color:#fff; font-size:19px; }
