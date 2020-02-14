@@ -31,7 +31,8 @@
 .pb-contents-top .pb-txt-navi em.pb-icon-dashboard {display:inline-block;width:17px; height:14px; margin-right:13px;background:url(../../images/icon_navi.png) no-repeat; background-position:left -22px; vertical-align:middle;}
 
 .pb-contents-top .pb-txt-navi .pb-txt-name {vertical-align:middle;}
-.pb-contents-top .pb-txt-navi .pb-txt-super {margin-left:25px;color:rgba(0,0,0,0.6); font-size:16px; vertical-align:middle;}
+.pb-contents-top .pb-txt-navi .pb-txt-super {margin-left:25px;color:rgba(0,0,0,0.6); font-size:16px; vertical-align:middle; cursor:pointer;}
+.pb-contents-top .pb-txt-navi .pb-txt-super:hover {text-decoration: underline;}
 .pb-contents-top .pb-txt-super .pb-icon-super {display:inline-block; position:relative; top:-1px; width:13px; height:16px; margin-right:5px; background:url(../../images/icon_navi.png) no-repeat; background-position:left -114px; vertical-align:middle;}
 
 .pb-contents-top .pb-ui-buttons {float:right; padding:20px 18px 0 0;}
