@@ -109,7 +109,8 @@
   <!-- //intro setting -->
   <!-- intro contents -->
   <div class="pb-intro-contents" *ngIf="viewMode == 'CARD'">
-    <div class="pb-intro-contents-in" *ngIf="dataflows.length > 0">
+    <!--<div class="pb-intro-contents-in" *ngIf="dataflows.length > 0">-->
+    <div class="pb-intro-contents-in">
       <div class="pb-wrap-box" *ngFor="let item of dataflows; let i = index" [attr.data-index]="i" (click)="goToDfDetail(item.dfId)" style="cursor: pointer;">
         <!-- box -->
         <div class="pb-box-intro">
