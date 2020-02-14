@@ -31,10 +31,13 @@ import {DsType, ImportType, PrDataset, Rule} from "../../domain/data-preparation
 import {PreparationAlert} from "../util/preparation-alert.util";
 import {Alert} from "../../common/util/alert.util";
 import {PrDataflow} from "../../domain/data-preparation/pr-dataflow";
-import {DataflowModelService} from "../dataflow/service/dataflow.model.service";
+
 import {isUndefined} from "util";
 import * as _ from "lodash";
 import {StringUtil} from "../../common/util/string.util";
+import {DataflowModelService} from "../dataflow/service/dataflow.model.service";
+import {SnapshotLoadingComponent} from "../component/snapshot-loading.component";
+import { CreateSnapshotPopup } from '../component/create-snapshot-popup.component';
 declare let echarts: any;
 
 @Component({
@@ -65,6 +68,13 @@ export class PrepDetailComponent extends AbstractComponent {
 
     @ViewChild('dfDesc')
     private dfDesc: ElementRef;
+
+    @ViewChild(SnapshotLoadingComponent)
+    public snapshotLoadingComponent : SnapshotLoadingComponent;
+
+    @ViewChild(CreateSnapshotPopup)
+    private createSnapshotPopup : CreateSnapshotPopup;
+
 
     // echart ins
     public chart: any;
@@ -166,7 +176,88 @@ export class PrepDetailComponent extends AbstractComponent {
             this.dataflowName = this.dataflow.dfName;
         }
     }
+    public snapshotCreateFinish(data) {
+        this.snapshotLoadingComponent.init(data);
+    }
 
+    public openSnapshotPopup() {
+        this.createSnapshotPopup.init({id : this.selectedDataSet.dsId , name : this.selectedDataSet.dsName});
+    }
+
+    /**
+     * 다른 데이터셋으로 변경했을 떄 ..
+     * @Param data 변경된 데이터셋으로 다시 표시
+     */
+    public onDatasetChange(data) {
+
+        this.initSelectedDataSet();
+
+        this.selectedDataSet = data;
+
+        this.getDataflow();
+
+    }
+
+    public addDatasets() {
+        this.openAddDatasetPopup(null);
+    }
+
+    /**
+     * Open swap dataset popup
+     * @param data
+     */
+    public openAddDatasetPopup(data :any) {
+
+        // console.info('openAddDatasetPopup', data);
+        if(data === null) {
+            this.swapDatasetId = null;
+            this.longUpdatePopupType = 'add';
+            // this.datasetPopupTitle = 'Add datasets';
+            this.isRadio = false;
+        }else{
+            this.swapDatasetId = data.dsId;
+            if (data.type === 'imported') {
+                // this.datasetPopupTitle = 'Replace dataset';
+                this.isRadio = true;
+                this.longUpdatePopupType = 'imported';
+            } else if (data.type === 'wrangled') {
+                // this.datasetPopupTitle = 'Change input dataset';
+                this.isRadio = true;
+                this.longUpdatePopupType = 'wrangled';
+            }
+        }
+        this.isSelectDatasetPopupOpen = true;
+    }
+
+
+    /**
+     * 뒤로가기
+     * */
+    public close() {
+        this.router.navigate(['/management/datapreparation/dataflow']);
+    }
+
+    // 다른 데이터 플로우로 이동
+    public selectDataflow(dfId) {
+        // 선택된 데이터 셋 레이어 hide
+        this.selectedDataSet.dsId = '';
+        this.isDataflowsShow = false;
+
+        // 선택한 데이터 플로우 아이디로 변경
+        this.dataflow.dfId = dfId;
+        // 데이터 플로우 상세조회
+        this.getDataflow();
+    }
+
+    // 데이터 플로우 옵션 레이어 toggle
+    public showOption(event) {
+        this.isDataflowOptionShow = !this.isDataflowOptionShow;
+        event.stopImmediatePropagation();
+    }
+
+    public hideOption() {
+        this.isDataflowOptionShow = false;
+    }
     /**
      * Dataflow 섦영 셋 (this.dataflowDesc은 container이고 this.dataflow.dfDesc 실제 설명임
      */
@@ -392,6 +483,78 @@ export class PrepDetailComponent extends AbstractComponent {
     /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
      | Private Method
      |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
+
+
+    /** 데이터셋을 지우고 난 후에 init */
+    public initEventAfterDelete() {
+        // 데이터 형식은 유지한 상태에서 내부 내용을 지우기 위해서 각 키별 삭제 처리를 함
+        for (const key in this.selectedDataSet) {
+            delete this.selectedDataSet[key];
+        }
+        //$.extend(this.selectedDataSet, new Dataset());
+        $.extend(this.selectedDataSet, new PrDataset());
+
+        // 밖에 누르면 edit을 할 수 없다
+        this.isDatasetNameEditMode = false;
+        this.isDatasetDescEditMode = false;
+        this.getDataflow();
+    }
+
+    /** imported dataset일 경우, wrangled dataset을 생성하는 createWrangledDataset을 호출, wrangled dataset일 경우 룰 편집 화면으로 이동
+     * @param {string} data step 정보
+     * */
+    public datasetEventHandler(data?: string) {
+        if (data) {
+            this.step = data;
+        } else {
+            this.createWrangledDataset();
+        }
+    }
+
+    /**
+     * create wrangled dataset
+     */
+    public createWrangledDataset() {
+        this.loadingShow();
+        this.dataflowService.createWrangledDataset(this.selectedDataSet.dsId, this.dataflow.dfId)
+            .then((result) => {
+                this.loadingHide();
+                if (isUndefined(result)) {
+                    Alert.warning(this.translateService.instant('msg.dp.alert.rule.create.fail'));
+                } else {
+                    Alert.success(this.translateService.instant('msg.dp.alert.rule.create.success'));
+                    // 새로운 데이터 셋 정보로 초기화 및 차트 초기화
+                    this.getDataflow();
+
+                    // wrangled dataset 생성시 열려있던 창을 닫는다
+                    this.changeChartClickStatus(this.selectedDataSet, false);
+                    this.selectedDataSet.dsId = '';
+                }
+            })
+            .catch((error) => {
+                this.loadingHide();
+                let prep_error = this.dataprepExceptionHandler(error);
+                PreparationAlert.output(prep_error, this.translateService.instant(prep_error.message));
+            });
+    }
+
+    /**
+     * Clone dataset
+     * @param event
+     */
+    public datasetClone(event) {
+        this.loadingShow();
+        if (!this.cloneFlag) {
+            this.dataflowService.cloneWrangledDataset(event.dsId).then(() => {
+                this.cloneFlag = true;
+                this.selectedDataSet.dsId = '';
+                this.getDataflow();
+            }).catch(() => {
+                this.loadingHide();
+                Alert.warning('msg.dp.alert.clone.failed');
+            })
+        }
+    }
 
     private initViewPage() {
 

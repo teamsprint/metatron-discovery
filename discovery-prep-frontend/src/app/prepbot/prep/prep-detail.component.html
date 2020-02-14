@@ -272,17 +272,33 @@
         <div class="pb-wrap-box-navigation">
             <!-- box navi -->
             <div class="pb-box-navigation">
-                <div id="chartCanvas" style="width:100%;height:100%;"></div>
-                <!--<div class="pb-box-title">-->
-                    <!--Sales Forecast by State-->
-                <!--</div>-->
-                <!--<div class="pb-ui-graph" style="background-color:#ccc;">-->
-                    <!--그래프 영역-->
-                <!--</div>-->
-            </div>
-            <!-- //box navi -->
 
+                <div class="pb-box-title">
+                    Sales Forecast by State
+                </div>
+                <div class="pb-ui-graph">
+                    <div id="chartCanvas" style="width:100%;height:100%;"></div>
+                </div>
+                <!-- 그리드 아이콘 클릭시 데이터셋 상세 팝업 -->
+                <div *ngIf="selectedDataSet.dsId"
+                     class="sys-dataflow-right-panel ddp-box-flowdetail" >
+                    <app-dataset-info-popup
+                            [selectedDataSet]="selectedDataSet"
+                            [dataflow] = "dataflow"
+                            (initEventAfterDelete)="initEventAfterDelete()"
+                            (closePopup)="changeChartClickStatus($event)"
+                            (datasetEventHandler)="datasetEventHandler($event)"
+                            (cloneEventHandler)="datasetClone($event)"
+                            (changeDataflow)="selectDataflow($event)"
+                            (createSnapshotEvent)="openSnapshotPopup()"
+                            (updateDataflow)="getDataflow(); changeChartClickStatus(this.selectedDataSet,true); datasetInfoPopup.setDataset(this.selectedDataSet)"
+                            (datasetSelectPopupOpen)="openAddDatasetPopup($event)">
+                    </app-dataset-info-popup>
+                </div>
+                <!-- //그리드 아이콘 클릭시 데이터셋 상세 팝업 -->
+            </div>
         </div>
+        <!-- //box navi -->
 
         <!-- //contents navi -->
     </div>
