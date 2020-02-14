@@ -117,7 +117,7 @@ ul.pb-list-type-data li a .pb-icon-type-sharp {width:16px; height:11px; backgrou
 
 .pb-rnb-sub .pb-part-sub {padding:0 28px 20px 28px; border-bottom:1px solid #cccbc4;}
 .pb-rnb-sub .pb-sub-title {padding:30px 0 20px 0;color:#000; font-size:15px; font-weight:600;}
-.pb-rnb-sub .pb-form-option .pb-label-form {display:block; padding-bottom:10px;color:#010101; font-size:15px; border-bottom:1px solid #cccbc4;}
+.pb-rnb-sub .pb-form-option .pb-label-form {display:block; padding:5px 0;color:#010101; font-size:15px; border-bottom:1px solid #cccbc4;}
 .pb-rnb-sub .pb-form-option.type-toggle {padding:20px 0 0 0;overflow:hidden;}
 .pb-rnb-sub .pb-form-option.type-toggle .pb-label-form {padding-bottom:0;float:left; line-height:32px;}
 .pb-rnb-sub .pb-form-option.type-toggle .pb-component-toggle {float:right;}

@@ -16,6 +16,7 @@ import { Component, ElementRef, Injector, OnDestroy, OnInit } from '@angular/cor
 import { AbstractComponent } from '../../../common/component/abstract.component';
 import { EventBroadcaster } from '../../../common/event/event.broadcaster';
 import {Alert} from "../../../common/util/alert.util";
+import {CookieConstant} from "../../../common/constant/cookie.constant";
 
 @Component({
   selector: 'app-layout',
@@ -45,7 +46,21 @@ export class LayoutComponent extends AbstractComponent implements OnInit, OnDest
     super.ngOnDestroy();
   }
 
-  /**
+    /**
+     * 메인 화면으로 이동
+     */
+    public goToMain() {
+        this.cookieService.delete(CookieConstant.KEY.CURRENT_WORKSPACE, '/');  // 쿠키 삭제
+        if ('/workspace' === this.router.url) {
+            this.broadCaster.broadcast('moveFromLnb', 'my');
+        } else {
+            this.router.navigate(['/management/prepbot']).then(); // 이동
+        }
+    } // function - goMain
+
+
+
+    /**
    * 얼럿창에서 번역이 필요한 부분 세팅
    * @private
    */

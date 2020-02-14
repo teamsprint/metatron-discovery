@@ -134,7 +134,9 @@ export class GnbComponent extends AbstractComponent implements OnInit, OnDestroy
     }
   } // function - getUserImage
 
-  public isThemeDark(): boolean {
+
+
+    public isThemeDark(): boolean {
     return $('body').hasClass(Theme.DARK);
   }
 
