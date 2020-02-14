@@ -832,6 +832,18 @@ export class DatasetInfoPopupComponent extends AbstractComponent implements OnIn
   }
 
 
+
+    /**
+     * Move to dataflow detail
+     * @param dsId
+     */
+    public goToDetail(dsId) {
+        //const params = this._getDfParams();
+        //this.dataflowService.setParamsForDataflowList(params);
+        this.router.navigate(
+            ['/management/prepbot/dataset',dsId])
+            .then();
+    }
 }
 
 

@@ -16,7 +16,7 @@
     100% {opacity:1;}
 }
 
-prep-detail {
+prep-detail, prep-dataset-detail {
     height:100%;
 }
 .ddp-box-in {

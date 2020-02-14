@@ -90,17 +90,20 @@ import {DataflowService} from './dataflow/service/dataflow.service';
 import { DataflowModelService } from "./dataflow/service/dataflow.model.service";
 import {DataconnectionService} from "../dataconnection/service/dataconnection.service";
 import {PrepDetailComponent} from "./prep/prep-detail.component";
+import {PrepDatasetDetailComponent} from "./prep/prep-dataset-detail.component";
 import {PrepPopCreateComponent} from "./prep/prep-pop-create.component";
 
 const dataPreparationRoutes: Routes = [
 { path: '', component: PrepListComponent },
 { path: 'dataflow', component: PrepListComponent },
 { path: 'dataflow/:id', component: PrepDetailComponent },
+{ path: 'dataset', component: PrepDatasetDetailComponent },
+{ path: 'dataset/:id', component: PrepDatasetDetailComponent },
 //{ path: 'dataflow/:id', component: DataflowDetail2Component },
 { path: 'dataflow/:dfId/rule/:dsId', component: EditDataflowRule2Component},
-{ path: 'dataset', component: DatasetComponent },
+// { path: 'dataset', component: DatasetComponent },
 { path: 'dataset/new', component: DatasetComponent },
-{ path: 'dataset/:id', component: DatasetDetailComponent },
+// { path: 'dataset/:id', component: DatasetDetailComponent },
 { path: 'datasnapshot', component: DataSnapshotComponent }
 ];
 
@@ -175,8 +178,9 @@ const dataPreparationRoutes: Routes = [
     PrepSelectBoxCustomComponent,
     AddDatasetDataflowComponent,
     PrepListComponent,
-      PrepDetailComponent,
-      PrepPopCreateComponent,
+    PrepDetailComponent,
+    PrepDatasetDetailComponent,
+    PrepPopCreateComponent,
     CreateSnapshotPopup
   ],
   providers: [
