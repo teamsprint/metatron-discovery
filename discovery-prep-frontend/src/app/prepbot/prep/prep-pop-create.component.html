@@ -9,58 +9,37 @@
         </div>
         <!-- //top -->
         <!-- contents -->
-        <div class="pb-popup-contents pb-pop-create">
-            <!-- option -->
-            <div class="pb-ui-data-option ">
-                <!-- form -->
-                <div class="pb-form-option pb-clear">
-                    <label class="pb-label-title">Data source</label>
-                    <div class="pb-component-select-button">
-                        <!-- selectbox -->
-                        <!--
-                            클릭시 : is-selected 추가
-                            값 입력시 : is-value 추가
-
-                        -->
-                        <div class="pb-component-selectbox type-icons is-value ">
-                            <span class="pb-txt-selectbox">
-                                <em class="pb-icon-datasource"></em>Select data
-                            </span>
-                            <!-- popup -->
-                            <div class="pb-select-popup">
-                                <ul class="pb-list-selectbox">
-                                    <li>
-                                        <a href="javascript:">
-                                            <em class="pb-icon-datasource"></em>1
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:"><em class="pb-icon-datasource"></em>1</a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:"><em class="pb-icon-datasource"></em>1</a>
-                                    </li>
-                                </ul>
-                            </div>
-                            <!-- //popup -->
-                        </div>
-                        <!-- //selectbox -->
-                        <a href="javascript:" class="pb-btn-select">SELECT</a>
+        <div class="pb-popup-contents">
+            <div class="pb-wrap-fileupload">
+                <div class="pb-txt-title">Data Connection Type</div>
+                <div class="pb-txt-det">You can create data.</div>
+                <div class="pb-wrap-box">
+                    <!-- box -->
+                    <div class="pb-box-fileupload" (click)="goToFile()">
+                        <em class="pb-img-diagram1"></em>
+                        File Upload,<br>
+                        by loading file data from your PC
+                        <a href="javascript:" class="pb-btn-box-file">File Upload</a>
                     </div>
+                    <!-- //box -->
+                    <!-- box -->
+                    <div class="pb-box-fileupload" (click)="goToDB()" >
+                        <em class="pb-img-diagram2"></em>
+                        Connect Dataconnector,<br>
+                        by your connection library
+                        <a href="javascript:" class="pb-btn-box-file">Connect Dataconnector</a>
+                    </div>
+                    <!-- //box -->
+                    <!-- box -->
+                    <div class="pb-box-fileupload" (click)="goToKafka()">
+                        <em class="pb-img-diagram3"></em>
+                        Connect Kafka,<br>
+                        by url
+                        <a href="javascript:" class="pb-btn-box-file">Connect Kafka</a>
+                    </div>
+                    <!-- //box -->
                 </div>
-                <!-- //form -->
             </div>
-            <!-- //option -->
-            <!-- data connect -->
-            <div class="pb-wrap-data-connect">
-                <em class="pb-img-create"></em>
-                <div class="pb-txt-title">Require a data connection</div>
-                <div class="pb-txt-det">
-                    You need a data source connection for creating dashboard.<br>
-                    Please connect data sources first.
-                </div>
-            </div>
-            <!-- //data connect -->
         </div>
         <!-- //contents -->
         <!-- bottom -->

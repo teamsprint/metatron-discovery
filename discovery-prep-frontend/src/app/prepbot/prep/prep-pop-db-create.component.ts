@@ -16,18 +16,15 @@ import {Component, ElementRef, HostListener, Injector, OnDestroy, OnInit, ViewCh
 import {AbstractComponent} from '../../common/component/abstract.component';
 import {DataflowService} from '../dataflow/service/dataflow.service';
 import {ActivatedRoute} from "@angular/router";
-import {PrepPopDBCreateComponent} from "./prep-pop-db-create.component";
 
 @Component({
-  selector: 'prep-pop-create',
-  templateUrl: './prep-pop-create.component.html'
+  selector: 'prep-pop-db-create',
+  templateUrl: './prep-pop-db-create.component.html'
 })
-export class PrepPopCreateComponent extends AbstractComponent {
+export class PrepPopDBCreateComponent extends AbstractComponent {
 
     public isShow = false;
 
-    @ViewChild(PrepPopDBCreateComponent)
-    public prepPopDBCreateComponent : PrepPopDBCreateComponent;
 
     // 생성자
     constructor(protected elementRef: ElementRef,
@@ -45,10 +42,8 @@ export class PrepPopCreateComponent extends AbstractComponent {
         super.ngOnInit();
     }
 
-
     // Destory
     public ngOnDestroy() {
-
         // Destory
         super.ngOnDestroy();
     }
@@ -56,33 +51,4 @@ export class PrepPopCreateComponent extends AbstractComponent {
     public init() {
         this.isShow = true;
     }
-
-    /**
-     * Create new db
-     */
-    public goToDB() {
-        this.prepPopDBCreateComponent.init();
-    }
-
-    /**
-     * Create new file
-     */
-    public goToFile() {
-        this.prepPopDBCreateComponent.init();
-    }
-
-    /**
-     * Create new kafka
-     */
-    public goToKafka() {
-        this.prepPopDBCreateComponent.init();
-    }
-
-    // public goToDB() {
-    //     const params = this._getDfParams();
-    //     this.router.navigate(
-    //         ['/management/prepbot/dataflow'])
-    //         .then();
-    // }
-
 }

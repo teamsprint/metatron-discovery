@@ -87,11 +87,12 @@ import {EditorComponent} from "./component/editor.component";
 
 import {DatasetService} from './dataset/service/dataset.service';
 import {DataflowService} from './dataflow/service/dataflow.service';
-import { DataflowModelService } from "./dataflow/service/dataflow.model.service";
+import {DataflowModelService} from "./dataflow/service/dataflow.model.service";
 import {DataconnectionService} from "../dataconnection/service/dataconnection.service";
 import {PrepDetailComponent} from "./prep/prep-detail.component";
 import {PrepDatasetDetailComponent} from "./prep/prep-dataset-detail.component";
 import {PrepPopCreateComponent} from "./prep/prep-pop-create.component";
+import {PrepPopDBCreateComponent} from "./prep/prep-pop-db-create.component";
 
 const dataPreparationRoutes: Routes = [
 { path: '', component: PrepListComponent },
@@ -181,6 +182,7 @@ const dataPreparationRoutes: Routes = [
     PrepDetailComponent,
     PrepDatasetDetailComponent,
     PrepPopCreateComponent,
+    PrepPopDBCreateComponent,
     CreateSnapshotPopup
   ],
   providers: [

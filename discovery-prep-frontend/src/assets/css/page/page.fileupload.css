@@ -7,13 +7,14 @@
 .pb-wrap-fileupload .pb-txt-title {padding-bottom:10px;color:#000; font-size:34px; font-weight:300;}
 .pb-wrap-fileupload .pb-txt-det {padding-bottom:70px; color:rgba(0,0,0,0.7); font-size:19px; font-weight:300;}
 
-.pb-box-fileupload {display:inline-block; position:relative; padding:150px 31px 0 31px; margin:0 5px;width:317px; min-height:315px; border-radius:6px; border:1px solid #d5d4cd; background-color:#fff; box-shadow: 0 4px 5px 0px rgba(64,64,61,0.15); text-align:center; color:rgba(0,0,0,0.9); font-size:15px;}
+.pb-box-fileupload {display:inline-block; position:relative; padding:150px 31px 0 31px; margin:0 5px;width:317px; min-height:315px; border-radius:6px; border:1px solid #d5d4cd; background-color:#fff; box-shadow: 0 4px 5px 0px rgba(64,64,61,0.15); text-align:center; color:rgba(0,0,0,0.9); font-size:15px; cursor:pointer;}
+.pb-box-fileupload:hover {color:#ff6701; border:1px solid #ffac5b; background-color:#fff2b7;}
 .pb-box-fileupload [class*="pb-img-diagram"] {display:inline-block; position:absolute; top:42px; left:50%; background:url(../../images/img_fileupload.png) no-repeat;}
 .pb-box-fileupload .pb-img-diagram1 {width:63px; height:62px; margin-left:-31px;}
 .pb-box-fileupload .pb-img-diagram2 {width:63px; height:60px; margin-left:-31px;background-position-y:-63px;}
 .pb-box-fileupload .pb-img-diagram3 {width:63px; height:57px; margin-left:-31px;background-position-y:-124px;}
 .pb-box-fileupload .pb-btn-box-file {display:block; margin-top:31px;padding:10px 0; text-align:center; border-radius:4px; background-color:#f77a15; border:1px solid #f77a15; color:#fff; font-weight:600;}
-.pb-box-fileupload .pb-btn-box-file:hover {color:#ff6701; border:1px solid #ffac5b; background-color:#fff2b7;}
+/*.pb-box-fileupload .pb-btn-box-file:hover {color:#ff6701; border:1px solid #ffac5b; background-color:#fff2b7;}*/
 
 
 
