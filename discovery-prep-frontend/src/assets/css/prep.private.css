@@ -43,3 +43,38 @@ prep-detail, prep-dataset-detail {
     cursor:pointer;
     margin-right:10px;
     border-radius: 3px;}
+
+.ddp-wrap-grid-option {height:55px; border-bottom:1px solid  #eaeaec; box-sizing:border-box;}
+
+.ddp-wrap-grid-option {position:relative; z-index:50;}
+.ddp-wrap-grid-option .ddp-part-left {float:left;}
+.ddp-wrap-grid-option .ddp-part-right {float:right; padding-right:15px;}
+
+.ddp-wrap-grid-option .ddp-part-right .ddp-type-search {float:left; width:200px; margin-top:15px; box-sizing:border-box;}
+.ddp-wrap-grid-option .ddp-data-form {display:inline-block; position:relative; padding:19px 0 12px 0; margin-left:17px; color:#4b515b; font-size:12px; font-weight:300; }
+.ddp-wrap-grid-option .ddp-data-form strong {color:#4b515b; font-weight:bold;}
+.ddp-wrap-grid-option .ddp-data-form input.ddp-data-input {display:inline-block; width:80px; padding:4px 9px; box-sizing:border-box; border:none; border-bottom:1px solid #d7d8dc; background:none; color:#656eb2; font-size:12px;}
+.ddp-wrap-grid-option .ddp-data-form .ddp-wrap-popup2 {position:absolute; right:0; top:47px;}
+
+.pb-ui-graph .ddp-box-gridarea {position:absolute; padding-top:55px; left:0; right:0; bottom:0; width:100%; height:100%; border:none; box-sizing:border-box; border-top:1px solid #ddd }
+.pb-ui-graph. ddp-box-gridarea .ddp-ui-gridbody {top:35px;}
+
+.slick-headerrow-column.ui-state-default {border-right:1px solid #ebebed;}
+.slick-headerrow.ui-state-default {border-top:1px solid #ebebed;}
+
+.ddp-type-search {position:relative; padding:0 20px 0 23px;}
+.ddp-type-search input {display:block; width:100%; padding:6px 0; border:none; background:none; font-size:13px;}
+.ddp-type-search input::placeholder {color:#b6b9c2;}
+
+/**************************************************************
+    프리퍼레이션 그리드
+**************************************************************/
+.slick-header-menuicon {display:inline-block; width:17px; height:17px; margin-right:5px; text-align:center; border-radius:50%; border:1px solid #727ab7;}
+.slick-header-menuicon:before {display:inline-block; font-size:9px; color:#727ab7; line-height:17px;}
+.slick-header-menuicon.type-rn:before {content:'Rn';}
+.slick-header-menuicon.type-dp:before {content:'Dp';}
+.slick-header-menuicon.type-st:before {content:'St';}
+.slick-header-menuicon.type-so:before {content:'So';}
+.slick-header-menuicon.type-mv:before {content:'Mv';}
+.slick-headerrow::-webkit-scrollbar {display: none;}
+.slick-header::-webkit-scrollbar {display: none;}

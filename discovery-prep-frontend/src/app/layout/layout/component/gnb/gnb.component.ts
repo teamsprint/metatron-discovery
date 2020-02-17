@@ -39,6 +39,9 @@ export class GnbComponent extends AbstractComponent implements OnInit, OnDestroy
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
    | Public Variables
    |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
+
+  public defaultProfileImageSrc = '/assets/images/img_photo.png';
+
   // my info show/hide
   public isMyInfoShow = false;
   public isLanguageShow = false;
@@ -89,6 +92,10 @@ export class GnbComponent extends AbstractComponent implements OnInit, OnDestroy
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
    | Public Method
    |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
+
+  public goToMain(): void {
+    this.router.navigate(['/management/prepbot']).then(); // 이동
+  }
 
   /**
    * 사용자 프로필 show

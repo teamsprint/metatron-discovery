@@ -201,12 +201,12 @@ export class DatasetInfoPopupComponent extends AbstractComponent implements OnIn
   }
 
   public ngAfterViewInit() {
-    setTimeout( () => {
+    /*setTimeout( () => {
       this._split = Split(['.sys-dataflow-left-panel', '.sys-dataflow-right-panel'], { sizes: [80, 20], minSize: [300,300], onDragEnd : (() => {
           this.gridComponent.resize();
           this.datasetEventHandler.emit('resize');
         }) });
-    }, 500 );
+    }, 500 );*/
   } // function -  ngAfterViewInit
 
   public ngOnDestroy() {
@@ -626,7 +626,7 @@ export class DatasetInfoPopupComponent extends AbstractComponent implements OnIn
    */
   public onEditRulesBtnClicked() {
     this.gridComponent.destroy();
-    this.router.navigate([`/management/datapreparation/dataflow/${this.dataflow.dfId}/rule/${this.selectedDataSet.dsId}`], {skipLocationChange: true});
+    this.router.navigate([`/management/prepbot/dataflow/${this.dataflow.dfId}/rule/${this.selectedDataSet.dsId}`], {skipLocationChange: true}).then();
   }
 
   /**
@@ -835,13 +835,13 @@ export class DatasetInfoPopupComponent extends AbstractComponent implements OnIn
 
     /**
      * Move to dataflow detail
-     * @param dsId
      */
-    public goToDetail(dsId) {
+    public goToDetail() {
+      console.log('test')
         //const params = this._getDfParams();
         //this.dataflowService.setParamsForDataflowList(params);
         this.router.navigate(
-            ['/management/prepbot/dataset',dsId])
+            [`/management/prepbot/dataset/${this.selectedDataSet.dsId}`])
             .then();
     }
 }

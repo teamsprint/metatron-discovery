@@ -14,7 +14,7 @@
 
 <div class="ddp-box-in">
   <a href="javascript:" class="ddp-btn-popup-close" (click)="closeInfo()"></a>
-  <a href="javascript:" class="ddp-btn-go-detail" (click)="goToDetail(datasetName)">GO TO DATASET</a>
+  <a href="javascript:" class="ddp-btn-go-detail" (click)="goToDetail()">GO TO DATASET</a>
   <div class="ddp-data-filename"
        [class.ddp-selected]="isDatasetNameEdit"
        (clickOutside)="isDatasetNameEdit ? setDatasetName(): null;">

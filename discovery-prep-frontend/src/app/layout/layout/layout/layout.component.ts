@@ -30,8 +30,6 @@ export class LayoutComponent extends AbstractComponent implements OnInit, OnDest
     super(elementRef, injector);
   }
 
-  public defaultProfileImageSrc = '/assets/images/img_photo.png';
-
   ngOnInit() {
     super.ngOnInit();
   }
@@ -45,20 +43,6 @@ export class LayoutComponent extends AbstractComponent implements OnInit, OnDest
   ngOnDestroy() {
     super.ngOnDestroy();
   }
-
-    /**
-     * 메인 화면으로 이동
-     */
-    public goToMain() {
-        this.cookieService.delete(CookieConstant.KEY.CURRENT_WORKSPACE, '/');  // 쿠키 삭제
-        if ('/workspace' === this.router.url) {
-            this.broadCaster.broadcast('moveFromLnb', 'my');
-        } else {
-            this.router.navigate(['/management/prepbot']).then(); // 이동
-        }
-    } // function - goMain
-
-
 
     /**
    * 얼럿창에서 번역이 필요한 부분 세팅

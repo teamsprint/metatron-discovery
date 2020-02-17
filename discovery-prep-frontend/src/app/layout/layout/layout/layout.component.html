@@ -27,33 +27,7 @@
 
 <div class="pb-wrap-layout">
   <!-- gnb -->
-  <div class="pb-layout-gnb">
-    <!-- left -->
-    <div class="pb-gnb-left">
-      <!-- lnb -->
-      <app-lnb></app-lnb>
-      <!-- //lnb -->
-      <a (click)="goToMain()" href="javascript:" ><span class="pb-img-logo">METATRON <em>PREP-BOT</em></span></a>
-    </div>
-    <!-- //left -->
-    <!-- user -->
-    <div class="pb-data-user">
-      Good morning
-      <span class="pb-data-photo">
-        <img src="{{defaultProfileImageSrc}}" #profileImage>
-      </span>
-      Metatron
-    </div>
-    <!-- //user -->
-    <!-- menu -->
-    <div class="pb-ui-gnb-menu">
-      <!--<a href="javascript:" class="pb-icon-live"></a>-->
-      <a href="javascript:" class="pb-icon-noti"></a>
-      <!--<a href="javascript:" class="pb-icon-message"></a>-->
-
-    </div>
-    <!-- //menu -->
-  </div>
+  <app-gnb></app-gnb>
   <!-- //gnb -->
   <!-- intro -->
   <router-outlet></router-outlet>

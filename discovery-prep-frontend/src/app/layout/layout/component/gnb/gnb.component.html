@@ -2,95 +2,18 @@
   <!-- left -->
   <div class="pb-gnb-left">
     <!-- lnb -->
-    <!--
-        메뉴 클릭시 is-selected 추가
-    -->
-    <div class="pb-wrap-lnb ">
-      <a href="javascript:" class="pb-btn-menu"></a>
-      <div class="pb-layout-lnb">
-        <a href="javascript:" class="pb-btn-menu"></a>
-        <span class="pb-lnb-logo">METATRON</span>
-
-        <!-- menu -->
-        <ul class="pb-list-menu">
-          <li class="is-selected">
-            <a href="javascript:">
-              Workflow
-            </a>
-          </li>
-          <li>
-            <a href="javascript:">
-              Analytic
-            </a>
-          </li>
-          <li>
-            <a href="javascript:">
-              Dashboard
-            </a>
-          </li>
-          <li>
-            <a href="javascript:">
-              Report
-            </a>
-          </li>
-          <li>
-            <a href="javascript:">
-              Notebook
-            </a>
-          </li>
-        </ul>
-        <!-- //menu -->
-
-        <!-- box menu -->
-        <div class="pb-box-menu">
-          <ul class="pb-list-box-menu">
-            <li>
-              <a href="javascript:">
-                <em class="pb-icon-lnb-explorer"></em>
-                Metatron
-                <span class="pb-txt-menu">Explorer</span>
-              </a>
-            </li>
-            <li>
-              <a href="javascript:">
-                <em class="pb-icon-lnb-builder"></em>
-                Metatron
-                <span class="pb-txt-menu">Explorer</span>
-              </a>
-            </li>
-            <li>
-              <a href="javascript:">
-                <em class="pb-icon-lnb-manager"></em>
-                Metatron
-                <span class="pb-txt-menu">Explorer</span>
-              </a>
-            </li>
-            <li>
-              <a href="javascript:">
-                <em class="pb-icon-lnb-notebook"></em>
-                Metatron
-                <span class="pb-txt-menu">Explorer</span>
-              </a>
-            </li>
-
-
-
-          </ul>
-        </div>
-        <!-- //box menu -->
-      </div>
-    </div>
+    <app-lnb></app-lnb>
     <!-- //lnb -->
-    <a href="javascript:" ><span class="pb-img-logo">METATRON <em>PREP-BOT</em></span></a>
+    <a (click)="goToMain()" href="javascript:" ><span class="pb-img-logo">METATRON <em>PREP-BOT</em></span></a>
   </div>
   <!-- //left -->
   <!-- user -->
   <div class="pb-data-user">
     Good morning
     <span class="pb-data-photo">
-                <img src="../images/@img_photo.png">
-            </span>
-    {{user.fullName}}
+        <img src="{{defaultProfileImageSrc}}" #profileImage>
+      </span>
+    Metatron
   </div>
   <!-- //user -->
   <!-- menu -->
