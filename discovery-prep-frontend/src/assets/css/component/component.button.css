@@ -3,12 +3,41 @@
 /***********************************************************************
      Compontent : button
  *************************************************************************/
-.pb-component-btn {display:inline-block; min-width:131px; padding:7px 35px; border-radius:3px; font-size:16px; font-weight:600; text-align:center;}
+.pb-component-btn {display:inline-block; min-width:83px; height:30px; padding:6px 10px; border-radius:3px; font-size:14px; font-weight:600; text-align:center;}
+.pb-component-btn:hover {background-color:#e4e3de;}
 .pb-component-btn.type-bg { color:#fff; background-color:#f77115;border:1px solid #f77115;}
-.pb-component-btn.type-bg2 {color:#ff6701; border:1px solid #ffac5b; background-color:#fff2b7;}
+.pb-component-btn.type-bg:hover {color:#fff; border:1px solid #dd591c; background-color:#dd591c;}
+.pb-component-btn.type-bg2 {}
 .pb-component-btn.type-line {border:1px solid rgba(127,126,124,0.4); color:#000;}
 .pb-component-btn.type-dark {background-color:#71706d; color:#fff;}
+.pb-component-btn.type-dark:hover {background-color:#484847;}
 .pb-component-btn em[class*="pb-icon-"] {display:inline-block; margin-right:9px;  background:url(../../images/icon_buttons.png) no-repeat; vertical-align:middle;}
 .pb-component-btn em.pb-icon-analytics {width:27px; height:20px;}
 .pb-component-btn em.pb-icon-add{width:13px; height:13px; background-position:left -20px;}
-.pb-component-btn.is-disabled {opacity:0.4; cursor:no-drop;}
+.pb-component-btn em.pb-icon-dictionary {width:14px; height:14px; background-position:left -34px;}
+.pb-component-btn.is-disabled,
+.pb-component-btn.is-disabled:hover {opacity:0.4; cursor:no-drop;color:#fff; background-color:#f77115;border:1px solid #f77115;}
+.pb-component-btn-s {display:inline-block; min-width:36px; height:26px; padding:5px 10px; border-radius:3px; font-size:12px; color:#313131; font-weight:600; text-align:center; border:1px solid #b5b5b2; background-color:#fff;}
+
+.pb-component-btn-s:hover {background-color:#e4e3de;}
+.pb-component-btn-s.type-bg {border-color:#f37135; background-color:#f37135; color:#fff;}
+
+.pb-component-btn-s.type-bg:hover {background-color:#dd591c;}
+
+/***********************************************************************
+     Compontent : tab button
+ *************************************************************************/
+.pb-component-tab-btn {}
+.pb-component-tab-btn li:first-of-type a {border-radius:3px 0 0 3px;}
+.pb-component-tab-btn li:last-of-type a {border-radius:0 3px 3px 0;}
+.pb-component-tab-btn li {display:inline-block; float:left; }
+.pb-component-tab-btn li a {display:block; position:relative;width:40px; height:28px; background-color:#e4e3de;}
+.pb-component-tab-btn a:before {display:inline-block; position:absolute; top:50%; left:50%; background:url(../../images/btn_tab.png) no-repeat;content:'';}
+.pb-component-tab-btn li a:hover {background-color:#cfcec7;}
+.pb-component-tab-btn .pb-icon-grid:before {width:11px; height:10px; margin:-5px 0 0 -6px;}
+.pb-component-tab-btn .pb-icon-list:before {width:12px; height:10px; margin:-5px 0 0 -6px;background-position:left -11px;}
+.pb-component-tab-btn li.is-selected .pb-icon-grid:before {background-position-x:-12px;}
+.pb-component-tab-btn li.is-selected .pb-icon-list:before {background-position-x:-13px;}
+.pb-component-tab-btn li.is-selected a {background-color:#71706d}
+
+

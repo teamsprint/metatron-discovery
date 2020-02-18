@@ -1,0 +1,13 @@
+@charset "utf-8";
+
+/***********************************************************************
+     Compontent : search
+ *************************************************************************/
+.pb-component-search {display:inline-block; position:relative; width:300px;padding:0 0 0 20px;}
+.pb-component-search:before {display:inline-block; position:absolute; top:50%; left:0; margin-top:-7px;width:14px; height:14px; background:url(../../images/icon_search.png); content:''; background-position:left -15px;}
+.pb-component-search input {display:block; font-size:13px; line-height:30px;border:none; background:none;}
+
+
+
+
+

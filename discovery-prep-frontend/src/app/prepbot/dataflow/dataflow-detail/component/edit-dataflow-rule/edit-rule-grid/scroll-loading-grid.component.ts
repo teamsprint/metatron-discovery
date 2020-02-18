@@ -778,7 +778,7 @@ export class ScrollLoadingGridComponent implements OnInit, AfterViewInit, OnDest
 
     if (this._option.showHeaderRow) {
       if (this._option.headerRowHeight !== 25) {
-        $('.slick-viewport').css('top', this._option.headerRowHeight + 30 + 'px');
+        $('.slick-viewport').css('top', this._option.headerRowHeight + 50 + 'px');
       }
       grid.onHeaderRowCellRendered.subscribe((event, args) => {
         this.onHeaderRowCellRendered.emit(args);

@@ -14,12 +14,15 @@
 @import url('component/component.toggle.css');
 @import url('component/component.slider.css');
 @import url('component/component.grid.css');
+@import url('component/component.search.css');
 
 /***********************************************************************
      Page
  *************************************************************************/
+@import url('page/page.login.css');
 @import url('page/page.intro.css');
 @import url('page/page.rule.css');
+@import url('page/page.recommendation.css');
 @import url('page/page.navigation.css');
 @import url('page/page.fileupload.css');
 @import url('page/page.noti.css');

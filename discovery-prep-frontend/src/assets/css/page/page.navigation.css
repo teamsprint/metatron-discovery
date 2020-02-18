@@ -65,14 +65,16 @@
 /***********************************************************************
      Page : Navigation open
  *************************************************************************/
-.pb-layout-navi.type-open .pb-lnb-navigation .pb-top-title {margin-bottom:28px;}
-.pb-layout-navi.type-open .pb-lnb-navigation {position:fixed; left:0; top:56px; right:0; bottom:0; min-width:100%; width:100%; height:auto; padding-bottom:106px; background:url(../../images/bg_lnb_navi.png) no-repeat; background-size:100% 100%; overflow:auto;}
+.pb-layout-navi.type-open .pb-lnb-navigation .pb-top-title {padding-bottom:28px; margin-bottom:0;}
+.pb-layout-navi.type-open .pb-lnb-navigation {position:relative; width:100%; height:100%; background:url(../../images/bg_lnb_navi.png) no-repeat; background-size:100% 100%; }
 .pb-layout-navi.type-open .pb-contents-navigation {display:none;}
 .pb-layout-navi.type-open .pb-lnb-navigation .pb-btn-resize {top:31px; right:55px; background-position-x:-19px;}
 .pb-layout-navi.type-open .pb-wrap-navi-tab {display:none;}
 .pb-layout-navi.type-open .pb-top-search {position:absolute; top:28px; right:94px; width:207px; margin:0;}
-.pb-contents-navi-open {display:none;}
-.pb-layout-navi.type-open .pb-contents-navi-open {display:block;}
+.pb-contents-navi-open {display:none; overflow:auto;}
+.pb-layout-navi.type-open {position:fixed; left:0; right:0; bottom:0; top:56px;}
+.pb-layout-navi.type-open .pb-contents-navi-open {display:block; position:absolute; top:89px;left:0; right:0; bottom:56px;}
+.pb-layout-navi.type-open .pb-contents-navi-open .pb-contents-in-open {position:absolute; top:0; left:0; right:0; bottom:56px; overflow:auto;}
 .pb-contents-navi-open .pb-ui-navi-buttons {margin:0 auto; text-align:center;}
 .pb-contents-navi-open .pb-ui-navi-buttons [class*="pb-btn-menu"] {display:inline-block; position:relative; width:110px; height:65px; padding:47px 0 0 0;color:#fff; font-size:16px; text-align:center;}
 .pb-contents-navi-open .pb-ui-navi-buttons [class*="pb-btn-menu"]:before {display:inline-block; position:absolute; top:0; left:50%; background:url(../../images/icon_navigation_open.png) no-repeat; vertical-align:top; content:'';}
@@ -87,22 +89,22 @@
 .pb-contents-navi-open .pb-ui-navi-buttons .pb-btn-menu.type-delete:before {width:33px; height:36px; margin-left:-17px;background-position:left -406px;}
 .pb-contents-navi-open .pb-ui-navi-buttons .pb-btn-menu.type-share:before {width:34px; height:36px;margin-left:-17px; background-position:left -443px;}
 
-.pb-contents-open-file {text-align:center;}
-.pb-contents-open-file ul.pb-list-open-file {display:inline-block; width:1620px;}
-.pb-contents-open-file ul.pb-list-open-file li {float:left; position:relative; width:357px; padding:225px 0 0 0; height:242px; margin:49px 24px 0 24px; cursor:pointer;}
-.pb-contents-open-file ul.pb-list-open-file li .pb-img-folder {display:inline-block; position:absolute; top:20px; left:50%; width:244px; height:168px;margin-left:-122px;}
+.pb-contents-open-file {text-align:center; }
+.pb-contents-open-file ul.pb-list-open-file {display:inline-block;}
+.pb-contents-open-file ul.pb-list-open-file li {float:left; position:relative; width:300px; padding:225px 0 0 0; height:242px; margin:49px 0; cursor:pointer;}
+.pb-contents-open-file ul.pb-list-open-file li .pb-img-folder {display:inline-block; position:absolute; top:20px; left:50%; width:238px; height:168px;margin-left:-122px;}
 .pb-contents-open-file ul.pb-list-open-file li .pb-img-folder:after {display:inline-block; position:absolute; top:0; left:0; width:244px; height:168px; background:url(../../images/icon_navigation_open.png) no-repeat; content:''; z-index:1;}
 .pb-contents-open-file ul.pb-list-open-file li .pb-img-folder .pb-btn-pin {display:inline-block;position:absolute; top:44px; left:100%; margin-left:-8px; width:43px; height:44px; border-radius:6px; background-color:rgba(99, 130, 160);}
 .pb-contents-open-file ul.pb-list-open-file li .pb-img-folder .pb-btn-pin:before {display:inline-block; width:15px; height:19px; position:absolute; top:50%; right:9px; margin-top:-10px; background:url(../../images/icon_navigation_open.png) no-repeat;background-position:left -169px;content:'';}
 .pb-contents-open-file ul.pb-list-open-file li .pb-img-folder .pb-btn-pin.is-selected:before {width:17px; height:22px; margin-top:-12px; right:7px;background-position-x:-16px}
 .pb-contents-open-file ul.pb-list-open-file li .pb-data-file-name {display:block; color:#fff; font-size:16px; text-align:center;}
-.pb-contents-open-file ul.pb-list-open-file li .pb-box-file {display:inline-block; position:absolute; top:0; left:50%; padding:10px 34px 10px 10px; margin-left:-179px; width:357px; height:208px; border-radius:5px; background-color:#6382a0;}
+.pb-contents-open-file ul.pb-list-open-file li .pb-box-file {display:inline-block; position:absolute; top:0; left:50%; padding:10px 34px 10px 10px; margin-left:-145px; width:290px; height:208px; border-radius:5px; background-color:#6382a0;}
 .pb-contents-open-file ul.pb-list-open-file li .pb-box-file .pb-btn-pin {display:inline-block; width:15px; height:19px; position:absolute; top:15px; right:8px; background:url(../../images/icon_navigation_open.png) no-repeat;background-position:left -169px;}
 .pb-contents-open-file ul.pb-list-open-file li .pb-box-file .pb-btn-pin.is-selected
 {width:17px; height:22px; top:13px; right:6px;background-position-x:-16px}
 .pb-contents-open-file ul.pb-list-open-file li .pb-box-file:after {display:inline-block; width:12px; height:13px; position:absolute; bottom:10px;right:10px;background:url(../../images/icon_navigation_open.png) no-repeat; background-position:left -191px; content:'';}
 .pb-contents-open-file ul.pb-list-open-file li .pb-box-file .pb-ui-graph {display:block; width:100%; height:100%; border-radius:5px; overflow:hidden; text-align:left;}
-.pb-bottom-open-file {position:fixed; left:0; right:0; bottom:0; height:56px;background:rgba(42,58,81,0.95);}
+.pb-bottom-open-file {position:absolute; bottom:0; left:0; right:0;height:56px;background:rgba(42,58,81,0.95);}
 .pb-bottom-open-file .pb-data-total {float:left;padding:20px 0 0 76px;color:#fff; font-size:16px;}
 .pb-bottom-open-file .pb-wrap-slider2 {float:left; width:150px; margin:25px 105px 0 0;}
 .pb-bottom-open-file .pb-type-file {float:left; margin-right:103px;}

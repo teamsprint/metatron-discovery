@@ -17,6 +17,7 @@
 :host /deep/ .slick-header-columns {
   border-bottom: none;
   background: none;
+  height: 50px;
 }
 
 :host /deep/ .slick-header-column.ui-state-default {
@@ -25,7 +26,7 @@
   text-align: left;
   color:#4b515b;
   background: none;
-  background-color:#fff;
+  background-color:#edf4f8;
   cursor: pointer;
 }
 
@@ -33,7 +34,7 @@
 :host /deep/ .slick-column-name {
   display:inline-block;
   width:100%;
-  line-height:29px;
+  line-height:48px;
   vertical-align: middle;
   white-space:pre;
   text-overflow:ellipsis;
@@ -53,7 +54,7 @@
   border-bottom: none;
   border-right: 1px solid #ebebed;
   color: #4b525b;
-  font-size: 12px;
+  font-size: 13px;
 }
 
 :host /deep/ .slick-row > .slick-cell {

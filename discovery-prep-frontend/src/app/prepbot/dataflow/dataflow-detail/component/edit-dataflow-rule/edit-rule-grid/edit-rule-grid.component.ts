@@ -1860,7 +1860,7 @@ export class EditRuleGridComponent extends AbstractComponent implements OnInit, 
 
     const defaultStyle: string = 'line-height:30px;';
     const nullStyle: string = 'color:#b8bac2; font-style: italic;';
-    const selectStyle: string = 'background-color:#d6d9f1; position:absolute; top:0; left:0; right:0; bottom:0px; line-height:30px; padding:0 10px;';
+    const selectStyle: string = 'background-color:#d0e1e9; position:absolute; top:0; left:0; right:0; bottom:0px; line-height:30px; padding:0 10px;';
     const mismatchStyle: string = 'color:' + this._BARCHART_MISMATCH_COLOR + ';';
 
     // 헤더정보 생성

@@ -13,73 +13,55 @@
   ~ limitations under the License.
   -->
 
-<!-- option -->
-<div class="ddp-wrap-grid-option ddp-clear">
+<!-- setting -->
+<div class="pb-ui-setting pb-clear">
   <!-- left -->
-  <div class="ddp-part-left">
-    <div class="ddp-data-form">
-      <strong >{{totalColumnCnt | numberCommas}}</strong>
-      {{'msg.comm.detail.columns' | translate}}
-    </div>
-    <div class="ddp-data-form">
-      <strong>{{totalRowCnt | numberCommas}}</strong>
-      {{'msg.comm.detail.rows' | translate}}
-    </div>
-    <div #typeListElement class="ddp-data-form ddp-cursor"
-         (click)="toggleShowColumnTypes($event)">
-      <strong >{{columnTypeCnt | numberCommas}}</strong>
-      {{'msg.comm.detail.types' | translate}}
-      <!-- 팝업 -->
-      <div class="ddp-wrap-popup2 ddp-types"
-           *ngIf="isShowColumnTypes">
-        <ul class="ddp-list-popup">
-          <li *ngFor="let item of columnTypeList">
-            <a href="javascript:">
-              <em class="{{getFieldTypeIconClass(item.label)}}"></em>
-              {{item.value}}
-            </a>
-          </li>
+  <div class="pb-fleft">
 
-        </ul>
-      </div>
-      <!-- //팝업 -->
-    </div>
-  </div>
-  <!-- //left -->
-  <!-- right -->
-  <div class="ddp-part-right">
-    <!-- search -->
-
-    <div class="ddp-type-search">
-      <em class="ddp-icon-search"></em>
+    <div class="pb-component-search">
       <input placeholder="{{'msg.storage.ui.search.data' | translate}}"
              id="gridSearch"
              [(ngModel)]="searchText"
              (keyup.enter)="searchGrid();"
              (keyup.esc)="searchGrid(true);">
-      <em class="ddp-btn-search-close" [ngStyle]="searchText ? {'display':'block'} : {'display':'none'}"  (click)="searchGrid(true);"></em>
     </div>
-    <!-- //search -->
+  </div>
+  <!-- //left -->
+  <!-- right -->
+  <div class="pb-fright">
 
-    <ul class="ddp-list-tab-button" style="display: none;">
-      <li>
-        <a href="javascript:"><em class="ddp-icon-grid"></em></a>
-
-        <div class="ddp-ui-tooltip-info">
-          <em class="ddp-icon-view-top"></em>
-          그리드 뷰
+    <div class="pb-data-set-num">
+      <span class="pb-data-txt"><strong>{{totalColumnCnt | numberCommas}}</strong> {{'msg.comm.detail.columns' | translate}}</span>
+      <span class="pb-data-txt"><strong>{{totalRowCnt | numberCommas}}</strong> {{'msg.comm.detail.rows' | translate}}</span>
+      <span #typeListElement class="pb-data-txt ddp-cursor"
+            (click)="toggleShowColumnTypes($event)">
+        <strong>{{columnTypeCnt | numberCommas}}</strong> {{'msg.comm.detail.types' | translate}}
+        <!-- 팝업 -->
+        <div class="ddp-wrap-popup2 ddp-types"
+             *ngIf="isShowColumnTypes">
+          <ul class="ddp-list-popup">
+            <li *ngFor="let item of columnTypeList">
+              <a href="javascript:">
+                <em class="{{getFieldTypeIconClass(item.label)}}"></em>
+                {{item.value}}
+              </a>
+            </li>
+          </ul>
         </div>
+      </span>
 
+      <!-- //팝업 -->
+    </div>
+    <!-- tab button -->
+    <ul class="pb-component-tab-btn pb-clear "style="display: none;">>
+      <li class="is-selected">
+        <a href="javascript:" class="pb-icon-grid "></a>
       </li>
-      <li class="ddp-selected">
-        <a href="javascript:"><em class="ddp-icon-listgrid"></em></a>
-        <div class="ddp-ui-tooltip-info">
-          <em class="ddp-icon-view-top"></em>
-          리스트 뷰
-        </div>
-
+      <li>
+        <a href="javascript:" class="pb-icon-list"></a>
       </li>
     </ul>
+    <!-- //tab button -->
 
     <div class="ddp-box-warning" *ngIf="isAggregationIncluded">
       <em class="ddp-icon-warning"></em>
@@ -89,10 +71,12 @@
         {{'msg.dp.ui.aggregate.warning.grid-top2' | translate }}
       </div>
     </div>
+
   </div>
   <!-- //right -->
 </div>
-<!-- //option -->
+<!-- //setting -->
+
 <!-- 그리드 영역 -->
 <div scroll-grid-component
      class="ddp-box-gridarea"
