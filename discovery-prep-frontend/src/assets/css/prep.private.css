@@ -16,36 +16,16 @@
     100% {opacity:1;}
 }
 
-prep-detail, prep-dataset-detail {
-    height:100%;
-}
-.ddp-box-in {
-    background: #d0e1e9;
-    color: white;
-    float: right;
-    top: 130px;
-    position: absolute;
-    left: 482px;
-    height: 300px;
-    width: 300px;
-    overflow-y: scroll;
-    overflow-x: hidden;
-    border: 3px solid #3c65ab;
-    border-radius: 5px;
-    font-size: 14px;
-    padding: 10px;
-}
+prep-detail, prep-dataset-detail {height:100%;}
+.ddp-box-in {background: #d0e1e9;color: white;float: right;top: 130px;position: absolute;left: 482px;height: 300px;width: 300px;overflow-y: scroll;overflow-x: hidden;border: 3px solid #3c65ab;border-radius: 5px;font-size: 14px;padding: 10px;}
 .ddp-icon-file-svg {display:none;}
-.ddp-btn-go-detail {float: right;
-    background: black;
-    color: white;
-    padding: 10px;
-    cursor:pointer;
-    margin-right:10px;
-    border-radius: 3px;}
+.ddp-btn-go-detail {float: right;background: black;color: white;padding: 10px;cursor:pointer;margin-right:10px;border-radius: 3px;}
+
+.pb-drop-file {border: 16px dashed #eee;margin: 15px;border-radius: 61px;}
+.pb-drop-file .pb-txt-title{padding-bottom: 10px;color: #e0e0e0;font-size: 65px;font-weight: 900;}
+.pb-drop-file .pb-txt-det {padding-bottom: 70px;color: #e0e0e0;font-size: 19px;font-weight: 300;}
 
 .ddp-wrap-grid-option {height:55px; border-bottom:1px solid  #eaeaec; box-sizing:border-box;}
-
 .ddp-wrap-grid-option {position:relative; z-index:50;}
 .ddp-wrap-grid-option .ddp-part-left {float:left;}
 .ddp-wrap-grid-option .ddp-part-right {float:right; padding-right:15px;}
@@ -78,3 +58,5 @@ prep-detail, prep-dataset-detail {
 .slick-header-menuicon.type-mv:before {content:'Mv';}
 .slick-headerrow::-webkit-scrollbar {display: none;}
 .slick-header::-webkit-scrollbar {display: none;}
+
+

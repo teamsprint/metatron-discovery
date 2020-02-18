@@ -17,6 +17,7 @@ import {AbstractComponent} from '../../common/component/abstract.component';
 import {DataflowService} from '../dataflow/service/dataflow.service';
 import {ActivatedRoute} from "@angular/router";
 import {PrepPopDBCreateComponent} from "./prep-pop-db-create.component";
+import {PrepPopFileUploadCreateComponent} from "./prep-pop-file-upload-create.component";
 
 @Component({
   selector: 'prep-pop-create',
@@ -28,6 +29,10 @@ export class PrepPopCreateComponent extends AbstractComponent {
 
     @ViewChild(PrepPopDBCreateComponent)
     public prepPopDBCreateComponent : PrepPopDBCreateComponent;
+
+
+    @ViewChild(PrepPopFileUploadCreateComponent)
+    public prepPopFileUploadCreateComponent : PrepPopFileUploadCreateComponent;
 
     // 생성자
     constructor(protected elementRef: ElementRef,
@@ -68,7 +73,7 @@ export class PrepPopCreateComponent extends AbstractComponent {
      * Create new file
      */
     public goToFile() {
-        this.prepPopDBCreateComponent.init();
+        this.prepPopFileUploadCreateComponent.init();
     }
 
     /**

@@ -44,7 +44,6 @@ export class PrepPopDBCreateComponent extends AbstractComponent {
 
     // Destory
     public ngOnDestroy() {
-        // Destory
         super.ngOnDestroy();
     }
 

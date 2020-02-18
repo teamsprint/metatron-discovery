@@ -121,7 +121,7 @@
 }
 
 :host /deep/ .slick-cell.selected {
-  background-color: #d6d9f1;
+  background-color: #c2d7e5;
 }
 
 :host /deep/ .slick-cell.ddp-selected {

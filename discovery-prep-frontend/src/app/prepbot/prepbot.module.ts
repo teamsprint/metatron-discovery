@@ -93,6 +93,7 @@ import {PrepDetailComponent} from "./prep/prep-detail.component";
 import {PrepDatasetDetailComponent} from "./prep/prep-dataset-detail.component";
 import {PrepPopCreateComponent} from "./prep/prep-pop-create.component";
 import {PrepPopDBCreateComponent} from "./prep/prep-pop-db-create.component";
+import {PrepPopFileUploadCreateComponent} from "./prep/prep-pop-file-upload-create.component";
 
 const dataPreparationRoutes: Routes = [
 { path: '', component: PrepListComponent },
@@ -183,6 +184,7 @@ const dataPreparationRoutes: Routes = [
     PrepDatasetDetailComponent,
     PrepPopCreateComponent,
     PrepPopDBCreateComponent,
+    PrepPopFileUploadCreateComponent,
     CreateSnapshotPopup
   ],
   providers: [

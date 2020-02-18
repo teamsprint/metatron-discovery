@@ -23,4 +23,13 @@ export class PrepbotService extends AbstractService {
     super(injector);
   }
 
+    /**
+     * 1st step of 3-way negotiation for file uploading
+     */
+    public getFileUploadNegotiation() {
+        let url = this.API_URL + 'preparationdatasets/file_upload';
+        return this.get(url);
+    }
+
+
 }

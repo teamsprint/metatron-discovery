@@ -1,0 +1,35 @@
+<div class="pb-layout-popup" *ngIf="isShow">
+    <!-- box popup -->
+    <div class="pb-box-popup">
+        <a href="javascript:" class="pb-btn-pop-close" (click)="isShow = false"></a>
+        <!-- top -->
+        <div class="pb-popup-top">
+            <div class="pb-txt-title">DATA CONNECT</div>
+
+        </div>
+        <!-- //top -->
+        <!-- contents -->
+        <div class="pb-popup-contents">
+            <div class="pb-wrap-fileupload pb-drop-file"  #drop_container [ngStyle]="{'visibility': supportedFileCount===0?'visible':'hidden'}">
+                <div class="pb-txt-title">Drop your File</div>
+                <div class="pb-txt-det">You can create data.</div>
+                <component-select
+                        [array]="fileLocations"
+                        [isUpSelect]="false"
+                        [isFull]="false"
+                        [viewKey]="'label'"
+                        [defaultIndex]="fileLocationDefaultIdx"
+                        (onSelected)="onSelected($event)">
+                </component-select>
+            </div>
+        </div>
+        <!-- //contents -->
+        <!-- bottom -->
+        <div class="pb-popup-bottom">
+            <a href="javascript:" class="pb-component-btn type-bg">SKIP</a>
+            <a href="javascript:" class="pb-component-btn type-line">CANCEL</a>
+        </div>
+        <!-- //bottom -->
+    </div>
+    <!-- //box popup -->
+</div>

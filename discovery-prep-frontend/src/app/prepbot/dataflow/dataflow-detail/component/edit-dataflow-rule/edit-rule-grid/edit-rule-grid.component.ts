@@ -78,9 +78,9 @@ export class EditRuleGridComponent extends AbstractComponent implements OnInit, 
   private _hoverHistogramData: string;  // Hover 했을 때 보여지는 데이타
   private _hoverHistogramIndo: any = {}; // Hover 했을 때 해당 Chart data 할당
 
-  private readonly _HISTOGRAM_DEFAULT_COLOR: string = '#c1cef1';
+  private readonly _HISTOGRAM_DEFAULT_COLOR: string = '#c2d7e5';
   private readonly _HISTOGRAM_HOVER_COLOR: string = '#9aa5c1';
-  private readonly _HISTOGRAM_CLICK_COLOR: string = '#666eb2';
+  private readonly _HISTOGRAM_CLICK_COLOR: string = '#5282b9';
 
   // Bar chart
   private _barCharts: any = [];
@@ -496,7 +496,7 @@ export class EditRuleGridComponent extends AbstractComponent implements OnInit, 
       let selectedDiv = this.$element.find('.slick-header-columns').children()[idx + 1];
 
       if (data.isSelect) {
-        selectedDiv.setAttribute('style', 'background-color : #d6d9f1; width : ' + selectedDiv.style.width);
+        selectedDiv.setAttribute('style', 'background-color : #c2d7e5; width : ' + selectedDiv.style.width);
       } else {
         selectedDiv.setAttribute('style', 'background-color : ; width : ' + selectedDiv.style.width);
       }
