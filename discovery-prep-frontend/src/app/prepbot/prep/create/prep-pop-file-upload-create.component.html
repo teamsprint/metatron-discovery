@@ -13,23 +13,14 @@
             <div class="pb-wrap-fileupload pb-drop-file"  #drop_container [ngStyle]="{'visibility': supportedFileCount===0?'visible':'hidden'}">
                 <div class="pb-txt-title">Drop your File</div>
                 <div class="pb-txt-det">You can create data.</div>
-                <component-select
-                        [array]="fileLocations"
-                        [isUpSelect]="false"
-                        [isFull]="false"
-                        [viewKey]="'label'"
-                        [defaultIndex]="fileLocationDefaultIdx"
-                        (onSelected)="onSelected($event)">
-                </component-select>
-                <input type="file" accept=".txt, .csv, .json, .xls, .xlsx" #pickfiles />
             </div>
         </div>
         <!-- //contents -->
         <!-- bottom -->
         <div class="pb-popup-bottom">
-            <a href="javascript:" class="pb-component-btn type-line">PRE</a>
-            <a href="javascript:" class="pb-component-btn type-bg">SKIP</a>
-            <a href="javascript:" class="pb-component-btn type-line">NEXT</a>
+            <a (click)="next();" href="javascript:" class="pb-component-btn type-line">PRE</a>
+            <a (click)="next();" href="javascript:" class="pb-component-btn type-bg">SKIP</a>
+            <a (click)="next();" href="javascript:" class="pb-component-btn type-line">NEXT</a>
         </div>
         <!-- //bottom -->
     </div>

@@ -78,7 +78,6 @@ export class PrepPopFileUploadCreateComponent extends AbstractPopupComponent imp
 
   // file uploader
   public chunk_uploader: any;
-  public chunk_uploader2: any;
 
   public uploadNegoParams: UploadNegotitationParameters;
 
@@ -178,7 +177,6 @@ export class PrepPopFileUploadCreateComponent extends AbstractPopupComponent imp
     this.chunk_uploader = new plupload.Uploader({
       runtimes : 'html5,html4',
       chunk_size: '0',
-      browse_button : this.pickfiles.nativeElement,
       drop_element : this.drop_container.nativeElement,
       url : CommonConstant.API_CONSTANT.API_URL + 'preparationdatasets/file_upload',
       headers:{
@@ -396,238 +394,6 @@ export class PrepPopFileUploadCreateComponent extends AbstractPopupComponent imp
     });
     this.chunk_uploader.init();
 
-    this.chunk_uploader2 = new plupload.Uploader({
-      runtimes : 'html5,html4',
-      chunk_size: '0',
-      browse_button : this.pickfiles2.nativeElement,
-      drop_element : this.drop_container2.nativeElement,
-      url : CommonConstant.API_CONSTANT.API_URL + 'preparationdatasets/file_upload',
-      headers:{
-        'Accept': 'application/json, text/plain, */*',
-        'Authorization': this.cookieService.get(CookieConstant.KEY.LOGIN_TOKEN_TYPE) + ' ' + this.cookieService.get(CookieConstant.KEY.LOGIN_TOKEN)
-      },
-
-      filters : {
-        max_file_size : 0,
-        prevent_duplicate: true,
-        mime_types: [
-          {title: "Datapreparation files", extensions: "csv,txt,xls,xlsx,json"}
-        ],
-
-      },
-
-      multipart_params: {
-        storage_type: '',
-        upload_id: '',
-        chunk_size: '',
-        total_size : ''
-      },
-
-      init: {
-        PostInit: () => {
-          for ( let item in this.chunk_uploader2.settings.multipart_params){
-            this.chunk_uploader2.settings.multipart_params[item] = ''
-          }
-        },
-
-        // QueueChanged: (up)=>{
-        // },
-
-        FilesAdded: (up, files) => {
-          this.isNext = false;
-
-          if(this.isUploading) {
-            this.chunk_uploader2.disableBrowse(true);
-
-            plupload.each(files, (file, idx) => {
-              if(file.status != plupload.UPLOADING){
-                this.chunk_uploader2.removeFile(file);
-              }
-            });
-
-            //Alert.warning('Can not add files during file upload.');
-            return;
-          }
-
-          this.chunk_uploader2.setOption('chunk_size', this.limitSize );
-          plupload.each(files, (file, idx) => {
-            this.chunk_uploader2.settings.multipart_params.upload_id = null;
-            this.chunk_uploader2.settings.multipart_params.chunk_size = null;
-            this.chunk_uploader2.settings.multipart_params.total_size = null;
-
-            file.uploaderNo = 2;
-            file.upload_id = null;
-            file.isUploaded = false;
-            file.isUploading = false;
-            file.isCanceled = false;
-            file.isFailed = false;
-            file.total_chunks = 0;
-            file.uploading_chunks = 0;
-            file.succeeded_chunks = 0;
-            file.failed_chunks = 0;
-            file.progressPercent = 0;
-            file.storage_type = ('LOCAL' === this.fileLocation? 'Local': this.fileLocation);
-
-            let tmp = PreparationCommonUtil.getFileNameAndExtension(file.name);
-
-            file.fileName = tmp[0];
-            file.fileExtension = tmp[1];
-            file.response = null;
-
-            this.prepbotService.getFileUploadNegotiation().then((params) => {
-              this.uploadNegoParams = JSON.parse(JSON.stringify(params));
-              file.upload_id = this.uploadNegoParams.upload_id;
-
-              this.supportedFileCount++;
-              this.changeDetect.detectChanges();
-            });
-          });
-
-          files.forEach((file)=>{ this.upFiles.push(file); });
-          this._isFileAddedCheck(2);
-        },
-
-        UploadProgress: (up, file) => {
-          let idx = this.upFiles.findIndex((upFile)=>{ return upFile.id === file.id});
-          this.upFiles[idx].progressPercent = file.percent;
-
-          this.changeDetect.detectChanges();
-        },
-
-        BeforeUpload: (up, file)=>{
-          this.chunk_uploader2.settings.multipart_params.upload_id = file.upload_id;
-          this.chunk_uploader2.settings.multipart_params.chunk_size = this.limitSize;
-          this.chunk_uploader2.settings.multipart_params.total_size = file.size;
-
-          this.chunk_uploader2.settings.multipart_params.storage_type = this.fileLocation;
-
-          this.changeDetect.detectChanges();
-        },
-
-        UploadFile: (up,file)=>{
-          this.changeDetect.detectChanges();
-        },
-
-        FileUploaded: (up, file, info)=>{
-          let response = JSON.parse(info.response);
-
-          this.isUploading = false;
-          file.isUploading = false;
-
-          file.response = response;
-          if( response.chunkIdx == 0 ) {
-            file.uploading_chunks--;
-
-            if( response.success==true ) {
-              file.succeeded_chunks++;
-            } else {
-              file.failed_chunks++;
-            }
-          }
-
-          if( file.succeeded_chunks == file.total_chunks ){
-            file.isUploaded = true;
-            file.storedUri = response.storedUri;
-            this.sucessFileCount++;
-          } else {
-            file.isUploaded = false;
-            file.storedUri = '';
-          }
-
-          let idx = this.upFiles.findIndex((upFile)=>{ return upFile.id === file.id});
-          this.upFiles[idx].response = file.response;
-          this.upFiles[idx].uploading_chunks = file.uploading_chunks;
-          this.upFiles[idx].succeeded_chunks = file.succeeded_chunks;
-          this.upFiles[idx].failed_chunks = file.failed_chunks;
-          this.upFiles[idx].isUploading = file.isUploading;
-          this.upFiles[idx].isUploaded = file.isUploaded;
-          this.upFiles[idx].storedUri = file.storedUri;
-          this.changeDetect.detectChanges();
-        },
-
-        BeforeChunkUpload: (up, file, result)=>{
-          this.isUploading = true;
-
-          file.total_chunks++;
-          file.uploading_chunks++;
-          file.isUploading = true;
-
-          let idx = this.upFiles.findIndex((upFile)=>{ return upFile.id === file.id});
-          this.upFiles[idx].total_chunks = file.total_chunks;
-          this.upFiles[idx].uploading_chunks = file.uploading_chunks;
-          this.upFiles[idx].isUploading = file.isUploading;
-
-          this.changeDetect.detectChanges();
-        },
-
-        ChunkUploaded: (up, file, info)=>{
-          let response = JSON.parse(info.response);
-
-          this.isUploading = true;
-
-          file.isUploading = true;
-          file.uploading_chunks--;
-          if( response.success==true ) {
-            file.succeeded_chunks++;
-          } else {
-            file.failed_chunks++;
-          }
-
-          let idx = this.upFiles.findIndex((upFile)=>{ return upFile.id === file.id});
-          this.upFiles[idx].isUploading = file.isUploading;
-          this.upFiles[idx].uploading_chunks = file.uploading_chunks;
-          this.upFiles[idx].succeeded_chunks = file.succeeded_chunks;
-          this.upFiles[idx].failed_chunks = file.failed_chunks;
-
-          this.changeDetect.detectChanges();
-        },
-
-        UploadComplete: (up, files) => {
-          this.isUploading = false;
-          this.fileUploadComplete(2);
-          this.changeDetect.detectChanges();
-        },
-
-        /* error define
-        -100 GENERIC_ERROR
-        -200 HTTP_ERROR
-        -300 IO_ERROR
-        -400 SECURITY_ERROR
-        -500 INIT_ERROR
-        -600 FILE_SIZE_ERROR
-        -601 FILE_EXTENSION_ERROR
-        -602 FILE_DUPLICATE_ERROR
-        -701 MEMORY_ERROR
-         */
-        Error: (up, err) => {
-          switch (err.code){
-            case -601:
-              this.unsupportedFileCount++;
-              this.unsupportedFileView = true;
-              this._unsupportedFileView();
-              //Alert.error(this.translateService.instant('msg.dp.alert.file.format.wrong'));
-              break;
-            case -100:
-              console.log('GENERIC_ERROR', err);
-              break;
-            case -200:
-              console.log('HTTP_ERROR', err);
-              if (err.response) {
-                const res = JSON.parse(err.response);
-                Alert.error(this.translateService.instant(res.message));
-              }
-              break;
-            case -300:
-              console.log('IO_ERROR', err);
-              break;
-            default:
-              console.log('unknow error', err);
-              break;
-          }
-        }
-      }
-    });
-    this.chunk_uploader2.init();
   }
 
   /**
@@ -654,7 +420,6 @@ export class PrepPopFileUploadCreateComponent extends AbstractPopupComponent imp
     this.isNext = false;
 
     this.chunk_uploader.splice();
-    this.chunk_uploader2.splice();
     this.upFiles.splice(0, this.upFiles.length);
     this.datasetFiles.splice(0, this.datasetFiles.length);
   }
@@ -666,19 +431,11 @@ export class PrepPopFileUploadCreateComponent extends AbstractPopupComponent imp
     if (file.status == plupload.UPLOADING) {
       let idx = this.upFiles.findIndex((upFile)=>{ return upFile.id === file.id});
 
-      if(file.uploaderNo === 1) {
         this.chunk_uploader.stop();
         this.chunk_uploader.removeFile(file);
         this.upFiles[idx].isUploading = false;
         this.upFiles[idx].isCanceled = true;
         this.chunk_uploader.start();
-      } else {
-        this.chunk_uploader2.stop();
-        this.chunk_uploader2.removeFile(file);
-        this.upFiles[idx].isUploading = false;
-        this.upFiles[idx].isCanceled = true;
-        this.chunk_uploader2.start();
-      }
     }
   }
 
@@ -687,15 +444,10 @@ export class PrepPopFileUploadCreateComponent extends AbstractPopupComponent imp
    */
   public startUpload(pluploadNo:number){
     this.isUploading = true;
-    this.chunk_uploader2.disableBrowse(true);
 
     $('.ddp-list-file-progress').scrollTop(422 * (this.upFiles.length +1));
 
-    if (pluploadNo===1){
       this.chunk_uploader.start();
-    } else {
-      this.chunk_uploader2.start();
-    }
   }
 
   /**
@@ -745,13 +497,8 @@ export class PrepPopFileUploadCreateComponent extends AbstractPopupComponent imp
     }
     this.isNext = ( !this.isUploading && this.sucessFileCount > 0) ;
 
-    if(pluploadNo === 1){
       this.chunk_uploader.splice();
-    }else{
-      this.chunk_uploader2.splice();
-    }
 
-    this.chunk_uploader2.disableBrowse(false);
   }
 
   /**

@@ -264,6 +264,6 @@
 
 <!-- 생성 -->
 <prep-pop-create *ngIf="mode=='prep-pop-create'"
-                        (sourceCreateClose)="changeMode( '' )"
-                        (sourceCreateComplete)="createComplete()"></prep-pop-create>
+                        (closeEvent)="changeMode( '' )"
+                        (createComplete)="createComplete()"></prep-pop-create>
 <!-- //생성 -->

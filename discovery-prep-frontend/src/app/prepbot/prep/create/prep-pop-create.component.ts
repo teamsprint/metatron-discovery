@@ -19,6 +19,7 @@ import { PrDataset, ImportType } from '../../../domain/data-preparation/pr-datas
 import {PrepPopTypeComponent} from "./prep-pop-type.component";
 import {PrepPopDBCreateComponent} from "./prep-pop-db-create.component";
 import {PrepPopFileUploadCreateComponent} from "./prep-pop-file-upload-create.component";
+import {PrepPopFileSelectsheetComponent} from "./prep-pop-file-selectsheet.component";
 
 @Component({
   selector: 'prep-pop-create',
@@ -52,6 +53,7 @@ export class PrepPopCreateComponent  extends AbstractComponent implements OnInit
     @Output('sourceCreateComplete')
     public completeEvent: EventEmitter<PrDataset> = new EventEmitter();
 
+   @Input()
     public step: string = '';
 
     // 새로 생성될 데이터소스 정보
@@ -75,6 +77,11 @@ export class PrepPopCreateComponent  extends AbstractComponent implements OnInit
     public ngOnInit() {
         // Init
         super.ngOnInit();
+        this.init();
+    }
+
+    public init() {
+        this.step='';
     }
 
     public ngOnDestroy() {

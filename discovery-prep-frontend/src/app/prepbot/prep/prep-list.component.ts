@@ -277,6 +277,9 @@ export class PrepListComponent extends AbstractComponent {
      */
     public changeMode(mode: string) {
         this.useUnloadConfirm = ('prep-pop-create' === mode);
+        if('prep-pop-create' === mode && this.prepPopCreateComponent) {
+        this.prepPopCreateComponent.step = '';
+        }
         this.mode = mode;
     } // function - changeMode
 
