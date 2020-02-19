@@ -45,6 +45,9 @@ export class PrepPopFileUploadCreateComponent extends AbstractPopupComponent imp
    | Private Variables
    |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
+    @Input()
+    public step: string = '';
+
   @ViewChild('pickfiles')
   private pickfiles: ElementRef;
 
@@ -122,6 +125,8 @@ export class PrepPopFileUploadCreateComponent extends AbstractPopupComponent imp
 
   public ngOnInit() {
     super.ngOnInit();
+
+    this.init();
 
     this.upFiles = [];
 

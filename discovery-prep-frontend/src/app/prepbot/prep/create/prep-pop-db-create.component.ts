@@ -12,12 +12,11 @@
  * limitations under the License.
  */
 
-import {Component, ElementRef, HostListener, Injector, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, HostListener, Injector, OnDestroy, OnInit, ViewChild, Input} from '@angular/core';
 import {AbstractComponent} from '../../../common/component/abstract.component';
 import {DataflowService} from '../../dataflow/service/dataflow.service';
 import {ActivatedRoute} from "@angular/router";
 import {PopupService} from '../../../common/service/popup.service';
-import {PrepPopCreateComponent} from "./prep-pop-create.component";
 
 @Component({
   selector: 'prep-pop-db-create',
@@ -25,10 +24,10 @@ import {PrepPopCreateComponent} from "./prep-pop-create.component";
 })
 export class PrepPopDBCreateComponent extends AbstractComponent {
 
-    public isShow = false;
+    @Input()
+    public step: string = '';
 
-    @ViewChild(PrepPopCreateComponent)
-    public prepPopCreateComponent : PrepPopCreateComponent;
+    public isShow = false;
 
     // 생성자
     constructor(protected elementRef: ElementRef,
@@ -45,6 +44,7 @@ export class PrepPopDBCreateComponent extends AbstractComponent {
 
     public ngOnInit() {
         super.ngOnInit();
+        this.init();
     }
 
     // Destory

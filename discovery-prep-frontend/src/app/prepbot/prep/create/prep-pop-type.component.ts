@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-import {Component, ElementRef, Injector, Input, ViewChild} from '@angular/core';
+import {Component, ElementRef, Injector, Input, ViewChild, Output, EventEmitter} from '@angular/core';
 import {AbstractComponent} from '../../../common/component/abstract.component';
 import {ActivatedRoute} from "@angular/router";
 import {PrepPopDBCreateComponent} from "./prep-pop-db-create.component";
@@ -30,6 +30,8 @@ export class PrepPopTypeComponent extends AbstractComponent {
 
     @Input()
     public step: string = '';
+    @Output()
+    public stepChange : EventEmitter<string> = new EventEmitter();
 
     // 새로 생성될 데이셋 타입 정보
     @Input()
@@ -57,6 +59,7 @@ export class PrepPopTypeComponent extends AbstractComponent {
 
     public ngOnInit() {
         super.ngOnInit();
+        this.init();
     }
 
 
@@ -75,8 +78,7 @@ export class PrepPopTypeComponent extends AbstractComponent {
      * Create new db
      */
     public goToDB() {
-        this.step = "DB";
-        this.prepPopDBCreateComponent.init();
+        this.stepChange.emit( "DB" );
         // this.popupService.notiPopup({
         //     name: 'DB',
         //     data: null
@@ -87,8 +89,7 @@ export class PrepPopTypeComponent extends AbstractComponent {
      * Create new file
      */
     public goToFile() {
-        this.step = "FILE";
-        this.prepPopFileUploadCreateComponent.init();
+        this.stepChange.emit( "FILE" );
     //     this.popupService.notiPopup({
     //         name: 'FILE',
     //         data: null

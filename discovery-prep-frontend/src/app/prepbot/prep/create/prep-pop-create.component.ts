@@ -13,9 +13,12 @@
  */
 
 
-import {Component, ElementRef, EventEmitter, Injector, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import {Component, ElementRef, EventEmitter, Injector, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import {AbstractComponent} from '../../../common/component/abstract.component';
 import { PrDataset, ImportType } from '../../../domain/data-preparation/pr-dataset';
+import {PrepPopTypeComponent} from "./prep-pop-type.component";
+import {PrepPopDBCreateComponent} from "./prep-pop-db-create.component";
+import {PrepPopFileUploadCreateComponent} from "./prep-pop-file-upload-create.component";
 
 @Component({
   selector: 'prep-pop-create',
@@ -34,7 +37,14 @@ export class PrepPopCreateComponent  extends AbstractComponent implements OnInit
     /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
      | Public Variables
      |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
+  @ViewChild(PrepPopTypeComponent)
+  public prepPopType : PrepPopTypeComponent;
 
+  @ViewChild(PrepPopDBCreateComponent)
+  public prepPopDbCreate : PrepPopDBCreateComponent;
+
+  @ViewChild(PrepPopFileUploadCreateComponent)
+  public prepPopFileUploadCreate : PrepPopFileUploadCreateComponent;
 
     @Output('sourceCreateClose')
     public closeEvent: EventEmitter<string> = new EventEmitter();
@@ -69,6 +79,10 @@ export class PrepPopCreateComponent  extends AbstractComponent implements OnInit
 
     public ngOnDestroy() {
         super.ngOnDestroy();
+    }
+
+    public stepChange(step) {
+        this.step = step;
     }
 
     /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
