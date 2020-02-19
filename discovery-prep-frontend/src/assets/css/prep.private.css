@@ -47,9 +47,9 @@ prep-detail, prep-dataset-detail {height:100%;}
 .pb-ui-graph2 .ddp-box-gridarea {position:absolute; padding: 0 20px 40px 20px; left:0; right:0; bottom:0; width:calc(100% - 19px); height:calc(100% - 98px); border:none; box-sizing:border-box; }
 .pb-ui-graph2 .ddp-box-gridarea .ddp-ui-gridbody {top:35px;}
 
-.slick-header.ui-state-default {border-top:3px solid #426895;}
+.slick-header-columns {border-top:3px solid #426895;}
+.slick-headerrow-columns {border-top:1px solid rgba(144,150,156,0.25);}
 .slick-headerrow-column.ui-state-default {border-right:1px solid rgba(144,150,156,0.25);}
-.slick-headerrow.ui-state-default {border-top:1px solid rgba(144,150,156,0.25);}
 .slick-headerrow::-webkit-scrollbar {display: none;}
 .slick-header::-webkit-scrollbar {display: none;}
 

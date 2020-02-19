@@ -22,11 +22,11 @@ import {PreparationCommonUtil} from "../util/preparation-common.util";
 import {isNullOrUndefined, isUndefined} from "util";
 import {Alert} from "../../common/util/alert.util";
 import {PrDataset} from "../../domain/data-preparation/pr-dataset";
+import {Location} from "@angular/common";
 
 @Component({
     selector: 'prep-dataset-detail',
-    templateUrl: './prep-dataset-detail.component.html',
-  host: { '[class.pb-layout-contents]': 'true' }
+    templateUrl: './prep-dataset-detail.component.html'
 })
 export class PrepDatasetDetailComponent extends AbstractComponent {
 
@@ -45,6 +45,7 @@ export class PrepDatasetDetailComponent extends AbstractComponent {
 
   // 생성자
   constructor(private _dataflowService: DataflowService,
+              private _location: Location,
               private activatedRoute: ActivatedRoute,
               protected elementRef: ElementRef,
               protected injector: Injector) {
@@ -68,6 +69,10 @@ export class PrepDatasetDetailComponent extends AbstractComponent {
   // Destory
   public ngOnDestroy() {
     super.ngOnDestroy();
+  }
+
+  public onClickPrev(): void {
+    this._location.back();
   }
 
   /**
