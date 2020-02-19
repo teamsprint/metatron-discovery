@@ -46,7 +46,7 @@
 .pb-intro-setting .pb-wrap-search input::placeholder {color:#fff;}
 
 .pb-intro-contents {flex:auto; height:100%; overflow:auto; text-align:center;}
-.pb-intro-contents-in {display:inline-block; max-width:1580px;margin-left:-11px; padding:29px 0 0 0;text-align:left;}
+.pb-intro-contents-in {display:inline-block; max-width:1580px;min-width:1270px;margin-left:-11px; padding:29px 0 0 0;text-align:left;}
 .pb-intro-contents .pb-wrap-box {float:left; padding-left:11px; width:25%;}
 .pb-box-intro {width:100%; margin-bottom:13px;border-radius:5px; border:1px solid #d8d6d4; background-color:#fff;box-shadow: 2px 2px 5px 0px rgba(99,91,82,0.15);}
 .pb-box-intro .pb-data-num [class*="pb-icon-data"] {display:inline-block; margin-right:6px; background:url(../../images/icon_box_intro.png) no-repeat; vertical-align:middle;}

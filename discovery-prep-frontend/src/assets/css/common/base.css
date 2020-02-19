@@ -97,6 +97,37 @@
     font-weight:bold;
     font-style:normal;
 }
+
+
+@font-face {
+    font-family:"SpoqaHanSans";
+    src: url("../../fonts/SpoqaHanSans-Bold.eot");
+    src: url("../../fonts/SpoqaHanSans-Bold.eot?#iefix") format("embedded-opentype"),
+    url("../../fonts/SpoqaHanSans-Bold.woff") format("woff"),
+    url("../../fonts/SpoqaHanSans-Bold.ttf") format("truetype");
+    font-weight:bold;
+    font-style:normal;
+
+}
+@font-face {
+    font-family:"SpoqaHanSans";
+    src: url("../../fonts/SpoqaHanSans-Regular.eot");
+    src: url("../../fonts/SpoqaHanSans-Regular.eot?#iefix") format("embedded-opentype"),
+    url("../../fonts/SpoqaHanSans-Regular.woff") format("woff"),
+    url("../../fonts/SpoqaHanSans-Regular.ttf") format("truetype");
+    font-weight:normal;
+    font-style:normal;
+}
+@font-face {
+    font-family:"SpoqaHanSans";
+    src: url("../../fonts/SpoqaHanSans-Thin.eot");
+    src: url("../../fonts/SpoqaHanSans-Thin.eot?#iefix") format("embedded-opentype"),
+    url("../../fonts/SpoqaHanSans-Thin.woff") format("woff"),
+    url("../../fonts/SpoqaHanSans-Thin.ttf") format("truetype");
+    font-weight:300;
+    font-style:normal;
+}
+
 /***********************************************************************************************************
 	기본설정
 ************************************************************************************************************/

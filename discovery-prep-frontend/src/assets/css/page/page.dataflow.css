@@ -1,0 +1,28 @@
+@charset "utf-8";
+
+/***********************************************************************
+     Page : Dataflow
+ *************************************************************************/
+.pb-box-dataflow {position:absolute; top:0; left:0; bottom:60px;width:288px; padding:0 15px;box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2); border: solid 1px #e9e9e9; background-color: #fff; border-radius:3px; overflow:auto;}
+.pb-box-dataflow .pb-label-title {padding:15px 0 17px 0; color:#222; font-weight:bold; font-size:16px;}
+.pb-box-dataflow .pb-txt-detail {padding:0 15px 14px 0;font-size:12px; color:#a3a3a3;}
+.pb-box-dataflow .pb-ui-buttons {position:absolute; top:17px; right:15px;}
+.pb-box-dataflow .pb-dataflow-top .pb-component-btn {width:100%;}
+.pb-box-dataflow .pb-ui-part {margin-top:15px; padding:15px 0 0 0 ; border-top:1px solid #dedede;}
+.pb-box-dataflow .pb-ui-part:last-of-type {padding-bottom:15px;}
+.pb-box-dataflow .pb-label-part {padding:0 0 8px 0; color:#737373; font-size:13px; font-weight:bold;}
+
+.pb-box-dataflow .pb-box-table {height:112px;  margin-bottom:5px;border:1px solid #dedede; overflow:auto;}
+.pb-box-dataflow .pb-box-table .pb-table-grid {min-width:100%; white-space:nowrap;}
+.pb-box-dataflow table.pb-table-data {margin-bottom:-5px;}
+.pb-box-dataflow table.pb-table-data tr th {padding:5px 0;font-weight:normal; color:#a3a3a3; font-size:13px; text-align:left;}
+.pb-box-dataflow table.pb-table-data tr td {padding:5px 5px;color:#4e4e4e; font-size:13px;}
+.pb-box-dataflow .pb-ui-rule-list {position:relative;}
+.pb-box-dataflow .pb-ui-rule-list .pb-data-num {position:absolute; bottom:100%; right:0; margin-bottom:8px; color:#a3a3a3; font-size:12px;}
+.pb-box-dataflow .pb-ui-rule-list .pb-box-rule-list:first-of-type {margin-top:0;}
+.pb-box-dataflow .pb-ui-rule-list .pb-box-rule-list {padding:8px; margin-top:4px; border-radius: 3px; background-color: #f6f6f6; color:#4e4e4e; font-size:14px;}
+.pb-box-dataflow .pb-ui-rule-list .pb-box-rule-list .pb-txt-type {color:#f37135; font-size:14px; margin-right:4px; }
+.pb-box-dataflow .pb-data-day:last-of-type {margin-bottom:0;}
+.pb-box-dataflow .pb-data-day {margin-bottom:6px; color:#a3a3a3; font-size:13px;}
+.pb-box-dataflow .pb-data-day .pb-txt-day {color:#4e4e4e; font-size:13px;}
+

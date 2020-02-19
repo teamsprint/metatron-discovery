@@ -12,17 +12,27 @@
 .pb-wrap-data-connect .pb-txt-title {padding:25px 0 0 0;color:#000; font-size:30px;}
 .pb-wrap-data-connect .pb-txt-det {padding:20px 0 0 0;color:rgba(0,0,0,0.7); font-size:18px; text-align:center;}
 
-.pb-ui-data-expression {flex:auto; height:100%; padding:30px 37px;}
-.pb-ui-data-expression .pb-ui-grid {width:100%; height:100%;}
+.pb-ui-data-expression {flex:auto; position:relative; height:100%; padding:20px 37px 0 37px;}
+.pb-ui-data-expression .pb-ui-grid {position:absolute; top:60px; left:37px; right:37px; bottom:0; overflow:auto;}
+.pb-ui-data-expression .pb-ui-grid-option .pb-grid-input {display:inline-block; position:relative; float:left; padding:5px 9px; margin:-5px 0 0 14px;width:61px; height:25px; border-radius:3px; border:1px solid #929292; font-size:15px;}
+.pb-ui-data-expression .pb-ui-grid-option {}
+.pb-ui-data-expression .pb-ui-grid-option .pb-fleft [class*="pb-icon-grid"]:first-of-type {margin-left:0;}
+.pb-ui-data-expression .pb-ui-grid-option .pb-fright [class*="pb-icon-grid"]  {top:-6px;}
+.pb-ui-data-expression .pb-ui-grid-option [class*="pb-icon-grid"] {position:relative; display:inline-block; float:left; margin-left:15px; background:url(../../images/icon_grid.png) no-repeat;}
+.pb-ui-data-expression .pb-ui-grid-option .pb-icon-grid {width:15px; height:15px;}
+.pb-ui-data-expression .pb-ui-grid-option .pb-icon-grid-set {top:-1px; width:18px; height:18px; background-position:left -16px;}
+.pb-ui-data-expression .pb-ui-grid-option .pb-icon-grid-search {width:18px; height:18px; background-position:left -35px;}
+.pb-ui-data-expression .pb-ui-grid-option .pb-icon-grid-pause {width:18px; height:18px; background-position:left -55px;}
+.pb-ui-data-expression .pb-ui-grid-option .pb-icon-grid-refresh {width:18px; height:18px;background-position:left -74px;}
+.pb-ui-data-expression .pb-ui-grid-option .pb-icon-grid-resize {width:17px; height:18px;background-position:left -93px;}
+.pb-ui-data-expression .pb-ui-grid-option .pb-wrap-slider3 {float:left;width:188px; margin-left:25px;}
 
+.pb-box-empty {height:100%; padding:50px;}
+.pb-box-empty .pb-data-empty {height:100%; border-radius: 20px; border: dashed 6px rgba(222,222,222,0.8);}
+.pb-box-empty .pb-img-create {display:inline-block;width:76px;height:101px; background-position:left -95px;}
 
-
-
-
-
-
-
-
+.pb-box-empty .pb-txt-title {padding-top:15px; color:#d1d1d1; font-size:40px; font-weight:bold; line-height:61px;}
+.pb-box-empty .pb-txt-det {padding:0;color:#d1d1d1; font-size:20px;}
 
 
 

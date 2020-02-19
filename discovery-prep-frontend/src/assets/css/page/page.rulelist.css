@@ -1,0 +1,21 @@
+@charset "utf-8";
+
+/***********************************************************************
+     Page : Rule List
+ *************************************************************************/
+.pb-rnb-sub .pb-box-rule-list {display:flex; position:relative; padding:12px 16px; color:#222; font-size:14px; border-bottom:1px solid #cfcec7; cursor:pointer;}
+.pb-rnb-sub .pb-box-rule-list:hover {background-color:#fffdf5;}
+.pb-rnb-sub .pb-box-rule-list .pb-txt-type {color:#f37135; font-weight:600;}
+.pb-rnb-sub .pb-box-rule-list .pb-area-buttons {display:none; white-space:nowrap;}
+.pb-rnb-sub .pb-box-rule-list:hover .pb-area-buttons.type-hover {display:block;}
+.pb-rnb-sub .pb-box-rule-list.is-focus .pb-area-buttons.type-focus {display:block;}
+.pb-rnb-sub .pb-box-rule-list.is-focus {background-color:#fffdf5;}
+.pb-rnb-sub .pb-box-rule-list.is-focus:hover .pb-area-buttons.type-hover {display:none;}
+.pb-rnb-sub .pb-box-rule-list .pb-txt-rule-list {word-break:break-word;}
+.type-rule-list .pb-ui-buttons {padding:15px 15px;}
+.type-rule-list .pb-ui-buttons .pb-component-btn {width:100%;}
+
+
+.jqtree-dragging {position:absolute; top:200px; left:0;padding:11px 16px;border:1px solid #ffb777; background-color: #fffdf5; box-shadow: 0 2px 4px 0 rgba(243, 113, 53, 0.3); color:#222; font-size:14px;border-radius: 3px;}
+.jqtree-dragging .pb-txt-type {color:#f37135; font-weight:600;}
+.jqtree-ghost {position: absolute; top: -2px; left: 0; right:0;background-color: #f37135; height: 3px; padding: 0;  }

@@ -11,10 +11,15 @@
 .pb-component-btn.type-line {border:1px solid rgba(127,126,124,0.4); color:#000;}
 .pb-component-btn.type-dark {background-color:#71706d; color:#fff;}
 .pb-component-btn.type-dark:hover {background-color:#484847;}
+.pb-component-btn.type-dark2 {background-color:#cfcec7; color:#4e4e4e; font-weight:normal;}
+
 .pb-component-btn em[class*="pb-icon-"] {display:inline-block; margin-right:9px;  background:url(../../images/icon_buttons.png) no-repeat; vertical-align:middle;}
 .pb-component-btn em.pb-icon-analytics {width:27px; height:20px;}
 .pb-component-btn em.pb-icon-add{width:13px; height:13px; background-position:left -20px;}
+.pb-component-btn em.pb-icon-add-r{width:14px; height:13px; position:relative; top:-1px; background-position:left -49px;}
+.pb-component-btn.type-dark2 em.pb-icon-add-r {}
 .pb-component-btn em.pb-icon-dictionary {width:14px; height:14px; background-position:left -34px;}
+.pb-component-btn em.pb-icon-move {width:13px; height:11px; background-position:left -63px;}
 .pb-component-btn.is-disabled,
 .pb-component-btn.is-disabled:hover {opacity:0.4; cursor:no-drop;color:#fff; background-color:#f77115;border:1px solid #f77115;}
 .pb-component-btn-s {display:inline-block; min-width:36px; height:26px; padding:5px 10px; border-radius:3px; font-size:12px; color:#313131; font-weight:600; text-align:center; border:1px solid #b5b5b2; background-color:#fff;}
@@ -23,6 +28,18 @@
 .pb-component-btn-s.type-bg {border-color:#f37135; background-color:#f37135; color:#fff;}
 
 .pb-component-btn-s.type-bg:hover {background-color:#dd591c;}
+
+/***********************************************************************
+     Compontent : button icons
+ *************************************************************************/
+.pb-btn-icons-type {display:inline-block; position:relative; width:16px; height:16px;}
+.pb-btn-icons-type:before{display:inline-block; position:absolute; top:50%; left:50%; background:url(../../images/btn_icons.png) no-repeat; content:'';}
+.pb-btn-icons-type.type-del:before {width:10px; height:13px; margin:-7px 0 0 -5px;}
+.pb-btn-icons-type.type-del:hover:before {background-position-x:-11px;}
+.pb-btn-icons-type.type-close:before {width:8px; height:9px;  margin:-5px 0 0 -4px;background-position:left -14px;}
+.pb-btn-icons-type.type-close:hover:before {background-position-x:-9px;}
+.pb-btn-icons-type.type-edit:before {width:12px; height:13px; margin:-7px 0 0 -7px;background-position:left -24px;}
+.pb-btn-icons-type.type-edit:hover:before {background-position-x:-13px;}
 
 /***********************************************************************
      Compontent : tab button
