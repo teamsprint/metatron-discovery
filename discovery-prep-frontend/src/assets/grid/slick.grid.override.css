@@ -22,6 +22,7 @@
 
 :host /deep/ .slick-header-column.ui-state-default {
   padding:0px 20px 0 9px;
+  border-top:3px solid #426895;
   border-right: 1px solid #ebebed;
   text-align: left;
   color:#4b515b;
