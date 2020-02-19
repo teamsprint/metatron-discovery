@@ -1,0 +1,7 @@
+<prep-pop-type *ngIf="step == '' || step == 'complete-create'" [importType]="importType" [(step)]="step" (close)="createClose()"></prep-pop-type>
+
+<!-- DB -->
+<prep-pop-db-create (close)="init();"></prep-pop-db-create>
+
+<!-- FILE -->
+<prep-pop-file-upload-create (close)="init();"></prep-pop-file-upload-create>

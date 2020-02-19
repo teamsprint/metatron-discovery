@@ -13,29 +13,26 @@
  */
 
 import {Component, ElementRef, HostListener, Injector, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {AbstractComponent} from '../../common/component/abstract.component';
-import {DataflowService} from '../dataflow/service/dataflow.service';
+import {AbstractComponent} from '../../../common/component/abstract.component';
+import {DataflowService} from '../../dataflow/service/dataflow.service';
 import {ActivatedRoute} from "@angular/router";
-import {PrepPopDBCreateComponent} from "./prep-pop-db-create.component";
-import {PrepPopFileUploadCreateComponent} from "./prep-pop-file-upload-create.component";
+import {PopupService} from '../../../common/service/popup.service';
+import {PrepPopCreateComponent} from "./prep-pop-create.component";
 
 @Component({
-  selector: 'prep-pop-create',
-  templateUrl: './prep-pop-create.component.html'
+  selector: 'prep-pop-db-create',
+  templateUrl: './prep-pop-db-create.component.html'
 })
-export class PrepPopCreateComponent extends AbstractComponent {
+export class PrepPopDBCreateComponent extends AbstractComponent {
 
     public isShow = false;
 
-    @ViewChild(PrepPopDBCreateComponent)
-    public prepPopDBCreateComponent : PrepPopDBCreateComponent;
-
-
-    @ViewChild(PrepPopFileUploadCreateComponent)
-    public prepPopFileUploadCreateComponent : PrepPopFileUploadCreateComponent;
+    @ViewChild(PrepPopCreateComponent)
+    public prepPopCreateComponent : PrepPopCreateComponent;
 
     // 생성자
     constructor(protected elementRef: ElementRef,
+                private popupService: PopupService,
                 protected injector: Injector,
                 private activatedRoute: ActivatedRoute) {
 
@@ -50,11 +47,8 @@ export class PrepPopCreateComponent extends AbstractComponent {
         super.ngOnInit();
     }
 
-
     // Destory
     public ngOnDestroy() {
-
-        // Destory
         super.ngOnDestroy();
     }
 
@@ -62,32 +56,11 @@ export class PrepPopCreateComponent extends AbstractComponent {
         this.isShow = true;
     }
 
-    /**
-     * Create new db
-     */
-    public goToDB() {
-        this.prepPopDBCreateComponent.init();
+    public goPre(){
+        //this.prepPopCreateComponent.init();
+        // this.popupService.notiPopup({
+        //     name: 'prep-pop-create',
+        //     data: null
+        // });
     }
-
-    /**
-     * Create new file
-     */
-    public goToFile() {
-        this.prepPopFileUploadCreateComponent.init();
-    }
-
-    /**
-     * Create new kafka
-     */
-    public goToKafka() {
-        this.prepPopDBCreateComponent.init();
-    }
-
-    // public goToDB() {
-    //     const params = this._getDfParams();
-    //     this.router.navigate(
-    //         ['/management/prepbot/dataflow'])
-    //         .then();
-    // }
-
 }

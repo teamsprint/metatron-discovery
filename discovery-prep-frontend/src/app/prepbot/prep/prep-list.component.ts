@@ -32,7 +32,7 @@ import {isNullOrUndefined} from "util";
 import {StringUtil} from "../../common/util/string.util";
 import {ActivatedRoute} from "@angular/router";
 import * as _ from 'lodash';
-import {PrepPopCreateComponent} from "./prep-pop-create.component";
+import {PrepPopCreateComponent} from "./create/prep-pop-create.component";
 
 
 const DEFAULT_VIEW_TYPE = 'CARD';
@@ -66,7 +66,10 @@ export class PrepListComponent extends AbstractComponent {
   // search text
   public searchText: string;
 
-  // 뷰타입 LIST, CARD
+    // datasource create step
+    public mode: string;
+
+    // 뷰타입 LIST, CARD
   public viewMode = DEFAULT_VIEW_TYPE;
 
   // 정렬
@@ -269,6 +272,24 @@ export class PrepListComponent extends AbstractComponent {
     }
 
     /**
+     * 모드 변경
+     * @param {string} mode
+     */
+    public changeMode(mode: string) {
+        this.useUnloadConfirm = ('prep-pop-create' === mode);
+        this.mode = mode;
+    } // function - changeMode
+
+    /**
+     * 생성 완료
+     */
+    public createComplete(): void {
+        this.changeMode('');
+        // true
+        this.reloadPage();
+    }
+
+    /**
    * Change order of list
    * @param key
    */
@@ -294,13 +315,14 @@ export class PrepListComponent extends AbstractComponent {
           }
       }
   }
-
-    /**
-     * Create new dataflow
-     */
-    public createDataflow() {
-        this.prepPopCreateComponent.init();
-    }
+    //
+    // /**
+    //  * Create new dataflow
+    //  */
+    // public createDataflow() {
+    //     //TODO
+    //     // this.prepPopCreateComponent.init();
+    // }
 
     /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
      | Protected Method

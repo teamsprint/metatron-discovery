@@ -13,18 +13,18 @@
  */
 
 import {ChangeDetectorRef, Component, ElementRef, Injector, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {AbstractPopupComponent} from '../../common/component/abstract-popup.component';
-import {PopupService} from '../../common/service/popup.service';
-import {CommonConstant} from '../../common/constant/common.constant';
-import {CookieConstant} from '../../common/constant/cookie.constant';
-import {FileFormat, PrDatasetFile, StorageType} from '../../domain/data-preparation/pr-dataset';
+import {AbstractPopupComponent} from '../../../common/component/abstract-popup.component';
+import {PopupService} from '../../../common/service/popup.service';
+import {CommonConstant} from '../../../common/constant/common.constant';
+import {CookieConstant} from '../../../common/constant/cookie.constant';
+import {FileFormat, PrDatasetFile, StorageType} from '../../../domain/data-preparation/pr-dataset';
 import {isUndefined} from 'util';
-import {PrepbotService} from "../service/prepbot.service";
-import {DeleteModalComponent} from '../../common/component/modal/delete/delete.component';
-import {Modal} from '../../common/domain/modal';
-import {PreparationCommonUtil} from "../util/preparation-common.util";
+import {PrepbotService} from "../../service/prepbot.service";
+import {DeleteModalComponent} from '../../../common/component/modal/delete/delete.component';
+import {Modal} from '../../../common/domain/modal';
+import {PreparationCommonUtil} from "../../util/preparation-common.util";
 import * as _ from 'lodash';
-import {Alert} from "../../common/util/alert.util";
+import {Alert} from "../../../common/util/alert.util";
 
 declare let plupload: any;
 
@@ -36,7 +36,7 @@ export class UploadNegotitationParameters {
 }
 
 @Component({
-  selector: 'app-prep-pop-file-upload-create',
+  selector: 'prep-pop-file-upload-create',
   templateUrl: './prep-pop-file-upload-create.component.html',
 })
 export class PrepPopFileUploadCreateComponent extends AbstractPopupComponent implements OnInit, OnDestroy {

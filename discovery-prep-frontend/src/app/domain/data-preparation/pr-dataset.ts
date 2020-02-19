@@ -101,6 +101,7 @@ export enum DsType {
 }
 
 export enum ImportType {
+  FILE = <any> 'FILE',
   UPLOAD = <any>'UPLOAD',
   URI = <any>'URI',
   DATABASE = <any>'DATABASE',

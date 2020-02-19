@@ -91,9 +91,10 @@ import {DataflowModelService} from "./dataflow/service/dataflow.model.service";
 import {DataconnectionService} from "../dataconnection/service/dataconnection.service";
 import {PrepDetailComponent} from "./prep/prep-detail.component";
 import {PrepDatasetDetailComponent} from "./prep/prep-dataset-detail.component";
-import {PrepPopCreateComponent} from "./prep/prep-pop-create.component";
-import {PrepPopDBCreateComponent} from "./prep/prep-pop-db-create.component";
-import {PrepPopFileUploadCreateComponent} from "./prep/prep-pop-file-upload-create.component";
+import {PrepPopCreateComponent} from "./prep/create/prep-pop-create.component";
+import {PrepPopTypeComponent} from "./prep/create/prep-pop-type.component";
+import {PrepPopDBCreateComponent} from "./prep/create/prep-pop-db-create.component";
+import {PrepPopFileUploadCreateComponent} from "./prep/create/prep-pop-file-upload-create.component";
 
 const dataPreparationRoutes: Routes = [
 { path: '', component: PrepListComponent },
@@ -183,6 +184,7 @@ const dataPreparationRoutes: Routes = [
     PrepDetailComponent,
     PrepDatasetDetailComponent,
     PrepPopCreateComponent,
+    PrepPopTypeComponent,
     PrepPopDBCreateComponent,
     PrepPopFileUploadCreateComponent,
     CreateSnapshotPopup

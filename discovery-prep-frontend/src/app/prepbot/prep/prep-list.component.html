@@ -14,7 +14,7 @@
   <!-- intro menu -->
   <div class="pb-intro-menu">
     <div class="pb-ui-menu">
-      <a href="javascript:" class="pb-menu-dashboard" (click)="createDataflow()">
+      <a href="javascript:" class="pb-menu-dashboard" (click)="changeMode('prep-pop-create')">
         <em class="pb-icon-dashboard"></em>
         Create <strong>Dataflow</strong>
       </a>
@@ -261,4 +261,9 @@
   <!-- //list -->
   <!-- //intro contents -->
 <!-- //intro -->
-<prep-pop-create></prep-pop-create>
+
+<!-- 생성 -->
+<prep-pop-create *ngIf="mode=='prep-pop-create'"
+                        (sourceCreateClose)="changeMode( '' )"
+                        (sourceCreateComplete)="createComplete()"></prep-pop-create>
+<!-- //생성 -->
