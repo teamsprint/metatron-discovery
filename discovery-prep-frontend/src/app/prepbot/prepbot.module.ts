@@ -93,6 +93,7 @@ import {PrepDetailComponent} from "./prep/prep-detail.component";
 import {PrepDatasetDetailComponent} from "./prep/prep-dataset-detail.component";
 import {PrepPopCreateComponent} from "./prep/create-dataset/prep-pop-create.component";
 import {PrepPopTypeComponent} from "./prep/create-dataset/prep-pop-type.component";
+import {PrepPopCreateDatasetNameComponent} from "./prep/create-dataset/prep-pop-create-dataset-name.component";
 import {PrepPopDBCreateComponent} from "./prep/create-dataset/prep-pop-db-create.component";
 import {PrepPopFileUploadCreateComponent} from "./prep/create-dataset/prep-pop-file-upload-create.component";
 import {PrepPopFileSelectsheetComponent} from "./prep/create-dataset/prep-pop-file-selectsheet.component";
@@ -186,6 +187,7 @@ const dataPreparationRoutes: Routes = [
     PrepDetailComponent,
     PrepDatasetDetailComponent,
     PrepPopCreateComponent,
+    PrepPopCreateDatasetNameComponent,
     PrepPopTypeComponent,
     PrepPopDBCreateComponent,
     PrepPopFileUploadCreateComponent,

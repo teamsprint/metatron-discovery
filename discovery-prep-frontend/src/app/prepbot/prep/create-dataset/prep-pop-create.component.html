@@ -11,3 +11,4 @@
 <!-- FILE -->
 <prep-pop-file-upload-create *ngIf="step=='FILE'" [datasetFiles]="datasetFiles" [(step)]="step" (close)="createClose();"></prep-pop-file-upload-create>
 <prep-pop-file-selectsheet *ngIf="step=='select-sheet'" [datasetFiles]="datasetFiles" [(step)]="step" (close)="createClose();"></prep-pop-file-selectsheet>
+<prep-pop-create-dataset-name *ngIf="step=='create-dataset-name'" [datasetFiles]="datasetFiles" [(step)]="step" (close)="createClose();"></prep-pop-create-dataset-name>

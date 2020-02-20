@@ -231,8 +231,9 @@
         <!-- //contents -->
         <!-- bottom -->
         <div class="pb-popup-bottom">
-            <a href="javascript:" class="pb-component-btn type-bg">SKIP</a>
-            <a href="javascript:" class="pb-component-btn type-line">CANCEL</a>
+            <a (click)="goto('');" class="pb-component-btn type-bg">SKIP</a>
+            <a (click)="close();" class="pb-component-btn type-line">CANCEL</a>
+            <a (click)="goto('create-dataset-name');" class="pb-component-btn type-line">NEXT</a>
         </div>
         <!-- //bottom -->
     </div>

@@ -53,6 +53,8 @@ export class PrepPopFileSelectsheetComponent extends AbstractPopupComponent impl
     @Input()
     public step: string = '';
 
+    @Output()
+    public stepChange : EventEmitter<string> = new EventEmitter();
   @Output()
   public typeEmitter = new EventEmitter<string>();
 
@@ -803,6 +805,10 @@ export class PrepPopFileSelectsheetComponent extends AbstractPopupComponent impl
     }
   }
 
+  public goto(step) {
+    this.step = step;
+        this.stepChange.emit( step );
+  }
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
    | Protected Method
    |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/

@@ -515,6 +515,11 @@ export class PrepPopFileUploadCreateComponent extends AbstractPopupComponent imp
         this.stepChange.emit( 'select-sheet' );
   }
 
+  public goto(step) {
+    this.step = step;
+        this.stepChange.emit( step );
+  }
+
   /**
    * Close Check
    */
