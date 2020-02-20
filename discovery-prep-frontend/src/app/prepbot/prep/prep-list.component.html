@@ -14,17 +14,17 @@
   <!-- intro menu -->
   <div class="pb-intro-menu">
     <div class="pb-ui-menu">
-      <a href="javascript:" class="pb-menu-dashboard" (click)="changeMode('prep-pop-create')">
+      <a href="javascript:" class="pb-menu-dashboard" (click)="changeMode('prep-pop2-create')">
         <em class="pb-icon-dashboard"></em>
         Create <strong>Dataflow</strong>
       </a>
-      <a href="javascript:" class="pb-menu-create-data">
+      <a href="javascript:" class="pb-menu-create-data" (click)="changeMode('prep-pop-create')">
         <em class="pb-icon-create-data"></em>
         Create <strong>Dataset</strong>
       </a>
       <a href="javascript:" class="pb-menu-manage-data">
         <em class="pb-icon-manage-data"></em>
-        Manage <strong>Resources</strong>
+        Create <strong>Data Connection</strong>
       </a>
     </div>
   </div>
@@ -42,7 +42,7 @@
 
         -->
         <div class="pb-component-selectbox type-white ">
-          <span class="pb-txt-selectbox">Select data</span>
+          <span class="pb-txt-selectbox">Recently</span>
           <!-- popup -->
           <div class="pb-select-popup">
             <ul class="pb-list-selectbox">

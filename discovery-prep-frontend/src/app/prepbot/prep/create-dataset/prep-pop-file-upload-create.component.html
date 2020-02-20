@@ -1,0 +1,93 @@
+<div class="pb-layout-popup" *ngIf="isShow">
+    <!-- box popup -->
+    <div class="pb-box-popup">
+        <a href="javascript:" class="pb-btn-pop-close" (click)="isShow = false"></a>
+        <!-- top -->
+        <div class="pb-popup-top">
+            <div class="pb-txt-title">DATA CONNECT</div>
+
+        </div>
+        <!-- //top -->
+        <!-- contents -->
+        <div class="pb-popup-contents">
+            <div class="pb-wrap-fileupload pb-drop-file"  #drop_container [ngStyle]="{'visibility': supportedFileCount===0?'visible':'hidden'}">
+                <div class="pb-txt-title">Drop your File</div>
+                <div class="pb-txt-det">You can create data.</div>
+            </div>
+
+            <!-- file progress -->
+            <div class="ddp-box-file-progress" [ngStyle]="{'visibility': supportedFileCount>0?'visible':'hidden'}" >
+                <div class="ddp-file-progress">
+
+                    <!-- title -->
+                    <div class="ddp-wrap-file-title">
+                        <div class="ddp-file-title">File upload list</div>
+                        <a href="javascript:" class="ddp-btn-restore" (click)="reset()">
+                            <em class="ddp-icon-reset2"> </em>
+                            {{'msg.page.btn.reset' | translate}}
+                        </a>
+                    </div>
+                    <!-- //title -->
+
+                    <!-- list -->
+                    <ul class="ddp-list-file-progress" (dragenter)="disableEvent($event)" (dragover)="disableEvent($event)" (drop)="disableEvent($event)">
+                        <li *ngFor="let item of upFiles" [ngClass]="{'ddp-disabled' : item.isCanceled}" >
+                            <!-- name -->
+                            <div class="ddp-file-name">
+                                <em class="ddp-icon-flow-svg">
+                                    <svg-icon-component [name]="preparationUtil.getFileFormat(item.fileExtension)" [isBlackAndWhite]="true"></svg-icon-component>
+                                </em>
+
+                                <div class="ddp-data-filename">
+                                    <span class="ddp-txt-subname">{{item.fileExtension}}</span>
+                                    <span class="ddp-txt-filename">{{item.fileName}}.</span>
+
+                                </div>
+                                <span class="ddp-data-size">{{formatBytes(item.size,1)}} | {{item.storage_type}}</span>
+                            </div>
+                            <!-- //name -->
+
+                            <!-- 상태 -->
+                            <div class="ddp-ui-condition" [ngClass]="{'type-failed': item.isFailed==true}">
+                                <span class="ddp-data-per">{{item.progressPercent}} %</span>
+                                <!-- bar -->
+                                <div class="ddp-type-progressbar2">
+                                    <em class="ddp-data-progressbar" [ngStyle]="{'width': item.progressPercent>0? item.progressPercent+'%':'0%'}"></em>
+                                </div>
+                                <!-- //bar -->
+                                <div class="ddp-data-condition">
+                                    <a href="javascript:" class="ddp-btn-selection ddp-line" *ngIf="item.isUploading==true" (click)="cancelUpload(item)" >{{'msg.comm.btn.cancl' | translate}}</a>
+
+                                    <div class="ddp-data-condition" *ngIf="item.isCanceled==true">{{'msg.dp.ui.file.upload.canceled' | translate}}</div>
+                                    <div class="ddp-data-condition" *ngIf="item.isUploaded==true">{{'msg.dp.ui.file.upload.uploaded' | translate}}</div>
+                      <span class="ddp-txt-error" *ngIf="item.isFailed==true"><em class="ddp-icon-error"></em>{{'msg.storage.ui.list.failed' | translate}}
+                          <!-- popup -->
+                        <div class="ddp-box-layout4 ">
+                            <div class="ddp-data-det">
+                                {{item.response.message}}
+                            </div>
+                        </div>
+                          <!-- //popup -->
+                      </span>
+                                </div>
+
+                            </div>
+                            <!-- //상태 -->
+                        </li>
+                    </ul>
+                    <!-- list -->
+                </div>
+            </div>
+            <!-- //file progress -->
+        </div>
+        <!-- //contents -->
+        <!-- bottom -->
+        <div class="pb-popup-bottom">
+            <a (click)="console.log('pre');" href="javascript:" class="pb-component-btn type-line">PRE</a>
+            <a (click)="console.log('skip');" href="javascript:" class="pb-component-btn type-bg">SKIP</a>
+            <a (click)="next();" href="javascript:" class="pb-component-btn type-line">NEXT</a>
+        </div>
+        <!-- //bottom -->
+    </div>
+    <!-- //box popup -->
+</div>

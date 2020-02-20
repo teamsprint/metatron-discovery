@@ -47,6 +47,109 @@ prep-detail, prep-dataset-detail {height:100%;}
 .pb-ui-graph2 .ddp-box-gridarea {position:absolute; padding: 0 20px 40px 20px; left:0; right:0; bottom:0; width:calc(100% - 19px); height:calc(100% - 98px); border:none; box-sizing:border-box; }
 .pb-ui-graph2 .ddp-box-gridarea .ddp-ui-gridbody {top:35px;}
 
+/**************************************************************
+	임시-File upload
+**************************************************************/
+.ddp-box-file-progress .ddp-file-progress .ddp-wrap-file-title {
+    padding: 10px;
+    color: #000;
+    font-size: 20px;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+.ddp-box-file-progress .ddp-list-file-progress {
+    position: relative;
+    margin: 0 39px;
+}
+.ddp-box-file-progress .ddp-file-name {
+    position: relative;
+    height: 35px;
+}
+.ddp-box-file-progress .ddp-data-filename{
+    position: absolute;
+    top: 5px;
+    left: 32px;
+}
+.ddp-box-file-progress .ddp-data-size{
+    position: absolute;
+    top: 5px;
+}
+.ddp-box-file-progress .ddp-import-file {
+    position: absolute;
+    left: -1px;
+    right: -1px;
+    bottom: -1px;
+    padding: 27px 0 0 30px;
+    height: 100px;
+    border: 1px solid #d0d1d8;
+    background-color: #f6f6f7;
+    box-sizing: border-box;
+}
+.ddp-box-file-progress .ddp-list-file-progress li .ddp-file-name .ddp-data-filename {
+    display: inline-block;
+    max-width: 100%;
+    padding-bottom: 8px;
+    color: #4b515b;
+    font-size: 14px;
+    font-weight: 700;
+}
+.ddp-box-file-progress .ddp-list-file-progress li .ddp-file-name .ddp-data-filename .ddp-txt-subname {
+    float: right;
+}
+.ddp-box-file-progress .ddp-list-file-progress li .ddp-file-name .ddp-data-filename .ddp-txt-filename {
+    display: block;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+.ddp-box-file-progress .ddp-list-file-progress li .ddp-file-name .ddp-data-size {
+    display: block;
+    color: #91969e;
+    font-size: 12px;
+}
+.ddp-type-progressbar2 {
+    display: inline-block;
+    position: relative;
+    height: 7px;
+    width: 100%;
+    border-radius: 4px;
+    background-color: #e7e7ea;
+    overflow: hidden;
+}
+.ddp-type-progressbar2 .ddp-data-progressbar {
+    display: inline-block;
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    border-radius: 4px;
+    background-color: #666eb2;
+}
+.ddp-box-file-progress .ddp-list-file-progress .ddp-ui-condition .ddp-type-progressbar2 {
+    width: 200px;
+}
+.ddp-box-file-progress .ddp-list-file-progress .ddp-ui-condition .ddp-data-condition {
+    display: inline-block;
+    width: 65px;
+    padding-left: 7px;
+    text-align: center;
+    color: #90969f;
+    vertical-align: middle;
+}
+
+.pb-drop-file.file-done{
+     position: absolute;
+     bottom: 72px;
+     width: 98%;
+     height: 193px;
+     overflow: hidden;
+     margin: 22px;
+     }
+
+/**************************************************************
+	뭔지모르곘음
+**************************************************************/
 .slick-headerrow-columns {border-top:1px solid rgba(144,150,156,0.25);}
 .slick-headerrow-column.ui-state-default {border-right:1px solid rgba(144,150,156,0.25);}
 .slick-headerrow::-webkit-scrollbar {display: none;}

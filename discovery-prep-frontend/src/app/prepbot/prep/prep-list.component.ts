@@ -32,7 +32,8 @@ import {isNullOrUndefined} from "util";
 import {StringUtil} from "../../common/util/string.util";
 import {ActivatedRoute} from "@angular/router";
 import * as _ from 'lodash';
-import {PrepPopCreateComponent} from "./create/prep-pop-create.component";
+import {PrepPopCreateComponent} from "./create-dataset/prep-pop-create.component";
+import {PrepPopFlowCreateComponent} from "./create-dataflow/prep-pop-flow-create.component";
 
 
 const DEFAULT_VIEW_TYPE = 'CARD';
@@ -75,8 +76,8 @@ export class PrepListComponent extends AbstractComponent {
   // 정렬
   public selectedContentSort: Order = new Order();
 
-  @ViewChild(PrepPopCreateComponent)
-  public prepPopCreateComponent : PrepPopCreateComponent;
+  @ViewChild(PrepPopFlowCreateComponent)
+  public prepPopCreateComponent : PrepPopFlowCreateComponent;
 
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
    | Constructor
