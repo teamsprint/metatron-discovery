@@ -136,15 +136,17 @@
             <!-- //user -->
             <!-- right -->
             <div class="pb-data-right">
-              <span class="pb-data-num">
-                  <em class="pb-icon-data1"></em>5
-              </span>
-              <span class="pb-data-num">
-                  <em class="pb-icon-data2"></em>5
-              </span>
-              <span class="pb-data-num">
-                  <em class="pb-icon-data3"></em>5
-              </span>
+              <span class="pb-txt-data"><em class="pb-icon-dataset"></em>DATASET <strong>7</strong></span>
+              <span class="pb-txt-data"><em class="pb-icon-result"></em>RESULT<strong>7</strong></span>
+              <!--<span class="pb-data-num">-->
+                  <!--<em class="pb-icon-data1"></em>5-->
+              <!--</span>-->
+              <!--<span class="pb-data-num">-->
+                  <!--<em class="pb-icon-data2"></em>5-->
+              <!--</span>-->
+              <!--<span class="pb-data-num">-->
+                  <!--<em class="pb-icon-data3"></em>5-->
+              <!--</span>-->
             </div>
             <!-- //right -->
 
@@ -266,4 +268,9 @@
 <prep-pop-create *ngIf="mode=='prep-pop-create'"
                         (closeEvent)="changeMode( '' )"
                         (createComplete)="createComplete()"></prep-pop-create>
+
+<prep-pop-flow-create *ngIf="mode=='prep-pop-flow-create'"
+                 (closeEvent)="changeMode( '' )"
+                 (createComplete)="createComplete()"></prep-pop-flow-create>
+
 <!-- //생성 -->
