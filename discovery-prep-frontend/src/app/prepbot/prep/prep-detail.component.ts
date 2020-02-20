@@ -38,6 +38,7 @@ import {StringUtil} from "../../common/util/string.util";
 import {DataflowModelService} from "../dataflow/service/dataflow.model.service";
 import {SnapshotLoadingComponent} from "../component/snapshot-loading.component";
 import { CreateSnapshotPopup } from '../component/create-snapshot-popup.component';
+import {Location} from "@angular/common";
 declare let echarts: any;
 
 @Component({
@@ -51,6 +52,7 @@ export class PrepDetailComponent extends AbstractComponent {
     constructor(
                 private dataflowService: DataflowService,
                 private dataflowModelService : DataflowModelService,
+                private _location: Location,
                 private activatedRoute: ActivatedRoute,
                 protected elementRef: ElementRef,
                 protected injector: Injector) {
@@ -536,6 +538,10 @@ export class PrepDetailComponent extends AbstractComponent {
                 let prep_error = this.dataprepExceptionHandler(error);
                 PreparationAlert.output(prep_error, this.translateService.instant(prep_error.message));
             });
+    }
+
+    public onClickPrev(): void {
+        this._location.back();
     }
 
     /**
