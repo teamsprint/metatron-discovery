@@ -30,6 +30,7 @@ import {Alert} from "../../../common/util/alert.util";
 @Component({
   selector: 'prep-pop-file-selectsheet',
   templateUrl: './prep-pop-file-selectsheet.component.html',
+  providers: [DatasetService]
 })
 export class PrepPopFileSelectsheetComponent extends AbstractPopupComponent implements OnInit, OnDestroy {
 

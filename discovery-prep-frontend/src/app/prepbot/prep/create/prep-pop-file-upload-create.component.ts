@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-import {ChangeDetectorRef, Component, ElementRef, Injector, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectorRef, Component, ElementRef, Injector, Input, OnDestroy, OnInit, ViewChild, Output, EventEmitter} from '@angular/core';
 import {AbstractPopupComponent} from '../../../common/component/abstract-popup.component';
 import {PopupService} from '../../../common/service/popup.service';
 import {CommonConstant} from '../../../common/constant/common.constant';
@@ -47,6 +47,9 @@ export class PrepPopFileUploadCreateComponent extends AbstractPopupComponent imp
 
     @Input()
     public step: string = '';
+
+    @Output()
+    public stepChange : EventEmitter<string> = new EventEmitter();
 
   @ViewChild('pickfiles')
   private pickfiles: ElementRef;
@@ -509,10 +512,7 @@ export class PrepPopFileUploadCreateComponent extends AbstractPopupComponent imp
       return;
     }
 
-    this.popupService.notiPopup({
-      name: 'select-sheet',
-      data: null
-    });
+        this.stepChange.emit( 'select-sheet' );
   }
 
   /**

@@ -38,6 +38,9 @@ export class PrepPopCreateComponent  extends AbstractComponent implements OnInit
     /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
      | Public Variables
      |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
+
+  public datasetFiles: any = [];
+
   @ViewChild(PrepPopTypeComponent)
   public prepPopType : PrepPopTypeComponent;
 

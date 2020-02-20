@@ -4,5 +4,5 @@
 <prep-pop-db-create *ngIf="step=='DB'" [(step)]="step" (close)="createClose();"></prep-pop-db-create>
 
 <!-- FILE -->
-<prep-pop-file-upload-create *ngIf="step=='FILE'" [(step)]="step" (close)="createClose();"></prep-pop-file-upload-create>
-<prep-pop-file-selectsheet *ngIf="step=='select-sheet'" [(step)]="step" (close)="createClose();"></prep-pop-file-selectsheet>
+<prep-pop-file-upload-create *ngIf="step=='FILE'" [datasetFiles]="datasetFiles" [(step)]="step" (close)="createClose();"></prep-pop-file-upload-create>
+<prep-pop-file-selectsheet *ngIf="step=='select-sheet'" [datasetFiles]="datasetFiles" [(step)]="step" (close)="createClose();"></prep-pop-file-selectsheet>
