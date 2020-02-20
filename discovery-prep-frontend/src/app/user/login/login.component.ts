@@ -94,8 +94,8 @@ export class LoginComponent extends AbstractComponent implements OnInit, OnDestr
       this.forwardURL = params['forwardURL'] || 'NONE';
     });
 
-    // this.user.username = 'admin';
-    // this.user.password = 'admin';
+    this.user.username = 'admin';
+    this.user.password = 'admin';
 
     const id = this.cookieService.get(CookieConstant.KEY.SAVE_USER_ID);
 
