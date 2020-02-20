@@ -139,7 +139,7 @@ prep-detail, prep-dataset-detail {height:100%;}
 }
 
 .pb-drop-file.file-done{
-     position: absolute;
+     position: absolute!important;
      bottom: 72px;
      width: 98%;
      height: 193px;

@@ -34,11 +34,9 @@
 .pb-box-empty .pb-txt-title {padding-top:15px; color:#d1d1d1; font-size:40px; font-weight:bold; line-height:61px;}
 .pb-box-empty .pb-txt-det {padding:0;color:#d1d1d1; font-size:20px;}
 
-
-
-
-
-
-
-
-
+/***********************************************************************
+     임시 Popup : Create - Input
+ *************************************************************************/
+.pb-clear {margin-bottom:10px;}
+.pb-input-type {display: block;position: relative;padding: 9px 25px 9px 15px;font-size: 15px;color: rgba(1,1,1,0.4);border: 1px solid #d0d3d3;border-radius: 5px;z-index: 5;background-color: #fff;}
+.pb-input-type.pb-input-long{min-widht:80%;}

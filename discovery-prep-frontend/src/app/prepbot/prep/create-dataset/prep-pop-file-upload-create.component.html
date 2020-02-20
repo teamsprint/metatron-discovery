@@ -10,7 +10,7 @@
         <!-- //top -->
         <!-- contents -->
         <div class="pb-popup-contents">
-            <div class="pb-wrap-fileupload pb-drop-file"  #drop_container [ngStyle]="{'visibility': supportedFileCount===0?'visible':'hidden'}">
+            <div class="pb-wrap-fileupload pb-drop-file "  #drop_container [ngClass]="{'file-done': supportedFileCount>0}">
                 <div class="pb-txt-title">Drop your File</div>
                 <div class="pb-txt-det">You can create data.</div>
             </div>
