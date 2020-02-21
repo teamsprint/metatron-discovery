@@ -281,7 +281,7 @@ export class PrepPopCreateDatasetNameComponent extends AbstractPopupComponent im
 
           // 2. Find wrangled dataset
           // 3. Move to dataFlow main grid (navigate)
-          this.router.navigate([`/management/datapreparation/dataflow/${result1['dfId']}/rule/${result1.datasets[1].dsId}`]);
+          this.router.navigate([`/management/prepbot/dataflow/${result1['dfId']}/dataset/${result1.datasets[1].dsId}`]);
         } else {
 
           // If error move to dataset list
