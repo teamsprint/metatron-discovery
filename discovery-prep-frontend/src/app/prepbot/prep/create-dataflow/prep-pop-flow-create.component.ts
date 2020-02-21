@@ -44,6 +44,7 @@ export class PrepPopFlowCreateComponent extends AbstractComponent implements OnI
    @Input()
     public step: string = '';
 
+
     // 새로 생성될 데이터소스 정보
     public importType: PrDataset = new PrDataset();
 
@@ -90,7 +91,7 @@ export class PrepPopFlowCreateComponent extends AbstractComponent implements OnI
 
     // 닫기
     public createClose() {
-        this.closeEvent.emit('close-create');
+        this.closeEvent.emit('complete-dataflow-create');
     }
 
     // 완료

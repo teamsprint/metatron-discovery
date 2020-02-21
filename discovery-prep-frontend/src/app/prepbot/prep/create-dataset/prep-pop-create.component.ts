@@ -105,7 +105,7 @@ export class PrepPopCreateComponent  extends AbstractComponent implements OnInit
 
     // 닫기
     public createClose() {
-        this.closeEvent.emit('close-create');
+        this.closeEvent.emit('complete-create-dataset');
     }
 
     // 완료

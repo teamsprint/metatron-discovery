@@ -1,9 +1,6 @@
 
-<!-- make dataflow -->
-<prep-pop-type *ngIf="step == '' || step == 'complete-create'" [importType]="importType" [(step)]="step" (close)="createClose()"></prep-pop-type>
-
-
 <!-- make dataset -->
+<prep-pop-type *ngIf="step == '' || step == 'complete-create-dataset'" [importType]="importType" [(step)]="step" (close)="createClose()"></prep-pop-type>
 
 <!-- DB -->
 <prep-pop-db-create *ngIf="step=='DB'" [(step)]="step" (close)="createClose();"></prep-pop-db-create>

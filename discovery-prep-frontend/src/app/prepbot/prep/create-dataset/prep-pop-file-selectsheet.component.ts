@@ -50,16 +50,19 @@ export class PrepPopFileSelectsheetComponent extends AbstractPopupComponent impl
    | Public Variables
    |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
-    @Input()
-    public step: string = '';
+  @Input()
+  public step: string = '';
 
-    @Output()
-    public stepChange : EventEmitter<string> = new EventEmitter();
+  @Output()
+  public stepChange : EventEmitter<string> = new EventEmitter();
+
   @Output()
   public typeEmitter = new EventEmitter<string>();
 
   @Input()
   public datasetFiles: any;
+
+  public isShow = false;
 
   public isCSV: boolean = false;
   public isEXCEL: boolean = false;
@@ -158,6 +161,7 @@ export class PrepPopFileSelectsheetComponent extends AbstractPopupComponent impl
       // 다음 버튼 활성화 여부 확인
       this._checkNextBtn();
     }
+    this.init();
   }
 
   public ngOnDestroy() {
@@ -168,7 +172,10 @@ export class PrepPopFileSelectsheetComponent extends AbstractPopupComponent impl
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
    | Public Method
    |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
-  /**
+    public init() {
+        this.isShow = true;
+    }
+    /**
    * Close
    */
   public close() {

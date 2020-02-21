@@ -40,10 +40,6 @@ prep-detail, prep-dataset-detail {height:100%;}
 .ddp-icon-file-svg {display:none;}
 .ddp-btn-go-detail {float: right;background: black;color: white;padding: 10px;cursor:pointer;margin-right:10px;border-radius: 3px;}
 
-.pb-drop-file {border: 16px dashed #eee;margin: 15px;border-radius: 61px;}
-.pb-drop-file .pb-txt-title{padding-bottom: 10px;color: #e0e0e0;font-size: 65px;font-weight: 900;}
-.pb-drop-file .pb-txt-det {padding-bottom: 70px;color: #e0e0e0;font-size: 19px;font-weight: 300;}
-
 .pb-ui-graph2 .ddp-box-gridarea {position:absolute; padding: 0 20px 40px 20px; left:0; right:0; bottom:0; width:calc(100% - 19px); height:calc(100% - 98px); border:none; box-sizing:border-box; }
 .pb-ui-graph2 .ddp-box-gridarea .ddp-ui-gridbody {top:35px;}
 

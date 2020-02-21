@@ -1,0 +1,52 @@
+<div class="pb-layout-popup" *ngIf="isShow">
+    <!-- box popup -->
+    <div class="pb-box-popup">
+        <a href="javascript:" class="pb-btn-pop-close" (click)="isShow = false"></a>
+        <!-- step -->
+        <div class="pb-ui-step">
+            <span class="pb-txt-step">1</span>
+            <span class="pb-txt-step is-selected">2</span>
+        </div>
+        <!-- //step -->
+        <!-- top -->
+        <div class="pb-popup-top">
+            <div class="pb-txt-title">CREATE DATAFLOW</div>
+
+        </div>
+        <!-- //top -->
+        <!-- contents -->
+        <div class="pb-popup-contents pb-pop-create">
+            <!-- option -->
+            <div class="pb-ui-data-option ">
+                <!-- form -->
+                <div class="pb-form-option pb-clear">
+                    <label class="pb-label-title">Name</label>
+                    <input type="text" class="pb-input-type" maxlength="50" placeholder="Please enter a name">
+                    <span class="pb-ui-error"></span>
+                </div>
+                <div class="pb-form-option pb-clear">
+                    <label class="pb-label-title">Description</label>
+                    <input class="pb-input-type pb-input-long" maxlength="150" type="text" placeholder="Please enter a description">
+                    <span class="pb-ui-error"></span>
+                </div>
+                <!-- //form -->
+            </div>
+            <!-- //option -->
+            <!-- data connect -->
+
+            <!-- //data connect -->
+        </div>
+        <!-- //contents -->
+        <!-- bottom -->
+        <div class="pb-popup-bottom">
+            <a href="javascript:" class="pb-component-btn type-line" (click)="prev()">{{'msg.comm.btn.previous' | translate}}</a>
+            <a href="javascript:" class="pb-component-btn type-line">CANCEL</a>
+            <!-- disabled 시 ddp-disabled 추가 -->
+            <a href="javascript:" class="pb-component-btn type-bg" (click)="complete()" [ngClass]="{'ddp-disabled': isBtnDisabled() }">{{'msg.comm.btn.done2' | translate}}</a>
+        </div>
+        <!-- //bottom -->
+    </div>
+    <!-- //box popup -->
+</div>
+
+

@@ -2,24 +2,27 @@
     <!-- box popup -->
     <div class="pb-box-popup">
         <a href="javascript:" class="pb-btn-pop-close" (click)="isShow = false"></a>
+        <!-- step -->
+        <div class="pb-ui-step">
+            <span class="pb-txt-step is-selected">1</span>
+            <span class="pb-txt-step">2</span>
+        </div>
+        <!-- //step -->
         <!-- top -->
         <div class="pb-popup-top">
-            <div class="pb-txt-title">DATA CONNECT</div>
+            <div class="pb-txt-title">CREATE DATAFLOW</div>
 
         </div>
         <!-- //top -->
         <!-- contents -->
         <div class="pb-popup-contents">
-            <div class="pb-wrap-fileupload pb-drop-file">
-                <div class="pb-txt-title">Drop your File</div>
-                <div class="pb-txt-det">You can create data.</div>
-            </div>
+
         </div>
         <!-- //contents -->
         <!-- bottom -->
         <div class="pb-popup-bottom">
             <a href="javascript:" class="pb-component-btn type-bg">SKIP</a>
-            <a href="javascript:" class="pb-component-btn type-line">CANCEL</a>
+            <a href="javascript:" class="pb-component-btn type-line" (click)="goto('dataflow-name');">NEXT</a>
         </div>
         <!-- //bottom -->
     </div>

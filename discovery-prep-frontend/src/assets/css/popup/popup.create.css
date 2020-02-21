@@ -27,7 +27,7 @@
 .pb-ui-data-expression .pb-ui-grid-option .pb-icon-grid-resize {width:17px; height:18px;background-position:left -93px;}
 .pb-ui-data-expression .pb-ui-grid-option .pb-wrap-slider3 {float:left;width:188px; margin-left:25px;}
 
-.pb-box-empty {height:100%; padding:50px;}
+.pb-box-empty {height:100%; padding:50px 50px 0 50px;}
 .pb-box-empty .pb-data-empty {height:100%; border-radius: 20px; border: dashed 6px rgba(222,222,222,0.8);}
 .pb-box-empty .pb-img-create {display:inline-block;width:76px;height:101px; background-position:left -95px;}
 

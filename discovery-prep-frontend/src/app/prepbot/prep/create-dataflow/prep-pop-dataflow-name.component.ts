@@ -32,11 +32,11 @@ import {PreparationCommonUtil} from "../../util/preparation-common.util";
 declare let moment;
 
 @Component({
-  selector: 'prep-pop-create-dataset-name',
-  templateUrl: './prep-pop-create-dataset-name.component.html',
+  selector: 'prep-pop-dataflow-name',
+  templateUrl: './prep-pop-dataflow-name.component.html',
   providers: [DatasetService]
 })
-export class PrepPopCreateDatasetNameComponent extends AbstractPopupComponent implements OnInit, OnDestroy  {
+export class PrepPopDataflowNameComponent extends AbstractPopupComponent implements OnInit, OnDestroy  {
 
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   | Private Variables
@@ -121,11 +121,6 @@ export class PrepPopCreateDatasetNameComponent extends AbstractPopupComponent im
 
     this.dsfileInformations = [];
 
-    this.type='FILE'; // temporary
-    // Set default name
-    this._setDefaultDatasetName(this.type);
-
-    // Set dataset information
     this._setDatasetInfo();
     this.init();
 
@@ -150,112 +145,222 @@ export class PrepPopCreateDatasetNameComponent extends AbstractPopupComponent im
     if (this.flag) {
       return;
     }
+    //
+    // // Name validation
+    // this.names.forEach((item, index) => {
+    //   if (isUndefined(item) || item.trim() === '' || item.length < 1) {
+    //     this.nameErrors[index] = this.translateService.instant('msg.dp.alert.name.error');
+    //     this.showNameError = true;
+    //   }
+    //
+    //   if (item.length > 150) {
+    //     this.showNameError = true;
+    //     this.nameErrors[index] = this.translateService.instant('msg.dp.alert.name.error.description');
+    //   }
+    //
+    // });
+    //
+    //
+    // // description validation
+    // this.descriptions.forEach((item, index) => {
+    //   if (!StringUtil.isEmpty(this.descriptions[index]) && this.descriptions[index].length > 150) {
+    //     this.descriptionErrors[index] = this.translateService.instant('msg.dp.alert.description.error.description');
+    //   }
+    // });
+    //
+    // if (this.showNameError || this.showDescError) {
+    //   return;
+    // }
+    //
+    //
+    // let params = {};
+    // if (this.type === 'STAGING') {
+    //
+    //   this.datasetHive.dsName = this.names[0];
+    //   this.datasetHive.dsDesc = this.descriptions[0];
+    //   params = this._getHiveParams(this.datasetHive);
+    //   this._createDataset(params);
+    // }
+    //
+    // if (this.type === 'DB') {
+    //
+    //   this.datasetJdbc.dsName = this.names[0];
+    //   this.datasetJdbc.dsDesc = this.descriptions[0];
+    //   params = this._getJdbcParams(this.datasetJdbc);
+    //   this._createDataset(params);
+    //
+    // }
+    //
+    // if (this.type === 'FILE' || 'URL' === this.type) {
+    //
+    //   // List of parameters used to make multiple dataSets
+    //   const params = this.names.map((name:string,index:number) => {
+    //     this.datasetFiles[this.dsfileInformations[index].datasetFileIndex].dsName = name;
+    //     this.datasetFiles[this.dsfileInformations[index].datasetFileIndex].dsDesc = this.descriptions[index];
+    //     this.datasetFiles[this.dsfileInformations[index].datasetFileIndex].sheetName = this.dsfileInformations[index].sheetName;
+    //     if (this.datasetFiles[this.dsfileInformations[index].datasetFileIndex].fileFormat != FileFormat.JSON) {
+    //       this.datasetFiles[this.dsfileInformations[index].datasetFileIndex].manualColumnCount = this.dsfileInformations[index].manualColumnCount;
+    //     }
+    //     return this._getFileParams(this.datasetFiles[this.dsfileInformations[index].datasetFileIndex]);
+    //   });
+    //
+    //   // Make list of params into observable using from.
+    //   // used concatMap to send multiple sequential HTTP requests
+    //   this.flag = true;
+    //   this.results = [];
+    //   const streams = from(params).pipe(
+    //     concatMap(stream => this._createFileDataset(stream)
+    //       .catch((error) => {
+    //         console.info(error)
+    //       })));
+    //
+    //   this.loadingShow();
+    //   streams.subscribe((result) => {
+    //
+    //     // push only successful result into an array
+    //     // because this information is required in
+    //     // complete() but no way to access them
+    //     if (result) {
+    //       this.results.push({dsId: result.dsId, dsName: result.dsName, link : result['_links'].self.href});
+    //     }
+    //
+    //   },(error) => {
+    //     console.error(error);
+    //   },() => {
+    //
+    //     this.flag = false;
+    //     this.loadingHide();
+    //
+    //     // Find number of errors
+    //     const errorNum = this.names.length - this.results.length;
+    //     if (errorNum > 0) {
+    //       Alert.error(this.translateService.instant('msg.dp.alert.num.fail.dataset', {value : errorNum}));
+    //     }
+    //
+    //     // 데이터셋 리스트에서 진입과 체크됐다면(데이터플로우로 바로 이동)
+    //     if (this.isChecked && this.isFromDatasetList && this.names.length === 1) {
+    //       this._makeShortCutToDataFlow();
+    //     } else {
+    //
+    //       // 리스트로 돌아간다.
+    //       this.popupService.notiPopup({
+    //         name: 'complete-dataflow-create',
+    //         data: this.results.length > 0 ? this.results[0].dsId : null
+    //       });
+    //     }
+    //   })
+    //
+    // }
+    // // Name validation
+    // this.names.forEach((item, index) => {
+    //   if (isUndefined(item) || item.trim() === '' || item.length < 1) {
+    //     this.nameErrors[index] = this.translateService.instant('msg.dp.alert.name.error');
+    //     this.showNameError = true;
+    //   }
+    //
+    //   if (item.length > 150) {
+    //     this.showNameError = true;
+    //     this.nameErrors[index] = this.translateService.instant('msg.dp.alert.name.error.description');
+    //   }
+    //
+    // });
+    //
+    //
+    // // description validation
+    // this.descriptions.forEach((item, index) => {
+    //   if (!StringUtil.isEmpty(this.descriptions[index]) && this.descriptions[index].length > 150) {
+    //     this.descriptionErrors[index] = this.translateService.instant('msg.dp.alert.description.error.description');
+    //   }
+    // });
+    //
+    // if (this.showNameError || this.showDescError) {
+    //   return;
+    // }
+    //
+    //
+    // let params = {};
+    // if (this.type === 'STAGING') {
+    //
+    //   this.datasetHive.dsName = this.names[0];
+    //   this.datasetHive.dsDesc = this.descriptions[0];
+    //   params = this._getHiveParams(this.datasetHive);
+    //   this._createDataset(params);
+    // }
+    //
+    // if (this.type === 'DB') {
+    //
+    //   this.datasetJdbc.dsName = this.names[0];
+    //   this.datasetJdbc.dsDesc = this.descriptions[0];
+    //   params = this._getJdbcParams(this.datasetJdbc);
+    //   this._createDataset(params);
+    //
+    // }
+    //
+    // if (this.type === 'FILE' || 'URL' === this.type) {
+    //
+    //   // List of parameters used to make multiple dataSets
+    //   const params = this.names.map((name:string,index:number) => {
+    //     this.datasetFiles[this.dsfileInformations[index].datasetFileIndex].dsName = name;
+    //     this.datasetFiles[this.dsfileInformations[index].datasetFileIndex].dsDesc = this.descriptions[index];
+    //     this.datasetFiles[this.dsfileInformations[index].datasetFileIndex].sheetName = this.dsfileInformations[index].sheetName;
+    //     if (this.datasetFiles[this.dsfileInformations[index].datasetFileIndex].fileFormat != FileFormat.JSON) {
+    //       this.datasetFiles[this.dsfileInformations[index].datasetFileIndex].manualColumnCount = this.dsfileInformations[index].manualColumnCount;
+    //     }
+    //     return this._getFileParams(this.datasetFiles[this.dsfileInformations[index].datasetFileIndex]);
+    //   });
+    //
+    //   // Make list of params into observable using from.
+    //   // used concatMap to send multiple sequential HTTP requests
+    //   this.flag = true;
+    //   this.results = [];
+    //   const streams = from(params).pipe(
+    //     concatMap(stream => this._createFileDataset(stream)
+    //       .catch((error) => {
+    //         console.info(error)
+    //       })));
+    //
+    //   this.loadingShow();
+    //   streams.subscribe((result) => {
+    //
+    //     // push only successful result into an array
+    //     // because this information is required in
+    //     // complete() but no way to access them
+    //     if (result) {
+    //       this.results.push({dsId: result.dsId, dsName: result.dsName, link : result['_links'].self.href});
+    //     }
+    //
+    //   },(error) => {
+    //     console.error(error);
+    //   },() => {
+    //
+    //     this.flag = false;
+    //     this.loadingHide();
+    //
+    //     // Find number of errors
+    //     const errorNum = this.names.length - this.results.length;
+    //     if (errorNum > 0) {
+    //       Alert.error(this.translateService.instant('msg.dp.alert.num.fail.dataset', {value : errorNum}));
+    //     }
+    //
+    //     // 데이터셋 리스트에서 진입과 체크됐다면(데이터플로우로 바로 이동)
+    //     if (this.isChecked && this.isFromDatasetList && this.names.length === 1) {
+    //       this._makeShortCutToDataFlow();
+    //     } else {
+    //
+    //       // 리스트로 돌아간다.
+    //       this.popupService.notiPopup({
+    //         name: 'complete-dataflow-create',
+    //         data: this.results.length > 0 ? this.results[0].dsId : null
+    //       });
+    //     }
+    //   })
+    //
+    // }
 
-    // Name validation
-    this.names.forEach((item, index) => {
-      if (isUndefined(item) || item.trim() === '' || item.length < 1) {
-        this.nameErrors[index] = this.translateService.instant('msg.dp.alert.name.error');
-        this.showNameError = true;
-      }
-
-      if (item.length > 150) {
-        this.showNameError = true;
-        this.nameErrors[index] = this.translateService.instant('msg.dp.alert.name.error.description');
-      }
-
+    this.popupService.notiPopup({
+        name: 'complete-dataflow-create',
+        data: null
     });
-
-
-    // description validation
-    this.descriptions.forEach((item, index) => {
-      if (!StringUtil.isEmpty(this.descriptions[index]) && this.descriptions[index].length > 150) {
-        this.descriptionErrors[index] = this.translateService.instant('msg.dp.alert.description.error.description');
-      }
-    });
-
-    if (this.showNameError || this.showDescError) {
-      return;
-    }
-
-
-    let params = {};
-    if (this.type === 'STAGING') {
-
-      this.datasetHive.dsName = this.names[0];
-      this.datasetHive.dsDesc = this.descriptions[0];
-      params = this._getHiveParams(this.datasetHive);
-      this._createDataset(params);
-    }
-
-    if (this.type === 'DB') {
-
-      this.datasetJdbc.dsName = this.names[0];
-      this.datasetJdbc.dsDesc = this.descriptions[0];
-      params = this._getJdbcParams(this.datasetJdbc);
-      this._createDataset(params);
-
-    }
-
-    if (this.type === 'FILE' || 'URL' === this.type) {
-
-      // List of parameters used to make multiple dataSets
-      const params = this.names.map((name:string,index:number) => {
-        this.datasetFiles[this.dsfileInformations[index].datasetFileIndex].dsName = name;
-        this.datasetFiles[this.dsfileInformations[index].datasetFileIndex].dsDesc = this.descriptions[index];
-        this.datasetFiles[this.dsfileInformations[index].datasetFileIndex].sheetName = this.dsfileInformations[index].sheetName;
-        if (this.datasetFiles[this.dsfileInformations[index].datasetFileIndex].fileFormat != FileFormat.JSON) {
-          this.datasetFiles[this.dsfileInformations[index].datasetFileIndex].manualColumnCount = this.dsfileInformations[index].manualColumnCount;
-        }
-        return this._getFileParams(this.datasetFiles[this.dsfileInformations[index].datasetFileIndex]);
-      });
-
-      // Make list of params into observable using from.
-      // used concatMap to send multiple sequential HTTP requests
-      this.flag = true;
-      this.results = [];
-      const streams = from(params).pipe(
-        concatMap(stream => this._createFileDataset(stream)
-          .catch((error) => {
-            console.info(error)
-          })));
-
-      this.loadingShow();
-      streams.subscribe((result) => {
-
-        // push only successful result into an array
-        // because this information is required in
-        // complete() but no way to access them
-        if (result) {
-          this.results.push({dsId: result.dsId, dsName: result.dsName, link : result['_links'].self.href});
-        }
-
-      },(error) => {
-        console.error(error);
-      },() => {
-
-        this.flag = false;
-        this.loadingHide();
-
-        // Find number of errors
-        const errorNum = this.names.length - this.results.length;
-        if (errorNum > 0) {
-          Alert.error(this.translateService.instant('msg.dp.alert.num.fail.dataset', {value : errorNum}));
-        }
-
-        // 데이터셋 리스트에서 진입과 체크됐다면(데이터플로우로 바로 이동)
-        if (this.isChecked && this.isFromDatasetList && this.names.length === 1) {
-          this._makeShortCutToDataFlow();
-        } else {
-
-          // 리스트로 돌아간다.
-          this.popupService.notiPopup({
-            name: 'complete-dataset-create',
-            data: this.results.length > 0 ? this.results[0].dsId : null
-          });
-        }
-      })
-
-    }
 
   }
 
@@ -304,28 +409,10 @@ export class PrepPopCreateDatasetNameComponent extends AbstractPopupComponent im
 
   /** go to previous step */
   public prev() {
-
-    if (this.type === 'FILE') {
       this.popupService.notiPopup({
-        name: 'select-sheet',
+        name: 'dataset-list',
         data: null
       });
-    } else if (this.type === 'STAGING') {
-      this.popupService.notiPopup({
-        name: 'create-dataset-staging-selectdata',
-        data: null
-      });
-    } else if (this.type === 'DB') {
-      this.popupService.notiPopup({
-        name: 'create-db-query',
-        data: null
-      });
-    } else if (this.type === 'URL') {
-      this.popupService.notiPopup({
-        name: 'select-url',
-        data : null
-      })
-    }
   }
 
 
@@ -336,7 +423,7 @@ export class PrepPopCreateDatasetNameComponent extends AbstractPopupComponent im
     super.close();
 
     this.popupService.notiPopup({
-      name: 'complete-dataset-create',
+      name: 'complete-dataflow-create',
       data: null
     });
   }
@@ -487,80 +574,6 @@ export class PrepPopCreateDatasetNameComponent extends AbstractPopupComponent im
    * @private
    */
   private _setDefaultDatasetName(type : string) : void {
-
-    if ('FILE' === type || 'URL' === type) {
-
-      // FIXME: no idea why dsfileInformations is used instead of datasetInfo
-      this.datasetFiles.forEach((dsFile, index)=>{
-        if(dsFile.sheetInfo){
-          if(dsFile.fileFormat === FileFormat.EXCEL){
-            dsFile.sheetInfo.forEach((sheet)=>{
-              if (sheet.selected){
-                let name = `${dsFile.fileName} - ${sheet.sheetName}`;
-                this.names.push(name.slice(0,150));
-                this.descriptions.push('');
-                this.nameErrors.push('');
-                this.descriptionErrors.push('');
-                this.dsfileInformations.push({
-                  datasetFileIndex : index,
-                  fileName: dsFile.filenameBeforeUpload,
-                  fileFormat: dsFile.fileFormat.toString(),
-                  sheetName:sheet.sheetName,
-                  manualColumnCount:sheet.columnCount,
-                  svg: dsFile.fileFormat.toUpperCase(),
-                });
-              }
-            })
-          } else {
-            if(dsFile.selected){
-              let name = `${dsFile.fileName}.${dsFile.fileExtension}`;
-              this.names.push(name.slice(0,150));
-              this.descriptions.push('');
-              this.nameErrors.push('');
-              this.descriptionErrors.push('');
-              if (dsFile.fileFormat === FileFormat.JSON ){
-                this.dsfileInformations.push({
-                  datasetFileIndex : index,
-                  fileName: dsFile.filenameBeforeUpload,
-                  fileFormat: dsFile.fileFormat.toString(),
-                  sheetName:'',
-                  svg: dsFile.fileFormat.toUpperCase(),
-                });
-              } else {
-                this.dsfileInformations.push({
-                  datasetFileIndex : index,
-                  fileName: dsFile.filenameBeforeUpload,
-                  fileFormat: dsFile.fileFormat.toString(),
-                  sheetName:'',
-                  manualColumnCount:dsFile.sheetInfo[0].columnCount,
-                  svg: dsFile.fileFormat.toUpperCase(),
-                });
-              }
-            }
-          }
-        }
-      });
-
-    } else if ('DB' === type) {
-
-      // When table
-      if (this.datasetJdbc.rsType === RsType.TABLE) {
-        this.names[0] = `${this.datasetJdbc.tableInfo.tableName}_${this.datasetJdbc.dataconnection.connection.implementor}`;
-      } else {
-        this.names[0] = '';
-      }
-
-    } else if ('STAGING' === type) {
-
-      // When table
-      if (this.datasetHive.rsType === RsType.TABLE) {
-        this.names[0] = `${this.datasetHive.tableInfo.tableName}_STAGING`;
-      } else {
-        this.names[0] = '';
-      }
-
-    }
-
     // For placeholder
     this.clonedNames = _.cloneDeep(this.names);
 

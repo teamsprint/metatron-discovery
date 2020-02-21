@@ -103,7 +103,7 @@ export class PrepPopFileUploadCreateComponent extends AbstractPopupComponent imp
   public isNext : boolean = false;
 
   public preparationUtil = PreparationCommonUtil;
-    public isShow = false;
+  public isShow = false;
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
    | Constructor
    |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
