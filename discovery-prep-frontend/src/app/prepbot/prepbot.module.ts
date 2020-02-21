@@ -100,7 +100,9 @@ import {PrepPopFileSelectsheetComponent} from "./prep/create-dataset/prep-pop-fi
 import {PrepPopFlowCreateComponent} from "./prep/create-dataflow/prep-pop-flow-create.component";
 import {PrepPopDataflowNameComponent} from "./prep/create-dataflow/prep-pop-dataflow-name.component";
 import {PrepPopDatasetListComponent} from "./prep/create-dataflow/prep-pop-dataset-list.component";
-
+import {PrepPopConnectionCreateComponent} from "./prep/create-connection/prep-pop-connection-create.component";
+import {PrepPopConnectionInfoComponent} from "./prep/create-connection/prep-pop-connection-info.component";
+import {PrepPopConnectionNameComponent} from "./prep/create-connection/prep-pop-connection-name.component";
 
 const dataPreparationRoutes: Routes = [
 { path: '', component: PrepListComponent },
@@ -196,8 +198,11 @@ const dataPreparationRoutes: Routes = [
     PrepPopFileUploadCreateComponent,
     PrepPopFileSelectsheetComponent,
     PrepPopFlowCreateComponent,
-      PrepPopDatasetListComponent,
-      PrepPopDataflowNameComponent,
+    PrepPopDatasetListComponent,
+    PrepPopDataflowNameComponent,
+    PrepPopConnectionCreateComponent,
+    PrepPopConnectionInfoComponent,
+    PrepPopConnectionNameComponent,
     CreateSnapshotPopup
   ],
   providers: [

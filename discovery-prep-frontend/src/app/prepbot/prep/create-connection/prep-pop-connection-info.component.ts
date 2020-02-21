@@ -15,15 +15,14 @@
 import {Component, ElementRef, Injector, Input, ViewChild, Output, EventEmitter} from '@angular/core';
 import {AbstractComponent} from '../../../common/component/abstract.component';
 import {ActivatedRoute} from "@angular/router";
-import {PrepPopDataflowNameComponent} from "./prep-pop-dataflow-name.component";
+import {PrepPopConnectionNameComponent} from "./prep-pop-connection-name.component";
 import {PopupService} from "../../../common/service/popup.service";
-import { PrDataset, ImportType } from '../../../domain/data-preparation/pr-dataset';
 
 @Component({
-  selector: 'prep-pop-dataset-list',
-  templateUrl: './prep-pop-dataset-list.component.html'
+  selector: 'prep-pop-connection-info',
+  templateUrl: './prep-pop-connection-info.component.html'
 })
-export class PrepPopDatasetListComponent extends AbstractComponent {
+export class PrepPopConnectionInfoComponent extends AbstractComponent {
 
     public isShow = false;
 
@@ -32,12 +31,8 @@ export class PrepPopDatasetListComponent extends AbstractComponent {
     @Output()
     public stepChange : EventEmitter<string> = new EventEmitter();
 
-    // 새로 생성될 데이셋 타입 정보
-    @Input()
-    public importType: PrDataset = new PrDataset();
-
-    @ViewChild(PrepPopDataflowNameComponent)
-    public prepPopDataflowNameComponent : PrepPopDataflowNameComponent;
+    @ViewChild(PrepPopConnectionNameComponent)
+    public prepPopDataflowNameComponent : PrepPopConnectionNameComponent;
 
 
     // 생성자
@@ -74,19 +69,4 @@ export class PrepPopDatasetListComponent extends AbstractComponent {
         this.step = step;
         this.stepChange.emit( step );
     }
-
-    // /**
-    //  * Create new kafka
-    //  */
-    // public goToNext() {
-    //     this.prepPopDataflowNameComponent.init();
-    // }
-
-    // public goToDB() {
-    //     const params = this._getDfParams();
-    //     this.router.navigate(
-    //         ['/management/prepbot/dataflow'])
-    //         .then();
-    // }
-
 }

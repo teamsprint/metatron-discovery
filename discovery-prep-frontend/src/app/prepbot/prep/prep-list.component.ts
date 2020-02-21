@@ -34,6 +34,7 @@ import {ActivatedRoute} from "@angular/router";
 import * as _ from 'lodash';
 import {PrepPopCreateComponent} from "./create-dataset/prep-pop-create.component";
 import {PrepPopFlowCreateComponent} from "./create-dataflow/prep-pop-flow-create.component";
+import {PrepPopConnectionCreateComponent} from "./create-connection/prep-pop-connection-create.component";
 
 
 const DEFAULT_VIEW_TYPE = 'CARD';
@@ -76,11 +77,14 @@ export class PrepListComponent extends AbstractComponent {
   // 정렬
   public selectedContentSort: Order = new Order();
 
-    @ViewChild(PrepPopFlowCreateComponent)
-    public prepPopFlowCreateComponent : PrepPopFlowCreateComponent;
-
   @ViewChild(PrepPopCreateComponent)
   public prepPopCreateComponent : PrepPopCreateComponent;
+
+  @ViewChild(PrepPopFlowCreateComponent)
+  public prepPopFlowCreateComponent : PrepPopFlowCreateComponent;
+
+  @ViewChild(PrepPopConnectionCreateComponent)
+  public prepPopConnectionCreateComponent : PrepPopConnectionCreateComponent;
 
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
    | Constructor
@@ -285,6 +289,8 @@ export class PrepListComponent extends AbstractComponent {
             this.prepPopCreateComponent.step = '';
         }else if('prep-pop-flow-create' === mode && this.prepPopFlowCreateComponent) {
             this.prepPopFlowCreateComponent.step = '';
+        }else if('prep-pop-connection-create' === mode && this.prepPopConnectionCreateComponent) {
+            this.prepPopConnectionCreateComponent.step = '';
         }
         this.mode = mode;
     } // function - changeMode

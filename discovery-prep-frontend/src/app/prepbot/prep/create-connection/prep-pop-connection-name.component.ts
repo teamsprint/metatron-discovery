@@ -29,14 +29,15 @@ import { from} from "rxjs/observable/from";
 import {DataflowService} from "../../dataflow/service/dataflow.service";
 import {PrDataflow} from "../../../domain/data-preparation/pr-dataflow";
 import {PreparationCommonUtil} from "../../util/preparation-common.util";
+
 declare let moment;
 
 @Component({
-  selector: 'prep-pop-dataflow-name',
-  templateUrl: './prep-pop-dataflow-name.component.html',
+  selector: 'prep-pop-connection-name',
+  templateUrl: './prep-pop-connection-name.component.html',
   providers: [DatasetService]
 })
-export class PrepPopDataflowNameComponent extends AbstractPopupComponent implements OnInit, OnDestroy  {
+export class PrepPopConnectionNameComponent extends AbstractPopupComponent implements OnInit, OnDestroy  {
 
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   | Private Variables
@@ -50,12 +51,11 @@ export class PrepPopDataflowNameComponent extends AbstractPopupComponent impleme
   | Public Variables
   |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
+    @Input()
+    public step: string = '';
+
   @Input()
-  public step: string = '';
-
-
-  @Input() // [DB, STAGING, FILE]
-  public type : string;
+  public isFromDatasetList: boolean = true;
 
   // name error msg show/hide
   public showNameError: boolean = false;
@@ -71,19 +71,15 @@ export class PrepPopDataflowNameComponent extends AbstractPopupComponent impleme
 
   public isShow = false;
 
-  public datasetInfo : DatasetInfo[] = [];
   public fileExtension: string;
 
   public dsfileInformations: any;
 
-  public isMultiSheet: boolean = false;
   public names : string [] = [];
-  public clonedNames:string[] = [];
   public descriptions : string [] = [];
   public nameErrors: string[] = [];
   public descriptionErrors: string[] = [];
   public currentIndex: number = 0;
-  public isMaxLengthError: boolean = false;
   public results: any[] = [];
 
   public isChecked: boolean = true; // jump to dataflow main grid
@@ -110,7 +106,7 @@ export class PrepPopDataflowNameComponent extends AbstractPopupComponent impleme
 
     this.dsfileInformations = [];
 
-    this._setDatasetInfo();
+    // this._setDatasetInfo();
     this.init();
 
   }
@@ -477,21 +473,21 @@ export class PrepPopDataflowNameComponent extends AbstractPopupComponent impleme
    */
   public keyDownEvent(event, index) {
 
-    if (this.names[index].length > 149 && this.isKeyPressedWithChar(event.keyCode) && !this.isMaxLengthError) {
-      this.isMaxLengthError = true;
-      if(this.type !== 'FILE') {
-        this.showNameError = true;
-      }
-      this.nameErrors[index] = this.translateService.instant('msg.dp.ui.max.length.error');
-      setTimeout(() => {
-        this.hideNameError(index);
-        this.isMaxLengthError = false;
-      }, 2000);
-    }
-
-    if (this.nameErrors[index] !== '' && !this.isMaxLengthError) {
-      this.hideNameError(index);
-    }
+    // if (this.names[index].length > 149 && this.isKeyPressedWithChar(event.keyCode) && !this.isMaxLengthError) {
+    //   this.isMaxLengthError = true;
+    //   if(this.type !== 'FILE') {
+    //     this.showNameError = true;
+    //   }
+    //   this.nameErrors[index] = this.translateService.instant('msg.dp.ui.max.length.error');
+    //   setTimeout(() => {
+    //     this.hideNameError(index);
+    //     this.isMaxLengthError = false;
+    //   }, 2000);
+    // }
+    //
+    // if (this.nameErrors[index] !== '' && !this.isMaxLengthError) {
+    //   this.hideNameError(index);
+    // }
   }
 
 
@@ -502,18 +498,18 @@ export class PrepPopDataflowNameComponent extends AbstractPopupComponent impleme
    */
   public keyDownDescEvent(event, index) {
 
-    if (this.descriptions[index].length > 149 && this.isKeyPressedWithChar(event.keyCode) && !this.isMaxLengthError) {
-      this.isMaxLengthError = true;
-      this.descriptionErrors[index] = this.translateService.instant('msg.dp.ui.max.length.error');
-      setTimeout(() => {
-        this.hideDescError(index);
-        this.isMaxLengthError = false;
-      }, 2000);
-    }
-
-    if (this.descriptionErrors[index] !== '' && !this.isMaxLengthError) {
-      this.hideDescError(index);
-    }
+    // if (this.descriptions[index].length > 149 && this.isKeyPressedWithChar(event.keyCode) && !this.isMaxLengthError) {
+    //   this.isMaxLengthError = true;
+    //   this.descriptionErrors[index] = this.translateService.instant('msg.dp.ui.max.length.error');
+    //   setTimeout(() => {
+    //     this.hideDescError(index);
+    //     this.isMaxLengthError = false;
+    //   }, 2000);
+    // }
+    //
+    // if (this.descriptionErrors[index] !== '' && !this.isMaxLengthError) {
+    //   this.hideDescError(index);
+    // }
 
   }
 
@@ -527,29 +523,29 @@ export class PrepPopDataflowNameComponent extends AbstractPopupComponent impleme
     return exceptionList.indexOf(keyCode) === -1
   }
 
-
-  /**
-   * Return appropriate title for each dataset type
-   */
-  public get getTypeName() {
-
-    let result = 'Staging DB';
-
-    if (this.type === 'DB') {
-      result = 'Database';
-    }
-
-    if (this.type === 'FILE') {
-      result = 'File';
-    }
-
-    if (this.type === 'URL') {
-      result = this.type;
-    }
-
-    return result;
-
-  }
+  //
+  // /**
+  //  * Return appropriate title for each dataset type
+  //  */
+  // public get getTypeName() {
+  //
+  //   let result = 'Staging DB';
+  //
+  //   if (this.type === 'DB') {
+  //     result = 'Database';
+  //   }
+  //
+  //   if (this.type === 'FILE') {
+  //     result = 'File';
+  //   }
+  //
+  //   if (this.type === 'URL') {
+  //     result = this.type;
+  //   }
+  //
+  //   return result;
+  //
+  // }
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   | Protected Method
   |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
@@ -557,282 +553,282 @@ export class PrepPopDataflowNameComponent extends AbstractPopupComponent impleme
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   | Private Method
   |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
-  /**
-   * 데이터셋 이름의 default값을 넣는다.
-   * @param {string} type
-   * @private
-   */
-  private _setDefaultDatasetName(type : string) : void {
-    // For placeholder
-    this.clonedNames = _.cloneDeep(this.names);
+  // /**
+  //  * 데이터셋 이름의 default값을 넣는다.
+  //  * @param {string} type
+  //  * @private
+  //  */
+  // private _setDefaultDatasetName(type : string) : void {
+  //   // For placeholder
+  //   this.clonedNames = _.cloneDeep(this.names);
+  //
+  //   this.nameElement && setTimeout(() => { this.nameElement.nativeElement.select(); });
+  // } // function - _setDefaultDatasetName
+  //
+  //
+  // /**
+  //  * Set dataset information (summary)
+  //  * @private
+  //  */
+  // private _setDatasetInfo() {
+  //
+  //   if ('FILE' === this.type || 'URL' === this.type) {
+  //
+  //     if (this.names.length === 1) {
+  //       const ext = this.prepCommonUtil.getFileNameAndExtension(this.datasetFiles[0].filenameBeforeUpload)[1];
+  //       if ('FILE' === this.type) {
+  //
+  //         this.datasetInfo.push({
+  //           name : this.translateService.instant('msg.dp.ui.list.file'),
+  //           value : this.datasetFiles[0].fileName,
+  //           svg : this.prepCommonUtil.getFileFormatWithExtension(ext).toString()
+  //         });
+  //       } else {
+  //         this.datasetInfo.push({
+  //           name : `URL(${this.prepCommonUtil.getFileFormatWithExtension(ext)})`,
+  //           value : this.datasetFiles[0].storedUri,
+  //           svg : this.prepCommonUtil.getFileFormatWithExtension(ext).toString()
+  //         });
+  //       }
+  //
+  //       if ('XLSX' === this.datasetFiles[0].fileExtension.toUpperCase() || 'XLS' === this.datasetFiles[0].fileExtension.toUpperCase()) {
+  //         this.datasetInfo.push({
+  //           name: this.translateService.instant('msg.dp.th.sheet'),
+  //           value: this.datasetFiles[0].sheetName
+  //         });
+  //       }
+  //     }
+  //
+  //   } else if ('DB' === this.type) {
+  //
+  //     let ds = this.datasetJdbc;
+  //
+  //     // TYPE
+  //     this.datasetInfo.push({
+  //       name : this.translateService.instant('msg.comm.th.type'),
+  //       value : `DB(${ds.dataconnection['connection'].implementor})`,
+  //       svg : ds.dataconnection['connection'].implementor,
+  //     });
+  //
+  //     if (this.datasetJdbc.rsType === RsType.TABLE) {
+  //
+  //       // DATABASE NAME
+  //       this.datasetInfo.push({
+  //         name : this.translateService.instant('msg.dp.th.database'),
+  //         value : ds.tableInfo.databaseName
+  //       });
+  //
+  //       // TABLE NAME
+  //       this.datasetInfo.push({
+  //         name : this.translateService.instant('msg.dp.th.ss.table'),
+  //         value : ds.tableInfo.tableName
+  //       });
+  //
+  //     } else {
+  //
+  //       this.datasetInfo.push({
+  //         name : this.translateService.instant('msg.dp.th.database'),
+  //         value : ds.sqlInfo.databaseName
+  //       });
+  //
+  //       // QUERY STATEMENT
+  //       this.datasetInfo.push({
+  //         name : this.translateService.instant('msg.dp.btn.query'),
+  //         value : ds.sqlInfo.queryStmt
+  //       });
+  //
+  //     }
+  //
+  //     if (ds.dataconnection['connection'].hostname && ds.dataconnection['connection'].port) {
+  //
+  //       // HOST & PORT
+  //       this.datasetInfo.push(
+  //         {name : this.translateService.instant('msg.comm.th.host'), value : ds.dataconnection['connection'].hostname},
+  //         {name : this.translateService.instant('msg.comm.th.port'), value : ds.dataconnection['connection'].port}
+  //       );
+  //     } else {
+  //
+  //       // URL
+  //       this.datasetInfo.push(
+  //         {name : this.translateService.instant('msg.nbook.th.url'), value : ds.dataconnection['connection'].url}
+  //       );
+  //     }
+  //
+  //   } else if ('STAGING' === this.type) {
+  //     this.datasetInfo.push({
+  //       name : this.translateService.instant('msg.comm.th.type'),
+  //       value : 'STAGING_DB',
+  //       svg : 'HIVE'
+  //     });
+  //
+  //     if (this.datasetHive.rsType === RsType.TABLE) {
+  //       this.datasetInfo.push(
+  //         {name : this.translateService.instant('msg.dp.th.database'), value : this.datasetHive.tableInfo.databaseName},
+  //         {name : this.translateService.instant('msg.dp.th.ss.table'), value : this.datasetHive.tableInfo.tableName}
+  //       );
+  //     } else {
+  //       this.datasetInfo.push({name : this.translateService.instant('msg.dp.btn.query'), value : this.datasetHive.sqlInfo.queryStmt});
+  //     }
+  //
+  //   }
+  //
+  // }
+  //
+  //
+  // /**
+  //  * Returns parameter needed for creating staging dataset
+  //  * @returns {Object}
+  //  * @private
+  //  */
+  // private _getHiveParams(hive): object {
+  //
+  //   if (hive.rsType === RsType.QUERY) {
+  //     hive.queryStmt = hive.sqlInfo.queryStmt;
+  //     hive.dbName = hive.sqlInfo.databaseName;
+  //   } else {
+  //     hive.tblName = hive.tableInfo.tableName;
+  //     hive.dbName = hive.tableInfo.databaseName;
+  //   }
+  //   return hive
+  // }
+  //
+  //
+  // /**
+  //  * Returns parameter needed for creating jdbc dataset
+  //  * @param jdbc
+  //  * @returns {Object}
+  //  * @private
+  //  */
+  // private _getJdbcParams(jdbc) : object {
+  //
+  //   // For postgre dbName is database not databaseName!
+  //   if (jdbc.rsType === RsType.QUERY) {
+  //     jdbc.queryStmt = jdbc.sqlInfo.queryStmt;
+  //     jdbc.dbName = jdbc.sqlInfo.databaseName;
+  //   } else {
+  //     jdbc.tblName = jdbc.tableInfo.tableName;
+  //     jdbc.dbName = jdbc.tableInfo.databaseName;
+  //   }
+  //   return jdbc
+  // }
+  //
+  //
+  // /**
+  //  * Returns parameter needed for creating staging dataset
+  //  * @returns {Object}
+  //  * @private
+  //  */
+  // private _getFileParams(file): object {
+  //   const params: any = {};
+  //   if (file.fileFormat === FileFormat.EXCEL){
+  //     params.delimiter = ',';
+  //   } else {
+  //     params.delimiter = file.delimiter;
+  //   }
+  //
+  //   if (file.fileFormat === FileFormat.CSV || file.fileFormat === FileFormat.TXT ){
+  //     params.quoteChar = file.quoteChar;
+  //   }
+  //
+  //   params.dsName = file.dsName;
+  //   params.dsDesc = file.dsDesc;
+  //   params.dsType = 'IMPORTED';
+  //   if (this.type === 'FILE') {
+  //     params.importType = 'UPLOAD';
+  //   } else if(this.type === 'URL') {
+  //     params.importType = 'URI';
+  //   } else {
+  //     params.importType = 'UPLOAD';
+  //   }
+  //   params.filenameBeforeUpload = file.filenameBeforeUpload;
+  //   params.storageType = file.storageType;
+  //   params.sheetName = file.sheetName;
+  //   params.storedUri = file.storedUri;
+  //   params.manualColumnCount = file.manualColumnCount;
+  //
+  //   return params
+  // }
+  //
+  //
+  //
+  // /**
+  //  * Create dataset (call API)
+  //  * @param {Object} params
+  //  * (staging and db)
+  //  * @private
+  //  */
+  // private _createDataset(params : object) {
+  //
+  //   let type = this.type === 'DB' ? this.datasetJdbc : this.datasetHive;
+  //
+  //   let tableInfo = type.tableInfo;
+  //   let sqlInfo = type.sqlInfo;
+  //
+  //   // delete - only use in UI
+  //   delete type.tableInfo;
+  //   delete type.sqlInfo;
+  //
+  //   // Error when creating dataflow with dataset with no querystmt
+  //   if (type.rsType === RsType.TABLE) {
+  //     var databaseName = tableInfo.databaseName;
+  //     var tableName = tableInfo.tableName;
+  //     if(type.dataconnection.connection.implementor==="POSTGRESQL") {
+  //       if( /^[a-z0-9]+$/.test(databaseName) === false ) {
+  //         databaseName = `"${databaseName}"`;
+  //       }
+  //       if( /^[a-z0-9]+$/.test(tableName) === false ) {
+  //         tableName = `"${tableName}"`;
+  //       }
+  //     }
+  //     params['queryStmt'] = `select * from ${databaseName}.${tableName}`;
+  //   }
+  //
+  //   this.loadingShow();
+  //   this.flag = true;
+  //   this.datasetService.createDataSet(params).then((result) => {
+  //     this.flag = false;
+  //     this.loadingHide();
+  //     if (result) {
+  //       this.results = [];
+  //       this.results.push({dsId: result.dsId, dsName: result.dsName, link : result['_links'].self.href});
+  //       if (this.isChecked && this.isFromDatasetList) {
+  //         this._makeShortCutToDataFlow();
+  //       } else {
+  //         this.popupService.notiPopup({
+  //           name: 'complete-dataset-create',
+  //           data: this.results.length > 0 ? this.results[0].dsId : null
+  //         });
+  //       }
+  //     }
+  //   }).catch((error) => {
+  //
+  //     type.tableInfo = tableInfo;
+  //     type.sqlInfo = sqlInfo;
+  //
+  //     // Error when creating dataflow with dataset with no querystmt
+  //     if (type.rsType === RsType.TABLE) {
+  //       delete params['queryStmt'];
+  //     }
+  //
+  //     this.loadingHide();
+  //     this.errorAction(error);
+  //   })
+  // }
 
-    this.nameElement && setTimeout(() => { this.nameElement.nativeElement.select(); });
-  } // function - _setDefaultDatasetName
 
-
-  /**
-   * Set dataset information (summary)
-   * @private
-   */
-  private _setDatasetInfo() {
-
-    // if ('FILE' === this.type || 'URL' === this.type) {
-    //
-    //   if (this.names.length === 1) {
-    //     const ext = this.prepCommonUtil.getFileNameAndExtension(this.datasetFiles[0].filenameBeforeUpload)[1];
-    //     if ('FILE' === this.type) {
-    //
-    //       this.datasetInfo.push({
-    //         name : this.translateService.instant('msg.dp.ui.list.file'),
-    //         value : this.datasetFiles[0].fileName,
-    //         svg : this.prepCommonUtil.getFileFormatWithExtension(ext).toString()
-    //       });
-    //     } else {
-    //       this.datasetInfo.push({
-    //         name : `URL(${this.prepCommonUtil.getFileFormatWithExtension(ext)})`,
-    //         value : this.datasetFiles[0].storedUri,
-    //         svg : this.prepCommonUtil.getFileFormatWithExtension(ext).toString()
-    //       });
-    //     }
-    //
-    //     if ('XLSX' === this.datasetFiles[0].fileExtension.toUpperCase() || 'XLS' === this.datasetFiles[0].fileExtension.toUpperCase()) {
-    //       this.datasetInfo.push({
-    //         name: this.translateService.instant('msg.dp.th.sheet'),
-    //         value: this.datasetFiles[0].sheetName
-    //       });
-    //     }
-    //   }
-    //
-    // } else if ('DB' === this.type) {
-    //
-    //   let ds = this.datasetJdbc;
-    //
-    //   // TYPE
-    //   this.datasetInfo.push({
-    //     name : this.translateService.instant('msg.comm.th.type'),
-    //     value : `DB(${ds.dataconnection['connection'].implementor})`,
-    //     svg : ds.dataconnection['connection'].implementor,
-    //   });
-    //
-    //   if (this.datasetJdbc.rsType === RsType.TABLE) {
-    //
-    //     // DATABASE NAME
-    //     this.datasetInfo.push({
-    //       name : this.translateService.instant('msg.dp.th.database'),
-    //       value : ds.tableInfo.databaseName
-    //     });
-    //
-    //     // TABLE NAME
-    //     this.datasetInfo.push({
-    //       name : this.translateService.instant('msg.dp.th.ss.table'),
-    //       value : ds.tableInfo.tableName
-    //     });
-    //
-    //   } else {
-    //
-    //     this.datasetInfo.push({
-    //       name : this.translateService.instant('msg.dp.th.database'),
-    //       value : ds.sqlInfo.databaseName
-    //     });
-    //
-    //     // QUERY STATEMENT
-    //     this.datasetInfo.push({
-    //       name : this.translateService.instant('msg.dp.btn.query'),
-    //       value : ds.sqlInfo.queryStmt
-    //     });
-    //
-    //   }
-    //
-    //   if (ds.dataconnection['connection'].hostname && ds.dataconnection['connection'].port) {
-    //
-    //     // HOST & PORT
-    //     this.datasetInfo.push(
-    //       {name : this.translateService.instant('msg.comm.th.host'), value : ds.dataconnection['connection'].hostname},
-    //       {name : this.translateService.instant('msg.comm.th.port'), value : ds.dataconnection['connection'].port}
-    //     );
-    //   } else {
-    //
-    //     // URL
-    //     this.datasetInfo.push(
-    //       {name : this.translateService.instant('msg.nbook.th.url'), value : ds.dataconnection['connection'].url}
-    //     );
-    //   }
-    //
-    // } else if ('STAGING' === this.type) {
-    //   this.datasetInfo.push({
-    //     name : this.translateService.instant('msg.comm.th.type'),
-    //     value : 'STAGING_DB',
-    //     svg : 'HIVE'
-    //   });
-    //
-    //   if (this.datasetHive.rsType === RsType.TABLE) {
-    //     this.datasetInfo.push(
-    //       {name : this.translateService.instant('msg.dp.th.database'), value : this.datasetHive.tableInfo.databaseName},
-    //       {name : this.translateService.instant('msg.dp.th.ss.table'), value : this.datasetHive.tableInfo.tableName}
-    //     );
-    //   } else {
-    //     this.datasetInfo.push({name : this.translateService.instant('msg.dp.btn.query'), value : this.datasetHive.sqlInfo.queryStmt});
-    //   }
-    //
-    // }
-
-  }
-
-
-  /**
-   * Returns parameter needed for creating staging dataset
-   * @returns {Object}
-   * @private
-   */
-  private _getHiveParams(hive): object {
-
-    if (hive.rsType === RsType.QUERY) {
-      hive.queryStmt = hive.sqlInfo.queryStmt;
-      hive.dbName = hive.sqlInfo.databaseName;
-    } else {
-      hive.tblName = hive.tableInfo.tableName;
-      hive.dbName = hive.tableInfo.databaseName;
-    }
-    return hive
-  }
-
-
-  /**
-   * Returns parameter needed for creating jdbc dataset
-   * @param jdbc
-   * @returns {Object}
-   * @private
-   */
-  private _getJdbcParams(jdbc) : object {
-
-    // For postgre dbName is database not databaseName!
-    if (jdbc.rsType === RsType.QUERY) {
-      jdbc.queryStmt = jdbc.sqlInfo.queryStmt;
-      jdbc.dbName = jdbc.sqlInfo.databaseName;
-    } else {
-      jdbc.tblName = jdbc.tableInfo.tableName;
-      jdbc.dbName = jdbc.tableInfo.databaseName;
-    }
-    return jdbc
-  }
-
-
-  /**
-   * Returns parameter needed for creating staging dataset
-   * @returns {Object}
-   * @private
-   */
-  private _getFileParams(file): object {
-    const params: any = {};
-    if (file.fileFormat === FileFormat.EXCEL){
-      params.delimiter = ',';
-    } else {
-      params.delimiter = file.delimiter;
-    }
-
-    if (file.fileFormat === FileFormat.CSV || file.fileFormat === FileFormat.TXT ){
-      params.quoteChar = file.quoteChar;
-    }
-
-    params.dsName = file.dsName;
-    params.dsDesc = file.dsDesc;
-    params.dsType = 'IMPORTED';
-    if (this.type === 'FILE') {
-      params.importType = 'UPLOAD';
-    } else if(this.type === 'URL') {
-      params.importType = 'URI';
-    } else {
-      params.importType = 'UPLOAD';
-    }
-    params.filenameBeforeUpload = file.filenameBeforeUpload;
-    params.storageType = file.storageType;
-    params.sheetName = file.sheetName;
-    params.storedUri = file.storedUri;
-    params.manualColumnCount = file.manualColumnCount;
-
-    return params
-  }
-
-
-
-  /**
-   * Create dataset (call API)
-   * @param {Object} params
-   * (staging and db)
-   * @private
-   */
-  private _createDataset(params : object) {
-
-    // let type = this.type === 'DB' ? this.datasetJdbc : this.datasetHive;
-    //
-    // let tableInfo = type.tableInfo;
-    // let sqlInfo = type.sqlInfo;
-    //
-    // // delete - only use in UI
-    // delete type.tableInfo;
-    // delete type.sqlInfo;
-    //
-    // // Error when creating dataflow with dataset with no querystmt
-    // if (type.rsType === RsType.TABLE) {
-    //   var databaseName = tableInfo.databaseName;
-    //   var tableName = tableInfo.tableName;
-    //   if(type.dataconnection.connection.implementor==="POSTGRESQL") {
-    //     if( /^[a-z0-9]+$/.test(databaseName) === false ) {
-    //       databaseName = `"${databaseName}"`;
-    //     }
-    //     if( /^[a-z0-9]+$/.test(tableName) === false ) {
-    //       tableName = `"${tableName}"`;
-    //     }
-    //   }
-    //   params['queryStmt'] = `select * from ${databaseName}.${tableName}`;
-    // }
-    //
-    // this.loadingShow();
-    // this.flag = true;
-    // this.datasetService.createDataSet(params).then((result) => {
-    //   this.flag = false;
-    //   this.loadingHide();
-    //   if (result) {
-    //     this.results = [];
-    //     this.results.push({dsId: result.dsId, dsName: result.dsName, link : result['_links'].self.href});
-    //     if (this.isChecked && this.isFromDatasetList) {
-    //       this._makeShortCutToDataFlow();
-    //     } else {
-    //       this.popupService.notiPopup({
-    //         name: 'complete-dataset-create',
-    //         data: this.results.length > 0 ? this.results[0].dsId : null
-    //       });
-    //     }
-    //   }
-    // }).catch((error) => {
-    //
-    //   type.tableInfo = tableInfo;
-    //   type.sqlInfo = sqlInfo;
-    //
-    //   // Error when creating dataflow with dataset with no querystmt
-    //   if (type.rsType === RsType.TABLE) {
-    //     delete params['queryStmt'];
-    //   }
-    //
-    //   this.loadingHide();
-    //   this.errorAction(error);
-    // })
-  }
-
-
-  /**
-   * Create file type dataset
-   * @param param
-   * @private
-   */
-  private _createFileDataset(param): Promise<any> {
-    return new Promise((resolve, reject) => {
-      this.datasetService.createDataSet(param).
-      then(result => resolve(result)).
-      catch(error => reject(error));
-    });
-  }
-
+  // /**
+  //  * Create file type dataset
+  //  * @param param
+  //  * @private
+  //  */
+  // private _createFileDataset(param): Promise<any> {
+  //   return new Promise((resolve, reject) => {
+  //     this.datasetService.createDataSet(param).
+  //     then(result => resolve(result)).
+  //     catch(error => reject(error));
+  //   });
+  // }
+  //
 
 }
 
