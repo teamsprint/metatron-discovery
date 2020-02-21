@@ -24,7 +24,7 @@ import {
     ViewChild
 } from '@angular/core';
 import {AbstractComponent} from '../../common/component/abstract.component';
-import {DataflowService} from '../dataflow/service/dataflow.service';
+import {DataflowService} from './service/dataflow.service';
 import {ActivatedRoute} from "@angular/router";
 import * as $ from "jquery";
 import {DsType, ImportType, PrDataset, Rule} from "../../domain/data-preparation/pr-dataset";

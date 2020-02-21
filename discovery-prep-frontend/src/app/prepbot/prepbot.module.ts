@@ -85,10 +85,10 @@ import {AddDatasetDataflowComponent} from "./dataset/add-dataset-dataflow.compon
 import {PrepListComponent} from "./prep/prep-list.component";
 import {EditorComponent} from "./component/editor.component";
 
-import {DatasetService} from './dataset/service/dataset.service';
-import {DataflowService} from './dataflow/service/dataflow.service';
-import {DataflowModelService} from "./dataflow/service/dataflow.model.service";
-import {DataconnectionService} from "../dataconnection/service/dataconnection.service";
+import {DataconnectionService} from "./prep/service/dataconnection.service";
+import {DatasetService} from './prep/service/dataset.service';
+import {DataflowService} from './prep/service/dataflow.service';
+import {DataflowModelService} from "./prep/service/dataflow.model.service";
 import {PrepDetailComponent} from "./prep/prep-detail.component";
 import {PrepDatasetDetailComponent} from "./prep/prep-dataset-detail.component";
 import {PrepPopCreateComponent} from "./prep/create-dataset/prep-pop-create.component";

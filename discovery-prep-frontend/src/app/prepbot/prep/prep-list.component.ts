@@ -23,7 +23,7 @@
 
 import {Component, ElementRef, HostListener, Injector, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {AbstractComponent} from '../../common/component/abstract.component';
-import {DataflowService} from '../dataflow/service/dataflow.service';
+import {DataflowService} from './service/dataflow.service';
 import {PrDataflow} from '../../domain/data-preparation/pr-dataflow';
 import {Modal} from '../../common/domain/modal';
 import {Alert} from '../../common/util/alert.util';

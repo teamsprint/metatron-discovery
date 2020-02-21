@@ -14,7 +14,7 @@
 
 import {Component, ElementRef, HostListener, Injector, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {AbstractComponent} from '../../common/component/abstract.component';
-import {DataflowService} from '../dataflow/service/dataflow.service';
+import {DataflowService} from './service/dataflow.service';
 import {ActivatedRoute} from "@angular/router";
 import {EditRuleGridComponent} from "../dataflow/dataflow-detail/component/edit-dataflow-rule/edit-rule-grid/edit-rule-grid.component";
 import {PreparationAlert} from "../util/preparation-alert.util";

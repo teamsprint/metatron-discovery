@@ -26,7 +26,7 @@ import {Alert} from '../../../common/util/alert.util';
 import * as _ from 'lodash';
 import { concatMap } from 'rxjs/operators';
 import { from} from "rxjs/observable/from";
-import {DataflowService} from "../../dataflow/service/dataflow.service";
+import {DataflowService} from "../service/dataflow.service";
 import {PrDataflow} from "../../../domain/data-preparation/pr-dataflow";
 import {PreparationCommonUtil} from "../../util/preparation-common.util";
 declare let moment;
