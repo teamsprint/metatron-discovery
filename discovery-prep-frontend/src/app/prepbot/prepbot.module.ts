@@ -103,6 +103,7 @@ import {PrepPopDatasetListComponent} from "./prep/create-dataflow/prep-pop-datas
 import {PrepPopConnectionCreateComponent} from "./prep/create-connection/prep-pop-connection-create.component";
 import {PrepPopConnectionInfoComponent} from "./prep/create-connection/prep-pop-connection-info.component";
 import {PrepPopConnectionNameComponent} from "./prep/create-connection/prep-pop-connection-name.component";
+import {DataSnapshotService} from "./data-snapshot/service/data-snapshot.service";
 
 const dataPreparationRoutes: Routes = [
 { path: '', component: PrepListComponent },
