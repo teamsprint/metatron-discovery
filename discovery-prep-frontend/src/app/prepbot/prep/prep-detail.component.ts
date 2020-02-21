@@ -39,6 +39,7 @@ import {DataflowModelService} from "../dataflow/service/dataflow.model.service";
 import {SnapshotLoadingComponent} from "../component/snapshot-loading.component";
 import { CreateSnapshotPopup } from '../component/create-snapshot-popup.component';
 import {Location} from "@angular/common";
+import {DatasetInfoPopupComponent} from "../dataflow/dataflow-detail/component/dataset-info-popup/dataset-info-popup.component";
 declare let echarts: any;
 
 @Component({
@@ -77,6 +78,8 @@ export class PrepDetailComponent extends AbstractComponent {
     @ViewChild(CreateSnapshotPopup)
     private createSnapshotPopup : CreateSnapshotPopup;
 
+    @ViewChild(DatasetInfoPopupComponent)
+    public datasetInfoPopupComponent : DatasetInfoPopupComponent;
 
     // echart ins
     public chart: any;
@@ -415,7 +418,7 @@ export class PrepDetailComponent extends AbstractComponent {
 
                             if (isOpen) {
                                 this.changeChartClickStatus(this.selectedDataSet, true);
-                                // (this.datasetInfoPopup) && (this.datasetInfoPopup.setDataset(this.selectedDataSet));
+                                (this.datasetInfoPopupComponent) && (this.datasetInfoPopupComponent.setDataset(this.selectedDataSet));
                             }
                             this.loadingHide();
 
@@ -1032,10 +1035,10 @@ export class PrepDetailComponent extends AbstractComponent {
             }
             chart.setOption(option);
 
-            // if (!StringUtil.isEmpty(this.selectedDataSet.dsId) && this.datasetInfoPopup) {
-            //     // 컴포넌트가 열려있는 상태에서 데이터를 설정해주기 위함
-            //     this.datasetInfoPopup.setDataset(this.selectedDataSet);
-            // }
+            if (!StringUtil.isEmpty(this.selectedDataSet.dsId) && this.datasetInfoPopupComponent) {
+                 // 컴포넌트가 열려있는 상태에서 데이터를 설정해주기 위함
+                 this.datasetInfoPopupComponent.setDataset(this.selectedDataSet);
+            }
 
             setTimeout( () => {
                 this.dataflowChartAreaResize();

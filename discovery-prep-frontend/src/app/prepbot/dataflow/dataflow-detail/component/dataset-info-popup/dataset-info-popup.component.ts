@@ -512,6 +512,8 @@ export class DatasetInfoPopupComponent extends AbstractComponent implements OnIn
 
       this.ruleList.push(rule);
     });
+
+    console.log(this.ruleList)
   }
 
 
@@ -840,8 +842,7 @@ export class DatasetInfoPopupComponent extends AbstractComponent implements OnIn
       console.log('test')
         //const params = this._getDfParams();
         //this.dataflowService.setParamsForDataflowList(params);
-        this.router.navigate(
-            [`/management/prepbot/dataset/${this.selectedDataSet.dsId}`])
+      this.router.navigate([`/management/prepbot/dataflow/${this.dataflow.dfId}/dataset/${this.selectedDataSet.dsId}`])
             .then();
     }
 }

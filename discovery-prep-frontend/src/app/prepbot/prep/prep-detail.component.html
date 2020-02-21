@@ -260,7 +260,7 @@
         <div class="pb-contents-top">
             <!-- right -->
             <div class="pb-ui-buttons">
-                <a href="javascript:" class="pb-component-btn type-line"><em class="pb-icon-add"></em>ADD DATASET</a>
+                <a href="javascript:" class="pb-component-btn type-line" (click)="addDatasets()"><em class="pb-icon-add"></em>ADD DATASET</a>
                 <!--<a href="javascript:" class="pb-component-btn type-line">MEMO</a>-->
                 <!--<a href="javascript:" class="pb-component-btn type-line">REPORT</a>-->
                 <!--<a href="javascript:" class="pb-component-btn type-line">SHARE</a>-->
@@ -278,9 +278,9 @@
             <!--</div>-->
             <div class="pb-txt-navi">
                 <a href="javascript:" class="pb-btn-back" (click)="onClickPrev()"></a>
-                Data Flow 01
-                <span class="pb-txt-data"><em class="pb-icon-dataset"></em>DATASET <strong>7</strong></span>
-                <span class="pb-txt-data"><em class="pb-icon-result"></em>DATA RESULT<strong>7</strong></span>
+                {{dataflow.dfName}}
+                <span class="pb-txt-data"><em class="pb-icon-dataset"></em>{{'msg.dp.ui.imported.data' | translate}}<strong>{{dataflow.importedDsCount}}</strong></span>
+                <span class="pb-txt-data"><em class="pb-icon-result"></em>{{'msg.dp.ui.wrangled.data' | translate}}<strong>{{dataflow.wrangledDsCount}}</strong></span>
 
             </div>
             <!-- //txt navi -->
@@ -309,7 +309,7 @@
                             (cloneEventHandler)="datasetClone($event)"
                             (changeDataflow)="selectDataflow($event)"
                             (createSnapshotEvent)="openSnapshotPopup()"
-                            (updateDataflow)="getDataflow(); changeChartClickStatus(this.selectedDataSet,true); datasetInfoPopup.setDataset(this.selectedDataSet)"
+                            (updateDataflow)="getDataflow(); changeChartClickStatus(this.selectedDataSet, true); datasetInfoPopupComponent.setDataset(this.selectedDataSet)"
                             (datasetSelectPopupOpen)="openAddDatasetPopup($event)">
                     </app-dataset-info-popup>
                 </div>

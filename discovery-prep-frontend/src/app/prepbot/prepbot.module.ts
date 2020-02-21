@@ -103,7 +103,7 @@ const dataPreparationRoutes: Routes = [
 { path: '', component: PrepListComponent },
 { path: 'dataflow', component: PrepListComponent },
 { path: 'dataflow/:id', component: PrepDetailComponent },
-{ path: 'dataset', component: PrepDatasetDetailComponent },
+{ path: 'dataflow/:dfId/dataset/:dsId', component: PrepDatasetDetailComponent },
 { path: 'dataset/:id', component: PrepDatasetDetailComponent },
 //{ path: 'dataflow/:id', component: DataflowDetail2Component },
 { path: 'dataflow/:dfId/rule/:dsId', component: EditDataflowRule2Component},

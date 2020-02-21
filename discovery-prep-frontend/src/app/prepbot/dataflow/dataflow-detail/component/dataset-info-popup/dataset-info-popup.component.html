@@ -17,13 +17,13 @@
 
 <div class="pb-box-dataflow">
   <div class="pb-dataflow-top">
-    <div class="pb-label-title">데이터셋 01</div>
+    <div class="pb-label-title">{{selectedDataSet.dsName}}</div>
     <div class="pb-ui-buttons">
-      <a href="javascript:" class="pb-btn-icons-type type-del"></a>
+      <a href="javascript:" class="pb-btn-icons-type type-del" (click)="deleteDataSet();"></a>
       <a href="javascript:" class="pb-btn-icons-type type-close" (click)="closeInfo()"></a>
     </div>
     <!-- 설명 -->
-    <div class="pb-txt-detail">설명설명설명
+    <div class="pb-txt-detail">{{selectedDataSet.dsDesc}}
     </div>
     <!-- //설명 -->
 
@@ -32,7 +32,7 @@
 
   <!-- part -->
   <div class="pb-ui-part">
-    <div class="pb-label-part">DATA PREVOEW</div>
+    <div class="pb-label-part">DATA PREVIEW</div>
     <!-- box table -->
     <div class="pb-box-table">
       <table class="pb-table-grid">
@@ -68,29 +68,29 @@
     <tbody>
     <tr>
       <th>Type</th>
-      <td>WRANGLED</td>
+      <td>{{selectedDataSet.dsType}}</td>
     </tr>
-    <tr>
+    <tr *ngIf="selectedDataSet.gridData">
       <th>Summary</th>
-      <td>27 row(s) / 3 column(s)</td>
+      <td>{{getRows}} / {{getCols()}}</td>
     </tr>
-    <tr>
+    <tr *ngIf="selectedDataSet.dataflows">
       <th>Used in</th>
-      <td>1 dataflow</td>
+      <td>{{selectedDataSet.dataflows.length}} {{selectedDataSet.dataflows.length === 1 ? 'dataflow' : 'msg.dp.ui.flows' | translate}}</td>
     </tr>
     </tbody>
   </table>
   </div>
   <!-- //part -->
   <!-- part -->
-  <div class="pb-ui-part">
+  <div class="pb-ui-part" *ngIf="ruleList && ruleList.length > 0">
     <div class="pb-label-part">Rule list</div>
     <!-- rule list -->
     <div class="pb-ui-rule-list">
-      <span class="pb-data-num">4개의 룰 적용</span>
-      <div class="pb-box-rule-list"><span class="pb-txt-type">Header</span> abcd efgh ijkl mlop qwer</div>
-      <div class="pb-box-rule-list"><span class="pb-txt-type">Header</span> abcd efgh ijkl mlop qwer</div>
-      <div class="pb-box-rule-list"><span class="pb-txt-type">Header</span> abcd efgh ijkl mlop qwer</div>
+      <span class="pb-data-num">{{'msg.dp.ui.rules' | translate :  { value : (ruleList ? ruleList.length : 0) } }} 적용</span>
+      <div class="pb-box-rule-list" *ngFor="let rule of ruleList;">
+        <span class="pb-txt-type">{{rule.command}}</span>{{rule.simplifiedRule}}
+      </div>
     </div>
     <!-- //rule list -->
   </div>
