@@ -273,4 +273,8 @@
                  (closeEvent)="changeMode( '' )"
                  (createComplete)="createComplete()"></prep-pop-flow-create>
 
+<prep-pop-connection-create *ngIf="mode=='prep-pop-connection-create'"
+                      (closeEvent)="changeMode( '' )"
+                      (createComplete)="createComplete()"></prep-pop-connection-create>
+
 <!-- //생성 -->
