@@ -21,12 +21,12 @@
                 <!-- form -->
                 <div class="pb-form-option pb-clear">
                     <label class="pb-label-title">Name</label>
-                    <input type="text" class="pb-input-type" maxlength="50" placeholder="Please enter a name">
+                    <input type="text" class="pb-input-type" maxlength="50" placeholder="Please enter a name" name="name" (input)="onSetIntoConnection($event.target)">
                     <span class="pb-ui-error"></span>
                 </div>
                 <div class="pb-form-option pb-clear">
                     <label class="pb-label-title">Description</label>
-                    <input class="pb-input-type pb-input-long" maxlength="150" type="text" placeholder="Please enter a description">
+                    <input class="pb-input-type pb-input-long" maxlength="150" type="text" placeholder="Please enter a description" name="desc" (input)="onSetIntoConnection($event.target)">
                     <span class="pb-ui-error"></span>
                 </div>
                 <!-- //form -->
@@ -39,10 +39,10 @@
         <!-- //contents -->
         <!-- bottom -->
         <div class="pb-popup-bottom">
-            <a href="javascript:" class="pb-component-btn type-line" (click)="prev()">{{'msg.comm.btn.previous' | translate}}</a>
-            <a href="javascript:" class="pb-component-btn type-line">CANCEL</a>
+            <a href="javascript:" class="pb-component-btn type-line" (click)="prev()">PREV</a>
+            <a href="javascript:" class="pb-component-btn type-line" (click)="close()">CANCEL</a>
             <!-- disabled 시 ddp-disabled 추가 -->
-            <a href="javascript:" class="pb-component-btn type-bg" (click)="complete()" [ngClass]="{'ddp-disabled': isBtnDisabled() }">{{'msg.comm.btn.done2' | translate}}</a>
+            <a href="javascript:" class="pb-component-btn type-bg" (click)="complete()" [ngClass]="{'ddp-disabled': isBtnDisabled() }">DONE</a>
         </div>
         <!-- //bottom -->
     </div>

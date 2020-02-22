@@ -17,12 +17,56 @@
         <!-- contents -->
         <div class="pb-popup-contents">
 
+                    <!-- import -->
+                    <div class="ddp-pop-contents">
+                        <div class="pb-ui-data-option">
+                            <div class="ddp-ui-edit-option ddp-type ddp-white-space">
+                                <ul class="ddp-list-dbtype">
+                                    <li class=""><a class="ddp-label-dbtype" href="javascript:" (click)="selectType('MYSQL');"><em class="ddp-img-icon"><img src="https://discovery.metatron.app/assets/images/img_db/ic_db_mysql.png"></em><span class="ddp-txt-db">MySQL</span></a></li>
+                                    <li class=""><a class="ddp-label-dbtype" href="javascript:" (click)="selectType('HIVE');"><em class="ddp-img-icon"><img src="https://discovery.metatron.app/assets/images/img_db/ic_db_hive.png"></em><span class="ddp-txt-db">Hive</span></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="pb-ui-data-option">
+                            <div *ngIf="connectionType=='MYSQL'" class="pb-ui-data-option pb-connection-type-form-mysql">
+                                <div class="pb-form-option pb-clear">
+                                    <label class="pb-label-title">Host</label><input class="pb-input-type" maxlength="50" placeholder="Host" type="text" name="host" (input)="onSetIntoConnection($event.target)"><span class="pb-ui-error"></span>
+                                </div>
+                                <div class="pb-form-option pb-clear">
+                                    <label class="pb-label-title">Port</label><input class="pb-input-type" maxlength="50" placeholder="Port" type="text" name="port" (input)="onSetIntoConnection($event.target)"><span class="pb-ui-error"></span>
+                                </div>
+                                <div class="pb-form-option pb-clear">
+                                    <label class="pb-label-title">Username</label><input class="pb-input-type" maxlength="50" placeholder="Username" type="text" name="username" (input)="onSetIntoConnection($event.target)"><span class="pb-ui-error"></span>
+                                </div>
+                                <div class="pb-form-option pb-clear">
+                                    <label class="pb-label-title">Password</label><input class="pb-input-type" maxlength="50" placeholder="Password" type="password" name="password" (input)="onSetIntoConnection($event.target)"><span class="pb-ui-error"></span>
+                                </div>
+                            </div>
+                            <div *ngIf="connectionType=='HIVE'" class="pb-ui-data-option pb-connection-type-form-hive">
+                                <div class="pb-form-option pb-clear">
+                                    <label class="pb-label-title">Host</label><input class="pb-input-type" maxlength="50" placeholder="Host" type="text" name="host" (input)="onSetIntoConnection($event.target)"><span class="pb-ui-error"></span>
+                                </div>
+                                <div class="pb-form-option pb-clear">
+                                    <label class="pb-label-title">Port</label><input class="pb-input-type" maxlength="50" placeholder="Port" type="text" name="port" (input)="onSetIntoConnection($event.target)"><span class="pb-ui-error"></span>
+                                </div>
+                                <div class="pb-form-option pb-clear">
+                                    <label class="pb-label-title">Username</label><input class="pb-input-type" maxlength="50" placeholder="Username" type="text" name="username" (input)="onSetIntoConnection($event.target)"><span class="pb-ui-error"></span>
+                                </div>
+                                <div class="pb-form-option pb-clear">
+                                    <label class="pb-label-title">Password</label><input class="pb-input-type" maxlength="50" placeholder="Password" type="password" name="password" (input)="onSetIntoConnection($event.target)"><span class="pb-ui-error"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- //import -->
+
+
         </div>
         <!-- //contents -->
         <!-- bottom -->
         <div class="pb-popup-bottom">
-            <a href="javascript:" class="pb-component-btn type-bg">SKIP</a>
-            <a href="javascript:" class="pb-component-btn type-line" (click)="goto('connection-name');">NEXT</a>
+            <a href="javascript:" class="pb-component-btn type-bg" (click)="close();">CANCEL</a>
+            <a href="javascript:" class="pb-component-btn type-line" (click)="next();">NEXT</a>
         </div>
         <!-- //bottom -->
     </div>

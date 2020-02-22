@@ -15,7 +15,7 @@
 
 import {Component, ElementRef, EventEmitter, Injector, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import {AbstractComponent} from '../../../common/component/abstract.component';
-import {Dataconnection} from "../../../domain/dataconnection/dataconnection";
+import {PrepPopConnectionInfoComponent} from "./prep-pop-connection-info.component";
 
 @Component({
   selector: 'prep-pop-connection-create',
@@ -35,15 +35,19 @@ export class PrepPopConnectionCreateComponent extends AbstractComponent implemen
      | Public Variables
      |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
-    @Output('sourceCreateClose')
+    @Output()
     public closeEvent: EventEmitter<string> = new EventEmitter();
 
-    @Output('sourceCreateComplete')
-    public completeEvent: EventEmitter<Dataconnection> = new EventEmitter();
+    @Output()
+    public createComplete: EventEmitter<void> = new EventEmitter();
 
    @Input()
     public step: string = '';
 
+ @ViewChild(PrepPopConnectionInfoComponent)
+  public prepPopConnectionInfoComponent : PrepPopConnectionInfoComponent;
+
+    public connectionInfo = {};
 
     /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
      | Constructor
@@ -67,7 +71,8 @@ export class PrepPopConnectionCreateComponent extends AbstractComponent implemen
     }
 
     public init() {
-        this.step='';
+        this.step='complete-connection-create';
+        this.prepPopConnectionInfoComponent.init();
     }
 
     public ngOnDestroy() {
@@ -78,6 +83,9 @@ export class PrepPopConnectionCreateComponent extends AbstractComponent implemen
         this.step = step;
     }
 
+    public connectionInfoChange(connectionInfo) {
+        this.connectionInfo = connectionInfo;
+    }
     /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
      | Public Method
      |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
@@ -92,9 +100,11 @@ export class PrepPopConnectionCreateComponent extends AbstractComponent implemen
     }
 
     // 완료
-    public createComplete() {
-        this.completeEvent.emit();
+    public createCompleteEvent() {
+        this.createComplete.emit();
     }
+
+
 
     /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
      | Private Method

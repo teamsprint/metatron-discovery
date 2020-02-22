@@ -30,10 +30,17 @@ export class PrepPopConnectionInfoComponent extends AbstractComponent {
     public step: string = '';
     @Output()
     public stepChange : EventEmitter<string> = new EventEmitter();
+    @Input()
+    public connectionInfo: any;
+ @Output()
+    public connectionInfoChange : EventEmitter<any> = new EventEmitter();
+ @Output()
+    public createClose : EventEmitter<void> = new EventEmitter();
 
     @ViewChild(PrepPopConnectionNameComponent)
     public prepPopDataflowNameComponent : PrepPopConnectionNameComponent;
 
+    public connectionType = '';
 
     // 생성자
     constructor(protected elementRef: ElementRef,
@@ -66,7 +73,28 @@ export class PrepPopConnectionInfoComponent extends AbstractComponent {
     }
 
     public goto(step) {
+        if(step==='connection-name') {
+            this.connectionInfo['connectionType'] = this.connectionType;
+            this.connectionInfoChange.emit(this.connectionInfo);
+        }
         this.step = step;
         this.stepChange.emit( step );
+    }
+
+    public next() {
+        if(this.connectionType!=='') {
+        this.goto('connection-name');
+        }
+    }
+    public close() {
+        this.createClose.emit();
+    }
+
+    public selectType(type: string) {
+        this.connectionType = type;
+    }
+
+    public onSetIntoConnection(target) {
+        this.connectionInfo[target.name] = target.value;
     }
 }

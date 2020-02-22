@@ -85,6 +85,7 @@ export class PrepPopCreateComponent  extends AbstractComponent implements OnInit
 
     public init() {
         this.step='';
+        this.prepPopType.init();
     }
 
     public ngOnDestroy() {

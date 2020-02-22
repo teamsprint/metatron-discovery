@@ -16,6 +16,8 @@
 import {Component, ElementRef, EventEmitter, Injector, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import {AbstractComponent} from '../../../common/component/abstract.component';
 import { PrDataset, ImportType } from '../../../domain/data-preparation/pr-dataset';
+import {PrepPopDatasetListComponent} from "./prep-pop-dataset-list.component";
+
 
 @Component({
   selector: 'prep-pop-flow-create',
@@ -44,6 +46,8 @@ export class PrepPopFlowCreateComponent extends AbstractComponent implements OnI
    @Input()
     public step: string = '';
 
+ @ViewChild(PrepPopDatasetListComponent)
+ public prepPopDatasetListComponent:PrepPopDatasetListComponent;
 
     // 새로 생성될 데이터소스 정보
     public importType: PrDataset = new PrDataset();
@@ -71,6 +75,7 @@ export class PrepPopFlowCreateComponent extends AbstractComponent implements OnI
 
     public init() {
         this.step='';
+        this.prepPopDatasetListComponent.init();
     }
 
     public ngOnDestroy() {

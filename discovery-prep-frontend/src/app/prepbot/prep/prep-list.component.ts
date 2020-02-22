@@ -76,7 +76,6 @@ export class PrepListComponent extends AbstractComponent {
 
   // 정렬
   public selectedContentSort: Order = new Order();
-
   @ViewChild(PrepPopCreateComponent)
   public prepPopCreateComponent : PrepPopCreateComponent;
 
@@ -85,15 +84,14 @@ export class PrepListComponent extends AbstractComponent {
 
   @ViewChild(PrepPopConnectionCreateComponent)
   public prepPopConnectionCreateComponent : PrepPopConnectionCreateComponent;
-
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
    | Constructor
    |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
   // 생성자
     constructor(private dataflowService: DataflowService,
-              protected elementRef: ElementRef,
-              protected injector: Injector,
+              public elementRef: ElementRef,
+              public injector: Injector,
               private activatedRoute: ActivatedRoute) {
 
     super(elementRef, injector);
@@ -285,12 +283,23 @@ export class PrepListComponent extends AbstractComponent {
      */
     public changeMode(mode: string) {
         this.useUnloadConfirm = ('prep-pop-create' === mode);
-        if('prep-pop-create' === mode && this.prepPopCreateComponent) {
-            this.prepPopCreateComponent.step = '';
-        }else if('prep-pop-flow-create' === mode && this.prepPopFlowCreateComponent) {
-            this.prepPopFlowCreateComponent.step = '';
-        }else if('prep-pop-connection-create' === mode && this.prepPopConnectionCreateComponent) {
-            this.prepPopConnectionCreateComponent.step = '';
+        if('prep-pop-create' === mode ) {
+             if( this.prepPopCreateComponent) {
+                 this.prepPopCreateComponent.init();
+             }
+             console.log(this.prepPopCreateComponent);
+        }else if('prep-pop-flow-create' === mode ) {
+            if( this.prepPopFlowCreateComponent) {
+            this.prepPopFlowCreateComponent.init();
+            }
+            console.log(this.prepPopFlowCreateComponent);
+
+        }else if('prep-pop-connection-create' === mode ) {
+            if( this.prepPopConnectionCreateComponent) {
+           this.prepPopConnectionCreateComponent.init();
+           }
+
+            console.log(this.prepPopConnectionCreateComponent);
         }
         this.mode = mode;
     } // function - changeMode
