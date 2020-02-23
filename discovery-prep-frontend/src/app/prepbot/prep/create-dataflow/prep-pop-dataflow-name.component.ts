@@ -60,10 +60,17 @@ export class PrepPopDataflowNameComponent extends AbstractPopupComponent impleme
 
     @Output()
     public createComplete: EventEmitter<void> = new EventEmitter();
+@Input()
+    public selectedDatasets: any;
+ @Output()
+    public selectedDatasetsChange : EventEmitter<any> = new EventEmitter();
+
 
 
   @Input() // [DB, STAGING, FILE]
   public type : string;
+
+public dataflowInfo: any = {dfName:"",dfDesc:""};
 
   // name error msg show/hide
   public showNameError: boolean = false;
@@ -136,10 +143,38 @@ export class PrepPopDataflowNameComponent extends AbstractPopupComponent impleme
     | Public Method
     |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
+    public onSetIntoDataflow(target) {
+        this.dataflowInfo[target.name] = target.value;
+    }
   /** Complete */
   public complete() {
 
-              this.createComplete.emit();
+ let today = moment();
+    const df = new PrDataflow();
+
+  df.datasets = this.selectedDatasets.map((ds)=>{
+return ds._links.self.href;
+});
+      df.dfName =  this.dataflowInfo.dfName;
+        df.dfDesc =  this.dataflowInfo.dfDesc;
+
+
+    this.loadingShow();
+      this.dataflowService.createDataflow(df).then((result) => {
+        this.loadingHide();
+        if (result) {
+
+          this.createCompleteEvent();
+        } else {
+
+          this.close();
+        }
+
+      }).catch(() => {
+        this.loadingHide();
+        this.close();
+      });
+
 
   }
 

@@ -35,6 +35,11 @@ export class PrepPopDatasetListComponent extends AbstractComponent {
 
  @Output()
     public createClose : EventEmitter<void> = new EventEmitter();
+ @Input()
+    public selectedDatasets: any;
+ @Output()
+    public selectedDatasetsChange : EventEmitter<any> = new EventEmitter();
+
 
     // 새로 생성될 데이셋 타입 정보
     @Input()
@@ -65,7 +70,6 @@ export class PrepPopDatasetListComponent extends AbstractComponent {
         // Update if editInfo has value
         // this.isUpdate = this.editInfo.length > 0;
 
-        this._getDatasets(true);
         this.isShow = true;
     }
 
@@ -76,18 +80,27 @@ export class PrepPopDatasetListComponent extends AbstractComponent {
         // Destory
         super.ngOnDestroy();
     }
+public ngAfterViewInit() {
 
+        this._getDatasets(true);
+}
     public init() {
         this.isShow = true;
+
     }
 
     public goto(step) {
+         if(step==='dataflow-name') {
+
+                    this.selectedDatasetsChange.emit(this.selectedDatasets);
+                }
+
         this.step = step;
         this.stepChange.emit( step );
     }
 
         public next() {
-            this.goto('prep-pop-dataflow-name');
+            this.goto('dataflow-name');
 
         }
         public close() {
@@ -184,6 +197,7 @@ export class PrepPopDatasetListComponent extends AbstractComponent {
      */
     private _addSelectedItem(ds: PrDataset) {
         this.selectedItems.push(ds);
+        this.selectedDatasetsChange.emit(this.selectedItems);
     }
 
 
@@ -371,12 +385,11 @@ export class PrepPopDatasetListComponent extends AbstractComponent {
      * Fetch dataset list
      */
     private _getDatasets(isInitial: boolean = false) {
-
         this.datasets = [];
         this.loadingShow();
 
         // Fetch dataset list
-        this.dataflowService.getDatasets(this.searchText, this.page, 'listing', this.DS_TYPE, this.IMPORT_TYPE).then((data) => {
+        this.dataflowService.getDatasets(this.searchText, this.page, 'listing', '','').then((data) => {
 
             // sorting
             const sorting = this.page.sort.split(',');
@@ -388,9 +401,8 @@ export class PrepPopDatasetListComponent extends AbstractComponent {
 
                 // Show only datasets from same dataflow as master dataset
                 this.datasets = data['_embedded'].preparationdatasets.filter((item) => {
-                    return item.creatorDfId === this.dfId;
+                    return item.dsId;
                 });
-
                 // get upstreams
                 // this._getUpstreams(isInitial);
 

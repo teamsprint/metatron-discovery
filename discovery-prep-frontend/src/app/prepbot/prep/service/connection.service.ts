@@ -37,4 +37,7 @@ export class PrConnectionService extends AbstractService {
     public createConnection(param : any) : Promise<any>  {
       return this.post(this.API_URL + 'preparationconnections', param);
     }
+    public getConnections() : Promise<any>  {
+          return this.get(this.API_URL + 'preparationconnections' );
+        }
 }

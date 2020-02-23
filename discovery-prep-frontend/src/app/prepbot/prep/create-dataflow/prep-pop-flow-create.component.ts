@@ -42,6 +42,8 @@ export class PrepPopFlowCreateComponent extends AbstractComponent implements OnI
 
     @Output()
     public createComplete: EventEmitter<void> = new EventEmitter();
+ @Input()
+public selectedDatasets : any = [];
 
    @Input()
     public step: string = '';
@@ -109,6 +111,11 @@ public goto(step) {
     // 닫기
     public createClose() {
         this.closeEvent.emit('complete-dataflow-create');
+    }
+
+    // 완료
+    public createCompleteEvent() {
+        this.createComplete.emit();
     }
 
     /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=

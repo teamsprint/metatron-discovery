@@ -21,12 +21,12 @@
                 <!-- form -->
                 <div class="pb-form-option pb-clear">
                     <label class="pb-label-title">Name</label>
-                    <input type="text" class="pb-input-type" maxlength="50" placeholder="Please enter a name">
+                    <input type="text" class="pb-input-type" maxlength="50" placeholder="Please enter a name"  name="dfName" (input)="onSetIntoDataflow($event.target)">
                     <span class="pb-ui-error"></span>
                 </div>
                 <div class="pb-form-option pb-clear">
                     <label class="pb-label-title">Description</label>
-                    <input class="pb-input-type pb-input-long" maxlength="150" type="text" placeholder="Please enter a description">
+                    <input class="pb-input-type pb-input-long" maxlength="150" type="text" placeholder="Please enter a description" name="dfDesc" (input)="onSetIntoDataflow($event.target)">
                     <span class="pb-ui-error"></span>
                 </div>
                 <!-- //form -->

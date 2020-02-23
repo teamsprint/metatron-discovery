@@ -18,6 +18,8 @@ import {DataflowService} from '../../dataflow/service/dataflow.service';
 import {ActivatedRoute} from "@angular/router";
 import {PopupService} from '../../../common/service/popup.service';
 
+import { PrConnectionService } from '../service/connection.service';
+
 @Component({
   selector: 'prep-pop-db-create',
   templateUrl: './prep-pop-db-create.component.html'
@@ -33,11 +35,13 @@ export class PrepPopDBCreateComponent extends AbstractComponent {
         public createClose : EventEmitter<void> = new EventEmitter();
 
 
+    public connections : any = [];
     public isShow = false;
 
     // 생성자
     constructor(protected elementRef: ElementRef,
                 private popupService: PopupService,
+                public connectionService: PrConnectionService,
                 protected injector: Injector,
                 private activatedRoute: ActivatedRoute) {
 
@@ -51,6 +55,10 @@ export class PrepPopDBCreateComponent extends AbstractComponent {
     public ngOnInit() {
         super.ngOnInit();
         this.init();
+    }
+
+    public ngAfterViewInit() {
+            this._getConnections();
     }
 
     // Destory
@@ -76,5 +84,22 @@ export class PrepPopDBCreateComponent extends AbstractComponent {
 
     public goPre(){
        this.goto('complete-create-dataset');
+    }
+
+    public _getConnections() {
+        this.connectionService.getConnections().then((result) => {
+            this.connections = [];
+            result.map((connection) => {
+                this.connections.push(connection);
+            });
+        }).catch((error) => {
+        console.log(error);
+        });
+    }
+
+    // should be changed with ngIf
+    public listShow :boolean = false;
+    public toggleList() {
+        this.listShow = !this.listShow;
     }
 }
