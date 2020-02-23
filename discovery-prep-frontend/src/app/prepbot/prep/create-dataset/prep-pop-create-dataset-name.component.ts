@@ -13,7 +13,7 @@
 */
 
 import {AbstractPopupComponent} from '../../../common/component/abstract-popup.component';
-import {Component, ElementRef, Injector, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, Injector, Input,Output, EventEmitter, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {
 FileFormat, PrDatasetHive, PrDatasetJdbc,
 RsType
@@ -26,7 +26,6 @@ import {Alert} from '../../../common/util/alert.util';
 import * as _ from 'lodash';
 import { concatMap } from 'rxjs/operators';
 import { from} from "rxjs/observable/from";
-import {DataflowService} from "../../dataflow/service/dataflow.service";
 import {PrDataflow} from "../../../domain/data-preparation/pr-dataflow";
 import {PreparationCommonUtil} from "../../util/preparation-common.util";
 declare let moment;
@@ -50,8 +49,15 @@ export class PrepPopCreateDatasetNameComponent extends AbstractPopupComponent im
   | Public Variables
   |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
-    @Input()
+ @Input()
     public step: string = '';
+    @Output()
+    public stepChange : EventEmitter<string> = new EventEmitter();
+
+ @Output()
+    public createClose : EventEmitter<void> = new EventEmitter();
+
+
 
   @Input()
   public datasetHive: PrDatasetHive;
@@ -107,7 +113,6 @@ export class PrepPopCreateDatasetNameComponent extends AbstractPopupComponent im
   |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
   constructor(private popupService: PopupService,
               private datasetService: DatasetService,
-              private dataflowService: DataflowService,
               protected elementRef: ElementRef,
               protected injector: Injector) {
     super(elementRef, injector);
@@ -146,10 +151,6 @@ export class PrepPopCreateDatasetNameComponent extends AbstractPopupComponent im
 
   /** Complete */
   public complete() {
-
-    if (this.flag) {
-      return;
-    }
 
     // Name validation
     this.names.forEach((item, index) => {
@@ -242,91 +243,34 @@ export class PrepPopCreateDatasetNameComponent extends AbstractPopupComponent im
           Alert.error(this.translateService.instant('msg.dp.alert.num.fail.dataset', {value : errorNum}));
         }
 
-        // 데이터셋 리스트에서 진입과 체크됐다면(데이터플로우로 바로 이동)
-        if (this.isChecked && this.isFromDatasetList && this.names.length === 1) {
-          this._makeShortCutToDataFlow();
-        } else {
 
-          // 리스트로 돌아간다.
-          this.popupService.notiPopup({
-            name: 'complete-dataset-create',
-            data: this.results.length > 0 ? this.results[0].dsId : null
-          });
-        }
       })
 
     }
 
+    this.close();
+
   }
 
-  /**
-   * Short cut to dataFlow
-   * @private
-   */
-  private _makeShortCutToDataFlow() {
-
-    let today = moment();
-    const df = new PrDataflow();
-    this.loadingShow();
-
-    // 데이터셋이 생성이 됐다면 데이터플로우 생성을 한다.
-    if (this.results[0] && !isNullOrUndefined(this.results[0].link)) {
-      df.datasets = [this.results[0].link];
-      df.dfName = `${this.results[0].dsName}_${today.format('MM')}${today.format('DD')}_${today.format('HH')}${today.format('mm')}`  ;
-
-      // 1. create dataflow with dataset
-      this.dataflowService.createDataflow(df).then((result1) => {
-        this.loadingHide();
-        if (result1) {
-
-          // 2. Find wrangled dataset
-          // 3. Move to dataFlow main grid (navigate)
-          this.router.navigate([`/management/prepbot/dataflow/${result1['dfId']}/dataset/${result1.datasets[1].dsId}`]);
-        } else {
-
-          // If error move to dataset list
-          this.loadingHide();
-          this.close();
-        }
-
-      }).catch(() => {
-
-        // If error move to dataset list
-        this.loadingHide();
-        this.close();
-      });
-    } else {
-      // If error move to dataset list
-      this.loadingHide();
-      this.close();
+  public goto(step) {
+            this.step = step;
+        this.stepChange.emit( step );
     }
-  }
-
   /** go to previous step */
   public prev() {
 
     if (this.type === 'FILE') {
-      this.popupService.notiPopup({
-        name: 'select-sheet',
-        data: null
-      });
-    } else if (this.type === 'STAGING') {
-      this.popupService.notiPopup({
-        name: 'create-dataset-staging-selectdata',
-        data: null
-      });
-    } else if (this.type === 'DB') {
-      this.popupService.notiPopup({
-        name: 'create-db-query',
-        data: null
-      });
-    } else if (this.type === 'URL') {
-      this.popupService.notiPopup({
-        name: 'select-url',
-        data : null
-      })
+
+      this.goto('select-sheet');
+     } else if (this.type === 'DB') {
+
+      this.goto('DB');
+    } else if (this.type === 'KAFKA') {
+
+      this.goto('complete-create-dataset');
     }
   }
+
 
 
   /**
@@ -334,12 +278,9 @@ export class PrepPopCreateDatasetNameComponent extends AbstractPopupComponent im
    * */
   public close() {
     super.close();
-
-    this.popupService.notiPopup({
-      name: 'complete-dataset-create',
-      data: null
-    });
+    this.createClose.emit();
   }
+
 
 
   /**
@@ -792,15 +733,7 @@ export class PrepPopCreateDatasetNameComponent extends AbstractPopupComponent im
       this.loadingHide();
       if (result) {
         this.results = [];
-        this.results.push({dsId: result.dsId, dsName: result.dsName, link : result['_links'].self.href});
-        if (this.isChecked && this.isFromDatasetList) {
-          this._makeShortCutToDataFlow();
-        } else {
-          this.popupService.notiPopup({
-            name: 'complete-dataset-create',
-            data: this.results.length > 0 ? this.results[0].dsId : null
-          });
-        }
+
       }
     }).catch((error) => {
 

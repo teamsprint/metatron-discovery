@@ -72,7 +72,9 @@ export class PrepPopConnectionCreateComponent extends AbstractComponent implemen
 
     public init() {
         this.step='complete-connection-create';
+        if( this.prepPopConnectionInfoComponent) {
         this.prepPopConnectionInfoComponent.init();
+        }
     }
 
     public ngOnDestroy() {

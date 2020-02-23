@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-import {Component, ElementRef, HostListener, Injector, OnDestroy, OnInit, ViewChild, Input} from '@angular/core';
+import {Component, ElementRef, HostListener, Injector, OnDestroy, OnInit, ViewChild, Input, Output, EventEmitter} from '@angular/core';
 import {AbstractComponent} from '../../../common/component/abstract.component';
 import {DataflowService} from '../../dataflow/service/dataflow.service';
 import {ActivatedRoute} from "@angular/router";
@@ -25,7 +25,13 @@ import {PopupService} from '../../../common/service/popup.service';
 export class PrepPopDBCreateComponent extends AbstractComponent {
 
     @Input()
-    public step: string = '';
+        public step: string = '';
+        @Output()
+        public stepChange : EventEmitter<string> = new EventEmitter();
+
+     @Output()
+        public createClose : EventEmitter<void> = new EventEmitter();
+
 
     public isShow = false;
 
@@ -55,12 +61,20 @@ export class PrepPopDBCreateComponent extends AbstractComponent {
     public init() {
         this.isShow = true;
     }
+  public goto(step) {
+            this.step = step;
+        this.stepChange.emit( step );
+    }
+
+    public next() {
+         this.goto('create-dataset-name');
+
+    }
+    public close() {
+        this.createClose.emit();
+    }
 
     public goPre(){
-        //this.prepPopCreateComponent.init();
-        // this.popupService.notiPopup({
-        //     name: 'prep-pop-create',
-        //     data: null
-        // });
+       this.goto('complete-create-dataset');
     }
 }

@@ -28,11 +28,13 @@ import * as _ from 'lodash';
 export class PrepPopDatasetListComponent extends AbstractComponent {
 
     public isShow = false;
-
-    @Input()
+@Input()
     public step: string = '';
     @Output()
     public stepChange : EventEmitter<string> = new EventEmitter();
+
+ @Output()
+    public createClose : EventEmitter<void> = new EventEmitter();
 
     // 새로 생성될 데이셋 타입 정보
     @Input()
@@ -83,6 +85,14 @@ export class PrepPopDatasetListComponent extends AbstractComponent {
         this.step = step;
         this.stepChange.emit( step );
     }
+
+        public next() {
+            this.goto('prep-pop-dataflow-name');
+
+        }
+        public close() {
+            this.createClose.emit();
+        }
     /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
      | Private Variables
      |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
@@ -106,8 +116,8 @@ export class PrepPopDatasetListComponent extends AbstractComponent {
     /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
      | Public - Output Variables
      |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
-    @Output()
-    public complete = new EventEmitter();
+
+
 
     /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
      | Public Variables
@@ -153,13 +163,6 @@ export class PrepPopDatasetListComponent extends AbstractComponent {
     }
 
 
-    /**
-     * Close popup
-     */
-    public close() {
-        this.complete.emit(null);
-    }
-
 
     /**
      * When add button is pressed
@@ -169,7 +172,7 @@ export class PrepPopDatasetListComponent extends AbstractComponent {
         if (this.selectedItems.length === 0) {
             return;
         }
-        this.complete.emit(this.selectedItems);
+
 
     }
 

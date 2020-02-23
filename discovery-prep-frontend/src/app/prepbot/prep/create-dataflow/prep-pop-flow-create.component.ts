@@ -37,11 +37,11 @@ export class PrepPopFlowCreateComponent extends AbstractComponent implements OnI
      | Public Variables
      |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
-    @Output('sourceCreateClose')
-    public closeEvent: EventEmitter<string> = new EventEmitter();
+      @Output()
+       public closeEvent: EventEmitter<string> = new EventEmitter();
 
-    @Output('sourceCreateComplete')
-    public completeEvent: EventEmitter<PrDataset> = new EventEmitter();
+    @Output()
+    public createComplete: EventEmitter<void> = new EventEmitter();
 
    @Input()
     public step: string = '';
@@ -75,8 +75,20 @@ export class PrepPopFlowCreateComponent extends AbstractComponent implements OnI
 
     public init() {
         this.step='';
+        if(this.prepPopDatasetListComponent) {
         this.prepPopDatasetListComponent.init();
+        }
     }
+
+public goto(step) {
+        this.step = step;
+    }
+
+        public next() {
+            this.goto('prep-pop-dataset-list');
+
+        }
+
 
     public ngOnDestroy() {
         super.ngOnDestroy();
@@ -97,11 +109,6 @@ export class PrepPopFlowCreateComponent extends AbstractComponent implements OnI
     // 닫기
     public createClose() {
         this.closeEvent.emit('complete-dataflow-create');
-    }
-
-    // 완료
-    public createComplete() {
-        this.completeEvent.emit();
     }
 
     /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=

@@ -50,14 +50,15 @@ export class PrepPopCreateComponent  extends AbstractComponent implements OnInit
   @ViewChild(PrepPopFileUploadCreateComponent)
   public prepPopFileUploadCreate : PrepPopFileUploadCreateComponent;
 
-    @Output('sourceCreateClose')
-    public closeEvent: EventEmitter<string> = new EventEmitter();
 
-    @Output('sourceCreateComplete')
-    public completeEvent: EventEmitter<PrDataset> = new EventEmitter();
+      @Output()
+        public closeEvent: EventEmitter<string> = new EventEmitter();
 
-   @Input()
-    public step: string = '';
+        @Output()
+        public createComplete: EventEmitter<void> = new EventEmitter();
+
+       @Input()
+        public step: string = '';
 
     // 새로 생성될 데이터소스 정보
     public importType: PrDataset = new PrDataset();
@@ -85,7 +86,10 @@ export class PrepPopCreateComponent  extends AbstractComponent implements OnInit
 
     public init() {
         this.step='';
+        if(this.prepPopType){
+
         this.prepPopType.init();
+        }
     }
 
     public ngOnDestroy() {
@@ -109,10 +113,6 @@ export class PrepPopCreateComponent  extends AbstractComponent implements OnInit
         this.closeEvent.emit('complete-create-dataset');
     }
 
-    // 완료
-    public createComplete() {
-        this.completeEvent.emit();
-    }
 
     /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
      | Private Method

@@ -12,7 +12,7 @@
 * limitations under the License.
 */
 
-import {Component, ElementRef, EventEmitter, HostListener, Injector, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, ElementRef, HostListener, Injector, Input, EventEmitter,OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import { AbstractPopupComponent } from '../../../common/component/abstract-popup.component';
 import { PopupService } from '../../../common/service/popup.service';
 import {PrDatasetFile, SheetInfo, FileFormat} from '../../../domain/data-preparation/pr-dataset';
@@ -50,11 +50,14 @@ export class PrepPopFileSelectsheetComponent extends AbstractPopupComponent impl
    | Public Variables
    |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
-  @Input()
-  public step: string = '';
+@Input()
+    public step: string = '';
+    @Output()
+    public stepChange : EventEmitter<string> = new EventEmitter();
 
-  @Output()
-  public stepChange : EventEmitter<string> = new EventEmitter();
+ @Output()
+    public createClose : EventEmitter<void> = new EventEmitter();
+
 
   @Output()
   public typeEmitter = new EventEmitter<string>();
@@ -186,22 +189,8 @@ export class PrepPopFileSelectsheetComponent extends AbstractPopupComponent impl
       this.datasetService.dataflowId = undefined;
     }
 
-    this.popupService.notiPopup({
-      name: 'close-create',
-      data: null
-    });
-  }
 
-
-  /**
-   * Previous step
-   */
-  public prev() {
-    super.close();
-    this.popupService.notiPopup({
-      name: 'select-file',
-      data: null
-    });
+        this.createClose.emit();
   }
 
 
@@ -222,13 +211,21 @@ export class PrepPopFileSelectsheetComponent extends AbstractPopupComponent impl
     });
 
     this.typeEmitter.emit('FILE');
-    this.popupService.notiPopup({
-      name: 'create-dataset-name',
-      data: null
-    });
 
+ this.goto('create-dataset-name');
   }
 
+
+  public goto(step) {
+    this.step = step;
+        this.stepChange.emit( step );
+  }
+
+
+
+    public goPre(){
+        this.goto( 'select-sheet' );
+    }
 
   /**
    * Advanced setting toggle
@@ -812,10 +809,6 @@ export class PrepPopFileSelectsheetComponent extends AbstractPopupComponent impl
     }
   }
 
-  public goto(step) {
-    this.step = step;
-        this.stepChange.emit( step );
-  }
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
    | Protected Method
    |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/

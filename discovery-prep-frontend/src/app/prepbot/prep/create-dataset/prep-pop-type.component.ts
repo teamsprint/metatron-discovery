@@ -100,8 +100,8 @@ export class PrepPopTypeComponent extends AbstractComponent {
      * Create new kafka
      */
     public goToKafka() {
-        this.prepPopDBCreateComponent.init();
-    }
+        this.goto("KAFKA");
+        }
 
     // public goToDB() {
     //     const params = this._getDfParams();
@@ -109,5 +109,12 @@ export class PrepPopTypeComponent extends AbstractComponent {
     //         ['/management/prepbot/dataflow'])
     //         .then();
     // }
+public goto(step) {
+        this.step = step;
+        this.stepChange.emit( step );
+    }
+
+
+
 
 }

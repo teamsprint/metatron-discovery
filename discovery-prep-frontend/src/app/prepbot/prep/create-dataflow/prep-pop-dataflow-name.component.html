@@ -40,7 +40,7 @@
         <!-- bottom -->
         <div class="pb-popup-bottom">
             <a href="javascript:" class="pb-component-btn type-line" (click)="prev()">{{'msg.comm.btn.previous' | translate}}</a>
-            <a href="javascript:" class="pb-component-btn type-line">CANCEL</a>
+            <a href="javascript:" class="pb-component-btn type-line" (click)="close()">CANCEL</a>
             <!-- disabled 시 ddp-disabled 추가 -->
             <a href="javascript:" class="pb-component-btn type-bg" (click)="complete()" [ngClass]="{'ddp-disabled': isBtnDisabled() }">{{'msg.comm.btn.done2' | translate}}</a>
         </div>
