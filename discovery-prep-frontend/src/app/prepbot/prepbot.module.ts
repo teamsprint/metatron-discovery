@@ -208,10 +208,9 @@ const dataPreparationRoutes: Routes = [
     CreateSnapshotPopup
   ],
   providers: [
-  PrepPopCreateComponent,
+    PrepPopCreateComponent,
     PrepPopFlowCreateComponent,
-     PrepPopConnectionCreateComponent,
-
+    PrepPopConnectionCreateComponent,
     PrepbotService,
     PrConnectionService,
     DataflowService,

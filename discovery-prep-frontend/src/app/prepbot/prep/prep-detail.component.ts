@@ -35,7 +35,7 @@ import {PrDataflow} from "../../domain/data-preparation/pr-dataflow";
 import {isUndefined} from "util";
 import * as _ from "lodash";
 import {StringUtil} from "../../common/util/string.util";
-import {DataflowModelService} from "../dataflow/service/dataflow.model.service";
+import {DataflowModelService} from "./service/dataflow.model.service";
 import {SnapshotLoadingComponent} from "../component/snapshot-loading.component";
 import { CreateSnapshotPopup } from '../component/create-snapshot-popup.component';
 import {Location} from "@angular/common";

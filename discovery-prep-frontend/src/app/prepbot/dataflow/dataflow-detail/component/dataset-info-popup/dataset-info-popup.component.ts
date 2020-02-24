@@ -36,14 +36,14 @@ import {PrDataflow} from '../../../../../domain/data-preparation/pr-dataflow';
 import {Alert} from '../../../../../common/util/alert.util';
 import {Modal} from '../../../../../common/domain/modal';
 import {PreparationAlert} from '../../../../util/preparation-alert.util';
-import {DataflowService} from '../../../service/dataflow.service';
+import {DataflowService} from '../../../../prep/service/dataflow.service';
 import {header, SlickGridHeader} from '../../../../../common/component/grid/grid.header';
 import {GridComponent} from '../../../../../common/component/grid/grid.component';
 import {GridOption} from 'app/common/component/grid/grid.option';
-import {DatasetService} from '../../../../dataset/service/dataset.service';
+import {DatasetService} from '../../../../prep/service/dataset.service';
 import {StringUtil} from '../../../../../common/util/string.util';
 import {PreparationCommonUtil} from "../../../../util/preparation-common.util";
-import {DataflowModelService} from "../../../service/dataflow.model.service";
+import {DataflowModelService} from "../../../../prep/service/dataflow.model.service";
 
 declare let Split;
 

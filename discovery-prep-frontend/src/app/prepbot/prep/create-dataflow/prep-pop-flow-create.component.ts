@@ -17,7 +17,7 @@ import {Component, ElementRef, EventEmitter, Injector, Input, OnDestroy, OnInit,
 import {AbstractComponent} from '../../../common/component/abstract.component';
 import { PrDataset, ImportType } from '../../../domain/data-preparation/pr-dataset';
 import {PrepPopDatasetListComponent} from "./prep-pop-dataset-list.component";
-
+import {PrepPopDataflowNameComponent} from "./prep-pop-dataflow-name.component";
 
 @Component({
   selector: 'prep-pop-flow-create',
@@ -42,14 +42,18 @@ export class PrepPopFlowCreateComponent extends AbstractComponent implements OnI
 
     @Output()
     public createComplete: EventEmitter<void> = new EventEmitter();
- @Input()
-public selectedDatasets : any = [];
 
-   @Input()
+    @Input()
+    public selectedDatasets : any = [];
+
+    @Input()
     public step: string = '';
 
- @ViewChild(PrepPopDatasetListComponent)
- public prepPopDatasetListComponent:PrepPopDatasetListComponent;
+    @ViewChild(PrepPopDatasetListComponent)
+    public prepPopDatasetListComponent:PrepPopDatasetListComponent;
+
+    @ViewChild(PrepPopDataflowNameComponent)
+    public prepPopDataflowNameComponent:PrepPopDataflowNameComponent;
 
     // 새로 생성될 데이터소스 정보
     public importType: PrDataset = new PrDataset();
@@ -68,6 +72,7 @@ public selectedDatasets : any = [];
      | Override Method
      |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
+
     // Init
     public ngOnInit() {
         // Init
@@ -82,14 +87,14 @@ public selectedDatasets : any = [];
         }
     }
 
-public goto(step) {
+    public goto(step) {
         this.step = step;
     }
 
-        public next() {
-            this.goto('prep-pop-dataset-list');
+    public next() {
+        this.goto('prep-pop-dataset-list');
 
-        }
+    }
 
 
     public ngOnDestroy() {

@@ -28,7 +28,7 @@ import { ScrollLoadingGridModel } from './scroll-loading-grid.model';
 import { isNull, isNullOrUndefined, isUndefined } from 'util';
 import { Field } from '../../../../../../domain/data-preparation/pr-dataset';
 import { header, SlickGridHeader } from '../../../../../../common/component/grid/grid.header';
-import { DataflowService } from '../../../../service/dataflow.service';
+import { DataflowService } from '../../../../../prep/service/dataflow.service';
 import { HeaderMenu } from '../../../../../../common/component/grid/grid.header.menu';
 import { AbstractComponent } from '../../../../../../common/component/abstract.component';
 import { ScrollLoadingGridComponent } from './scroll-loading-grid.component';

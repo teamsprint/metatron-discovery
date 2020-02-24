@@ -158,6 +158,7 @@
         <div class="pb-popup-bottom">
             <a href="javascript:" class="pb-component-btn type-bg" (click)="close()">CANCEL</a>
             <a href="javascript:" class="pb-component-btn type-line" (click)="goto('dataflow-name');">NEXT</a>
+            <a href="javascript:" class="pb-component-btn type-line" *ngIf="!isShow">CANCEL</a>
         </div>
         <!-- //bottom -->
     </div>
