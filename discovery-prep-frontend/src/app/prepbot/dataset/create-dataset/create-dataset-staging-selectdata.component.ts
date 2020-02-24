@@ -25,7 +25,7 @@ import { GridOption } from '../../../common/component/grid/grid.option';
 import { StringUtil } from '../../../common/util/string.util';
 import * as $ from "jquery";
 import { isNullOrUndefined } from "util";
-import {DataconnectionService} from "../../../dataconnection/service/dataconnection.service";
+import {DataconnectionService} from "../../prep/service/dataconnection.service";
 
 @Component({
   selector: 'app-create-dataset-staging-selectdata',

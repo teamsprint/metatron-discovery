@@ -17,7 +17,7 @@ import {AfterViewInit, Component, ElementRef, Injector, OnDestroy, OnInit, ViewC
 import { Field } from '../../../../../../domain/data-preparation/pr-dataset';
 import { Alert } from '../../../../../../common/util/alert.util';
 import { EventBroadcaster } from '../../../../../../common/event/event.broadcaster';
-import { DataflowService } from '../../../../service/dataflow.service';
+import { DataflowService } from '../../../../../prep/service/dataflow.service';
 import { StringUtil } from '../../../../../../common/util/string.util';
 import { isNullOrUndefined } from 'util';
 import { PrepSelectBoxComponent } from "../../../../../util/prep-select-box.component";

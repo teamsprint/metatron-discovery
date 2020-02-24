@@ -15,7 +15,7 @@
 import {MomentDatePipe} from "app/common/pipe/moment.date.pipe";
 import {Component, ElementRef, EventEmitter, Injector, Input, OnDestroy, OnInit, Output} from "@angular/core";
 import {AbstractComponent} from "../../common/component/abstract.component";
-import {DataflowService} from "../dataflow/service/dataflow.service";
+import {DataflowService} from "../prep/service/dataflow.service";
 //import {Dataflow, Dataflows} from "../../domain/data-preparation/dataflow";
 import {PrDataflow, Dataflows} from "../../domain/data-preparation/pr-dataflow";
 import {isNullOrUndefined} from "util";

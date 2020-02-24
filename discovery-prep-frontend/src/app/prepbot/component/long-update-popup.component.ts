@@ -18,7 +18,7 @@ import {
 import {AbstractComponent} from "../../common/component/abstract.component";
 import {ImportType, PrDataset} from "../../domain/data-preparation/pr-dataset";
 import {DataflowService} from "../dataflow/service/dataflow.service";
-import {DatasetService} from "../dataset/service/dataset.service";
+import {DatasetService} from "../prep/service/dataset.service";
 import {PreparationAlert} from "../util/preparation-alert.util";
 import {RadioSelectDatasetComponent} from "./radio-select-dataset.component";
 import { PopupService } from '../../common/service/popup.service';

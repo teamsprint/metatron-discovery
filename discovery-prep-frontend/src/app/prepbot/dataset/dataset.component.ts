@@ -13,7 +13,7 @@
  */
 
 import {Component, ElementRef, HostListener, Injector, OnInit, ViewChild} from '@angular/core';
-import {DatasetService} from './service/dataset.service';
+import {DatasetService} from '../prep/service/dataset.service';
 import {AbstractComponent} from '../../common/component/abstract.component';
 import {DsType, ImportType, PrDataset} from '../../domain/data-preparation/pr-dataset';
 import {SubscribeArg} from '../../common/domain/subscribe-arg';
@@ -24,7 +24,7 @@ import {DeleteModalComponent} from '../../common/component/modal/delete/delete.c
 import {Alert} from '../../common/util/alert.util';
 import {PreparationAlert} from '../util/preparation-alert.util';
 import {ActivatedRoute} from '@angular/router';
-import {DataflowService} from '../dataflow/service/dataflow.service';
+import {DataflowService} from '../prep/service/dataflow.service';
 import {MomentDatePipe} from '../../common/pipe/moment.date.pipe';
 import {PreparationCommonUtil} from "../util/preparation-common.util";
 import {isNullOrUndefined} from "util";

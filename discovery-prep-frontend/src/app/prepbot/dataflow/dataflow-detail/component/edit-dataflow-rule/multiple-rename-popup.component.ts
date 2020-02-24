@@ -30,7 +30,7 @@ import {GridOption} from "../../../../../common/component/grid/grid.option";
 import {ScrollLoadingGridComponent} from "./edit-rule-grid/scroll-loading-grid.component";
 import {ScrollLoadingGridModel} from "./edit-rule-grid/scroll-loading-grid.model";
 import {isNullOrUndefined} from "util";
-import {DatasetService} from "../../../../dataset/service/dataset.service";
+import {DatasetService} from "../../../../prep/service/dataset.service";
 
 declare const moment: any;
 

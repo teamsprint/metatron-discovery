@@ -11,15 +11,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-// import { Component, ElementRef, Injector } from '@angular/core';
-// import { ActivatedRoute } from '@angular/router';
-// import * as _ from 'lodash';
-// import { AbstractComponent } from '../../common/component/abstract.component';
-// import {DataflowService} from '../dataflow/service/dataflow.service';
-// import {isNullOrUndefined} from "util";
-// import {Alert} from "../../common/util/alert.util";
-// import {PrDataflow} from "../../domain/data-preparation/pr-dataflow";
-// import {StringUtil} from "../../common/util/string.util";
 
 import {Component, ElementRef, HostListener, Injector, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {AbstractComponent} from '../../common/component/abstract.component';

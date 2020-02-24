@@ -19,7 +19,7 @@ import { Alert } from '../../../../../../common/util/alert.util';
 import { RuleSuggestInputComponent } from './rule-suggest-input.component';
 import {isUndefined} from "util";
 import {AggregateRule} from "../../../../../../domain/data-preparation/prep-rules";
-import {DataflowModelService} from "../../../../service/dataflow.model.service";
+import {DataflowModelService} from "../../../../../prep/service/dataflow.model.service";
 
 interface formula {
   id: number;

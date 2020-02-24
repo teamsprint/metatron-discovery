@@ -23,7 +23,8 @@ import {Modal} from '../../common/domain/modal';
 import {PreparationAlert} from '../util/preparation-alert.util';
 import {header, SlickGridHeader} from '../../common/component/grid/grid.header';
 import {DatasetService} from './service/dataset.service';
-import {DataflowService} from '../dataflow/service/dataflow.service';
+import {DataflowService} from '../prep/service/dataflow.service';
+import {DataflowModelService} from "../prep/service/dataflow.model.service";
 import {StringUtil} from '../../common/util/string.util';
 import {ActivatedRoute} from '@angular/router';
 import {PrDataflow} from '../../domain/data-preparation/pr-dataflow';
@@ -35,7 +36,7 @@ import {Location} from "@angular/common";
 import {isNull, isNullOrUndefined} from "util";
 import * as pixelWidth from 'string-pixel-width';
 import {saveAs} from 'file-saver';
-import {DataflowModelService} from "../dataflow/service/dataflow.model.service";
+
 
 declare let moment: any;
 

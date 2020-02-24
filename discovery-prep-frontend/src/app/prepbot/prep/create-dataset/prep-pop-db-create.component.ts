@@ -14,7 +14,7 @@
 
 import {Component, ElementRef, HostListener, Injector, OnDestroy, OnInit, ViewChild, Input, Output, EventEmitter} from '@angular/core';
 import {AbstractComponent} from '../../../common/component/abstract.component';
-import {DataflowService} from '../../dataflow/service/dataflow.service';
+import {DataflowService} from '../service/dataflow.service';
 import {ActivatedRoute} from "@angular/router";
 import {PopupService} from '../../../common/service/popup.service';
 
