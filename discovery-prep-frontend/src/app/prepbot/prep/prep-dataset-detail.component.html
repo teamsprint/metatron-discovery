@@ -1,15 +1,18 @@
 <div class="pb-layout-contents">
     <!-- navi -->
-    <div class="pb-layout-navi">
+    <!--
+        navi 클릭시 is-selected 추가
+        navi 확대시 type-open 추가
+    -->
+    <div class="pb-layout-navi" [class.is-selected]="isNaivationOpen === true">
         <div class="pb-wrap-navi">
-            <a href="javascript:" class="pb-btn-navi"></a>
-
+            <a href="javascript:" class="pb-btn-navi" (click)="openNavigation()"></a>
         </div>
 
         <div class="pb-lnb-navigation ">
             <a href="javascript:" class="pb-btn-resize"></a>
             <div class="pb-top-title">
-                <em class="pb-icon-navi"></em>
+                <em class="pb-icon-navi" (click)="openNavigation()"></em>
                 NAVIGATION
             </div>
             <!-- search -->
@@ -159,7 +162,7 @@
             </div>
             <!-- //txt navi -->
         </div>
-        <div class="pb-wrap-box-rule">
+        <div class="pb-wrap-box-rule" [class.is-selected]="isNaivationOpen === true">
             <div class="pb-box-rule type-rule">
                 <!-- top -->
                 <div class="pb-box-top">

@@ -363,3 +363,8 @@ ul.ddp-list-popup li.ddp-sub:hover .ddp-wrap-popup2 {display:block;}
 **************************************************************/
 .ddp-ui-tooltip-info {display:none; position:absolute;top:-7px; left:17px; min-width:15px; padding:5px; color:#fff; font-size:12px; white-space:nowrap; border-radius:3px;background-color:#4e5255; z-index:1;}
 .ddp-ui-tooltip-info em.ddp-icon-view-top {display:inline-block; position:absolute; top:-6px; left:50%; width:4px; height:8px; margin-left:-4px; background:url(../images/prepbot/icon_tagview.png) no-repeat; transform:rotate(90deg);}
+
+/**************************************************************
+	버튼 Selected 시 margin 변경
+**************************************************************/
+.pb-wrap-box-rule.is-selected {margin-left:17px;}

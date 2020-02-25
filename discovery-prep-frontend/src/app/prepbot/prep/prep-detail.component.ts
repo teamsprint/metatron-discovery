@@ -134,6 +134,8 @@ export class PrepDetailComponent extends AbstractComponent {
     // delete selected dataflow
     public selectedDataflowId: string;
 
+    //Navigation bar open
+    public isNaivationOpen: boolean = false;
 
     // 룰 리스트 (룰 미리보기)
     public ruleList: any[];
@@ -170,6 +172,10 @@ export class PrepDetailComponent extends AbstractComponent {
         super.ngOnDestroy();
     }
 
+    //navigation open
+    public openNavigation(){
+        this.isNaivationOpen = !this.isNaivationOpen;
+    }
 
     /**
      * Dataflow 이름 셋 (this.dataflowName은 container이고 this.dataflow.dfName이 실제 이름임

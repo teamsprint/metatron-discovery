@@ -83,6 +83,8 @@ export class PrepDatasetDetailComponent extends AbstractComponent {
 
   public commandList: any[];
 
+  //Navigation bar open
+  public isNaivationOpen: boolean = false;
 
   // 생성자
   constructor(private _dataflowService: DataflowService,
@@ -118,7 +120,12 @@ export class PrepDatasetDetailComponent extends AbstractComponent {
     this._location.back();
   }
 
-  /**
+  //navigation open
+  public openNavigation(){
+      this.isNaivationOpen = !this.isNaivationOpen;
+  }
+
+    /**
    * Get dataflow info (API)
    * @private
    */
