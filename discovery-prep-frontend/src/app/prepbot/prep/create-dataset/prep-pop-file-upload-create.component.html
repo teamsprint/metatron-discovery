@@ -17,7 +17,9 @@
         <!-- //top -->
         <!-- contents -->
         <div class="pb-popup-contents">
-            <div class="pb-box-empty" #drop_container [ngClass]="{'file-done': supportedFileCount>0}">
+
+
+            <div class="pb-box-empty" #drop_container [ngStyle]="{'display': supportedFileCount>0?'none':'block'}" >
                 <div class="pb-data-empty">
                     <div class="pb-wrap-data-connect">
                         <em class="pb-img-create"></em>
@@ -29,78 +31,183 @@
                 </div>
             </div>
 
-            <!-- file progress -->
-            <div class="ddp-box-file-progress" [ngStyle]="{'visibility': supportedFileCount>0?'visible':'hidden'}" >
-                <div class="ddp-file-progress">
 
-                    <!-- title -->
-                    <div class="ddp-wrap-file-title">
-                        <div class="ddp-file-title">File upload list</div>
-                        <a href="javascript:" class="ddp-btn-restore" (click)="reset()">
-                            <em class="ddp-icon-reset2"> </em>
-                            {{'msg.page.btn.reset' | translate}}
-                        </a>
+
+            <div class="pb-wrap-connect" [ngStyle]="{'display': supportedFileCount>0?'flex':'none'}" >
+                <!-- file list -->
+                <div class="pb-ui-file-list" >
+                    <!-- top -->
+                    <div class="pb-ui-top">
+                        <span class="pb-txt-title">File upload list</span>
+
+                        <a href="javascript:" class="pb-component-btn type-line" (click)="reset()"><em class="pb-icon-refresh"></em>{{'msg.page.btn.reset' | translate}}</a>
                     </div>
-                    <!-- //title -->
-
-                    <!-- list -->
-                    <ul class="ddp-list-file-progress" (dragenter)="disableEvent($event)" (dragover)="disableEvent($event)" (drop)="disableEvent($event)">
+                    <!-- //top -->
+                    <ul class="pb-list-file" (dragenter)="disableEvent($event)" (dragover)="disableEvent($event)" (drop)="disableEvent($event)">
                         <li *ngFor="let item of upFiles" [ngClass]="{'ddp-disabled' : item.isCanceled}" >
-                            <!-- name -->
-                            <div class="ddp-file-name">
-                                <em class="ddp-icon-flow-svg">
-                                    <svg-icon-component [name]="preparationUtil.getFileFormat(item.fileExtension)" [isBlackAndWhite]="true"></svg-icon-component>
-                                </em>
+                            <div class="pb-box-file">
+                                <!--<svg-icon-component [name]="preparationUtil.getFileFormat(item.fileExtension)" [isBlackAndWhite]="true"></svg-icon-component>-->
+                                <em class="pb-img-file type-xls"></em>
+                                <div class="pb-file-name">
+                                    <span class="pb-data-name">{{item.fileName}}.{{item.fileExtension}}</span>
 
-                                <div class="ddp-data-filename">
-                                    <span class="ddp-txt-subname">{{item.fileExtension}}</span>
-                                    <span class="ddp-txt-filename">{{item.fileName}}.</span>
-
+                                    <span class="pb-data-size">{{formatBytes(item.size,1)}} | {{item.storage_type}}</span>
                                 </div>
-                                <span class="ddp-data-size">{{formatBytes(item.size,1)}} | {{item.storage_type}}</span>
-                            </div>
-                            <!-- //name -->
-
-                            <!-- 상태 -->
-                            <div class="ddp-ui-condition" [ngClass]="{'type-failed': item.isFailed==true}">
-                                <span class="ddp-data-per">{{item.progressPercent}} %</span>
-                                <!-- bar -->
-                                <div class="ddp-type-progressbar2">
-                                    <em class="ddp-data-progressbar" [ngStyle]="{'width': item.progressPercent>0? item.progressPercent+'%':'0%'}"></em>
+                                <div class="pb-component-upload">
+                                    <span class="pb-data-num">{{item.progressPercent}} %</span>
+                                    <!--<div class="pb-ui-bar">-->
+                                        <!--<em class="ddp-data-progressbar" [ngStyle]="{'width': item.progressPercent>0? item.progressPercent+'%':'0%'}"></em>-->
+                                    <!--</div>-->
+                                    <div class="pb-ui-bar ddp-type-progressbar2">
+                                        <em class="ddp-data-progressbar" [ngStyle]="{'width': item.progressPercent>0? item.progressPercent+'%':'0%'}"></em>
+                                    </div>
+                                    <a href="javascript:" class="pb-component-btn" *ngIf="item.isCanceled==true">{{'msg.dp.ui.file.upload.canceled' | translate}}</a>
+                                    <a href="javascript:" class="pb-component-btn" *ngIf="item.isUploaded==true">{{'msg.dp.ui.file.upload.uploaded' | translate}}</a>
+                                    <span class="ddp-txt-error" *ngIf="item.isFailed==true"><em class="ddp-icon-error"></em>{{'msg.storage.ui.list.failed' | translate}}
+                                        <!-- popup -->
+                                        <div class="ddp-box-layout4 ">
+                                            <div class="ddp-data-det">
+                                                {{item.response.message}}
+                                            </div>
+                                        </div>
+                                        <!-- //popup -->
+                                  </span>
                                 </div>
-                                <!-- //bar -->
-                                <div class="ddp-data-condition">
-                                    <a href="javascript:" class="ddp-btn-selection ddp-line" *ngIf="item.isUploading==true" (click)="cancelUpload(item)" >{{'msg.comm.btn.cancl' | translate}}</a>
-
-                                    <div class="ddp-data-condition" *ngIf="item.isCanceled==true">{{'msg.dp.ui.file.upload.canceled' | translate}}</div>
-                                    <div class="ddp-data-condition" *ngIf="item.isUploaded==true">{{'msg.dp.ui.file.upload.uploaded' | translate}}</div>
-                      <span class="ddp-txt-error" *ngIf="item.isFailed==true"><em class="ddp-icon-error"></em>{{'msg.storage.ui.list.failed' | translate}}
-                          <!-- popup -->
-                        <div class="ddp-box-layout4 ">
-                            <div class="ddp-data-det">
-                                {{item.response.message}}
                             </div>
-                        </div>
-                          <!-- //popup -->
-                      </span>
-                                </div>
-
-                            </div>
-                            <!-- //상태 -->
                         </li>
+
                     </ul>
-                    <!-- list -->
+
                 </div>
+                <!-- //file list -->
+
+
+                <!-- drop file -->
+                <div class="pb-box-drop-file" #drop_container >
+                    <div class="pb-txt-description">
+                        <span class="pb-txt-title">Drop your file</span>
+                        <span class="pb-txt-sub">xls, .xlsx and .csv formats are allowed</span>
+                    </div>
+
+                    <div class="pb-wrap-option">
+                        <span class="pb-label-option">Upload Location</span>
+                        <!-- selectbox -->
+                        <!--
+                            클릭시 : is-selected 추가
+                            값 입력시 : is-value 추가
+
+                        -->
+                        <div class="pb-component-selectbox ">
+                            <span class="pb-txt-selectbox">Select data</span>
+                            <!-- popup -->
+                            <div class="pb-select-popup">
+                                <ul class="pb-list-selectbox">
+                                    <li>
+                                        <a href="javascript:">1</a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:">1</a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:">1</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <!-- //popup -->
+                        </div>
+                        <!-- //selectbox -->
+                    </div>
+
+                </div>
+                <!-- //drop file -->
+
             </div>
-            <!-- //file progress -->
+
+            <!--<div class="pb-box-empty" #drop_container [ngClass]="{'file-done': supportedFileCount>0}">-->
+                <!--<div class="pb-data-empty">-->
+                    <!--<div class="pb-wrap-data-connect">-->
+                        <!--<em class="pb-img-create"></em>-->
+                        <!--<div class="pb-txt-title">Drop your file</div>-->
+                        <!--<div class="pb-txt-det">-->
+                            <!--You can create data.-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+
+            <!--&lt;!&ndash; file progress &ndash;&gt;-->
+            <!--<div class="ddp-box-file-progress" [ngStyle]="{'visibility': supportedFileCount>0?'visible':'hidden'}" >-->
+                <!--<div class="ddp-file-progress">-->
+
+                    <!--&lt;!&ndash; title &ndash;&gt;-->
+                    <!--<div class="ddp-wrap-file-title">-->
+                        <!--<div class="ddp-file-title">File upload list</div>-->
+                        <!--<a href="javascript:" class="ddp-btn-restore" (click)="reset()">-->
+                            <!--<em class="ddp-icon-reset2"> </em>-->
+                            <!--{{'msg.page.btn.reset' | translate}}-->
+                        <!--</a>-->
+                    <!--</div>-->
+                    <!--&lt;!&ndash; //title &ndash;&gt;-->
+
+                    <!--&lt;!&ndash; list &ndash;&gt;-->
+                    <!--<ul class="ddp-list-file-progress" (dragenter)="disableEvent($event)" (dragover)="disableEvent($event)" (drop)="disableEvent($event)">-->
+                        <!--<li *ngFor="let item of upFiles" [ngClass]="{'ddp-disabled' : item.isCanceled}" >-->
+                            <!--&lt;!&ndash; name &ndash;&gt;-->
+                            <!--<div class="ddp-file-name">-->
+                                <!--<em class="ddp-icon-flow-svg">-->
+                                    <!--<svg-icon-component [name]="preparationUtil.getFileFormat(item.fileExtension)" [isBlackAndWhite]="true"></svg-icon-component>-->
+                                <!--</em>-->
+
+                                <!--<div class="ddp-data-filename">-->
+                                    <!--<span class="ddp-txt-subname">{{item.fileExtension}}</span>-->
+                                    <!--<span class="ddp-txt-filename">{{item.fileName}}.</span>-->
+
+                                <!--</div>-->
+                                <!--<span class="ddp-data-size">{{formatBytes(item.size,1)}} | {{item.storage_type}}</span>-->
+                            <!--</div>-->
+                            <!--&lt;!&ndash; //name &ndash;&gt;-->
+
+                            <!--&lt;!&ndash; 상태 &ndash;&gt;-->
+                            <!--<div class="ddp-ui-condition" [ngClass]="{'type-failed': item.isFailed==true}">-->
+                                <!--<span class="ddp-data-per">{{item.progressPercent}} %</span>-->
+                                <!--&lt;!&ndash; bar &ndash;&gt;-->
+                                <!--<div class="ddp-type-progressbar2">-->
+                                    <!--<em class="ddp-data-progressbar" [ngStyle]="{'width': item.progressPercent>0? item.progressPercent+'%':'0%'}"></em>-->
+                                <!--</div>-->
+                                <!--&lt;!&ndash; //bar &ndash;&gt;-->
+                                <!--<div class="ddp-data-condition">-->
+                                    <!--<a href="javascript:" class="ddp-btn-selection ddp-line" *ngIf="item.isUploading==true" (click)="cancelUpload(item)" >{{'msg.comm.btn.cancl' | translate}}</a>-->
+
+                                    <!--<div class="ddp-data-condition" *ngIf="item.isCanceled==true">{{'msg.dp.ui.file.upload.canceled' | translate}}</div>-->
+                                    <!--<div class="ddp-data-condition" *ngIf="item.isUploaded==true">{{'msg.dp.ui.file.upload.uploaded' | translate}}</div>-->
+                                    <!--<span class="ddp-txt-error" *ngIf="item.isFailed==true"><em class="ddp-icon-error"></em>{{'msg.storage.ui.list.failed' | translate}}-->
+                                      <!--&lt;!&ndash; popup &ndash;&gt;-->
+                                    <!--<div class="ddp-box-layout4 ">-->
+                                        <!--<div class="ddp-data-det">-->
+                                            <!--{{item.response.message}}-->
+                                        <!--</div>-->
+                                    <!--</div>-->
+                                      <!--&lt;!&ndash; //popup &ndash;&gt;-->
+                                  <!--</span>-->
+                                <!--</div>-->
+
+                            <!--</div>-->
+                            <!--&lt;!&ndash; //상태 &ndash;&gt;-->
+                        <!--</li>-->
+                    <!--</ul>-->
+                    <!--&lt;!&ndash; list &ndash;&gt;-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--&lt;!&ndash; //file progress &ndash;&gt;-->
         </div>
         <!-- //contents -->
         <!-- bottom -->
-        <div class="pb-popup-bottom">
-            <a (click)="goPre();" href="javascript:" class="pb-component-btn type-line">PREV</a>
-            <a (click)="close();" href="javascript:" class="pb-component-btn type-bg">CANCEL</a>
-            <a (click)="next();" href="javascript:" class="pb-component-btn type-line">NEXT</a>
+        <div class="pb-popup-bottom ">
+            <a href="javascript:" (click)="goPre();" class="pb-component-btn-pop type-line">PREV</a>
+            <a href="javascript:" (click)="close();" class="pb-component-btn-pop type-line">CANCEL</a>
+            <a href="javascript:" (click)="next();" class="pb-component-btn-pop type-bg">NEXT</a>
         </div>
+
         <!-- //bottom -->
     </div>
     <!-- //box popup -->

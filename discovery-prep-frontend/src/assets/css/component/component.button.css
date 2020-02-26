@@ -4,11 +4,11 @@
      Compontent : button
  *************************************************************************/
 .pb-component-btn {display:inline-block; min-width:83px; height:30px; padding:6px 10px; border-radius:3px; font-size:14px; font-weight:600; text-align:center;}
-.pb-component-btn:hover {background-color:#e4e3de;}
+.pb-component-btn:hover {background-color:#f1f1ee;}
 .pb-component-btn.type-bg { color:#fff; background-color:#f77115;border:1px solid #f77115;}
 .pb-component-btn.type-bg:hover {color:#fff; border:1px solid #dd591c; background-color:#dd591c;}
 .pb-component-btn.type-bg2 {}
-.pb-component-btn.type-line {border:1px solid rgba(127,126,124,0.4); color:#000;}
+.pb-component-btn.type-line {border:1px solid #a3a3a3; color:#000;}
 .pb-component-btn.type-dark {background-color:#71706d; color:#fff;}
 .pb-component-btn.type-dark:hover {background-color:#484847;}
 .pb-component-btn.type-dark2 {background-color:#cfcec7; color:#4e4e4e; font-weight:normal;}
@@ -17,7 +17,7 @@
 .pb-component-btn em.pb-icon-analytics {width:27px; height:20px;}
 .pb-component-btn em.pb-icon-add{width:13px; height:13px; background-position:left -20px;}
 .pb-component-btn em.pb-icon-add-r{width:14px; height:13px; position:relative; top:-1px; background-position:left -49px;}
-.pb-component-btn.type-dark2 em.pb-icon-add-r {}
+.pb-component-btn em.pb-icon-refresh {width:11px; height:12px; position:relative; top:-1px; background-position:left -75px;}
 .pb-component-btn em.pb-icon-dictionary {width:14px; height:14px; background-position:left -34px;}
 .pb-component-btn em.pb-icon-move {width:13px; height:11px; background-position:left -63px;}
 .pb-component-btn.is-disabled,
@@ -41,6 +41,13 @@
 .pb-btn-icons-type.type-edit:before {width:12px; height:13px; margin:-7px 0 0 -7px;background-position:left -24px;}
 .pb-btn-icons-type.type-edit:hover:before {background-position-x:-13px;}
 
+.pb-component-btn-pop {display:inline-block; min-width:130px; height:42px; padding:10px 10px; border-radius:3px; font-size:16px; font-weight:600;  text-align:center;}
+.pb-component-btn-pop.type-line {border:1px solid #b5b5b2; color:#313131;}
+.pb-component-btn-pop.type-line:hover {border:1px solid #f37135; background-color:#fffdf5; color:#f37135;}
+.pb-component-btn-pop.type-bg {border:1px solid #f37135;background-color:#f37135; color:#fff;}
+.pb-component-btn-pop.type-bg:hover {background-color:#dd591c; border-color:#dd591c;}
+.pb-component-btn-pop.type-dark {border:1px solid #71706d; background-color:#71706d; color:#fff;}
+.pb-component-btn-pop.type-dark:hover {border:1px solid #484847; background-color:#484847;}
 /***********************************************************************
      Compontent : tab button
  *************************************************************************/

@@ -19,7 +19,14 @@
 .pb-data-user {text-align:center; color:#000; font-size:19px;}
 .pb-data-user .pb-data-photo {display:inline-block; margin:11px 15px; width:34px; height:34px; border-radius:50%; overflow:hidden; vertical-align:middle;}
 .pb-data-user .pb-data-photo img {display:block; height:100%; width:100%;}
+.pb-layout-gnb.type-gnb {text-align:center;}
+.pb-layout-gnb.type-gnb .pb-gnb-left {text-align:left;}
+.pb-layout-gnb.type-gnb .pb-img-logo {display:inline-block;padding:17px 0; font-size:15px; color:#000; font-weight:bold; letter-spacing:1px;}
+.pb-layout-gnb.type-gnb .pb-img-logo em {color:#f77115;}
 
+.pb-layout-gnb .pb-ui-admin {position:absolute; top:50%; right:25px; margin:-12px 0 0 0;color:#484847; font-size:13px;}
+.pb-layout-gnb .pb-ui-admin .pb-data-photo {display:inline-block; width:24px; height:24px; border-radius:50%; margin-right:5px; overflow:hidden; background-color:#d8d8d8; vertical-align:middle;}
+.pb-layout-gnb .pb-ui-admin .pb-data-photo img {display:block; width:100%; height:100%;}
 /***********************************************************************
      Layout : CONTENTS
  *************************************************************************/
@@ -93,8 +100,9 @@
 .pb-box-popup .pb-ui-step {position:absolute; top:22px; right:70px;}
 .pb-box-popup .pb-ui-step .pb-txt-step {display:inline-block; float:left; margin-left:6px; width:28px; height:28px; border-radius: 3px; border:1px solid #f37135; background-color:#fffdf5; color:#f37135; line-height:25px; text-align:center;}
 .pb-box-popup .pb-ui-step .pb-txt-step.is-selected {border:1px solid #f37135; background-color:#f37135; color:#fff;}
-.pb-box-popup .pb-ui-step .pb-txt-step.is-selected + .pb-txt-step {border: solid 1px #737373; background-color:#fff; color:#737373;}
+.pb-box-popup .pb-ui-step .pb-txt-step.is-selected + .pb-txt-step,
+.pb-box-popup .pb-ui-step .pb-txt-step.is-selected + .pb-txt-step + .pb-txt-step {border: solid 1px #737373; background-color:#fff; color:#737373;}
 .pb-box-popup .pb-popup-top {padding:24px 39px 24px 39px; color:#000; font-size:19px; font-weight:600;border-bottom:1px solid #d0d3d3;}
 .pb-box-popup .pb-popup-contents {display:flex; flex-direction:column;flex:auto; overflow:auto;}
-.pb-box-popup .pb-popup-bottom {padding:38px 0; text-align:center;}
-.pb-box-popup .pb-popup-bottom .pb-component-btn {margin:0 4px;}
+.pb-box-popup .pb-popup-bottom {padding:20px 0; text-align:center;}
+.pb-box-popup .pb-popup-bottom .pb-component-btn-pop {margin:0 4px;}

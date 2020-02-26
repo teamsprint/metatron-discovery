@@ -320,6 +320,8 @@
         <!-- //contents navi -->
     </div>
     <!-- //wrap contents -->
-
-
 </div>
+<!-- 생성 -->
+<prep-pop-create  *ngIf="isSelectDatasetPopupOpen"
+                 (closeEvent)="closeAddDatasets()"
+                 (createComplete)="closeAddDatasets()"></prep-pop-create>

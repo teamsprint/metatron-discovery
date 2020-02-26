@@ -37,9 +37,10 @@ import * as _ from "lodash";
 import {StringUtil} from "../../common/util/string.util";
 import {DataflowModelService} from "./service/dataflow.model.service";
 import {SnapshotLoadingComponent} from "../component/snapshot-loading.component";
-import { CreateSnapshotPopup } from '../component/create-snapshot-popup.component';
+import {CreateSnapshotPopup} from '../component/create-snapshot-popup.component';
 import {Location} from "@angular/common";
 import {DatasetInfoPopupComponent} from "../dataflow/dataflow-detail/component/dataset-info-popup/dataset-info-popup.component";
+import {PrepPopCreateComponent} from "./create-dataset/prep-pop-create.component";
 declare let echarts: any;
 
 @Component({
@@ -81,6 +82,9 @@ export class PrepDetailComponent extends AbstractComponent {
     @ViewChild(DatasetInfoPopupComponent)
     public datasetInfoPopupComponent : DatasetInfoPopupComponent;
 
+    @ViewChild(PrepPopCreateComponent)
+    public prepPopCreateComponent : PrepPopCreateComponent;
+
     // echart ins
     public chart: any;
 
@@ -118,6 +122,7 @@ export class PrepDetailComponent extends AbstractComponent {
 
     // 데이터 플로우 option layer show/hide
     public isDataflowOptionShow: boolean = false;
+
 
     // 데이터 플로우 이름 수정 모드
     public isDataflowNameEditMode: boolean = false;
@@ -209,10 +214,27 @@ export class PrepDetailComponent extends AbstractComponent {
 
     }
 
-    public addDatasets() {
-        this.openAddDatasetPopup(null);
-    }
 
+    /**
+     * 모드 변경
+     * @param {string} mode
+     */
+    public addDatasets() {
+        this.isSelectDatasetPopupOpen = true;
+        if( this.prepPopCreateComponent) {
+            this.prepPopCreateComponent.init();
+        }
+    } // function - changeMode
+
+    public closeAddDatasets() {
+        this.isSelectDatasetPopupOpen = false;
+    } // function - changeMode
+
+
+    // public addDatasets() {
+    //     this.openAddDatasetPopup(null);
+    // }
+    //
     /**
      * Open swap dataset popup
      * @param data
@@ -278,6 +300,8 @@ export class PrepDetailComponent extends AbstractComponent {
             this.dataflowDesc = this.dataflow.dfDesc;
         }
     }
+
+
 
     /**
      * chart에서 icon에 selected/unselected표시

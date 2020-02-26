@@ -5,7 +5,6 @@
  *************************************************************************/
 .pb-rnb-menu {display:flex; flex-direction:column;position:relative; min-width:56px; height:100%; border-left:1px solid #cccbc4; overflow:auto;}
 .pb-rnb-menu.is-selected {min-width:250px; width:250px;}
-.pb-rnb-menu.is-selected ul.pb-list-rnb.type-list > li > a {}
 .pb-rnb-menu.is-selected ul.pb-list-rnb > li {border-bottom:1px solid #cecec7;}
 .pb-rnb-menu.is-selected ul.pb-list-rnb > li > a {padding-left:16px; }
 .pb-rnb-menu.is-selected ul.pb-list-rnb > li > a [class*="pb-icon-"] {display:none; left:23px; margin-left:0;}

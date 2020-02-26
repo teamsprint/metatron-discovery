@@ -1,0 +1,12 @@
+@charset "utf-8";
+
+/***********************************************************************
+     Compontent : icons
+ *************************************************************************/
+.pb-img-file {display:inline-block;background:url(../../images/img_file.png) no-repeat;}
+.pb-img-file.type-xls { width:22px; height:20px;}
+
+
+
+
+

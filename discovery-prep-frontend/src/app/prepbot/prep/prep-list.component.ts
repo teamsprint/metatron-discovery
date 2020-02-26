@@ -59,7 +59,7 @@ export class PrepListComponent extends AbstractComponent {
   // search text
   public searchText: string;
 
-    // datasource create step
+    // create step
     public mode: string;
 
     // 뷰타입 LIST, CARD
@@ -67,6 +67,7 @@ export class PrepListComponent extends AbstractComponent {
 
   // 정렬
   public selectedContentSort: Order = new Order();
+
   @ViewChild(PrepPopCreateComponent)
   public prepPopCreateComponent : PrepPopCreateComponent;
 
