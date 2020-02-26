@@ -16,211 +16,453 @@
         </div>
         <!-- //top -->
         <!-- contents -->
-        <div class="pb-popup-contents pb-pop-create">
+        <div class="pb-popup-contents">
+
+            <div class="pb-wrap-connect type-connect">
 
 
-            <!-- import -->
-            <div class="ddp-pop-contents">
-
-                <div class="ddp-box-popupcontents ddp-wrap-file-create type-info">
-                    <!-- create file -->
-                    <div class="ddp-ui-create-file">
-                        <!-- list file -->
-                        <div class="ddp-list-create-file">
-                            <ul class="ddp-list-file-name" >
-
-                                <ng-container *ngFor="let file of datasetFiles; let i = index">
-                                    <li [ngClass]="{'ddp-selected':currDSIndex===i && file.fileFormat !== fileFormat.EXCEL}"  >
 
 
-                                        <!-- NOT EXCEL -->
-                                        <ng-container *ngIf="file.fileFormat !== fileFormat.EXCEL">
-                                            <!-- checkbox -->
-                                            <div class="ddp-wrap-checkbox" (click)="selectFile($event,i)">
-                                                <label class="ddp-label-checkbox" (click)="checkGroup($event, i)">
-                                                    <input type="checkbox" [checked]="file.selected">
-                                                    <i class="ddp-icon-checkbox"></i>
-                                                </label>
-                                                <span class="ddp-txt-checkbox">
-                        <span class="ddp-txt-subname">{{file.fileExtension}}
-                          <em class="ddp-icon-error2" [ngStyle]="{'display': file.error?'':'none'}"></em>
-                        </span>
-                        <span class="ddp-txt-filename">{{file.fileName}}.</span>
-                      </span>
-                                            </div>
-                                            <!-- //checkbox -->
-                                        </ng-container>
-                                        <!-- // NOT EXCEL -->
+
+                <!--<ng-container *ngFor="let file of datasetFiles; let i = index">-->
+                <!--<li [ngClass]="{'ddp-selected':currDSIndex===i && file.fileFormat !== fileFormat.EXCEL}"  >-->
 
 
-                                        <!-- EXCEL -->
-                                        <ng-container *ngIf="file.fileFormat === fileFormat.EXCEL">
-                                            <!-- checkbox -->
-                                            <div class="ddp-wrap-checkbox" (click)="selectFile($event,i)">
-                                                <label class="ddp-label-checkbox" (click)="checkGroup($event, i)">
-                                                    <input type="checkbox" [checked]="file.selected">
-                                                    <i class="ddp-icon-checkbox"></i>
-                                                </label>
-                                                <span class="ddp-txt-checkbox">
-                        <span class="ddp-txt-subname">{{file.fileExtension}}</span>
-                        <span class="ddp-txt-filename">{{file.fileName}}.</span>
-                      </span>
-                                            </div>
-                                            <!-- //checkbox -->
-                                            <!-- sub -->
-                                            <ul class="ddp-list-sub-file"  *ngFor="let item of file.sheetInfo; let j = index">
-                                                <li [ngClass]="{'ddp-selected':currSheetIndex===j && currDSIndex===i}">
-                                                    <!-- checkbox -->
-                                                    <div class="ddp-wrap-checkbox" (click)="selectSheet($event, i, item.sheetName, j)">
-                                                        <label class="ddp-label-checkbox" (click)="checkSheet($event, i, j)">
-                                                            <input type="checkbox" [checked]="item.selected">
-                                                            <i class="ddp-icon-checkbox"></i>
-                                                        </label>
-                                                        <span class="ddp-txt-checkbox">
-                            <span class="ddp-txt-subname"></span>
-                            <span class="ddp-txt-filename">{{item.sheetName}}</span>
-                          </span>
-                                                    </div>
-                                                    <!-- //checkbox -->
-                                                </li>
+                <!--&lt;!&ndash; NOT EXCEL &ndash;&gt;-->
+                <!--<ng-container *ngIf="file.fileFormat !== fileFormat.EXCEL">-->
+                <!--&lt;!&ndash; checkbox &ndash;&gt;-->
+                <!--<div class="ddp-wrap-checkbox" (click)="selectFile($event,i)">-->
+                <!--<label class="ddp-label-checkbox" (click)="checkGroup($event, i)">-->
+                <!--<input type="checkbox" [checked]="file.selected">-->
+                <!--<i class="ddp-icon-checkbox"></i>-->
+                <!--</label>-->
+                <!--<span class="ddp-txt-checkbox">-->
+                <!--<span class="ddp-txt-subname">{{file.fileExtension}}-->
+                <!--<em class="ddp-icon-error2" [ngStyle]="{'display': file.error?'':'none'}"></em>-->
+                <!--</span>-->
+                <!--<span class="ddp-txt-filename">{{file.fileName}}.</span>-->
+                <!--</span>-->
+                <!--</div>-->
+                <!--&lt;!&ndash; //checkbox &ndash;&gt;-->
+                <!--</ng-container>-->
+                <!--&lt;!&ndash; // NOT EXCEL &ndash;&gt;-->
 
-                                            </ul>
-                                            <!-- sub -->
-                                        </ng-container>
-                                        <!-- EXCEL -->
 
-                                    </li>
-                                </ng-container>
+                <!--&lt;!&ndash; EXCEL &ndash;&gt;-->
+                <!--<ng-container *ngIf="file.fileFormat === fileFormat.EXCEL">-->
+                <!--&lt;!&ndash; checkbox &ndash;&gt;-->
+                <!--<div class="ddp-wrap-checkbox" (click)="selectFile($event,i)">-->
+                <!--<label class="ddp-label-checkbox" (click)="checkGroup($event, i)">-->
+                <!--<input type="checkbox" [checked]="file.selected">-->
+                <!--<i class="ddp-icon-checkbox"></i>-->
+                <!--</label>-->
+                <!--<span class="ddp-txt-checkbox">-->
+                <!--<span class="ddp-txt-subname">{{file.fileExtension}}</span>-->
+                <!--<span class="ddp-txt-filename">{{file.fileName}}.</span>-->
+                <!--</span>-->
+                <!--</div>-->
+                <!--&lt;!&ndash; //checkbox &ndash;&gt;-->
 
+
+                <!--&lt;!&ndash; sub &ndash;&gt;-->
+                <!--<ul class="ddp-list-sub-file"  *ngFor="let item of file.sheetInfo; let j = index">-->
+                <!--<li [ngClass]="{'ddp-selected':currSheetIndex===j && currDSIndex===i}">-->
+                <!--&lt;!&ndash; checkbox &ndash;&gt;-->
+                <!--<div class="ddp-wrap-checkbox" (click)="selectSheet($event, i, item.sheetName, j)">-->
+                <!--<label class="ddp-label-checkbox" (click)="checkSheet($event, i, j)">-->
+                <!--<input type="checkbox" [checked]="item.selected">-->
+                <!--<i class="ddp-icon-checkbox"></i>-->
+                <!--</label>-->
+                <!--<span class="ddp-txt-checkbox">-->
+                <!--<span class="ddp-txt-subname"></span>-->
+                <!--<span class="ddp-txt-filename">{{item.sheetName}}</span>-->
+                <!--</span>-->
+                <!--</div>-->
+                <!--&lt;!&ndash; //checkbox &ndash;&gt;-->
+                <!--</li>-->
+
+                <!--</ul>-->
+                <!--&lt;!&ndash; sub &ndash;&gt;-->
+                <!--</ng-container>-->
+                <!--&lt;!&ndash; EXCEL &ndash;&gt;-->
+
+                <!--</li>-->
+                <!--</ng-container>-->
+
+
+                <!-- box select -->
+                <ng-container *ngFor="let file of datasetFiles; let i = index">
+                <div class="pb-box-select">
+                    <ul class="pb-list-select">
+                        <li [ngClass]="{'ddp-selected':currDSIndex===i && file.fileFormat !== fileFormat.EXCEL}">
+                            <ng-container *ngIf="file.fileFormat !== fileFormat.EXCEL">
+                                <div class="pb-ui-select " (click)="selectFile($event,i)">
+                                    <label class="pb-compomnent-checkbox type-checkbox" (click)="checkGroup($event, i)">
+                                        <input type="checkbox" [checked]="file.selected">
+                                        <i></i>
+                                    </label>
+                                    <span class="pb-txt-checkbox">({{file.fileExtension}}) {{file.fileName}}</span>
+                                    <em class="ddp-icon-error2" [ngStyle]="{'display': file.error?'':'none'}"></em>
+                                </div>
+                            </ng-container>
+
+                            <ng-container *ngIf="file.fileFormat === fileFormat.EXCEL">
+                                <div class="pb-ui-select " (click)="selectFile($event,i)">
+                                    <label class="pb-compomnent-checkbox type-checkbox" (click)="checkGroup($event, i)">
+                                        <input type="checkbox" [checked]="file.selected">
+                                        <i></i>
+                                    </label>
+                                    <span class="pb-txt-checkbox">({{file.fileExtension}}) {{file.fileName}}</span>
+                                    <em class="ddp-icon-error2" [ngStyle]="{'display': file.error?'':'none'}"></em>
+                                </div>
+                            </ng-container>
+
+
+                            <ul class="pb-list-sub" *ngFor="let item of file.sheetInfo; let j = index">
+                                <li class="" [ngClass]="{'ddp-selected':currSheetIndex===j && currDSIndex===i}">
+
+                                    <div class="pb-ui-select " (click)="selectSheet($event, i, item.sheetName, j)">
+                                        <label class="pb-compomnent-checkbox type-checkbox" (click)="checkSheet($event, i, j)">
+                                            <input type="checkbox" [checked]="item.selected">
+                                            <i></i>
+                                        </label>
+                                        <span class="pb-txt-checkbox">{{item.sheetName}}</span>
+                                    </div>
+                                </li>
                             </ul>
+                        </li>
+                    </ul>
+
+                </div>
+                </ng-container>
+                <!-- //box select -->
+
+
+
+
+                <!-- upload -->
+                <div class="pb-wrap-upload">
+                    <!-- top -->
+                    <div class="pb-grid-top">
+                        <div class="pb-grid-name">
+                            <em class="pb-img-file type-xls"></em>
+                            {{currDetail.detailName}}
                         </div>
-                        <!-- //list file -->
 
-                        <!-- detail -->
-                        <div class="ddp-wrap-create-detail ">
-                            <div class="ddp-ui-create-detail">
-                                <div class="ddp-wrap-grid-option">
-                                    <!-- total -->
-                                    <div class="ddp-data-total">
-                    <span class="ddp-txt-data">
-                      <span class="ddp-txt-num" *ngIf="(currDetail.columns)">{{currDetail.columns}}</span> Column(s)
-                    </span>
-                                    </div>
-
-                                    <div class="ddp-data-name">
-                                        <em class="ddp-icon-files">
-                                            <svg-icon-component [name]="currDetail.fileFormat" [isBlackAndWhite]="true"></svg-icon-component>
-                                        </em>
-                                        {{currDetail.detailName}}
-                                    </div>
-                                </div>
-
-                                <!-- 그리드 영역 -->
-                                <div class="ddp-wrap-grid"  [ngStyle]="getGridStyle()">
-                                    <div class="ddp-ui-empty" *ngIf="clearGrid">{{'msg.dp.ui.no.preview' | translate}}</div>
-                                    <div grid-component style="width:100%; height:100%;" [hidden]="clearGrid" ></div>
-                                </div>
-                                <!-- //그리드 영역 -->
-
-                                <div class="ddp-wrap-column-option" [ngStyle]="{'display': isJSON?'none':''}">
-
-                                    <div class="ddp-wrap-fold " [ngClass]="{'ddp-selected':settingFoldFlag}" >
-                                        <a href="javascript:" class="ddp-fold-link" (click)="settingFold()">{{'msg.dp.btn.advanced.settings' | translate}}</a>
-                                        <div class="ddp-fold-det">
-                                            <!-- edit -->
-                                            <div class="ddp-wrap-edit3 ddp-type ddp-error" [ngStyle]="{'display': !isCSV?'none':''}">
-                                                <label class="ddp-label-type">{{'msg.dp.th.col.delimiter' | translate}}</label>
-                                                <!-- edit option -->
-                                                <div class="ddp-ui-edit-option ddp-type">
-
-                                                    <!-- apply -->
-                                                    <div class="ddp-input-apply ddp-edit" [ngClass]="{'ddp-disabled': !isCSV}">
-                                                        <input type="text" placeholder="{{'msg.dp.th.col.delimiter.ph' | translate}}"
-                                                               class="ddp-input-txt" [(ngModel)]="currDelimiter"
-                                                               (keydown)="keyDownEvent($event, 'delimiter')">
-                                                        <em class="ddp-icon-apply" (click)="changeDelimiter()"></em>
-                                                    </div>
-                                                    <!-- //apply -->
-                                                    <span class="ddp-data-error" [ngStyle]="{'visibility': isDelimiterRequired?'visible':'hidden'}">
-                          {{'msg.common.ui.required' | translate}}</span>
-                                                </div>
-                                                <!-- //edit option -->
-                                            </div>
-                                            <!-- //edit -->
-                                            <!-- edit -->
-                                            <div class="ddp-wrap-edit3 ddp-type ddp-error" [ngStyle]="{'display': isJSON?'none':''}">
-                                                <label class="ddp-label-type">{{'msg.dp.th.col.cnt' | translate}}</label>
-                                                <!-- edit option -->
-                                                <div class="ddp-ui-edit-option ddp-type">
-
-                                                    <!-- apply -->
-                                                    <div class="ddp-input-apply"  [ngClass]="{'ddp-disabled': isJSON}">
-                                                        <input type="text" placeholder="{{'msg.dp.th.col.cnt.ph' | translate}}"
-                                                               class="ddp-input-txt" [(ngModel)]="currColumnCount"
-                                                               (keydown)="keyDownEvent($event, 'colCnt')">
-                                                        <em class="ddp-icon-apply" (click)="changeColumnCount()"></em>
-                                                    </div>
-                                                    <!-- //apply -->
-                                                    <span class="ddp-data-error" [ngStyle]="{'visibility': isColumnCountRequired?'visible':'hidden'}">
-                          {{'msg.common.ui.required' | translate}}
-                        </span>
-                                                </div>
-                                                <!-- //edit option -->
-                                            </div>
-                                            <!-- //edit -->
-                                            <div style="clear: both;" ></div>
-                                            <!-- edit -->
-                                            <div class="ddp-wrap-edit3 ddp-type ddp-error" [ngStyle]="{'display': !isCSV?'none':''}">
-                                                <label class="ddp-label-type">{{'msg.dp.th.quote' | translate}}</label>
-                                                <!-- edit option -->
-                                                <div class="ddp-ui-edit-option ddp-type">
-
-                                                    <!-- apply -->
-                                                    <div class="ddp-input-apply ddp-edit" [ngClass]="{'ddp-disabled': !isCSV}">
-                                                        <input type="text" placeholder="{{'msg.dp.th.quote.ph' | translate}}"
-                                                               class="ddp-input-txt" [(ngModel)]="currQuote"
-                                                               (keydown)="keyDownEvent($event, 'quoteChar')">
-                                                        <em class="ddp-icon-apply" (click)="changeQuote()"></em>
-                                                    </div>
-                                                    <!-- //apply -->
-                                                </div>
-                                                <!-- //edit option -->
-                                            </div>
-                                            <!-- //edit -->
-                                        </div>
-                                    </div>
-
+                        <div class="pb-grid-total" *ngIf="(currDetail.columns)"><strong>{{currDetail.columns}}</strong>Columns</div>
+                    </div>
+                    <!--//top -->
+                    <!-- grid area -->
+                    <div class="pb-grid-area" [ngStyle]="getGridStyle()">
+                        <div class="ddp-ui-empty" *ngIf="clearGrid">{{'msg.dp.ui.no.preview' | translate}}</div>
+                        <div grid-component style="width:100%; height:100%;" [hidden]="clearGrid" ></div>
+                    </div>
+                    <!-- //grid area -->
+                    <!-- box setting -->
+                    <!--
+                       클릭시 is-selected 추가
+                    -->
+                    <div class="pb-box-setting is-selected" [ngClass]="{'is-selected':settingFoldFlag}" >
+                        <div class="pb-box-fold pb-clear">
+                            <!-- setting edit -->
+                            <div class="pb-setting-edit">
+                                <div class="pb-edit-label">Upload Location</div>
+                                <div class="pb-form-edit">
+                                    <input type="text" class="pb-component-input">
                                 </div>
                             </div>
+                            <!-- //setting edit -->
 
+                            <a href="javascript:" class="pb-btn-setting" (click)="settingFold()">
+                                {{'msg.dp.btn.advanced.settings' | translate}}
+                            </a>
                         </div>
-                        <!-- //detail -->
-
-
+                        <!-- setting sub -->
+                        <div class="pb-setting-sub pb-clear">
+                            <!-- setting edit -->
+                            <div class="pb-setting-edit">
+                                <div class="pb-edit-label">Column delimiter</div>
+                                <div class="pb-form-edit">
+                                    <input type="text" class="pb-component-input" placeholder="Enter column delimiter">
+                                </div>
+                            </div>
+                            <!-- //setting edit -->
+                            <!-- setting edit -->
+                            <div class="pb-setting-edit" [ngClass]="{'is-disabled': isJSON}">
+                                <div class="pb-edit-label">Manual Column count</div>
+                                <div class="pb-form-edit">
+                                    <input type="text" class="pb-component-input" placeholder="{{'msg.dp.th.col.cnt.ph' | translate}}"
+                                           [(ngModel)]="currColumnCount"
+                                           (keydown)="keyDownEvent($event, 'colCnt')">
+                                    <em class="ddp-icon-apply" (click)="changeColumnCount()"></em>
+                                </div>
+                            </div>
+                            <!-- //setting edit -->
+                        </div>
+                        <!-- //setting sub -->
                     </div>
-                    <!-- //create file -->
+                    <!-- //box setting -->
+                    <!-- box setting -->
+                    <!--
+                       클릭시 is-selected 추가
+                    -->
+                    <div class="pb-box-setting">
+                        <div class="pb-box-fold pb-clear">
+                            <!-- setting edit -->
+                            <div class="pb-setting-edit">
+                                <div class="pb-edit-label">Upload Location</div>
+                                <div class="pb-form-edit">
+                                    <input type="text" class="pb-component-input">
+                                </div>
+                            </div>
+                            <!-- //setting edit -->
 
-                    <!-- warning -->
+                            <a href="javascript:" class="pb-btn-setting">
+                                Advanced setting
+                            </a>
+                        </div>
+                        <!-- setting sub -->
+                        <div class="pb-setting-sub pb-clear">
+                            <!-- setting edit -->
+                            <div class="pb-setting-edit">
+                                <div class="pb-edit-label">Column delimiter</div>
+                                <div class="pb-form-edit">
+                                    <input type="text" class="pb-component-input">
+                                </div>
+                            </div>
+                            <!-- //setting edit -->
+                            <!-- setting edit -->
+                            <div class="pb-setting-edit">
+                                <div class="pb-edit-label">Manual Column count</div>
+                                <div class="pb-form-edit">
+                                    <input type="text" class="pb-component-input">
+                                </div>
+                            </div>
+                            <!-- //setting edit -->
+                        </div>
+                        <!-- //setting sub -->
+                    </div>
+                    <!-- //box setting -->
                     <div class="ddp-box-synch type-error" [ngStyle]="{'display': previewErrorMsg != ''?'':'none'}">
                         <div class="ddp-txt-synch">
                             <em class="ddp-icon-info"></em>
                             {{previewErrorMsg}}
                         </div>
                     </div>
-                    <!-- //warning 에러항목을 확인하세요-->
-
                 </div>
+                <!--//upload -->
+
+
             </div>
+
+            <!-- import -->
+            <!--<div class="ddp-pop-contents">-->
+
+                <!--<div class="ddp-box-popupcontents ddp-wrap-file-create type-info">-->
+                    <!--&lt;!&ndash; create file &ndash;&gt;-->
+                    <!--<div class="ddp-ui-create-file">-->
+                        <!--&lt;!&ndash; list file &ndash;&gt;-->
+                        <!--<div class="ddp-list-create-file">-->
+                            <!--<ul class="ddp-list-file-name" >-->
+
+                                <!--<ng-container *ngFor="let file of datasetFiles; let i = index">-->
+                                    <!--<li [ngClass]="{'ddp-selected':currDSIndex===i && file.fileFormat !== fileFormat.EXCEL}"  >-->
+
+
+                                        <!--&lt;!&ndash; NOT EXCEL &ndash;&gt;-->
+                                        <!--<ng-container *ngIf="file.fileFormat !== fileFormat.EXCEL">-->
+                                            <!--&lt;!&ndash; checkbox &ndash;&gt;-->
+                                            <!--<div class="ddp-wrap-checkbox" (click)="selectFile($event,i)">-->
+                                                <!--<label class="ddp-label-checkbox" (click)="checkGroup($event, i)">-->
+                                                    <!--<input type="checkbox" [checked]="file.selected">-->
+                                                    <!--<i class="ddp-icon-checkbox"></i>-->
+                                                <!--</label>-->
+                                                <!--<span class="ddp-txt-checkbox">-->
+                        <!--<span class="ddp-txt-subname">{{file.fileExtension}}-->
+                          <!--<em class="ddp-icon-error2" [ngStyle]="{'display': file.error?'':'none'}"></em>-->
+                        <!--</span>-->
+                        <!--<span class="ddp-txt-filename">{{file.fileName}}.</span>-->
+                      <!--</span>-->
+                                            <!--</div>-->
+                                            <!--&lt;!&ndash; //checkbox &ndash;&gt;-->
+                                        <!--</ng-container>-->
+                                        <!--&lt;!&ndash; // NOT EXCEL &ndash;&gt;-->
+
+
+                                        <!--&lt;!&ndash; EXCEL &ndash;&gt;-->
+                                        <!--<ng-container *ngIf="file.fileFormat === fileFormat.EXCEL">-->
+                                            <!--&lt;!&ndash; checkbox &ndash;&gt;-->
+                                            <!--<div class="ddp-wrap-checkbox" (click)="selectFile($event,i)">-->
+                                                <!--<label class="ddp-label-checkbox" (click)="checkGroup($event, i)">-->
+                                                    <!--<input type="checkbox" [checked]="file.selected">-->
+                                                    <!--<i class="ddp-icon-checkbox"></i>-->
+                                                <!--</label>-->
+                                                <!--<span class="ddp-txt-checkbox">-->
+                        <!--<span class="ddp-txt-subname">{{file.fileExtension}}</span>-->
+                        <!--<span class="ddp-txt-filename">{{file.fileName}}.</span>-->
+                      <!--</span>-->
+                                            <!--</div>-->
+                                            <!--&lt;!&ndash; //checkbox &ndash;&gt;-->
+                                            <!--&lt;!&ndash; sub &ndash;&gt;-->
+                                            <!--<ul class="ddp-list-sub-file"  *ngFor="let item of file.sheetInfo; let j = index">-->
+                                                <!--<li [ngClass]="{'ddp-selected':currSheetIndex===j && currDSIndex===i}">-->
+                                                    <!--&lt;!&ndash; checkbox &ndash;&gt;-->
+                                                    <!--<div class="ddp-wrap-checkbox" (click)="selectSheet($event, i, item.sheetName, j)">-->
+                                                        <!--<label class="ddp-label-checkbox" (click)="checkSheet($event, i, j)">-->
+                                                            <!--<input type="checkbox" [checked]="item.selected">-->
+                                                            <!--<i class="ddp-icon-checkbox"></i>-->
+                                                        <!--</label>-->
+                                                        <!--<span class="ddp-txt-checkbox">-->
+                            <!--<span class="ddp-txt-subname"></span>-->
+                            <!--<span class="ddp-txt-filename">{{item.sheetName}}</span>-->
+                          <!--</span>-->
+                                                    <!--</div>-->
+                                                    <!--&lt;!&ndash; //checkbox &ndash;&gt;-->
+                                                <!--</li>-->
+
+                                            <!--</ul>-->
+                                            <!--&lt;!&ndash; sub &ndash;&gt;-->
+                                        <!--</ng-container>-->
+                                        <!--&lt;!&ndash; EXCEL &ndash;&gt;-->
+
+                                    <!--</li>-->
+                                <!--</ng-container>-->
+
+                            <!--</ul>-->
+                        <!--</div>-->
+                        <!--&lt;!&ndash; //list file &ndash;&gt;-->
+
+                        <!--&lt;!&ndash; detail &ndash;&gt;-->
+                        <!--<div class="ddp-wrap-create-detail ">-->
+                            <!--<div class="ddp-ui-create-detail">-->
+                                <!--<div class="ddp-wrap-grid-option">-->
+                                    <!--&lt;!&ndash; total &ndash;&gt;-->
+                                    <!--<div class="ddp-data-total">-->
+                    <!--<span class="ddp-txt-data">-->
+                      <!--<span class="ddp-txt-num" *ngIf="(currDetail.columns)">{{currDetail.columns}}</span> Column(s)-->
+                    <!--</span>-->
+                                    <!--</div>-->
+
+                                    <!--<div class="ddp-data-name">-->
+                                        <!--<em class="ddp-icon-files">-->
+                                            <!--<svg-icon-component [name]="currDetail.fileFormat" [isBlackAndWhite]="true"></svg-icon-component>-->
+                                        <!--</em>-->
+                                        <!--{{currDetail.detailName}}-->
+                                    <!--</div>-->
+                                <!--</div>-->
+
+                                <!--&lt;!&ndash; 그리드 영역 &ndash;&gt;-->
+                                <!--<div class="ddp-wrap-grid"  [ngStyle]="getGridStyle()">-->
+                                    <!--<div class="ddp-ui-empty" *ngIf="clearGrid">{{'msg.dp.ui.no.preview' | translate}}</div>-->
+                                    <!--<div grid-component style="width:100%; height:100%;" [hidden]="clearGrid" ></div>-->
+                                <!--</div>-->
+                                <!--&lt;!&ndash; //그리드 영역 &ndash;&gt;-->
+
+                                <!--<div class="ddp-wrap-column-option" [ngStyle]="{'display': isJSON?'none':''}">-->
+
+                                    <!--<div class="ddp-wrap-fold " [ngClass]="{'ddp-selected':settingFoldFlag}" >-->
+                                        <!--<a href="javascript:" class="ddp-fold-link" (click)="settingFold()">{{'msg.dp.btn.advanced.settings' | translate}}</a>-->
+                                        <!--<div class="ddp-fold-det">-->
+                                            <!--&lt;!&ndash; edit &ndash;&gt;-->
+                                            <!--<div class="ddp-wrap-edit3 ddp-type ddp-error" [ngStyle]="{'display': !isCSV?'none':''}">-->
+                                                <!--<label class="ddp-label-type">{{'msg.dp.th.col.delimiter' | translate}}</label>-->
+                                                <!--&lt;!&ndash; edit option &ndash;&gt;-->
+                                                <!--<div class="ddp-ui-edit-option ddp-type">-->
+
+                                                    <!--&lt;!&ndash; apply &ndash;&gt;-->
+                                                    <!--<div class="ddp-input-apply ddp-edit" [ngClass]="{'ddp-disabled': !isCSV}">-->
+                                                        <!--<input type="text" placeholder="{{'msg.dp.th.col.delimiter.ph' | translate}}"-->
+                                                               <!--class="ddp-input-txt" [(ngModel)]="currDelimiter"-->
+                                                               <!--(keydown)="keyDownEvent($event, 'delimiter')">-->
+                                                        <!--<em class="ddp-icon-apply" (click)="changeDelimiter()"></em>-->
+                                                    <!--</div>-->
+                                                    <!--&lt;!&ndash; //apply &ndash;&gt;-->
+                                                    <!--<span class="ddp-data-error" [ngStyle]="{'visibility': isDelimiterRequired?'visible':'hidden'}">-->
+                          <!--{{'msg.common.ui.required' | translate}}</span>-->
+                                                <!--</div>-->
+                                                <!--&lt;!&ndash; //edit option &ndash;&gt;-->
+                                            <!--</div>-->
+                                            <!--&lt;!&ndash; //edit &ndash;&gt;-->
+                                            <!--&lt;!&ndash; edit &ndash;&gt;-->
+                                            <!--<div class="ddp-wrap-edit3 ddp-type ddp-error" [ngStyle]="{'display': isJSON?'none':''}">-->
+                                                <!--<label class="ddp-label-type">{{'msg.dp.th.col.cnt' | translate}}</label>-->
+                                                <!--&lt;!&ndash; edit option &ndash;&gt;-->
+                                                <!--<div class="ddp-ui-edit-option ddp-type">-->
+
+                                                    <!--&lt;!&ndash; apply &ndash;&gt;-->
+                                                    <!--<div class="ddp-input-apply"  [ngClass]="{'ddp-disabled': isJSON}">-->
+                                                        <!--<input type="text" placeholder="{{'msg.dp.th.col.cnt.ph' | translate}}"-->
+                                                               <!--class="ddp-input-txt" [(ngModel)]="currColumnCount"-->
+                                                               <!--(keydown)="keyDownEvent($event, 'colCnt')">-->
+                                                        <!--<em class="ddp-icon-apply" (click)="changeColumnCount()"></em>-->
+                                                    <!--</div>-->
+                                                    <!--&lt;!&ndash; //apply &ndash;&gt;-->
+                                                    <!--<span class="ddp-data-error" [ngStyle]="{'visibility': isColumnCountRequired?'visible':'hidden'}">-->
+                          <!--{{'msg.common.ui.required' | translate}}-->
+                        <!--</span>-->
+                                                <!--</div>-->
+                                                <!--&lt;!&ndash; //edit option &ndash;&gt;-->
+                                            <!--</div>-->
+                                            <!--&lt;!&ndash; //edit &ndash;&gt;-->
+                                            <!--<div style="clear: both;" ></div>-->
+                                            <!--&lt;!&ndash; edit &ndash;&gt;-->
+                                            <!--<div class="ddp-wrap-edit3 ddp-type ddp-error" [ngStyle]="{'display': !isCSV?'none':''}">-->
+                                                <!--<label class="ddp-label-type">{{'msg.dp.th.quote' | translate}}</label>-->
+                                                <!--&lt;!&ndash; edit option &ndash;&gt;-->
+                                                <!--<div class="ddp-ui-edit-option ddp-type">-->
+
+                                                    <!--&lt;!&ndash; apply &ndash;&gt;-->
+                                                    <!--<div class="ddp-input-apply ddp-edit" [ngClass]="{'ddp-disabled': !isCSV}">-->
+                                                        <!--<input type="text" placeholder="{{'msg.dp.th.quote.ph' | translate}}"-->
+                                                               <!--class="ddp-input-txt" [(ngModel)]="currQuote"-->
+                                                               <!--(keydown)="keyDownEvent($event, 'quoteChar')">-->
+                                                        <!--<em class="ddp-icon-apply" (click)="changeQuote()"></em>-->
+                                                    <!--</div>-->
+                                                    <!--&lt;!&ndash; //apply &ndash;&gt;-->
+                                                <!--</div>-->
+                                                <!--&lt;!&ndash; //edit option &ndash;&gt;-->
+                                            <!--</div>-->
+                                            <!--&lt;!&ndash; //edit &ndash;&gt;-->
+                                        <!--</div>-->
+                                    <!--</div>-->
+
+                                <!--</div>-->
+                            <!--</div>-->
+
+                        <!--</div>-->
+                        <!--&lt;!&ndash; //detail &ndash;&gt;-->
+
+
+                    <!--</div>-->
+                    <!--&lt;!&ndash; //create file &ndash;&gt;-->
+
+                    <!--&lt;!&ndash; warning &ndash;&gt;-->
+                    <!--<div class="ddp-box-synch type-error" [ngStyle]="{'display': previewErrorMsg != ''?'':'none'}">-->
+                        <!--<div class="ddp-txt-synch">-->
+                            <!--<em class="ddp-icon-info"></em>-->
+                            <!--{{previewErrorMsg}}-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <!--&lt;!&ndash; //warning 에러항목을 확인하세요&ndash;&gt;-->
+
+                <!--</div>-->
+            <!--</div>-->
             <!-- //import  -->
 
         </div>
         <!-- //contents -->
+
         <!-- bottom -->
-        <div class="pb-popup-bottom">
-            <a (click)="goPre('');" class="pb-component-btn type-bg">PREV</a>
-            <a (click)="close();" class="pb-component-btn type-line">CANCEL</a>
-            <a (click)="next();" class="pb-component-btn type-line">NEXT</a>
+        <div class="pb-popup-bottom ">
+            <a href="javascript:" (click)="goPre();" class="pb-component-btn-pop type-line">PREV</a>
+            <a href="javascript:" (click)="close();" class="pb-component-btn-pop type-line">CANCEL</a>
+            <a href="javascript:" (click)="next();" class="pb-component-btn-pop type-bg">NEXT</a>
         </div>
+        <!--<div class="pb-popup-bottom">-->
+            <!--<a (click)="goPre('');" class="pb-component-btn type-bg">PREV</a>-->
+            <!--<a (click)="close();" class="pb-component-btn type-line">CANCEL</a>-->
+            <!--<a (click)="next();" class="pb-component-btn type-line">NEXT</a>-->
+        <!--</div>-->
         <!-- //bottom -->
     </div>
     <!-- //box popup -->

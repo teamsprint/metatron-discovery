@@ -368,3 +368,7 @@ ul.ddp-list-popup li.ddp-sub:hover .ddp-wrap-popup2 {display:block;}
 	버튼 Selected 시 margin 변경
 **************************************************************/
 .pb-wrap-box-rule.is-selected {margin-left:17px;}
+/**************************************************************
+	min width
+**************************************************************/
+.pb-wrap-connect .pb-wrap-upload{min-width:800px;}
