@@ -21,8 +21,10 @@
         </div>
         <div class="pb-login-buttons">
             <div class="pb-form-login">
-                <input type="text" class="pb-input-login" placeholder="id">
-                <input type="password" class="pb-input-login" placeholder="password">
+                <input type="text" class="pb-input-login" placeholder="id"
+                       [(ngModel)]="user.username" >
+                <input type="password" class="pb-input-login" placeholder="password"
+                       [(ngModel)]="user.password" (keyup)="$event.keyCode == 13 ? login() : null;">
             </div>
             <a href="javascript:" class="pb-btn-login-bg">Welcome to Metatron Station <em class="pb-icon-view"></em></a>
             <a href="javascript:" class="pb-btn-login-line"  (click)="login()">Sign-in</a>

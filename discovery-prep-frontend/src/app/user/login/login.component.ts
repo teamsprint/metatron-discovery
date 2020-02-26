@@ -94,9 +94,6 @@ export class LoginComponent extends AbstractComponent implements OnInit, OnDestr
       this.forwardURL = params['forwardURL'] || 'NONE';
     });
 
-    this.user.username = 'admin';
-    this.user.password = 'admin';
-
     const id = this.cookieService.get(CookieConstant.KEY.SAVE_USER_ID);
 
     if (id) {
@@ -180,6 +177,22 @@ export class LoginComponent extends AbstractComponent implements OnInit, OnDestr
         } else {
           this.cookieService.delete(CookieConstant.KEY.SAVE_USER_ID, '/');
         }
+
+        // 유저 권한 조회
+        this.permissionService.getPermissions('SYSTEM').then((permission) => {
+          if (permission && 0 < permission.length) {
+            this.cookieService.set(CookieConstant.KEY.PERMISSION, permission.join('=='), 0, '/');
+
+            // 페이지 이동
+            if (this.forwardURL !== 'NONE') {
+              this.router.navigate([this.forwardURL]).then();
+            } else {
+              this.router.navigate(['/']).then();
+            }
+          } else {
+            this.router.navigate(['/']).then();
+          }
+        });
 
       } else {
         this._logout();
