@@ -5,8 +5,59 @@
  *************************************************************************/
 .pb-img-file {display:inline-block;background:url(../../images/img_file.png) no-repeat;}
 .pb-img-file.type-xls { width:22px; height:20px;}
+.pb-img-file.type-xlsx { width:22px; height:20px; background-position:0 -21px;}
+.pb-img-file.type-txt { width:22px; height:20px; background-position:0 -42px;}
+.pb-img-file.type-csv { width:22px; height:20px; background-position:0 -63px;}
+.pb-img-file.type-json { width:22px; height:20px; background-position:0 -84px;}
+.pb-img-file.type-xml { width:22px; height:20px; background-position:0 -105px;}
+.pb-img-file.type-file { width:16px; height:20px; background-position:0 -126px;}
+
+.pb-img-dataset {display:inline-block; background:url(../../images/img_dataset_type.png) no-repeat;}
+.pb-img-dataset.type-mysql {width:23px; height:24px;}
+.pb-img-dataset.type-tibero {width:18px; height:22px; background-position:left -24px;}
+.pb-img-dataset.type-hive {width:23px; height:22px;background-position:left -47px;}
+.pb-img-dataset.type-oracle {width:20px; height:20px;background-position:left -70px;}
+.pb-img-dataset.type-phoenix {width:16px; height:22px;background-position:left -91px;}
+.pb-img-dataset.type-post {width:20px; height:22px;background-position:left -114px;}
+.pb-img-dataset.type-presto {width:20px; height:18px;background-position:left -137px;}
+.pb-img-dataset.type-druid {width:20px; height:16px;background-position:left -156px;}
+.pb-img-dataset.type-rds {width:20px; height:22px;background-position:left -173px;}
+.pb-img-dataset.type-mssql {width:21px; height:24px;background-position:left -196px;}
+.pb-img-dataset.type-custom {width:20px; height:22px;background-position:left -221px;}
 
 
+.pb-img-dataset2 {display:inline-block; background:url(../../images/img_dataset_type2.png) no-repeat;}
+.pb-img-dataset2.type-db {width:28px; height:33px;}
+.pb-img-dataset2.type-tibero {width:31px; height:38px; background-position:left -34px;}
+.pb-img-dataset2.type-mysql {width:40px; height:38px; background-position:left -75px;}
+.pb-img-dataset2.type-hive {width:40px; height:40px; background-position:left -114px;}
+.pb-img-dataset2.type-oracle {width:36px; height:36px; background-position:left -155px;}
+.pb-img-dataset2.type-phoenix {width:26px; height:39px; background-position:left -192px;}
+.pb-img-dataset2.type-post {width:40px; height:39px; background-position:left -231px;}
+.pb-img-dataset2.type-presto {width:35px; height:30px; background-position:left -271px;}
+.pb-img-dataset2.type-druid {width:35px; height:27px; background-position:left -302px;}
+.pb-img-dataset2.type-rds {width:34px; height:38px; background-position:left -330px;}
+.pb-img-dataset2.type-custom {width:34px; height:36px; background-position:left -369px;}
 
+
+.pb-img-dataset3 {display:inline-block; background:url(../../images/img_dataset_type3.png) no-repeat;}
+.pb-img-dataset3.type-db {width:16px; height:19px;}
+.pb-img-dataset3.type-tibero {width:18px; height:22px; background-position:left -20px;}
+.pb-img-dataset3.type-mysql {width:23px; height:23px; background-position:left -43px;}
+.pb-img-dataset3.type-hive {width:22px; height:22px; background-position:left -67px;}
+.pb-img-dataset3.type-oracle {width:20px; height:20px; background-position:left -90px;}
+.pb-img-dataset3.type-phoenix {width:16px; height:24px; background-position:left -111px;}
+.pb-img-dataset3.type-post {width:20px; height:22px; background-position:left -135px;}
+.pb-img-dataset3.type-presto {width:20px; height:18px; background-position:left -158px;}
+.pb-img-dataset3.type-druid {width:20px; height:16px; background-position:left -177px;}
+.pb-img-dataset3.type-rds {width:20px; height:22px; background-position:left -194px;}
+.pb-img-dataset3.type-custom {width:20px; height:22px; background-position:left -217px;}
+.pb-img-dataset3.type-mssql {width:21px; height:24px; background-position:left -240px;}
+
+.pb-img-state {display:inline-block; background:url(../../images/img_state.png) no-repeat;}
+.pb-img-state.type-inprogress {width:40px; height:39px;}
+.pb-img-state.type-error {width:37px; height:35px; background-position:left -40px;}
+.pb-img-state.type-success {width:40px; height:39px; background-position:left -76px;}
+.pb-img-state.type-inprogress2 {width:40px; height:39px;background-position:left -116px;}
 
 

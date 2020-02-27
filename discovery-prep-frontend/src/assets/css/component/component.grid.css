@@ -26,7 +26,8 @@ em.pb-icon-array {display:inline-block; position:relative; top:-1px; width:19px;
 em.pb-icon-array:before{display:inline-block; content:''; position:absolute; width:7px; height:9px;top:5px; left:50%; margin-left:-4px;background:url(../../images/icon_array.png) no-repeat; cursor: pointer;}
 em.pb-icon-array.type-asc:before {background-position:-16px top;}
 em.pb-icon-array.type-des:before {background-position:-8px top;}
-table.pb-table-grid tr td {padding:6px 17px; min-width:175px; color:#000; font-size:13px; border-left:1px solid rgba(144,150,156,0.25);border-right:1px solid rgba(144,150,156,0.25); border-bottom:1px solid #fff; }
+
+table.pb-table-grid tr td {padding:6px 17px; min-width:175px; color:#000; font-size:13px; border-left:1px solid rgba(144,150,156,0.25);border-right:1px solid rgba(144,150,156,0.25); border-bottom:1px solid #fff; background-color:#fff; }
 table.pb-table-grid tr:last-of-type td {border-bottom:1px solid rgba(144,150,156,0.25);}
 table.pb-table-grid tr:nth-child(2n) td { background-color: rgba(246, 246, 247, 0.5);}
 table.pb-table-grid tr td .pb-area-graph {height:90px;}
@@ -34,5 +35,18 @@ table.pb-table-grid tr td.pb-type-bg {background-color:#e6f7ff;}
 table.pb-table-grid tr td.pb-type-bg2 {background-color:#fff8d8;}
 table.pb-table-grid tr td.pb-type-bg3 {background-color:#ffe9e9;}
 
-
-
+/***********************************************************************
+     Compontent : component table
+ *************************************************************************/
+table.pb-component-table tr th {position:relative; padding:10px 15px;background-color:#eef3f6; font-size:14px; color:#5f737e; font-weight:600; text-align:left; border-bottom:1px solid #eee;}
+table.pb-component-table tr th em.pb-icon-array {position:relative; top:2px; margin:-5px 0 0 0; }
+table.pb-component-table tr td {padding:12px 15px; border-bottom:1px solid #eee; color:#222; font-size:14px;}
+table.pb-component-table tr td input {font-size:14px;}
+table.pb-component-table tr td textarea {font-size:14px;}
+table.pb-component-table tr td label .pb-txt-radio,
+table.pb-component-table tr td label .pb-txt-checkbox {font-size:14px;}
+table.pb-component-table tr th:first-of-type,
+table.pb-component-table tr td:first-of-type{padding-left:30px;}
+table.pb-component-table tr th:last-of-type,
+table.pb-component-table tr td:last-of-type{padding-right:30px;}
+table.pb-component-table tr td .pb-img-file {vertical-align:middle; margin-right:10px;}

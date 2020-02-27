@@ -17,12 +17,14 @@
 @import url('component/component.search.css');
 @import url('component/component.form.css');
 @import url('component/component.icons.css');
+@import url('component/component.tag.css');
 
 /***********************************************************************
      Page
  *************************************************************************/
 @import url('page/page.login.css');
 @import url('page/page.intro.css');
+@import url('page/page.main.css');
 @import url('page/page.rule.css');
 @import url('page/page.rulelist.css');
 @import url('page/page.recommendation.css');
@@ -35,6 +37,7 @@
  *************************************************************************/
 @import url('popup/popup.create.css');
 @import url('popup/popup.create.dataconnect.css');
+@import url('popup/popup.create.dataset.css');
 
 
 @import url('prep.private.css');

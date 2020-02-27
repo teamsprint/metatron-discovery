@@ -44,7 +44,7 @@ prep-detail, prep-dataset-detail {height:100%;}
 .pb-ui-graph2 .ddp-box-gridarea .ddp-ui-gridbody {top:35px;}
 
 /**************************************************************
-	임시-File upload
+    임시-File upload
 **************************************************************/
 .ddp-box-file-progress .ddp-file-progress .ddp-wrap-file-title {
     padding: 10px;
@@ -144,7 +144,7 @@ prep-detail, prep-dataset-detail {height:100%;}
      }
 
 /**************************************************************
-	뭔지모르곘음
+    뭔지모르곘음
 **************************************************************/
 .slick-headerrow-columns {border-top:1px solid rgba(144,150,156,0.25);}
 .slick-headerrow-column.ui-state-default {border-right:1px solid rgba(144,150,156,0.25);}
@@ -158,7 +158,7 @@ prep-detail, prep-dataset-detail {height:100%;}
 **************************************************************/
 em[class*="ddp-icon-"] {font-size:0px; vertical-align: middle;}
 /**************************************************************
-	value type
+    value type
 **************************************************************/
 em.ddp-icon-type-calen,
 em.ddp-icon-type-ab,
@@ -359,16 +359,12 @@ ul.ddp-list-popup li.ddp-sub:hover {background-color:#f6f6f7;}
 ul.ddp-list-popup li.ddp-sub:hover .ddp-wrap-popup2 {display:block;}
 
 /**************************************************************
-	툴팁
+    툴팁
 **************************************************************/
 .ddp-ui-tooltip-info {display:none; position:absolute;top:-7px; left:17px; min-width:15px; padding:5px; color:#fff; font-size:12px; white-space:nowrap; border-radius:3px;background-color:#4e5255; z-index:1;}
 .ddp-ui-tooltip-info em.ddp-icon-view-top {display:inline-block; position:absolute; top:-6px; left:50%; width:4px; height:8px; margin-left:-4px; background:url(../images/prepbot/icon_tagview.png) no-repeat; transform:rotate(90deg);}
 
 /**************************************************************
-	버튼 Selected 시 margin 변경
+    버튼 Selected 시 margin 변경
 **************************************************************/
 .pb-wrap-box-rule.is-selected {margin-left:17px;}
-/**************************************************************
-	min width
-**************************************************************/
-.pb-wrap-connect .pb-wrap-upload{min-width:800px;}

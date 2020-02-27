@@ -3,10 +3,11 @@
 /***********************************************************************
      Compontent : button
  *************************************************************************/
-.pb-component-btn {display:inline-block; min-width:83px; height:30px; padding:6px 10px; border-radius:3px; font-size:14px; font-weight:600; text-align:center;}
+.pb-component-btn {display:inline-block; min-width:83px; height:30px; padding:5px 10px; border-radius:3px; font-size:14px; font-weight:600; text-align:center;}
 .pb-component-btn:hover {background-color:#f1f1ee;}
 .pb-component-btn.type-bg { color:#fff; background-color:#f77115;border:1px solid #f77115;}
 .pb-component-btn.type-bg:hover {color:#fff; border:1px solid #dd591c; background-color:#dd591c;}
+.pb-component-btn.type-bg.tpye-normal {font-weight:normal;}
 .pb-component-btn.type-bg2 {}
 .pb-component-btn.type-line {border:1px solid #a3a3a3; color:#000;}
 .pb-component-btn.type-dark {background-color:#71706d; color:#fff;}
@@ -17,6 +18,7 @@
 .pb-component-btn em.pb-icon-analytics {width:27px; height:20px;}
 .pb-component-btn em.pb-icon-add{width:13px; height:13px; background-position:left -20px;}
 .pb-component-btn em.pb-icon-add-r{width:14px; height:13px; position:relative; top:-1px; background-position:left -49px;}
+.pb-component-btn.type-bg em.pb-icon-add-r {background-position:left -89px;}
 .pb-component-btn em.pb-icon-refresh {width:11px; height:12px; position:relative; top:-1px; background-position:left -75px;}
 .pb-component-btn em.pb-icon-dictionary {width:14px; height:14px; background-position:left -34px;}
 .pb-component-btn em.pb-icon-move {width:13px; height:11px; background-position:left -63px;}
@@ -63,5 +65,13 @@
 .pb-component-tab-btn li.is-selected .pb-icon-grid:before {background-position-x:-12px;}
 .pb-component-tab-btn li.is-selected .pb-icon-list:before {background-position-x:-13px;}
 .pb-component-tab-btn li.is-selected a {background-color:#71706d}
+
+/***********************************************************************
+     Compontent : tab button
+ *************************************************************************/
+.pb-component-btn-valid {display:inline-block; padding:7px 12px;border-radius:2px; font-size:14px; color:#fff; background-color:#a09e9b;}
+.pb-component-btn-valid:hover {background-color:#71706d; color:#fff;}
+.pb-form-valid .pb-txt-valid {display:inline-block; padding:7px 0 0 9px; color:#14933d; font-size:16px;}
+.pb-form-valid .pb-txt-valid.type-invalid {color:#ff465c;}
 
 

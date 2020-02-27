@@ -104,5 +104,6 @@
 .pb-box-popup .pb-ui-step .pb-txt-step.is-selected + .pb-txt-step + .pb-txt-step {border: solid 1px #737373; background-color:#fff; color:#737373;}
 .pb-box-popup .pb-popup-top {padding:24px 39px 24px 39px; color:#000; font-size:19px; font-weight:600;border-bottom:1px solid #d0d3d3;}
 .pb-box-popup .pb-popup-contents {display:flex; flex-direction:column;flex:auto; overflow:auto;}
+.pb-box-popup .pb-popup-contents .pb-popup-contents-in {padding:27px 40px 0 40px; height:100%;}
 .pb-box-popup .pb-popup-bottom {padding:20px 0; text-align:center;}
 .pb-box-popup .pb-popup-bottom .pb-component-btn-pop {margin:0 4px;}

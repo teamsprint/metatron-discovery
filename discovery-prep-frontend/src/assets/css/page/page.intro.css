@@ -21,7 +21,7 @@
 .pb-intro-menu .pb-ui-menu [class*="pb-menu-"] .pb-icon-manage-data {top:33px;margin-left:-26px;width:52px; height:50px; background-position:left -141px;}
 
 .pb-intro-setting {height:56px; background-color:#7591ab;}
-.pb-intro-setting-in {max-width:1580px; margin:0 auto;}
+.pb-intro-setting-in {max-width:1440px; margin:0 auto; padding:0 60px;}
 .pb-intro-setting .pb-set-left {float:left; padding:11px 0;}
 .pb-intro-setting .pb-set-right {float:right;}
 .pb-intro-setting .pb-label-set {float:left; padding:10px 15px 0 0; color:#fff; font-size:18px;}
@@ -46,7 +46,7 @@
 .pb-intro-setting .pb-wrap-search input::placeholder {color:#fff;}
 
 .pb-intro-contents {flex:auto; height:100%; overflow:auto; text-align:center;}
-.pb-intro-contents-in {display:inline-block; max-width:1580px;margin-left:-11px; padding:29px 0 0 0;text-align:left;}
+.pb-intro-contents-in {display:inline-block; margin-left:-11px; padding:29px 0 0 0;text-align:left;}
 .pb-intro-contents .pb-wrap-box {float:left; padding-left:11px; width:25%;min-width:330px;}
 .pb-box-intro {width:100%; margin-bottom:13px;border-radius:5px; border:1px solid #d8d6d4; background-color:#fff;box-shadow: 2px 2px 5px 0px rgba(99,91,82,0.15);}
 .pb-box-intro .pb-data-num [class*="pb-icon-data"] {display:inline-block; margin-right:6px; background:url(../../images/icon_box_intro.png) no-repeat; vertical-align:middle;}

@@ -29,3 +29,11 @@
 
 .pb-box-dataflow.type-box .pb-box-table {float:right;width:75%; height:160px;}
 .pb-box-dataflow.type-box .pb-table-data {float:left;width:25%}
+.pb-box-dataflow-empty {display:flex; flex-direction: column; justify-content:center; align-items: center; height:100%;}
+.pb-box-dataflow-empty .pb-img-dataflow {display:inline-block; width:206px; height:162px; background:url(../../images/img_dataflow.png) no-repeat;}
+.pb-box-dataflow-empty .pb-txt-title {padding:25px 0 0 0; font-size:30px; font-weight:600; color:#a3a3a3;}
+.pb-box-dataflow-empty .pb-txt-det {font-size:13px; color:#a3a3a3;}
+.pb-box-dataflow-empty .pb-component-btn {margin-top:21px;}
+
+
+

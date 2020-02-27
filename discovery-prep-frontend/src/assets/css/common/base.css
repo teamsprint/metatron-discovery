@@ -157,7 +157,7 @@ textarea {resize:none;}
 input,select,textarea {outline:none; box-shadow:none;}
 button {cursor:pointer;}
 button:focus {outline:none;}
-
+input::placeholder {color:#a3a3a3;}
 /*******************************************************************************
 	col
 *******************************************************************************/

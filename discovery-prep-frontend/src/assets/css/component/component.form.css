@@ -16,7 +16,10 @@
 .pb-form-selectbox .pb-select-popup .pb-list-selectbox li.is-selected a {padding-right:30px; color:#f37135;}
 .pb-form-selectbox .pb-select-popup .pb-list-selectbox li.is-selected a:after {display:inline-block; width:12px; height:11px; position:absolute; top:50%; right:13px; margin-top:-6px;background:url(../../images/icon_selectbox.png) no-repeat; background-position:left -15px; content:'';}
 
-
+/***********************************************************************
+     Compontent : error
+ **********************************************************************/
+.pb-form-error {padding:1px 0 0 0; display:block; color:#ff465c; font-size:13px;}
 /***********************************************************************
      Compontent : input
  *************************************************************************/
@@ -39,7 +42,9 @@
 .pb-compomnent-checkbox input:checked + i {background-position:left -68px;}
 .pb-compomnent-checkbox .pb-txt-checkbox {color:#222; font-size:16px;}
 .pb-compomnent-checkbox input:disabled + i + .pb-txt-checkbox {color:#dedede;}
-.pb-compomnent-checkbox input:disabled:checked + i + .pb-txt-checkbox {color:dedede;}
+.pb-compomnent-checkbox.type-font-s .pb-txt-checkbox {font-size:14px;}
+.pb-compomnent-checkbox.type-font-s i {top:0;}
+
 
 /***********************************************************************
      Compontent : radio
@@ -54,7 +59,7 @@
 .pb-compomnent-radio input:checked + i {background-position:left -68px;}
 .pb-compomnent-radio .pb-txt-radio {color:#222; font-size:16px;}
 .pb-compomnent-radio input:disabled + i + .pb-txt-radio{color:#dedede;}
-.pb-compomnent-radio input:disabled:checked + i + .pb-txt-radio {color:dedede;}
+
 
 /***********************************************************************
      Compontent : upload
@@ -65,6 +70,18 @@
 .pb-component-upload .pb-ui-bar span {position:absolute; top:0; left:0; bottom:0; background-color:#f37135; border-radius:4px;}
 .pb-component-upload .pb-component-btn {margin-left:2px;font-size:13px; border:1px solid #b6b9c2; min-width:61px;}
 
+/***********************************************************************
+     Compontent : create
+ *************************************************************************/
 
+.pb-form-create {margin-bottom:40px;}
+.pb-form-create:first-of-type {margin-top:0;}
+.pb-form-create .pb-create-label {padding-bottom:9px; color:#4b515b; font-weight:600; font-size:16px;}
+.pb-form-create ul.pb-list-create-check {margin:-5px 0;}
+.pb-form-create ul.pb-list-create-check li {padding:5px 0;}
+.pb-form-create ul.pb-list-create-check li .pb-compomnent-radio .pb-txt-radio .pb-txt-sub {margin-left:6px; color:#a3a3a3;}
 
-
+/***********************************************************************
+     Compontent : textarea auto
+ *************************************************************************/
+.pb-component-textarea-auto {display:block; height:36px; padding:7px 10px; width:100%; border:1px solid #dedede; font-size:16px;}

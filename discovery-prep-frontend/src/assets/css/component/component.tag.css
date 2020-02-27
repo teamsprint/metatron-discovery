@@ -1,0 +1,18 @@
+@charset "utf-8";
+
+/***********************************************************************
+     Compontent : Tag
+ *************************************************************************/
+.pb-component-tag {display:inline-block; padding:2px 6px 1px 6px; border-radius: 2px; font-size:13px;}
+.pb-component-tag.type-imported {border: solid 1px #528aa9; background-color: #ebf3f5; color:#276384; }
+.pb-component-tag.type-new {color:#fff; font-weight:bold; background-color:#f76515; border:1px solid #f76515;}
+.pb-component-tag.type-wrangled {color:#506917; border:1px solid #9ab65a; background-color:#f0f3e9;}
+
+
+
+
+
+
+
+
+
