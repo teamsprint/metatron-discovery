@@ -17,10 +17,21 @@ import {AbstractComponent} from '../../../common/component/abstract.component';
 import {ActivatedRoute} from "@angular/router";
 import {PrepPopConnectionNameComponent} from "./prep-pop-connection-name.component";
 import {PopupService} from "../../../common/service/popup.service";
+import {StorageService} from "../../../data-storage/service/storage.service";
+
+import {TranslateService} from "@ngx-translate/core";
+import {AuthenticationType, Dataconnection, InputMandatory, JdbcDialect, Scope} from "../../../domain/dataconnection/dataconnection";
+import {isNullOrUndefined} from "util";
+
+export enum ConnectionValid {
+    ENABLE_CONNECTION = 0,
+    DISABLE_CONNECTION = 1,
+    REQUIRE_CONNECTION_CHECK = 2
+}
 
 @Component({
-  selector: 'prep-pop-connection-info',
-  templateUrl: './prep-pop-connection-info.component.html'
+    selector: 'prep-pop-connection-info',
+    templateUrl: './prep-pop-connection-info.component.html'
 })
 export class PrepPopConnectionInfoComponent extends AbstractComponent {
 
@@ -32,15 +43,59 @@ export class PrepPopConnectionInfoComponent extends AbstractComponent {
     public stepChange : EventEmitter<string> = new EventEmitter();
     @Input()
     public connectionInfo: any;
- @Output()
+    @Output()
     public connectionInfoChange : EventEmitter<any> = new EventEmitter();
- @Output()
+    @Output()
     public createClose : EventEmitter<void> = new EventEmitter();
 
     @ViewChild(PrepPopConnectionNameComponent)
     public prepPopDataflowNameComponent : PrepPopConnectionNameComponent;
 
     public connectionType = '';
+
+
+
+    @Input()
+    public readonly isShowDialogGuide: boolean;
+    @Input()
+    public readonly isDisableChangeConnectionInfo: boolean;
+    @Input()
+    public readonly isDisableChangeConnectionType: boolean;
+
+    public readonly connectionTypeList: JdbcDialect[] = StorageService.connectionTypeList;
+    public selectedConnectionType: JdbcDialect;
+
+    // enum
+    public readonly AUTHENTICATION_TYPE = AuthenticationType;
+    private _translateService: TranslateService;
+    public authenticationTypeList: {label: string, value: AuthenticationType}[];
+    public selectedAuthenticationType;
+
+
+    // flag
+    public connectionValidation: ConnectionValid;
+    public isUsedUrl: boolean;
+    // input error
+    public isUrlError: boolean;
+    public isHostnameError: boolean;
+    public isPortError: boolean;
+    public isDatabaseError: boolean;
+    public isSidError: boolean;
+    public isCatalogError: boolean;
+    public isUsernameError: boolean;
+    public isPasswordError: boolean;
+
+    public hostname: string;
+    public port: number;
+    public url: string;
+    public database: string;
+    public sid: string;
+    public catalog: string;
+    public username: string;
+    public password: string;
+    public properties: {key: string, value: string, keyError?: boolean, valueError?: boolean, keyValidMessage?: string, valueValidMessage?: string}[];
+
+
 
     // 생성자
     constructor(protected elementRef: ElementRef,
@@ -49,6 +104,14 @@ export class PrepPopConnectionInfoComponent extends AbstractComponent {
                 private activatedRoute: ActivatedRoute) {
 
         super(elementRef, injector);
+        this._translateService = injector.get(TranslateService);
+
+        // set authentication type list
+        this.authenticationTypeList = [
+            { label: this._translateService.instant('msg.storage.li.connect.always'), value: AuthenticationType.MANUAL },
+            { label: this._translateService.instant('msg.storage.li.connect.account'), value: AuthenticationType.USERINFO },
+            { label: this._translateService.instant('msg.storage.li.connect.id'), value: AuthenticationType.DIALOG }
+        ];
     }
 
     /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
@@ -70,6 +133,21 @@ export class PrepPopConnectionInfoComponent extends AbstractComponent {
 
     public init() {
         this.isShow = true;
+        this.selectedAuthenticationType = this.authenticationTypeList[0];
+        // if (isNullOrUndefined(connection)) {
+        //     this.properties = [];
+        //     this.selectedAuthenticationType = this.authenticationTypeList[0];
+        //     this.selectedConnectionType = this.connectionTypeList[0];
+        // } else {
+        //     this.setConnectionInput(connection);
+        // }
+        this.properties = [];
+        this.selectedAuthenticationType = this.authenticationTypeList[0];
+        this.selectedConnectionType = this.connectionTypeList[0];
+
+        console.info('connectionTypeList', this.connectionTypeList);
+
+
     }
 
     public goto(step) {
@@ -81,9 +159,123 @@ export class PrepPopConnectionInfoComponent extends AbstractComponent {
         this.stepChange.emit( step );
     }
 
+    /**
+     * Change selected connection type
+     * @param {JdbcDialect} connectionType
+     *
+     */
+    // connectionType: JdbcDialect
+    public onChangeConnectionType(connectionTypeName: String): void {
+        let connectionType: JdbcDialect = null;
+
+        for(let i: number =0; i< this.connectionTypeList.length; i ++) {
+            if(this.connectionTypeList[i]['name']=== connectionTypeName) {
+                connectionType = this.connectionTypeList[i];
+                break;
+            }
+        }
+        if(connectionType === null) return;
+        if (!this.isDisableChangeConnectionType && connectionType.implementor !== this.selectedConnectionType.implementor) {
+            this.selectedConnectionType = connectionType;
+            // init input form
+            this._connectionInputInitialize();
+            // input error initial
+            this.inputErrorInitialize();
+            this.connectionValidInitialize();
+        }
+    }
+
+
+    /**
+     * Change use URL
+     */
+    public onChangeUseUrl(): void {
+        // console.info('onChangeUseUrl', this.connectionType);
+        if (!this.isDisableChangeConnectionInfo) {
+            this.isUsedUrl = !this.isUsedUrl;
+            // input error initial
+            this.inputErrorInitialize();
+            this.connectionValidInitialize();
+        }
+    }
+
+    /**
+     * Change selected authentication type
+     * @param authenticationType
+     */
+    public onChangeAuthenticationType(authenticationType): void {
+        if (!this.isDisableChangeConnectionInfo && this.selectedAuthenticationType.value !== authenticationType.value) {
+            this.selectedAuthenticationType = authenticationType;
+            // input error initial
+            this.inputErrorInitialize();
+            this.connectionValidInitialize();
+        }
+    }
+
+    /**
+     * Initial input error
+     */
+    public inputErrorInitialize(): void {
+        this.isUrlError = undefined;
+        this.isHostnameError = undefined;
+        this.isPortError = undefined;
+        this.isDatabaseError = undefined;
+        this.isSidError = undefined;
+        this.isCatalogError = undefined;
+        this.isUsernameError = undefined;
+        this.isPasswordError = undefined;
+    }
+    /**
+     * Initial connection valid
+     */
+    public connectionValidInitialize(): void {
+        this.connectionValidation = undefined;
+    }
+    /**
+     * Is disable SID
+     * @return {boolean}
+     */
+    public isDisableSid() {
+        return this.selectedConnectionType.inputSpec.sid === InputMandatory.NONE;
+    }
+
+    /**
+     * Is disable database
+     * @return {boolean}
+     */
+    public isDisableDatabase() {
+        return this.selectedConnectionType.inputSpec.database === InputMandatory.NONE;
+    }
+
+    /**
+     * Is disable catalog
+     * @return {boolean}
+     */
+    public isDisableCatalog() {
+        return this.selectedConnectionType.inputSpec.catalog === InputMandatory.NONE;
+    }
+
+    /**
+     * Initail connection input
+     * @private
+     */
+    private _connectionInputInitialize(): void {
+        this.selectedAuthenticationType = this.authenticationTypeList[0];
+        this.hostname = undefined;
+        this.port = undefined;
+        this.url = undefined;
+        this.database = undefined;
+        this.sid = undefined;
+        this.catalog = undefined;
+        this.username = undefined;
+        this.password = undefined;
+        this.isUsedUrl = undefined;
+    }
+
+
     public next() {
         if(this.connectionType!=='') {
-        this.goto('connection-name');
+            this.goto('connection-name');
         }
     }
     public close() {
