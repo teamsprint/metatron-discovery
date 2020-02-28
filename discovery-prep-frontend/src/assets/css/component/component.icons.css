@@ -61,4 +61,7 @@
 .pb-img-state.type-success {width:40px; height:39px; background-position:left -76px;}
 .pb-img-state.type-inprogress2 {width:40px; height:39px;background-position:left -116px;}
 
+.pb-file-type {display:inline-block; background:url(../../images/img_file.png) no-repeat;}
+.pb-file-type.type-db {width:12px; height:13px; background-position:left -147px;}
+.pb-file-type.type-dataset {width:13px; height:12px; background-position:left -161px;}
 

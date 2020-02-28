@@ -15,15 +15,15 @@
   <div class="pb-intro-menu">
     <div class="pb-ui-menu">
       <a href="javascript:" class="pb-menu-dashboard" (click)="changeMode('prep-pop-flow-create')">
-        <em class="pb-icon-dashboard"></em>
+        <em class="pb-icon-dataflow"></em>
         Create <strong>Dataflow</strong>
       </a>
       <a href="javascript:" class="pb-menu-create-data" (click)="changeMode('prep-pop-create')">
-        <em class="pb-icon-create-data"></em>
+        <em class="pb-icon-dataset"></em>
         Create <strong>Dataset</strong>
       </a>
       <a href="javascript:" class="pb-menu-manage-data" (click)="changeMode('prep-pop-connection-create')">
-        <em class="pb-icon-manage-data"></em>
+        <em class="pb-icon-dataconnection"></em>
         Create <strong>Data Connection</strong>
       </a>
     </div>
@@ -108,83 +108,111 @@
   </div>
   <!-- //intro setting -->
   <!-- intro contents -->
-  <div class="pb-intro-contents" *ngIf="viewMode == 'CARD'">
+  <div class="pb-wrap-main pb-clear" *ngIf="viewMode == 'CARD'">
     <!--<div class="pb-intro-contents-in" *ngIf="dataflows.length > 0">-->
-    <div class="pb-intro-contents-in">
-      <div class="pb-wrap-box" *ngFor="let item of dataflows; let i = index" [attr.data-index]="i" (click)="goToDfDetail(item.dfId)" style="cursor: pointer;">
-        <!-- box -->
-        <div class="pb-box-intro">
-          <span class="pb-tag-new">NEW</span>
-          <!-- data intro -->
-          <div class="pb-data-intro">
-            <div class="pb-data-det">
-              {{item.dfName}}
-            </div>
-            <div class="pb-data-day">{{'msg.comm.th.created' | translate}}</div>
-            <a href="javascript:" class="pb-icon-pin"></a>
+
+      <!-- box -->
+      <div class="pb-box-main" *ngFor="let item of dataflows; let i = index" [attr.data-index]="i" (click)="goToDfDetail(item.dfId)" style="cursor: pointer;">
+        <!-- main summary -->
+        <div class="pb-ui-main-summary">
+          <!-- tag -->
+          <div class="pb-ui-tags">
+            <span class="pb-component-tag type-new">NEW</span>
           </div>
-          <!-- //data intro -->
-          <!-- bottom -->
-          <div class="pb-data-bottom">
-            <!-- user -->
-            <div class="pb-box-user">
-              <span class="pb-data-photo">
-                  <img src="{{defaultProfileImageSrc}}" #profileImage>
-              </span>
-              {{item.createdBy.fullName}}
-            </div>
-            <!-- //user -->
-            <!-- right -->
-            <div class="pb-data-right">
-              <span class="pb-txt-data"><em class="pb-icon-dataset"></em>DATASET <strong>7</strong></span>
-              <span class="pb-txt-data"><em class="pb-icon-result"></em>RESULT<strong>7</strong></span>
-              <!--<span class="pb-data-num">-->
-                  <!--<em class="pb-icon-data1"></em>5-->
-              <!--</span>-->
-              <!--<span class="pb-data-num">-->
-                  <!--<em class="pb-icon-data2"></em>5-->
-              <!--</span>-->
-              <!--<span class="pb-data-num">-->
-                  <!--<em class="pb-icon-data3"></em>5-->
-              <!--</span>-->
-            </div>
-            <!-- //right -->
+          <!-- // tag -->
+          <div class="pb-ui-graph">
+            그래프 영역
 
           </div>
-          <!-- //bottom -->
+          <div class="pb-ui-name">
+            Dataflow - {{item.dfName}}
+          </div>
+          <div class="pb-ui-des">
+            Description Description Description Description Description
+            Description Description Description
+          </div>
+          <!-- num -->
+          <div class="pb-data-num">
+            <span class="pb-txt-num">
+                <em class="pb-file-type type-db"></em>
+                99
+            </span>
+            <span class="pb-txt-num">
+                <em class="pb-file-type type-dataset"></em>
+                99
+            </span>
+          </div>
+          <!-- //num -->
         </div>
-        <!-- //box -->
-      </div>
-      <div class="pb-wrap-box">
-        <!-- box -->
-        <div class="pb-box-intro type-warning">
-          <!-- warning -->
-          <div class="pb-intro-warning">
-            <em class="pb-icon-warning"></em>
-            <div class="pb-txt-message">
-              <div class="pb-txt-title">URGENT ALERT</div>
-              <div class="pb-txt-det">Rapid changes in line 2</div>
-            </div>
+        <!-- //main summary -->
 
-          </div>
-          <!-- //warning -->
-          <!-- data intro -->
-          <div class="pb-data-intro">
-            <div class="pb-data-det">
-              DataConnection 01 is failed to creation.
-            </div>
-            <div class="pb-data-day">JAN04  07:25 am</div>
-            <a href="javascript:" class="pb-icon-pin"></a>
-          </div>
-          <!-- //data intro -->
-
+        <!-- bottom -->
+        <div class="pb-box-bottom pb-clear">
+          <span class="pb-data-name">
+            <em class="pb-img-photo"></em>{{item.createdBy.fullName}}
+            <!--<img src="{{defaultProfileImageSrc}}" #profileImage>{{item.createdBy.fullName}}-->
+          </span>
+          <span class="pb-data-calen">
+              {{'msg.comm.th.created' | translate}}
+          </span>
         </div>
-        <!-- //box -->
+        <!-- //bottom -->
       </div>
+      <!-- //box -->
 
-    </div>
+
+
+
+
+      <!--<div class="pb-wrap-box" *ngFor="let item of dataflows; let i = index" [attr.data-index]="i" (click)="goToDfDetail(item.dfId)" style="cursor: pointer;">-->
+        <!--&lt;!&ndash; box &ndash;&gt;-->
+        <!--<div class="pb-box-intro">-->
+          <!--<span class="pb-tag-new">NEW</span>-->
+          <!--&lt;!&ndash; data intro &ndash;&gt;-->
+          <!--<div class="pb-data-intro">-->
+            <!--<div class="pb-data-det">-->
+              <!--{{item.dfName}}-->
+            <!--</div>-->
+            <!--<div class="pb-data-day">{{'msg.comm.th.created' | translate}}</div>-->
+            <!--<a href="javascript:" class="pb-icon-pin"></a>-->
+          <!--</div>-->
+          <!--&lt;!&ndash; //data intro &ndash;&gt;-->
+          <!--&lt;!&ndash; bottom &ndash;&gt;-->
+          <!--<div class="pb-data-bottom">-->
+            <!--&lt;!&ndash; user &ndash;&gt;-->
+            <!--<div class="pb-box-user">-->
+              <!--<span class="pb-data-photo">-->
+                  <!--<img src="{{defaultProfileImageSrc}}" #profileImage>-->
+              <!--</span>-->
+              <!--{{item.createdBy.fullName}}-->
+            <!--</div>-->
+            <!--&lt;!&ndash; //user &ndash;&gt;-->
+            <!--&lt;!&ndash; right &ndash;&gt;-->
+            <!--<div class="pb-data-right">-->
+              <!--<span class="pb-txt-data"><em class="pb-icon-dataset"></em>DATASET <strong>7</strong></span>-->
+              <!--<span class="pb-txt-data"><em class="pb-icon-result"></em>RESULT<strong>7</strong></span>-->
+              <!--&lt;!&ndash;<span class="pb-data-num">&ndash;&gt;-->
+                  <!--&lt;!&ndash;<em class="pb-icon-data1"></em>5&ndash;&gt;-->
+              <!--&lt;!&ndash;</span>&ndash;&gt;-->
+              <!--&lt;!&ndash;<span class="pb-data-num">&ndash;&gt;-->
+                  <!--&lt;!&ndash;<em class="pb-icon-data2"></em>5&ndash;&gt;-->
+              <!--&lt;!&ndash;</span>&ndash;&gt;-->
+              <!--&lt;!&ndash;<span class="pb-data-num">&ndash;&gt;-->
+                  <!--&lt;!&ndash;<em class="pb-icon-data3"></em>5&ndash;&gt;-->
+              <!--&lt;!&ndash;</span>&ndash;&gt;-->
+            <!--</div>-->
+            <!--&lt;!&ndash; //right &ndash;&gt;-->
+
+          <!--</div>-->
+          <!--&lt;!&ndash; //bottom &ndash;&gt;-->
+        <!--</div>-->
+        <!--&lt;!&ndash; //box &ndash;&gt;-->
+      <!--</div>-->
+
+
 
   </div>
+
   <!-- //list -->
   <div class="pb-intro-contents" *ngIf="viewMode == 'LIST'">
     <div class="pb-intro-contents-in">

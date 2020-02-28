@@ -9,16 +9,17 @@
 .pb-intro-menu .pb-ui-menu [class*="pb-menu-"] {display:inline-block; position:relative; float:left; min-width:200px; padding:81px 0 0 0;color:#fff; font-size:19px; }
 .pb-intro-menu .pb-ui-menu [class*="pb-menu-"]:hover {text-shadow: 6px 6px 0px #03164c;}
 .pb-intro-menu .pb-ui-menu [class*="pb-menu-"].is-disabled {opacity:0.34; cursor:no-drop;}
-.pb-intro-menu .pb-ui-menu [class*="pb-menu-"]:last-of-type {min-width:288px; margin-left:25px;}
-.pb-intro-menu .pb-ui-menu [class*="pb-menu-"]:last-of-type:before {position:absolute; top:34px; left:0; height:64px; border-left:1px solid #718da8; content:'';}
 .pb-intro-menu .pb-ui-menu [class*="pb-menu-"] strong {font-weight:bold;}
 
-.pb-intro-menu .pb-ui-menu [class*="pb-menu-"] [class*="pb-icon-"] {display:inline-block; position:absolute; top:0; left:50%; background:url(../../images/icon_intro.png) no-repeat;}
-.pb-intro-menu .pb-ui-menu [class*="pb-menu-"] .pb-icon-create-data {top:33px; margin-left:-25px;width:51px; height:48px; }
-.pb-intro-menu .pb-ui-menu [class*="pb-menu-"]:hover .pb-icon-dashboard {background-position-x:-58px;}
-.pb-intro-menu .pb-ui-menu [class*="pb-menu-"] .pb-icon-dashboard {top:35px; margin-left:-29px;width:57px; height:44px; background-position:left -49px;}
-.pb-intro-menu .pb-ui-menu [class*="pb-menu-"] .pb-icon-report {top:35px;margin-left:-29px;width:57px; height:48px; background-position:left -93px;}
-.pb-intro-menu .pb-ui-menu [class*="pb-menu-"] .pb-icon-manage-data {top:33px;margin-left:-26px;width:52px; height:50px; background-position:left -141px;}
+.pb-intro-menu .pb-ui-menu [class*="pb-menu-"] [class*="pb-icon-"] {display:inline-block; position:absolute; top:32px; left:50%; background:url(../../images/icon_main.png) no-repeat;}
+
+.pb-intro-menu .pb-ui-menu [class*="pb-menu-"] .pb-icon-dataflow { margin-left:-25px;width:51px; height:41px;}
+.pb-intro-menu .pb-ui-menu [class*="pb-menu-"] .pb-icon-dataset {width:43px; height:40px; margin-left:-22px; background-position:left -42px;}
+.pb-intro-menu .pb-ui-menu [class*="pb-menu-"] .pb-icon-dataconnection {width:50px; height:40px; margin-left:-25px; background-position:left -83px;}
+.pb-intro-menu .pb-ui-menu [class*="pb-menu-"]:hover .pb-icon-dataflow {width:55px; height:47px; background-position:left -125px}
+.pb-intro-menu .pb-ui-menu [class*="pb-menu-"]:hover .pb-icon-dataset {width:49px; height:46px; background-position:left -173px;}
+.pb-intro-menu .pb-ui-menu [class*="pb-menu-"]:hover .pb-icon-dataconnection {width:57px; height:47px; background-position:left -221px;}
+
 
 .pb-intro-setting {height:56px; background-color:#7591ab;}
 .pb-intro-setting-in {max-width:1440px; margin:0 auto; padding:0 60px;}
