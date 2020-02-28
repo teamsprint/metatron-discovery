@@ -18,8 +18,6 @@ import { PrepbotGuard } from './prepbot.guard';
 import { PrepbotService } from './service/prepbot.service';
 import { RouterModule, Routes } from '@angular/router';
 import { CommonModule } from '../common/common.module';
-import { FileModule } from '../common/file.module';
-import { SplitPaneModule } from 'ng2-split-pane/lib/ng2-split-pane';
 import {DatasetComponent} from "./dataset/dataset.component";
 import {CreateSnapshotPopup} from "./component/create-snapshot-popup.component";
 import {DatasetSummaryComponent} from "./component/dataset-summary.component";
@@ -84,8 +82,6 @@ import {PrepSelectBoxCustomComponent} from "./util/prep-select-box-custom.compon
 import {AddDatasetDataflowComponent} from "./dataset/add-dataset-dataflow.component";
 import {PrepListComponent} from "./prep/prep-list.component";
 import {EditorComponent} from "./component/editor.component";
-
-
 import {DatasetService} from './prep/service/dataset.service';
 import {DataflowService} from './prep/service/dataflow.service';
 import {DataflowModelService} from "./prep/service/dataflow.model.service";
@@ -103,9 +99,11 @@ import {PrepPopDatasetListComponent} from "./prep/create-dataflow/prep-pop-datas
 import {PrepPopConnectionCreateComponent} from "./prep/create-connection/prep-pop-connection-create.component";
 import {PrepPopConnectionInfoComponent} from "./prep/create-connection/prep-pop-connection-info.component";
 import {PrepPopConnectionNameComponent} from "./prep/create-connection/prep-pop-connection-name.component";
-import {SnapshotService} from "./prep/service/snapshot.service";
 import {PrConnectionService} from "./prep/service/connection.service"
 import {DataconnectionService} from "../dataconnection/service/dataconnection.service";
+import {PrepRnbRuleComponent} from "./prep/component/prep-rnb-rule.component";
+import {PrepRnbRuleListComponent} from "./prep/component/prep-rnb-rule-list.component";
+import {PrepRnbRecommendComponent} from "./prep/component/prep-rnb-recommend.component";
 
 const dataPreparationRoutes: Routes = [
 { path: '', component: PrepListComponent },
@@ -127,18 +125,18 @@ const dataPreparationRoutes: Routes = [
     RouterModule.forChild(dataPreparationRoutes)
   ],
   declarations: [
-  EditorComponent,
+    EditorComponent,
     PrepbotComponent,
     RuleListComponent,
-   RuleContextMenuComponent ,
-   MultipleRenamePopupComponent,
-   ExtendInputFormulaComponent,
-   EditDataflowRule2Component,
-   EditRuleGridComponent,
-   ScrollLoadingGridComponent,
-   RuleJoinPopupComponent,
-   RuleUnionPopupComponent,
-   UnionAddDatasetsComponent,
+    RuleContextMenuComponent ,
+    MultipleRenamePopupComponent,
+    ExtendInputFormulaComponent,
+    EditDataflowRule2Component,
+    EditRuleGridComponent,
+    ScrollLoadingGridComponent,
+    RuleJoinPopupComponent,
+    RuleUnionPopupComponent,
+    UnionAddDatasetsComponent,
     EditRuleAggregateComponent,
     EditRuleCountpatternComponent,
     EditRuleDeleteComponent,
@@ -206,19 +204,22 @@ const dataPreparationRoutes: Routes = [
     PrepPopConnectionCreateComponent,
     PrepPopConnectionInfoComponent,
     PrepPopConnectionNameComponent,
-    CreateSnapshotPopup
+    CreateSnapshotPopup,
+    PrepRnbRuleComponent,
+    PrepRnbRuleListComponent,
+    PrepRnbRecommendComponent
   ],
   providers: [
-      PrepPopCreateComponent,
-      PrepPopFlowCreateComponent,
-      PrepPopConnectionCreateComponent,
-      PrepbotService,
-      PrConnectionService,
-      DataflowService,
-      DatasetService,
-      PrepbotGuard,
-      DataflowModelService,
-      DataconnectionService
+    PrepPopCreateComponent,
+    PrepPopFlowCreateComponent,
+    PrepPopConnectionCreateComponent,
+    PrepbotService,
+    PrConnectionService,
+    DataflowService,
+    DatasetService,
+    PrepbotGuard,
+    DataflowModelService,
+    DataconnectionService
   ],
   exports: [
   ]

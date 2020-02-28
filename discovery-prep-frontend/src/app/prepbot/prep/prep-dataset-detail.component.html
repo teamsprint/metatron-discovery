@@ -176,7 +176,8 @@
                 </div>
                 <!-- //top -->
                 <div class="pb-ui-graph2">
-                    <edit-rule-grid></edit-rule-grid>
+                    <edit-rule-grid (selectHeader)="setRuleInfoFromGridHeader($event)"
+                                    (contextMenuItemInfo)="onContextMenuInfo($event)" [isAggregationIncluded]="isAggregationIncluded"></edit-rule-grid>
                 </div>
 
 
@@ -192,64 +193,36 @@
     -->
     <div class="pb-rnb-menu is-selected">
         <a href="javascript:" class="pb-btn-menu-close"></a>
-        <ul class="pb-list-rnb">
+        <ul class="pb-list-rnb type-list">
             <li>
                 <a href="javascript:">
-                    <em class="pb-icon-analysis"></em>
-                    <span class="pb-txt-rnb">Rule</span>
+                    <span class="pb-txt-rnb">RULE</span>
                 </a>
-                <!-- list -->
-                <!-- <ul class="pb-list-rnb-sub ">
-                    <li>
-                        <a href="javascript:">
-                            <em class="pb-icon-top-menu5"></em>
-                        </a>
-                    </li>
-                    <li class="is-disabled">
-                        <a href="javascript:">
-                            <em class="pb-icon-top-menu6"></em>
-                        </a>
-                    </li>
-                    <li class="is-disabled">
-                        <a href="javascript:">
-                            <em class="pb-icon-top-menu7"></em>
-                        </a>
-                    </li>
-                    <li class="is-disabled">
-                        <a href="javascript:">
-                            <em class="pb-icon-top-menu8"></em>
-                        </a>
-                    </li>
-                </ul> -->
-                <!-- //list -->
-                <!-- sub -->
-                <div class="pb-rnb-sub ">
-                    <!-- part -->
-                    <div class="pb-part-sub">
-                        <div class="pb-sub-title">Rule List</div>
-                        <!-- form option -->
-                        <div class="pb-form-option">
-                            <label class="pb-label-form">Substring column A and B</label>
-                            <label class="pb-label-form">Substring column A and B</label>
-                            <label class="pb-label-form">Substring column A and B</label>
-                            <label class="pb-label-form">Substring column A and B</label>
-                        </div>
-                        <!-- //form option -->
-                    </div>
-                    <!-- //part -->
-                </div>
-                <!-- //sub -->
+                <prep-rnb-rule></prep-rnb-rule>
+            </li>
+            <li class="is-selected">
+                <a href="javascript:">
+                    <span class="pb-txt-rnb">Rule list</span>
+                </a>
+                <prep-rnb-rule-list
+                        [ruleList]="ruleList"
+                        (jumpEvent)="jump($event)"
+                        (deleteEvent)="deleteRule($event)"
+                        (editEvent)="setEditData($event)">
+                </prep-rnb-rule-list>
             </li>
             <li>
                 <a href="javascript:">
-                    <em class="pb-icon-algorithm"></em>
-                    <span class="pb-txt-rnb">Recommendation</span>
+                    <span class="pb-txt-rnb">RECOMMENDATION</span>
                 </a>
+                <prep-rnb-recommend></prep-rnb-recommend>
             </li>
         </ul>
         <!-- bottom -->
         <div class="pb-btn-bottom">
-            <a href="javascript:" class="pb-component-btn type-dark">DATA MANAGER</a>
+            <a href="javascript:" class="pb-component-btn type-dark">
+                <em class="pb-icon-dictionary"></em>Rule Dictionary
+            </a>
         </div>
         <!-- //bottom -->
     </div>
