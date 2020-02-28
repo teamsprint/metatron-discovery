@@ -4,7 +4,7 @@
      Compontent : grid
  *************************************************************************/
 table.pb-table-grid {width:100%; border-collapse: collapse; border-bottom:1px solid rgba(144,150,156,0.25);}
-table.pb-table-grid.type-icons tr:first-of-type td {border-bottom:1px solid rgba(144,150,156,0.25);}
+
 table.pb-table-grid.type-icons tr th {padding:13px 20px 13px 30px;}
 table.pb-table-grid tr th {position:Relative; min-width:175px; padding:13px 17px; background-color:#edf4f8; text-align:left; font-weight:normal; border:1px solid rgba(144,150,156,0.25); border-top:3px solid #426895;}
 table.pb-table-grid tr th.pb-type-bg {background-color:#e6f7ff; border-top:3px solid #1374d5;}
@@ -39,6 +39,8 @@ table.pb-table-grid tr td.pb-type-bg3 {background-color:#ffe9e9;}
      Compontent : component table
  *************************************************************************/
 table.pb-component-table tr th {position:relative; padding:10px 15px;background-color:#eef3f6; font-size:14px; color:#5f737e; font-weight:600; text-align:left; border-bottom:1px solid #eee;}
+table.pb-component-table tr th.pb-txt-center,
+table.pb-component-table tr td.pb-txt-center {padding:0 15px !important;}
 table.pb-component-table tr th em.pb-icon-array {position:relative; top:2px; margin:-5px 0 0 0; }
 table.pb-component-table tr td {padding:12px 15px; border-bottom:1px solid #eee; color:#222; font-size:14px;}
 table.pb-component-table tr td input {font-size:14px;}

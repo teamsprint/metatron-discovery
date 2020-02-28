@@ -15,34 +15,86 @@
         </div>
         <!-- //top -->
         <!-- contents -->
-        <div class="pb-popup-contents pb-pop-create">
-            <!-- option -->
-            <div class="pb-ui-data-option ">
-                <!-- form -->
-                <div class="pb-form-option pb-clear">
-                    <label class="pb-label-title">Name</label>
-                    <input type="text" class="pb-input-type" maxlength="50" placeholder="Please enter a name"  name="dfName" (input)="onSetIntoDataflow($event.target)">
-                    <span class="pb-ui-error"></span>
+        <div class="pb-popup-contents">
+            <div class="pb-wrap-connect type-connect">
+                <!-- box file detail -->
+                <!--<div class="pb-box-file-detail">-->
+                    <!--<table class="pb-table-det">-->
+                        <!--<colgroup>-->
+                            <!--<col width="125px">-->
+                            <!--<col width="*">-->
+                        <!--</colgroup>-->
+                        <!--<tbody>-->
+                        <!--<tr>-->
+                            <!--<th>File</th>-->
+                            <!--<td>-->
+                                <!--<span class="pb-data-file-name">-->
+                                    <!--<em class="pb-img-file type-xls"></em>-->
+                                    <!--Sheet-->
+                                <!--</span>-->
+                            <!--</td>-->
+                        <!--</tr>-->
+                        <!--<tr>-->
+                            <!--<th>Sheet</th>-->
+                            <!--<td>-->
+                                <!--Sheet1-->
+                            <!--</td>-->
+                        <!--</tr>-->
+                        <!--</tbody>-->
+                    <!--</table>-->
+                <!--</div>-->
+                <!-- //box file detail -->
+
+                <!-- create -->
+                <div class="pb-ui-create">
+                    <!-- form create -->
+                    <div class="pb-form-create">
+                        <div class="pb-create-label">Name</div>
+                        <div class="pb-form-edit">
+                            <input type="text" class="pb-component-input"  maxlength="50" placeholder="Please enter a name" (input)="onSetIntoDataflow($event.target)">
+                        </div>
+                    </div>
+                    <!-- //form create -->
+                    <!-- form create -->
+                    <div class="pb-form-create">
+                        <div class="pb-create-label">Description</div>
+                        <div class="pb-form-edit">
+                            <input type="text" class="pb-component-input" maxlength="150" placeholder="Please enter a description" name="dfDesc" (input)="onSetIntoDataflow($event.target)">
+                            <span class="pb-ui-error"></span>
+                        </div>
+                    </div>
+                    <!-- //form create -->
                 </div>
-                <div class="pb-form-option pb-clear">
-                    <label class="pb-label-title">Description</label>
-                    <input class="pb-input-type pb-input-long" maxlength="150" type="text" placeholder="Please enter a description" name="dfDesc" (input)="onSetIntoDataflow($event.target)">
-                    <span class="pb-ui-error"></span>
-                </div>
-                <!-- //form -->
+                <!-- //create -->
+
             </div>
-            <!-- //option -->
+
+            <!--&lt;!&ndash; option &ndash;&gt;-->
+            <!--<div class="pb-ui-data-option ">-->
+                <!--&lt;!&ndash; form &ndash;&gt;-->
+                <!--<div class="pb-form-option pb-clear">-->
+                    <!--<label class="pb-label-title">Name</label>-->
+                    <!--<input type="text" class="pb-input-type" maxlength="50" placeholder="Please enter a name"  name="dfName" (input)="onSetIntoDataflow($event.target)">-->
+                    <!--<span class="pb-ui-error"></span>-->
+                <!--</div>-->
+                <!--<div class="pb-form-option pb-clear">-->
+                    <!--<label class="pb-label-title">Description</label>-->
+                    <!--<input class="pb-input-type pb-input-long" maxlength="150" type="text" placeholder="Please enter a description" name="dfDesc" (input)="onSetIntoDataflow($event.target)">-->
+                    <!--<span class="pb-ui-error"></span>-->
+                <!--</div>-->
+                <!--&lt;!&ndash; //form &ndash;&gt;-->
+            <!--</div>-->
+            <!--&lt;!&ndash; //option &ndash;&gt;-->
             <!-- data connect -->
 
             <!-- //data connect -->
         </div>
         <!-- //contents -->
         <!-- bottom -->
-        <div class="pb-popup-bottom">
-            <a href="javascript:" class="pb-component-btn type-line" (click)="prev()">{{'msg.comm.btn.previous' | translate}}</a>
-            <a href="javascript:" class="pb-component-btn type-line" (click)="close()">CANCEL</a>
-            <!-- disabled 시 ddp-disabled 추가 -->
-            <a href="javascript:" class="pb-component-btn type-bg" (click)="complete()" [ngClass]="{'ddp-disabled': isBtnDisabled() }">{{'msg.comm.btn.done2' | translate}}</a>
+        <div class="pb-popup-bottom ">
+            <a href="javascript:" class="pb-component-btn-pop type-line" (click)="prev()">{{'msg.comm.btn.previous' | translate}}</a>
+            <a href="javascript:" class="pb-component-btn-pop type-line" (click)="close()">CANCEL</a>
+            <a href="javascript:" class="pb-component-btn-pop type-bg" (click)="complete()" [ngClass]="{'pb-disabled': isBtnDisabled() }">{{'msg.comm.btn.done2' | translate}}</a>
         </div>
         <!-- //bottom -->
     </div>
