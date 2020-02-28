@@ -15,7 +15,11 @@
 
 import {Component, ElementRef, EventEmitter, Injector, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import {AbstractComponent} from '../../../common/component/abstract.component';
+import {ConnectionParam} from "../../../data-storage/service/data-connection-create.service";
+import {DataconnectionService} from '../../../dataconnection/service/dataconnection.service';
 import {PrepPopConnectionInfoComponent} from "./prep-pop-connection-info.component";
+import {PrepPopConnectionNameComponent} from "./prep-pop-connection-name.component";
+import {Alert} from '../../../common/util/alert.util';
 
 @Component({
   selector: 'prep-pop-connection-create',
@@ -41,20 +45,26 @@ export class PrepPopConnectionCreateComponent extends AbstractComponent implemen
     @Output()
     public createComplete: EventEmitter<void> = new EventEmitter();
 
-   @Input()
+
+    @Input()
     public step: string = '';
 
- @ViewChild(PrepPopConnectionInfoComponent)
-  public prepPopConnectionInfoComponent : PrepPopConnectionInfoComponent;
+    @ViewChild(PrepPopConnectionInfoComponent)
+    public prepPopConnectionInfoComponent : PrepPopConnectionInfoComponent;
+
+    @ViewChild(PrepPopConnectionNameComponent)
+    public popConnectionNameComponent : PrepPopConnectionNameComponent;
 
     public connectionInfo = {};
+    private connectionParam: ConnectionParam;
 
     /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
      | Constructor
      |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
     // 생성자
-    constructor(protected elementRef: ElementRef,
+    constructor(private connectionService: DataconnectionService,
+                protected elementRef: ElementRef,
                 protected injector: Injector) {
         super(elementRef, injector);
     }
@@ -73,7 +83,7 @@ export class PrepPopConnectionCreateComponent extends AbstractComponent implemen
     public init() {
         this.step='complete-connection-create';
         if( this.prepPopConnectionInfoComponent) {
-        this.prepPopConnectionInfoComponent.init();
+            this.prepPopConnectionInfoComponent.init();
         }
     }
 
@@ -81,9 +91,40 @@ export class PrepPopConnectionCreateComponent extends AbstractComponent implemen
         super.ngOnDestroy();
     }
 
-    public stepChange(step) {
-        this.step = step;
+    public stepChange(step : string) {
+        this.connectionParam = null;
+
+        if(step=='connection-name') {
+            if (this.prepPopConnectionInfoComponent.isEmptyConnectionValidation()) {
+                this.prepPopConnectionInfoComponent.setRequireCheckConnection();
+                return;
+            }
+
+            if (this.prepPopConnectionInfoComponent.isEnableConnection()) {
+                this.connectionParam = this._getCreateConnectionParams();
+                this.step = step;
+                // console.info('this.connectionParam', this.connectionParam);
+            }
+        }else{
+            this.step = step;
+        }
     }
+
+    /**
+     * Get create connection params
+     * @return {{implementor: ImplementorType}}
+     * @private
+     */
+    public _getCreateConnectionParams() {
+        let result = this.prepPopConnectionInfoComponent.getConnectionParams(true);
+        result['type'] = 'JDBC';
+        // result['name'] = this.connectionName.trim();
+        result['published'] = true;
+
+        return result;
+    }
+
+
 
     public connectionInfoChange(connectionInfo) {
         this.connectionInfo = connectionInfo;
@@ -92,20 +133,45 @@ export class PrepPopConnectionCreateComponent extends AbstractComponent implemen
      | Public Method
      |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
-    /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-     | Protected Method
-     |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
+
 
     // 닫기
     public createClose() {
+        this.connectionParam = null;
         this.closeEvent.emit('complete-connection-create');
     }
 
     // 완료
     public createCompleteEvent() {
-        this.createComplete.emit();
+        // this.createComplete.emit();
+        const connectionName = this.popConnectionNameComponent.getConnectionName();
+        if(connectionName == null || connectionName == undefined || connectionName.replace(/ /g,'') == '') return;
+        this.connectionParam['name'] = connectionName;
+
+
+        // loading show
+        this.loadingShow();
+        // create connection
+        this.connectionService.createConnection(this.connectionParam)
+            .then((result) => {
+                // alert
+                Alert.success(this.connectionParam['name'] + this.translateService.instant('msg.storage.alert.dconn.create.success'));
+                // loading hide
+                this.loadingHide();
+                // close
+                this.createClose();
+            })
+            .catch(error => this.commonExceptionHandler(error));
+
     }
 
+
+
+
+
+    /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+    | Protected Method
+    |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
 
     /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=

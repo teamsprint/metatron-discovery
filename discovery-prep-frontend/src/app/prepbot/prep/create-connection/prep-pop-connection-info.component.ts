@@ -18,10 +18,15 @@ import {ActivatedRoute} from "@angular/router";
 import {PrepPopConnectionNameComponent} from "./prep-pop-connection-name.component";
 import {PopupService} from "../../../common/service/popup.service";
 import {StorageService} from "../../../data-storage/service/storage.service";
+import {DataconnectionService} from "../../../dataconnection/service/dataconnection.service";
+import {ConnectionParam} from "../../../data-storage/service/data-connection-create.service";
+
 
 import {TranslateService} from "@ngx-translate/core";
-import {AuthenticationType, Dataconnection, InputMandatory, JdbcDialect, Scope} from "../../../domain/dataconnection/dataconnection";
+import {AuthenticationType, InputMandatory, JdbcDialect} from "../../../domain/dataconnection/dataconnection";
+import {StringUtil} from "../../../common/util/string.util";
 import {isNullOrUndefined} from "util";
+import * as _ from 'lodash';
 
 export enum ConnectionValid {
     ENABLE_CONNECTION = 0,
@@ -61,6 +66,14 @@ export class PrepPopConnectionInfoComponent extends AbstractComponent {
     public readonly isDisableChangeConnectionInfo: boolean;
     @Input()
     public readonly isDisableChangeConnectionType: boolean;
+    @Output()
+    public readonly createdName: EventEmitter<string> = new EventEmitter();
+
+    @Input()
+    public readonly isUsedNameInitial: boolean;
+    @Input()
+    public readonly connectionName: string;
+
 
     public readonly connectionTypeList: JdbcDialect[] = StorageService.connectionTypeList;
     public selectedConnectionType: JdbcDialect;
@@ -100,6 +113,7 @@ export class PrepPopConnectionInfoComponent extends AbstractComponent {
     // 생성자
     constructor(protected elementRef: ElementRef,
                 private popupService: PopupService,
+                private connectionService: DataconnectionService,
                 protected injector: Injector,
                 private activatedRoute: ActivatedRoute) {
 
@@ -144,20 +158,16 @@ export class PrepPopConnectionInfoComponent extends AbstractComponent {
         this.properties = [];
         this.selectedAuthenticationType = this.authenticationTypeList[0];
         this.selectedConnectionType = this.connectionTypeList[0];
-
-        console.info('connectionTypeList', this.connectionTypeList);
-
-
     }
 
-    public goto(step) {
-        if(step==='connection-name') {
-            this.connectionInfo['connectionType'] = this.connectionType;
-            this.connectionInfoChange.emit(this.connectionInfo);
-        }
-        this.step = step;
-        this.stepChange.emit( step );
-    }
+    // public goto(step) {
+    //     // if(step==='connection-name') {
+    //     //     this.connectionInfo['connectionType'] = this.connectionType;
+    //     //     this.connectionInfoChange.emit(this.connectionInfo);
+    //     // }
+    //     // this.step = step;
+    //     this.stepChange.emit( step );
+    // }
 
     /**
      * Change selected connection type
@@ -165,7 +175,7 @@ export class PrepPopConnectionInfoComponent extends AbstractComponent {
      *
      */
     // connectionType: JdbcDialect
-    public onChangeConnectionType(connectionTypeName: String): void {
+    public onChangeConnectionType(connectionTypeName: string): void {
         let connectionType: JdbcDialect = null;
 
         for(let i: number =0; i< this.connectionTypeList.length; i ++) {
@@ -231,6 +241,47 @@ export class PrepPopConnectionInfoComponent extends AbstractComponent {
     public connectionValidInitialize(): void {
         this.connectionValidation = undefined;
     }
+
+    /**
+     * Check valid connection
+     */
+    public checkConnection(): void {
+        // init connection validation
+        this.connectionValidation = undefined;
+        // check valid connection input
+        if (this.isValidConnectionInput()) {
+            // loading show
+            this.loadingShow();
+            // check connection
+            this.connectionService.checkConnection({connection: this.getConnectionParams()})
+                .then((result: {connected: boolean}) => {
+                    // set connection validation result
+                    this.connectionValidation = result.connected ? ConnectionValid.ENABLE_CONNECTION : ConnectionValid.DISABLE_CONNECTION;
+                    // scroll into connection invalid input
+                    this.scrollIntoConnectionInvalidInput();
+                    // loading hide
+                    this.loadingHide();
+                    // if used name initial
+                    if (this.isUsedNameInitial && !this.connectionName) {
+                        this.createdName.emit(this.isUsedUrl ? `${this.selectedConnectionType.name}-${this.url}` : `${this.selectedConnectionType.name}-${this.hostname}-${this.port}`);
+                    }
+                })
+                .catch((error) => {
+                    // set connection result fail
+                    this.connectionValidation = ConnectionValid.DISABLE_CONNECTION;
+                    // scroll into connection invalid input
+                    this.scrollIntoConnectionInvalidInput();
+                    // loading hide
+                    this.commonExceptionHandler(error);
+                });
+        } else {
+            // scroll into connection invalid input
+            this.scrollIntoConnectionInvalidInput();
+        }
+    }
+
+
+
     /**
      * Is disable SID
      * @return {boolean}
@@ -255,6 +306,261 @@ export class PrepPopConnectionInfoComponent extends AbstractComponent {
         return this.selectedConnectionType.inputSpec.catalog === InputMandatory.NONE;
     }
 
+
+    /**
+     * Is disable authentication type
+     * @return {boolean}
+     */
+    public isDisableAuthenticationType() {
+        return this.selectedConnectionType.inputSpec.authenticationType === InputMandatory.NONE;
+    }
+
+    /**
+     * Is disable username
+     * @return {boolean}
+     */
+    public isDisableUsername() {
+        return this.selectedConnectionType.inputSpec.username === InputMandatory.NONE;
+    }
+    /**
+     * Is disable password
+     * @return {boolean}
+     */
+    public isDisablePassword() {
+        return this.selectedConnectionType.inputSpec.password === InputMandatory.NONE;
+    }
+
+
+    /**
+     * Is valid connection input
+     * @return {boolean}
+     */
+    public isValidConnectionInput(): boolean {
+        let result: boolean = true;
+        // not use URL
+        if (!this.isUsedUrl) {
+            // check HOST
+            if (StringUtil.isEmpty(this.hostname)) {
+                this.isHostnameError = true;
+                result = false;
+            }
+            // check PORT
+            if (!this.port) {
+                this.isPortError = true;
+                result = false;
+            }
+            // check SID
+            if (!this.isDisableSid() && StringUtil.isEmpty(this.sid)) {
+                this.isSidError = true;
+                result = false;
+            } else if (!this.isDisableDatabase() && StringUtil.isEmpty(this.database)) {
+                this.isDatabaseError = true;
+                result = false;
+            } else if (!this.isDisableCatalog() && StringUtil.isEmpty(this.catalog)) {
+                this.isCatalogError = true;
+                result = false;
+            }
+        } else if (StringUtil.isEmpty(this.url)) {  // check URL
+            this.isUrlError = true;
+            result = false;
+        }
+        // check enable authentication
+        if (!this.isDisableAuthenticationType()) {
+            // check username
+            if (!this.isDisableUsername() && this.selectedAuthenticationType.value !== AuthenticationType.USERINFO && StringUtil.isEmpty(this.username)) {
+                this.isUsernameError = true;
+                result = false;
+            }
+            // check password
+            if (!this.isDisablePassword() && this.selectedAuthenticationType.value !== AuthenticationType.USERINFO && StringUtil.isEmpty(this.password)) {
+                this.isPasswordError = true;
+                result = false;
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Is exist properties
+     * @return {boolean}
+     */
+    public isExistProperties(): boolean {
+        return this.properties && this.properties.length > 0;
+    }
+
+    /**
+     * Is valid properties
+     * @return {boolean}
+     */
+    public isValidProperties(): boolean {
+        return this.properties.reduce((acc, property) => {
+            // check key empty
+            if (StringUtil.isEmpty(property.key)) {
+                // set empty message
+                property.keyValidMessage = this.translateService.instant('msg.storage.ui.required');
+                // set error flag
+                property.keyError = true;
+                // set valid false
+                acc = false;
+                return acc;
+            }
+            // check key special characters, and korean (enable .dot)
+            else if (property.key.trim().match(/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣|\{\}\[\]\/?,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/gi)) {
+                // set duplicate message
+                property.keyValidMessage = this.translateService.instant('msg.storage.ui.custom.property.special.char.disable');
+                // set error flag
+                property.keyError = true;
+                // set valid false
+                acc = false;
+                return acc;
+            }
+            // check key duplicate
+            else if (this.properties.filter(item => item.key.trim() === property.key.trim()).length > 1) {
+                // set duplicate message
+                property.keyValidMessage = this.translateService.instant('msg.storage.ui.custom.property.duplicated');
+                // set error flag
+                property.keyError = true;
+                // set valid false
+                acc = false;
+                return acc;
+            } else {
+                return acc;
+            }
+        }, true);
+    }
+
+    /**
+     * Is show username and password input
+     */
+    public isShowUsernameAndPasswordInput(): boolean {
+        return this.selectedAuthenticationType.value !== this.AUTHENTICATION_TYPE.USERINFO;
+    }
+
+    /**
+     * Get properties (key-value object)
+     * @return {{}}
+     */
+    public getProperties() {
+        // return this.properties.reduce((acc, property) => {
+        //     acc[property.key.trim()] = _.isNil(property.value) ? '' : property.value.trim();
+        //     return acc;
+        // }, {});
+    }
+
+    /**
+     * Get converted properties
+     * @param properties
+     * @return {any[]}
+     */
+    public getConvertedProperties(properties) {
+        return Object.keys(properties).reduce((acc, key) => {
+            acc.push({key: key, value: properties[key], keyError: false, valueError: false});
+            return acc;
+        }, []);
+    }
+
+    /**
+     * Get connection params
+     * @return {ConnectionParam}
+     */
+    public getConnectionParams(isIncludeProperties?: boolean) {
+        let connectionParam: ConnectionParam = {
+            implementor: this.selectedConnectionType.implementor
+        };
+        // not use URL
+        if (!this.isUsedUrl) {
+            // HOST
+            connectionParam.hostname = this.hostname;
+            connectionParam.port = this.port;
+            if (!this.isDisableSid()) {
+                connectionParam.sid = this.sid;
+            } else if (!this.isDisableDatabase()) {
+                connectionParam.database = this.database;
+            } else if (!this.isDisableCatalog()) {
+                connectionParam.catalog = this.catalog
+            }
+        } else {  // use URL
+            connectionParam.url = this.url;
+        }
+        // check enable authentication
+        if (!this.isDisableAuthenticationType()) {
+            connectionParam.authenticationType = this.selectedAuthenticationType.value;
+            // check username
+            if (!this.isDisableUsername() && this.selectedAuthenticationType.value !== AuthenticationType.USERINFO) {
+                connectionParam.username = this.username;
+            }
+            // check password
+            if (!this.isDisablePassword() && this.selectedAuthenticationType.value !== AuthenticationType.USERINFO) {
+                connectionParam.password = this.password;
+            }
+        } else { // if disable authentication, set default type
+            connectionParam.authenticationType = this.authenticationTypeList[0].value;
+        }
+        // Properties 미사용으로 주석 처리
+        // if is exist properties and include properties
+        // if (isIncludeProperties && this.isExistProperties()) {
+        //     connectionParam.properties = this.getProperties();
+        // }
+        return connectionParam;
+    }
+
+    /**
+     * Scroll into connection invalid input
+     */
+    public scrollIntoConnectionInvalidInput(): void {
+        // if invalid HOST or PORT or URL
+        // if (this.isUrlError || this.isHostnameError || this.isPortError || (this.isCatalogError || this.isDatabaseError || this.isSidError)) {
+        //     this.HOST_PORT_ELEMENT.nativeElement.scrollIntoView();
+        // }
+        // // if invalid username or password
+        // else if (this.isShowUsernameAndPasswordInput() && (this.isUsernameError || this.isPasswordError)) {
+        //     this.USERNAME_PASS_ELEMENT.nativeElement.scrollIntoView();
+        // } else if (this.isRequireCheckConnection() || this.isDisableConnection()) {  // if require check connection
+        //     this.CHECK_ELEMENT.nativeElement.scrollIntoView();
+        // }
+    }
+
+    /**
+     * Scroll into preperties
+     */
+    public scrollIntoPropertyInvalidInput(): void {
+        // if (!this.isDisableProperties) {
+        //     // if close advanced settings
+        //     if (!this.isShowAdvancedSettings) {
+        //         // open
+        //         this.isShowAdvancedSettings = true;
+        //         this.safelyDetectChanges();
+        //     }
+        //     // scroll into invalid property
+        //     this.PROPERTIES_ELEMENT.nativeElement.scrollIntoView();
+        // }
+    }
+    /**
+     * Is enable connection
+     * @return {boolean}
+     */
+    public isEnableConnection(): boolean {
+        return this.connectionValidation === ConnectionValid.ENABLE_CONNECTION;
+    }
+
+    /**
+     * Is disable connection
+     * @return {boolean}
+     */
+    public isDisableConnection(): boolean {
+        return this.connectionValidation === ConnectionValid.DISABLE_CONNECTION;
+    }
+
+    /**
+     * Is require check connection
+     * @return {boolean}
+     */
+    public isRequireCheckConnection(): boolean {
+        return this.connectionValidation === ConnectionValid.REQUIRE_CONNECTION_CHECK;
+    }
+
+
+
     /**
      * Initail connection input
      * @private
@@ -273,11 +579,35 @@ export class PrepPopConnectionInfoComponent extends AbstractComponent {
     }
 
 
-    public next() {
-        if(this.connectionType!=='') {
-            this.goto('connection-name');
-        }
+    /**
+     * Is empty connection validation
+     * @return {boolean}
+     */
+    public isEmptyConnectionValidation(): boolean {
+        return _.isNil(this.connectionValidation);
     }
+
+    /**
+     * Set require check connection
+     */
+    public setRequireCheckConnection(): void {
+        this.connectionValidation = ConnectionValid.REQUIRE_CONNECTION_CHECK;
+    }
+
+
+    public next() {
+        this.stepChange.emit( 'connection-name' );
+        // this.goto('connection-name');
+        // if(this.connectionType!=='') {
+        //     this.goto('connection-name');
+        // }
+    }
+
+
+
+
+
+
     public close() {
         this.createClose.emit();
     }

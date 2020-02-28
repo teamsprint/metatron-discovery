@@ -6,7 +6,7 @@
         <div class="pb-ui-step">
             <span class="pb-txt-step is-selected">1</span>
             <span class="pb-txt-step">2</span>
-            <span class="pb-txt-step">3</span>
+<!--            <span class="pb-txt-step">3</span>-->
         </div>
         <!-- //step -->
         <!-- top -->
@@ -175,7 +175,7 @@
                                 <div class="pb-form-edit">
                                     <input type="text" class="pb-component-input" placeholder="{{'msg.storage.th.db_name.ph' | translate}}" [readOnly]="isDisableChangeConnectionInfo"
                                            [ngModel]="database" (ngModelChange)="database = $event; isDatabaseError = undefined; connectionValidInitialize()">
-                                    <span class="pb-form-error" *ngIf="isSidError">{{'msg.storage.ui.required' | translate}}</span>
+                                    <span class="pb-form-error" *ngIf="isDatabaseError">{{'msg.storage.ui.required' | translate}}</span>
                                 </div>
                             </div>
                             <!-- //form create -->
@@ -186,7 +186,7 @@
                                 <div class="pb-form-edit">
                                     <input type="text" class="pb-component-input" placeholder="{{'msg.storage.ui.conn.catalog.ph' | translate}}" [readOnly]="isDisableChangeConnectionInfo"
                                            [ngModel]="catalog" (ngModelChange)="catalog = $event; isCatalogError = undefined; connectionValidInitialize()">
-                                    <span class="pb-form-error" *ngIf="isSidError">{{'msg.storage.ui.required' | translate}}</span>
+                                    <span class="pb-form-error" *ngIf="isCatalogError">{{'msg.storage.ui.required' | translate}}</span>
                                 </div>
                             </div>
                             <!-- //form create -->
@@ -202,7 +202,8 @@
                             <div class="pb-form-create">
                                 <div class="pb-create-label">{{'msg.storage.th.user_name' | translate}}</div>
                                 <div class="pb-form-edit">
-                                    <input type="text" class="pb-component-input" placeholder="{{'msg.storage.th.user_name.ph' | translate}}">
+                                    <input type="text" class="pb-component-input" placeholder="{{'msg.storage.th.user_name.ph' | translate}}" [readOnly]="selectedAuthenticationType.value !== AUTHENTICATION_TYPE.DIALOG && isDisableChangeConnectionInfo"
+                                           [ngModel]="username" (ngModelChange)="username = $event; isUsernameError = undefined; connectionValidInitialize()">
                                     <span class="pb-form-error" *ngIf="isUsernameError">{{'msg.storage.ui.required' | translate}}</span>
                                 </div>
 
@@ -214,7 +215,8 @@
                             <div class="pb-form-create">
                                 <div class="pb-create-label">{{'msg.storage.th.pwd' | translate}}</div>
                                 <div class="pb-form-edit">
-                                    <input type="password" class="pb-component-input" placeholder="{{'msg.storage.th.pwd.ph' | translate}}">
+                                    <input type="password" class="pb-component-input" placeholder="{{'msg.storage.th.pwd.ph' | translate}}" [readOnly]="selectedAuthenticationType.value !== AUTHENTICATION_TYPE.DIALOG && isDisableChangeConnectionInfo"
+                                           [ngModel]="password" (ngModelChange)="password = $event; isPasswordError = undefined; connectionValidInitialize()">
                                     <span class="pb-form-error" *ngIf="isPasswordError">{{'msg.storage.ui.required' | translate}}</span>
                                 </div>
                             </div>
@@ -247,9 +249,12 @@
                         <!-- form create -->
                         <div class="pb-form-create">
                             <div class="pb-form-valid">
-                                <a href="javascirpt:" class="pb-component-btn-valid">Validation Check</a>
+                                <a href="javascirpt:;" class="pb-component-btn-valid" (click)="checkConnection()">Validation Check</a>
                                 <!--<span class="pb-txt-valid type-invalid">Invalid Connection. Please check server and account information</span>-->
                                 <!--<span class="pb-txt-valid">Valid Connection</span>-->
+                                <span class="pb-txt-valid type-invalid" *ngIf="isRequireCheckConnection()">{{'msg.storage.ui.required' | translate}}</span>
+                                <span class="pb-txt-valid type-invalid" *ngIf="isDisableConnection()"><em class="ddp-icon-error"></em>{{'msg.storage.ui.invalid.conn' | translate}}</span>
+                                <span class="pb-txt-valid" *ngIf="isEnableConnection()"><em class="ddp-icon-ok"></em>{{'msg.storage.ui.valid.conn' | translate}}</span>
                             </div>
 
                             <!--<div class="pb-form-valid">-->

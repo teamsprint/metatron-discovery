@@ -105,6 +105,7 @@ import {PrepPopConnectionInfoComponent} from "./prep/create-connection/prep-pop-
 import {PrepPopConnectionNameComponent} from "./prep/create-connection/prep-pop-connection-name.component";
 import {SnapshotService} from "./prep/service/snapshot.service";
 import {PrConnectionService} from "./prep/service/connection.service"
+import {DataconnectionService} from "../dataconnection/service/dataconnection.service";
 
 const dataPreparationRoutes: Routes = [
 { path: '', component: PrepListComponent },
@@ -208,15 +209,16 @@ const dataPreparationRoutes: Routes = [
     CreateSnapshotPopup
   ],
   providers: [
-    PrepPopCreateComponent,
-    PrepPopFlowCreateComponent,
-    PrepPopConnectionCreateComponent,
-    PrepbotService,
-    PrConnectionService,
-    DataflowService,
-    DatasetService,
-    PrepbotGuard,
-    DataflowModelService
+      PrepPopCreateComponent,
+      PrepPopFlowCreateComponent,
+      PrepPopConnectionCreateComponent,
+      PrepbotService,
+      PrConnectionService,
+      DataflowService,
+      DatasetService,
+      PrepbotGuard,
+      DataflowModelService,
+      DataconnectionService
   ],
   exports: [
   ]

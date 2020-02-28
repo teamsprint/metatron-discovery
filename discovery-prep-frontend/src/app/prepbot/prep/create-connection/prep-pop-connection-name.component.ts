@@ -19,7 +19,7 @@ FileFormat, PrDatasetHive, PrDatasetJdbc,
 RsType
 } from '../../../domain/data-preparation/pr-dataset';
 import {PopupService} from '../../../common/service/popup.service';
-import { DatasetService } from '../service/dataset.service';
+// import { DatasetService } from '../service/dataset.service';
 import { DataflowService } from '../service/dataflow.service';
 import { PrConnectionService } from '../service/connection.service';
 import {isNullOrUndefined, isUndefined} from 'util';
@@ -35,8 +35,7 @@ declare let moment;
 
 @Component({
   selector: 'prep-pop-connection-name',
-  templateUrl: './prep-pop-connection-name.component.html',
-  providers: [DatasetService]
+  templateUrl: './prep-pop-connection-name.component.html'
 })
 export class PrepPopConnectionNameComponent extends AbstractPopupComponent implements OnInit, OnDestroy  {
 
@@ -52,30 +51,35 @@ export class PrepPopConnectionNameComponent extends AbstractPopupComponent imple
   | Public Variables
   |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
-    @Input()
-    public step: string = '';
+    // @Input()
+    // public step: string = '';
     @Output()
     public stepChange : EventEmitter<string> = new EventEmitter();
 
-  @Input()
-  public isFromDatasetList: boolean = true;
+    @Input()
+    public isFromDatasetList: boolean = true;
 
-@Input()
+    @Input()
     public connectionInfo: any;
- @Output()
+    @Output()
     public connectionInfoChange : EventEmitter<any> = new EventEmitter();
- @Output()
+    @Output()
     public createClose : EventEmitter<void> = new EventEmitter();
 
     @Output()
     public createComplete: EventEmitter<void> = new EventEmitter();
 
-  public isShow = false;
+    public isShow = false;
    // name error msg show/hide
     public showNameError: boolean = false;
 
     // desc error msg show/hide
     public showDescError: boolean = false;
+
+
+    public connectionName: string;
+    public description: string;
+
 
   public prepCommonUtil = PreparationCommonUtil;
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
@@ -83,9 +87,7 @@ export class PrepPopConnectionNameComponent extends AbstractPopupComponent imple
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   | Constructor
   |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
-  constructor(private popupService: PopupService,
-                private connectionService: PrConnectionService,
-               protected elementRef: ElementRef,
+  constructor(protected elementRef: ElementRef,
               protected injector: Injector) {
     super(elementRef, injector);
   }
@@ -100,9 +102,9 @@ export class PrepPopConnectionNameComponent extends AbstractPopupComponent imple
 
   }
 
-  public ngOnDestroy() {
-    super.ngOnDestroy();
-  }
+    public ngOnDestroy() {
+      super.ngOnDestroy();
+    }
 
     public init() {
         this.isShow = true;
@@ -113,50 +115,38 @@ export class PrepPopConnectionNameComponent extends AbstractPopupComponent imple
     | Public Method
     |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
-  /** Complete */
-  public complete() {
-        this.loadingShow();
-
-        this.connectionService.createConnection(this.connectionInfo).then((result) => {
-
-        this.loadingHide();
-      console.log(result);
-              this.createComplete.emit();
-      }).catch(() => {
-        this.loadingHide();
-      });
-
-  }
-
-  /** go to previous step */
-  public prev() {
-      this.goto('complete-connection-create');
-  }
-
-
-  /**
-   * close popup
-   * */
-  public close() {
-    super.close();
-    this.createClose.emit();
-  }
-
-    public onSetIntoConnection(target) {
-        this.connectionInfo[target.name] = target.value;
+    public getConnectionName() {
+        return this.connectionName;
     }
 
-    public goto(step) {
-        this.step = step;
-        this.stepChange.emit( step );
+    /** Complete */
+    public complete() {
+      this.createComplete.emit();
     }
 
-  /**
-   * Check if next button is disabled or not
-   */
-  public isBtnDisabled() : boolean {
-    return this.showNameError || this.showDescError;
-  }
+    /** go to previous step */
+    public prev() {
+      // this.goto('complete-connection-create');
+      this.stepChange.emit( '' );
+    }
+
+
+    /**
+    * close popup
+    * */
+    public close() {
+        super.close();
+        this.createClose.emit();
+    }
+
+
+    /**
+    * Check if next button is disabled or not
+    */
+    public isBtnDisabled() : boolean {
+        return false;
+        // return this.showNameError || this.showDescError;
+    }
 
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   | Protected Method

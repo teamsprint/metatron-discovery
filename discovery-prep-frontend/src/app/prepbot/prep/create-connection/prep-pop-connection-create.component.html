@@ -1,3 +1,8 @@
-<prep-pop-connection-info *ngIf="step == '' || step == 'complete-connection-create'" [(step)]="step" [(connectionInfo)]="connectionInfo" (createClose)="createClose();"></prep-pop-connection-info>
+<prep-pop-connection-info *ngIf="step == '' || step == 'complete-connection-create'" [(connectionInfo)]="connectionInfo"
+                          (createClose)="createClose();" (stepChange)="stepChange($event)"></prep-pop-connection-info>
 
-<prep-pop-connection-name *ngIf="step=='connection-name'" [(connectionInfo)]="connectionInfo" [(step)]="step" (createClose)="createClose();"  (createComplete)="createCompleteEvent();"></prep-pop-connection-name>
+<!--(stepChange)="stepChange($event)"-->
+<!--(step)]="step"-->
+
+<prep-pop-connection-name *ngIf="step=='connection-name'" [(connectionInfo)]="connectionInfo"
+                          (createClose)="createClose();"  (stepChange)="stepChange($event)" (createComplete)="createCompleteEvent();"></prep-pop-connection-name>

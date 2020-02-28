@@ -21,12 +21,12 @@
                 <!-- form -->
                 <div class="pb-form-option pb-clear">
                     <label class="pb-label-title">Name</label>
-                    <input type="text" class="pb-input-type" maxlength="50" placeholder="Please enter a name" name="name" (input)="onSetIntoConnection($event.target)">
+                    <input type="text" class="pb-input-type" [(ngModel)]="connectionName" maxlength="50" placeholder="Please enter a name">
                     <span class="pb-ui-error"></span>
                 </div>
                 <div class="pb-form-option pb-clear">
                     <label class="pb-label-title">Description</label>
-                    <input class="pb-input-type pb-input-long" maxlength="150" type="text" placeholder="Please enter a description" name="desc" (input)="onSetIntoConnection($event.target)">
+                    <input class="pb-input-type pb-input-long" [(ngModel)]="description" maxlength="150" type="text" placeholder="Please enter a description">
                     <span class="pb-ui-error"></span>
                 </div>
                 <!-- //form -->
@@ -39,10 +39,18 @@
         <!-- //contents -->
         <!-- bottom -->
         <div class="pb-popup-bottom">
-            <a href="javascript:" class="pb-component-btn type-line" (click)="prev()">PREV</a>
-            <a href="javascript:" class="pb-component-btn type-line" (click)="close()">CANCEL</a>
+            <!--<a href="javascript:;" class="pb-component-btn-pop type-bg" (click)="close()">CANCEL</a>-->
+            <!--<a href="javascript:;" class="pb-component-btn-pop type-line" (click)="next()">NEXT</a>-->
+
+
+
+
+            <a href="javascript:" class="pb-component-btn-pop type-bg" (click)="prev()">PREV</a>
+            <a href="javascript:" class="pb-component-btn-pop type-bg" (click)="close()">CANCEL</a>
             <!-- disabled 시 ddp-disabled 추가 -->
-            <a href="javascript:" class="pb-component-btn type-bg" (click)="complete()" [ngClass]="{'ddp-disabled': isBtnDisabled() }">DONE</a>
+            <a href="javascript:" class="pb-component-btn-pop type-line" (click)="complete()">DONE</a>
+
+            <!--[ngClass]="{'ddp-disabled': isBtnDisabled() }"-->
         </div>
         <!-- //bottom -->
     </div>
