@@ -128,14 +128,13 @@
             Dataflow - {{item.dfName}}
           </div>
           <div class="pb-ui-des">
-            Description Description Description Description Description
-            Description Description Description
+            {{item.dfDesc}}
           </div>
           <!-- num -->
           <div class="pb-data-num">
             <span class="pb-txt-num">
                 <em class="pb-file-type type-db"></em>
-                99
+                {{item.importedDsCount}}/{{item.wrangledDsCount}}
             </span>
             <span class="pb-txt-num">
                 <em class="pb-file-type type-dataset"></em>
