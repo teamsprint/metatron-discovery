@@ -10,7 +10,7 @@
 .pb-layout-gnb .pb-gnb-left .pb-btn-menu {display:inline-block; margin:21px 21px 0 22px; float:left;width:16px; height:12px; background:url(../../images/icon_header.png) no-repeat;}
 .pb-layout-gnb .pb-gnb-left .pb-img-logo {float:left; margin:15px 0 0 0;font-size:19px; color:#000; font-weight:bold; letter-spacing:2px;}
 .pb-layout-gnb .pb-gnb-left .pb-img-logo em {color:#f77115;}
-.pb-layout-gnb .pb-ui-gnb-menu {position:absolute; top:0; right:59px;}
+.pb-layout-gnb .pb-ui-gnb-menu {position:absolute; top:0; right:22px;}
 .pb-layout-gnb .pb-ui-gnb-menu [class*="pb-icon-"] {display:inline-block; float:left; margin:19px 0 0 45px;background:url(../../images/icon_header.png) no-repeat; vertical-align: middle;}
 
 .pb-layout-gnb .pb-ui-gnb-menu .pb-icon-live {width:26px; height:17px;background-position:left -13px}

@@ -136,6 +136,8 @@ export class PrepDetailComponent extends AbstractComponent {
     // 데이터셋 설명 수정 모드
     public isDatasetDescEditMode: boolean = false;
 
+    public viewMode: string = 'FLOW';
+
     // delete selected dataflow
     public selectedDataflowId: string;
 
@@ -231,6 +233,9 @@ export class PrepDetailComponent extends AbstractComponent {
     } // function - changeMode
 
 
+    public changeViewMode(mode:string){
+        this.viewMode = mode;
+    }
     // public addDatasets() {
     //     this.openAddDatasetPopup(null);
     // }

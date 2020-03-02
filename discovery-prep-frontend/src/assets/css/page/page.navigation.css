@@ -16,14 +16,21 @@
 .pb-layout-navi.type-open .pb-wrap-navi{display:none;}
 .pb-layout-navi .pb-lnb-navigation.type-close {}
 .pb-ui-navi-menu .pb-list-navi-menu li a {display:inline-block; position:relative; width:42px; height:46px;}
-.pb-ui-navi-menu .pb-list-navi-menu li a:before {display:inline-block; position:absolute; top:50%; left:50%; background:url(../../images/icon_lnb_navi.png) no-repeat; content:'';}
-.pb-ui-navi-menu .pb-list-navi-menu li a.pb-icon-dataset:before {width:18px; margin:-9px 0 0 -9px; height:17px;}
-.pb-ui-navi-menu .pb-list-navi-menu li a.pb-icon-dataset.is-selected:before,
+.pb-ui-navi-menu .pb-list-navi-menu li a:before {display:inline-block; position:absolute; top:50%; left:50%; background:url(../../images/icon_lnb_navi2.png) no-repeat; content:'';}
+
+.pb-ui-navi-menu .pb-list-navi-menu li a.pb-icon-home:before {width:21px; margin:-9px 0 0 -11px; height:20px;}
+.pb-ui-navi-menu .pb-list-navi-menu li a.pb-icon-home.is-selected:before {background-position-x:-20px;background-color:#fd7724;}
+.pb-ui-navi-menu .pb-list-navi-menu li a.pb-icon-home:hover:before {background-position-x:-20px;}
+
+.pb-ui-navi-menu .pb-list-navi-menu li a.pb-icon-dataset:before {width:18px; margin:-9px 0 0 -9px; height:17px;background-position:left -20px;}
+.pb-ui-navi-menu .pb-list-navi-menu li a.pb-icon-dataset.is-selected:before {background-position-x:-19px;background-color:#fd7724;}
 .pb-ui-navi-menu .pb-list-navi-menu li a.pb-icon-dataset:hover:before {background-position-x:-19px;}
-.pb-ui-navi-menu .pb-list-navi-menu li a.pb-icon-dataresult:before {width:21px; height:18px; margin:-9px 0 0 -11px; background-position:left -18px;}
-.pb-ui-navi-menu .pb-list-navi-menu li a.pb-icon-dataresult.is-selected:before,
+
+.pb-ui-navi-menu .pb-list-navi-menu li a.pb-icon-dataresult:before {width:21px; height:18px; margin:-9px 0 0 -11px; background-position:left -38px;}
+.pb-ui-navi-menu .pb-list-navi-menu li a.pb-icon-dataresult.is-selected:before {background-position-x:-22px;background-color:#fd7724;}
 .pb-ui-navi-menu .pb-list-navi-menu li a.pb-icon-dataresult:hover:before {background-position-x:-22px;}
-.pb-layout-navi a.pb-link-schedule {position:absolute; bottom:0; left:0; width:42px; height:46px;background:url(../../images/icon_lnb_navi.png) no-repeat; background-position:left -37px;}
+
+.pb-layout-navi a.pb-link-schedule {position:absolute; bottom:0; left:0; width:42px; height:46px;background:url(../../images/icon_lnb_navi2.png) no-repeat; background-position:left -56px;}
 .pb-layout-navi a.pb-link-schedule.is-selected,
 .pb-layout-navi a.pb-link-schedule:hover {background-position-x:-43px;}
 
