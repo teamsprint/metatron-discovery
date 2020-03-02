@@ -50,48 +50,49 @@ export class PrepPopFileSelectsheetComponent extends AbstractPopupComponent impl
    | Public Variables
    |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
-@Input()
+    @Input()
     public step: string = '';
+
     @Output()
     public stepChange : EventEmitter<string> = new EventEmitter();
 
- @Output()
+    @Output()
     public createClose : EventEmitter<void> = new EventEmitter();
 
 
-  @Output()
-  public typeEmitter = new EventEmitter<string>();
+    @Output()
+    public typeEmitter = new EventEmitter<string>();
 
-  @Input()
-  public datasetFiles: any;
+    @Input()
+    public datasetFiles: any;
 
-  public isShow = false;
+    public isShow = false;
 
-  public isCSV: boolean = false;
-  public isEXCEL: boolean = false;
-  public isJSON: boolean = false;
+    public isCSV: boolean = false;
+    public isEXCEL: boolean = false;
+    public isJSON: boolean = false;
 
-  public settingFoldFlag: boolean = false;
+    public settingFoldFlag: boolean = false;
 
-  // grid hide
-  public clearGrid : boolean = false;
+    // grid hide
+    public clearGrid : boolean = false;
 
-  public isNext: boolean = false;
+    public isNext: boolean = false;
 
-  public isDelimiterRequired : boolean = false;
-  public isColumnCountRequired : boolean = false;
+    public isDelimiterRequired : boolean = false;
+    public isColumnCountRequired : boolean = false;
 
-  public currDelimiter : string = '';
-  public currQuote: string = '';
-  public currSheetIndex : number = 0;
-  public currDSIndex: number = 0;
-  public currDetail : {fileFormat: FileFormat, detailName: string, columns: number} ;
-  public currColumnCount: number;
-  public prevColumnCount: number;
+    public currDelimiter : string = '';
+    public currQuote: string = '';
+    public currSheetIndex : number = 0;
+    public currDSIndex: number = 0;
+    public currDetail : {fileFormat: FileFormat, detailName: string, columns: number} ;
+    public currColumnCount: number;
+    public prevColumnCount: number;
 
-  public previewErrorMsg : string = '';
+    public previewErrorMsg : string = '';
 
-  public fileFormat = FileFormat;
+    public fileFormat = FileFormat;
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
    | Constructor
    |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
@@ -188,9 +189,7 @@ export class PrepPopFileSelectsheetComponent extends AbstractPopupComponent impl
     if (this.datasetService.dataflowId) {
       this.datasetService.dataflowId = undefined;
     }
-
-
-        this.createClose.emit();
+    this.createClose.emit();
   }
 
 
@@ -218,13 +217,17 @@ export class PrepPopFileSelectsheetComponent extends AbstractPopupComponent impl
 
   public goto(step) {
     this.step = step;
-        this.stepChange.emit( step );
+    this.stepChange.emit( step );
   }
 
 
 
     public goPre(){
-        this.goto( 'select-sheet' );
+        // this.goto( 'select-sheet' );
+        // this.isShow = false;
+        // this.step = 'select-sheet';
+        // this.stepChange.emit( 'select-sheet');
+        this.stepChange.emit( 'complete-create-dataset');
     }
 
   /**

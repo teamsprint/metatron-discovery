@@ -48,16 +48,14 @@ export class PrepPopCreateDatasetNameComponent extends AbstractPopupComponent im
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   | Public Variables
   |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
+  @Input()
+  public step: string = '';
 
- @Input()
-    public step: string = '';
-    @Output()
-    public stepChange : EventEmitter<string> = new EventEmitter();
+  @Output()
+  public stepChange : EventEmitter<string> = new EventEmitter();
 
- @Output()
-    public createClose : EventEmitter<void> = new EventEmitter();
-
-
+  @Output()
+  public createClose : EventEmitter<void> = new EventEmitter();
 
   @Input()
   public datasetHive: PrDatasetHive;
@@ -126,7 +124,7 @@ export class PrepPopCreateDatasetNameComponent extends AbstractPopupComponent im
 
     this.dsfileInformations = [];
 
-    this.type='FILE'; // temporary
+    // this.type='FILE'; // temporary
     // Set default name
     this._setDefaultDatasetName(this.type);
 
@@ -253,22 +251,22 @@ export class PrepPopCreateDatasetNameComponent extends AbstractPopupComponent im
   }
 
   public goto(step) {
-            this.step = step;
-        this.stepChange.emit( step );
+      // this.step = step;
+      // this.stepChange.emit( step );
     }
   /** go to previous step */
   public prev() {
 
-    if (this.type === 'FILE') {
-
-      this.goto('select-sheet');
-     } else if (this.type === 'DB') {
-
-      this.goto('DB');
-    } else if (this.type === 'KAFKA') {
-
-      this.goto('complete-create-dataset');
-    }
+    // if (this.type === 'FILE') {
+    //   this.goto('select-sheet');
+    //  } else if (this.type === 'DB') {
+    //
+    //   this.goto('DB');
+    // } else if (this.type === 'KAFKA') {
+    //
+    //   this.goto('complete-create-dataset');
+    // }
+      this.stepChange.emit( 'complete-create-dataset');
   }
 
 
@@ -428,6 +426,10 @@ export class PrepPopCreateDatasetNameComponent extends AbstractPopupComponent im
    * @private
    */
   private _setDefaultDatasetName(type : string) : void {
+
+      // console.info('type', type);
+      // console.info('this.datasetFiles', this.datasetFiles);
+
 
     if ('FILE' === type || 'URL' === type) {
 
@@ -614,6 +616,9 @@ export class PrepPopCreateDatasetNameComponent extends AbstractPopupComponent im
       }
 
     }
+
+
+    // console.info('this.datasetInfo',this.datasetInfo);
 
   }
 

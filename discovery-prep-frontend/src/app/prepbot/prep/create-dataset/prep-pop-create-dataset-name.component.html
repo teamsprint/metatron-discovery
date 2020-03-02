@@ -5,8 +5,9 @@
         <!-- step -->
         <div class="pb-ui-step">
             <span class="pb-txt-step">1</span>
-            <span class="pb-txt-step is-selected">2</span>
+            <span class="pb-txt-step">2</span>
             <span class="pb-txt-step">3</span>
+            <span class="pb-txt-step is-selected">4</span>
         </div>
         <!-- //step -->
         <!-- top -->
@@ -15,210 +16,83 @@
 
         </div>
         <!-- //top -->
+
+
+
+
         <!-- contents -->
-        <div class="pb-popup-contents pb-pop-create">
-            <div class="pb-data-option">
+        <div class="pb-popup-contents ">
+            <div class="pb-wrap-connect type-connect">
 
 
-            <ng-container *ngIf="names.length === 1">
+                <!-- box file detail -->
+                <div class="pb-box-file-detail">
+                    <table class="pb-table-det" *ngFor="let ds of datasetInfo;let index=index">
+                        <colgroup>
+                            <col width="125px">
+                            <col width="*">
+                        </colgroup>
+                        <tbody>
 
-                <div class="ddp-layout-pop-fix" [ngClass]="{'popup-prep-create-complete':isMultiSheet}">
-                    <!-- 닫기 버튼 -->
-                    <a href="javascript:" class="ddp-btn-close" (click)="close()"></a>
-                    <!-- //닫기 버튼 -->
+                        <tr>
+                            <th>File</th>
+                            <td>
+                                <span class="pb-data-file-name">
+                                    <em class="pb-img-file type-xls"></em>
+                                    Sheet
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Sheet</th>
+                            <td>
+                                Sheet1
+                            </td>
+                        </tr>
 
-                    <div class="ddp-layout-popup">
-                        <!-- top -->
-                        <div class="ddp-pop-top">
-                            <div class="ddp-pop-title">{{'msg.dp.ui.ds.create.title' | translate : {type : getTypeName} }}</div>
-                            <div class="ddp-pop-sub">{{'msg.dp.ui.create-staging-db.sub.title' | translate}}</div>
-                            <!-- step -->
-                            <div class="ddp-pop-step" *ngIf="type === 'DB'">
-                                <span class="">1</span>
-                                <span class="">2</span>
-                                <span class="ddp-selected">3</span>
-                            </div>
-                            <div class="ddp-pop-step" *ngIf="type !== 'DB'">
-                                <span class="">1</span>
-                                <span class="">2</span>
-                                <span class="ddp-selected">3</span>
-                            </div>
-                            <!-- //step -->
-                        </div>
-                        <!-- //top -->
-
-                        <!-- import -->
-                        <div class="ddp-pop-contents" *ngIf="!isMultiSheet">
-                            <div class="ddp-box-popupcontents2">
-
-                                <!-- edit -->
-                                <div class="ddp-wrap-boxtype">
-
-                                    <table class="ddp-wrap-boxdata">
-                                        <colgroup>
-                                            <col width="120px" />
-                                            <col width="*" />
-                                        </colgroup>
-
-                                        <tbody>
-
-                                        <tr *ngFor="let ds of datasetInfo;let index=index">
-                                            <th>
-                                                {{ds.name}}
-                                            </th>
-                                            <td>
-                                                <em class="ddp-icon-svg" *ngIf="ds.svg">
-                                                    <svg-icon-component [name]="ds.svg" [isBlackAndWhite]="false"></svg-icon-component>
-                                                </em>
-                                                {{ds.value}}
-                                            </td>
-                                        </tr>
-
-                                        </tbody>
-                                    </table>
-
-                                </div>
-                                <!-- //edit -->
-
-                                <!-- form -->
-                                <div class="pb-form-option pb-clear" [ngClass]="{'ddp-error':showNameError}">
-                                    <label class="pb-label-title">{{'msg.comm.ui.name' | translate}}</label>
-                                    <input type="text" class="pb-input-type" #nameElement
-                                           placeholder="{{'msg.comm.ui.create.desc' | translate}}"
-                                           (keydown)="keyDownDescEvent($event,0)"
-                                           [(ngModel)]="descriptions[0]" maxlength="150"
-                                           (keyup)="keyupEvent($event)">
-                                    <span class="pb-ui-error">{{descriptionErrors[0]}}</span>
-                                </div>
-                                <!-- //form -->
-                                <!-- form -->
-                                <div class="ddp-wrap-edit3">
-                                    <label class="ddp-label-checkbox">
-                                        <input type="checkbox" [(ngModel)]="isChecked" [checked]="isChecked" disabled="disabled" *ngIf="!isFromDatasetList">
-                                        <input type="checkbox" [(ngModel)]="isChecked" [checked]="isChecked" *ngIf="isFromDatasetList">
-                                        <i class="ddp-icon-checkbox"></i>
-                                        <span class="ddp-txt-checkbox">{{'mgs.dp.ui.continue.new.rule' | translate}}</span>
-                                    </label>
-                                </div>
-                            </div>
-
-                        </div>
-                        <!-- //contents in  -->
-
-                        <!-- buttons -->
-                        <!--<div class="pb-popup-bottom">-->
-                            <!--<a href="javascript:" class="pb-component-btn type-line" (click)="prev()">{{'msg.comm.btn.previous' | translate}}</a>-->
-                            <!--<a href="javascript:" class="pb-component-btn type-line">CANCEL</a>-->
-                            <!--<a href="javascript:" class="pb-component-btn type-bg" (click)="complete()">{{'msg.comm.btn.done2' | translate}}</a>-->
-                        <!--</div>-->
-                        <!-- //buttons -->
-                    </div>
+                        </tbody>
+                    </table>
                 </div>
-            </ng-container>
+                <!-- //box file detail -->
 
-
-
-            <ng-container *ngIf="(type==='FILE' || type === 'URL') && names.length > 1">
-
-
-                <div class="ddp-layout-pop-fix popup-prep-create-complete popup-prep-create">
-                    <!-- 닫기 버튼 -->
-                    <a href="javascript:" class="ddp-btn-close" (click)="close()"></a>
-                    <!-- //닫기 버튼 -->
-
-                    <div class="ddp-layout-popup">
-                        <!-- top -->
-                        <div class="ddp-pop-top">
-                            <div class="ddp-pop-title">{{'msg.dp.ui.ds.create.title' | translate : {type : getTypeName} }}</div>
-                            <div class="ddp-pop-sub">{{'msg.dp.ui.create-staging-db.sub.title' | translate}}</div>
-                            <!-- step -->
-                            <div class="ddp-pop-step" *ngIf="type !== 'URL'">
-                                <span class="">1</span>
-                                <span class="">2</span>
-                                <span class="ddp-selected">3</span>
-                            </div>
-                            <div class="ddp-pop-step" *ngIf="type === 'URL'">
-                                <span class="">1</span>
-                                <span class="ddp-selected">2</span>
-                            </div>
-                            <!-- //step -->
+                <!-- create -->
+                <div class="pb-ui-create">
+                    <!-- form create -->
+                    <div class="pb-form-create">
+                        <div class="pb-create-label">Name</div>
+                        <div class="pb-form-edit">
+                            <input type="text" class="pb-component-input" placeholder="Placeholder">
                         </div>
-                        <!-- //top -->
-
-                        <!-- import -->
-                        <div class="ddp-pop-contents">
-                            <div class="ddp-box-popupcontents ddp-wrap-file-create type-info ">
-                                <div class="ddp-ui-sheet-list">
-                                    <table class="ddp-table-sheet">
-                                        <colgroup>
-                                            <col width="250px">
-                                            <col width="230px">
-                                            <col width="*">
-                                        </colgroup>
-                                        <thead>
-                                        <tr>
-                                            <th>{{'msg.dp.th.source' | translate}}</th>
-                                            <th>{{'msg.comm.ui.name' | translate}}</th>
-                                            <th>{{'msg.comm.ui.description' | translate}}</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <tr *ngFor="let name of dsfileInformations; let index = index">
-                                            <td title="{{dsfileInformations[index].fileName}}">
-                                                <em class="ddp-icon-svg" *ngIf="dsfileInformations[index].svg">
-                                                    <svg-icon-component [name]="dsfileInformations[index].svg" [isBlackAndWhite]="false"></svg-icon-component>
-                                                </em>
-                                                {{dsfileInformations[index].fileName}}
-                                            </td>
-                                            <td>
-                                                <div class="ddp-sheet-form">
-                                                    <input class="ddp-input-typebasic"
-                                                           placeholder="{{clonedNames[index] === '' ? ('msg.comm.ui.create.name' | translate ) : clonedNames[index]}}"
-                                                           (keyup)="keyupEvent($event)"
-                                                           [(ngModel)]="names[index]" maxlength="150"
-                                                           (keydown)="keyDownEvent($event, index)">
-                                                    <span class="ddp-data-error" *ngIf="nameErrors[index] !== ''"> {{nameErrors[index]}}</span>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="ddp-textarea-resize">
-                                                    <div class="ddp-sheet-form">
-                                                        <div class="ddp-textarea-resize">
-                        <textarea  placeholder="{{'msg.comm.ui.create.desc' | translate}}"
-                                   [(ngModel)]="descriptions[index]" maxlength="150"
-                                   (keyup)="keyupEvent($event)"
-                                   style="height: 30px"
-                                   (keydown)="keyDownDescEvent($event,index)">
-                        </textarea>
-                                                        </div>
-                                                        <span class="ddp-data-error" *ngIf="descriptionErrors[index] !== ''"> {{descriptionErrors[index]}}</span>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-
-                                </div>
-
-                            </div>
-                        </div>
-
-
-                        <!--&lt;!&ndash; buttons &ndash;&gt;-->
-                        <!--<div class="pb-popup-bottom">-->
-                            <!--<a href="javascript:" class="pb-component-btn type-line" (click)="prev()">{{'msg.comm.btn.previous' | translate}}</a>-->
-                            <!--<a href="javascript:" class="pb-component-btn type-line">CANCEL</a>-->
-                            <!--&lt;!&ndash; disabled 시 ddp-disabled 추가 &ndash;&gt;-->
-                            <!--<a href="javascript:" class="pb-component-btn type-bg" (click)="complete()" [ngClass]="{'ddp-disabled': isBtnDisabled() }">{{'msg.comm.btn.done2' | translate}}</a>-->
-                        <!--</div>-->
-                        <!--&lt;!&ndash; //buttons &ndash;&gt;-->
                     </div>
+                    <!-- //form create -->
+                    <!-- form create -->
+                    <div class="pb-form-create">
+                        <div class="pb-create-label">Description</div>
+                        <div class="pb-form-edit">
+                            <input type="text" class="pb-component-input" placeholder="Placeholder">
+                        </div>
+                    </div>
+                    <!-- //form create -->
+                    <!-- form create -->
+                    <div class="pb-form-create">
+                        <label class="pb-compomnent-checkbox">
+                            <input type="checkbox">
+                            <i></i>
+                            <span class="pb-txt-checkbox">Continue to edit rules with this dataset in a new dataflow</span>
+                        </label>
+                    </div>
+                    <!-- //form create -->
+
                 </div>
-            </ng-container>
+                <!-- //create -->
+
             </div>
+
         </div>
         <!-- //contents -->
+
+
+
         <!-- bottom -->
         <!--<div class="pb-popup-bottom">-->
             <!--<a href="javascript:" class="pb-component-btn type-bg">SKIP</a>-->
@@ -226,10 +100,10 @@
         <!--</div>-->
         <!-- buttons -->
         <div class="pb-popup-bottom">
-            <a href="javascript:" class="pb-component-btn type-line" (click)="prev()">PREV</a>
-            <a href="javascript:" class="pb-component-btn type-line" (click)="close()">CANCEL</a>
+            <a href="javascript:;" class="pb-component-btn-pop type-line" (click)="prev()">PREV</a>
+            <a href="javascript:;" class="pb-component-btn-pop type-line" (click)="close()">CANCEL</a>
             <!-- disabled 시 ddp-disabled 추가 -->
-            <a href="javascript:" class="pb-component-btn type-bg" (click)="complete()" [ngClass]="{'ddp-disabled': isBtnDisabled() }">DONE</a>
+            <a href="javascript:;" class="pb-component-btn-pop type-bg" (click)="complete()" [ngClass]="{'ddp-disabled': isBtnDisabled() }">DONE</a>
         </div>
         <!-- //bottom -->
     </div>

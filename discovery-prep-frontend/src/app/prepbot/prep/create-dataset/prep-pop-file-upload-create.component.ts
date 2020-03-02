@@ -44,12 +44,12 @@ export class PrepPopFileUploadCreateComponent extends AbstractPopupComponent imp
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
    | Private Variables
    |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
-@Input()
+    @Input()
     public step: string = '';
     @Output()
     public stepChange : EventEmitter<string> = new EventEmitter();
 
- @Output()
+    @Output()
     public createClose : EventEmitter<void> = new EventEmitter();
 
 
@@ -514,18 +514,20 @@ export class PrepPopFileUploadCreateComponent extends AbstractPopupComponent imp
       return;
     }
 
-        this.goto( 'select-sheet' );
+      // this.goto( 'select-sheet' );
+      this.stepChange.emit( 'select-sheet');
   }
 
   public goto(step) {
-    this.step = step;
-        this.stepChange.emit( step );
+    // this.step = step;
+    // this.stepChange.emit( step );
   }
 
 
 
     public goPre(){
-       this.goto('complete-create-dataset');
+       // this.goto('complete-create-dataset');
+        this.stepChange.emit( 'complete-create-dataset');
     }
 
   /**
@@ -555,10 +557,8 @@ export class PrepPopFileUploadCreateComponent extends AbstractPopupComponent imp
   public close() {
 
     super.close();
-
     this.chunk_uploader.stop();
-
-        this.createClose.emit();
+    this.createClose.emit();
   }
 
   /**

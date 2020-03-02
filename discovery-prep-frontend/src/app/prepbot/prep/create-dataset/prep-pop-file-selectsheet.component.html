@@ -1,12 +1,13 @@
-<div class="pb-layout-popup">
+<div class="pb-layout-popup" *ngIf="isShow">
     <!-- box popup -->
     <div class="pb-box-popup">
-        <a href="javascript:" class="pb-btn-pop-close"></a>
+        <a href="javascript:" class="pb-btn-pop-close" (click)="isShow = false"></a>
         <!-- step -->
         <div class="pb-ui-step">
-            <span class="pb-txt-step ">1</span>
-            <span class="pb-txt-step is-selected">2</span>
-            <span class="pb-txt-step">3</span>
+            <span class="pb-txt-step">1</span>
+            <span class="pb-txt-step">2</span>
+            <span class="pb-txt-step is-selected">3</span>
+            <span class="pb-txt-step">4</span>
         </div>
         <!-- //step -->
         <!-- top -->
@@ -23,23 +24,12 @@
 
 
                 <!-- box select -->
-                <ng-container *ngFor="let file of datasetFiles; let i = index">
                     <div class="pb-box-select">
-                        <ul class="pb-list-select">
+                        <ul class="pb-list-select" *ngFor="let file of datasetFiles; let i = index">
                             <li [ngClass]="{'ddp-selected':currDSIndex===i && file.fileFormat !== fileFormat.EXCEL}">
-                                <ng-container *ngIf="file.fileFormat !== fileFormat.EXCEL">
-                                    <div class="pb-ui-select " (click)="selectFile($event,i)">
-                                        <label class="pb-compomnent-checkbox type-checkbox" (click)="checkGroup($event, i)">
-                                            <input type="checkbox" [checked]="file.selected">
-                                            <i></i>
-                                        </label>
-                                        <span class="pb-txt-checkbox">({{file.fileExtension}}) {{file.fileName}}</span>
-                                        <em class="ddp-icon-error2" [ngStyle]="{'display': file.error?'':'none'}"></em>
-                                    </div>
-                                </ng-container>
 
-                                <ng-container *ngIf="file.fileFormat === fileFormat.EXCEL">
-                                    <div class="pb-ui-select " (click)="selectFile($event,i)">
+                                <!--<ng-container *ngIf="file.fileFormat !== fileFormat.EXCEL">-->
+                                    <div class="pb-ui-select " (click)="selectFile($event,i)" *ngIf="file.fileFormat !== fileFormat.EXCEL">>
                                         <label class="pb-compomnent-checkbox type-checkbox" (click)="checkGroup($event, i)">
                                             <input type="checkbox" [checked]="file.selected">
                                             <i></i>
@@ -47,7 +37,18 @@
                                         <span class="pb-txt-checkbox">({{file.fileExtension}}) {{file.fileName}}</span>
                                         <em class="ddp-icon-error2" [ngStyle]="{'display': file.error?'':'none'}"></em>
                                     </div>
-                                </ng-container>
+                                <!--</ng-container>-->
+
+                                <!--<ng-container *ngIf="file.fileFormat === fileFormat.EXCEL">-->
+                                    <div class="pb-ui-select " (click)="selectFile($event,i)" *ngIf="file.fileFormat === fileFormat.EXCEL">
+                                        <label class="pb-compomnent-checkbox type-checkbox" (click)="checkGroup($event, i)">
+                                            <input type="checkbox" [checked]="file.selected">
+                                            <i></i>
+                                        </label>
+                                        <span class="pb-txt-checkbox">({{file.fileExtension}}) {{file.fileName}}</span>
+                                        <em class="ddp-icon-error2" [ngStyle]="{'display': file.error?'':'none'}"></em>
+                                    </div>
+                                <!--</ng-container>-->
 
 
                                 <ul class="pb-list-sub" *ngFor="let item of file.sheetInfo; let j = index">
@@ -66,7 +67,6 @@
                         </ul>
 
                     </div>
-                </ng-container>
                 <!-- //box select -->
 
 
@@ -192,9 +192,9 @@
         </div>
         <!-- //contents -->
         <div class="pb-popup-bottom ">
-            <a href="javascript:" (click)="goPre();" class="pb-component-btn-pop type-line">PREV</a>
-            <a href="javascript:" (click)="close();" class="pb-component-btn-pop type-line">CANCEL</a>
-            <a href="javascript:" (click)="next();" class="pb-component-btn-pop type-bg">NEXT</a>
+            <a href="javascript:;" (click)="goPre()" class="pb-component-btn-pop type-line">PREV</a>
+            <a href="javascript:;" (click)="close()" class="pb-component-btn-pop type-line">CANCEL</a>
+            <a href="javascript:;" (click)="next()" class="pb-component-btn-pop type-bg">NEXT</a>
         </div>
     </div>
     <!-- //box popup -->
