@@ -33,6 +33,11 @@ export class PrepPopTypeComponent extends AbstractComponent {
     @Output()
     public stepChange : EventEmitter<string> = new EventEmitter();
 
+    @Output()
+    public createClose : EventEmitter<void> = new EventEmitter();
+
+
+
     // 새로 생성될 데이셋 타입 정보
     @Input()
     public importType: PrDataset = new PrDataset();
@@ -109,9 +114,13 @@ export class PrepPopTypeComponent extends AbstractComponent {
     //         ['/management/prepbot/dataflow'])
     //         .then();
     // }
-public goto(step) {
+    public goto(step) {
         this.step = step;
         this.stepChange.emit( step );
+    }
+
+    public close(): void {
+        this.createClose.emit();
     }
 
 

@@ -304,7 +304,11 @@ export class PrepPopFileSelectsheetComponent extends AbstractPopupComponent impl
    * @returns {{top: string}}
    */
   public getGridStyle() {
-    return {'top':'45px'};
+      let elem, stayle;
+      elem = document.querySelector('.pb-layout-popup');
+      stayle = getComputedStyle(elem);
+      const gridWidth: number = Number(String(stayle.width).replace("px","")) - 520;
+      return {'top':'45px', 'width':gridWidth+'px'};
   }
 
 
@@ -635,16 +639,20 @@ export class PrepPopFileSelectsheetComponent extends AbstractPopupComponent impl
    * @param {any[]} headers
    * @param {any[]} rows
    */
-  private _drawGrid(headers: any[], rows: any[]) {
-    this.safelyDetectChanges();
-    this.gridComponent.create(headers, rows, new GridOption()
-      .SyncColumnCellResize(true)
-      .MultiColumnSort(true)
-      .RowHeight(32)
-      .build()
-    );
-    this.loadingHide();
-  }
+    private _drawGrid(headers: any[], rows: any[]) {
+      this.safelyDetectChanges();
+      this.gridComponent.create(headers, rows, new GridOption()
+              .SyncColumnCellResize(true)
+              .MultiColumnSort(true)
+              .RowHeight(32)
+          .build()
+      );
+
+      // slick-viewport - Custom Top
+      $('.slick-viewport').css('top', 50 + 'px');
+
+      this.loadingHide();
+    }
 
 
   /**
@@ -660,33 +668,33 @@ export class PrepPopFileSelectsheetComponent extends AbstractPopupComponent impl
         const headerWidth:number = Math.floor(pixelWidth(field.name, { size: 12 })) + 70;
 
         return new SlickGridHeader()
-          .Id(field.name)
-          .Name('<span style="padding-left:20px;"><em class="' + this.getFieldTypeIconClass(field.type) + '"></em>' + field.name + '</span>')
-          .Field(field.name)
-          .Behavior('select')
-          .Selectable(false)
-          .CssClass('cell-selection')
-          .Width(headerWidth)
-          .CannotTriggerInsert(true)
-          .Resizable(true)
-          .Unselectable(true)
-          .Sortable(true)
-          .ColumnType(field.type)
-          .Formatter(( row, cell, value, columnDef ) => {
-            if (field.type === 'STRING') {
-              value = (value) ? value.toString().replace(/</gi, '&lt;') : value;
-              value = (value) ? value.toString().replace(/>/gi, '&gt;') : value;
-              value = (value) ? value.toString().replace(/\n/gi, '&crarr;') : value;
-              let tag = '<span style="color:#ff00ff; font-size: 9pt; letter-spacing: 0px">&middot;</span>';
-              value = (value) ? value.toString().replace(/\s/gi, tag) : value;
-            }
-            if (isNull(value)) {
-              return '<div style=\'position:absolute; top:0; left:0; right:0; bottom:0; line-height:30px; padding:0 10px; font-style: italic ; color:#b8bac2;\'>' + '(null)' + '</div>';
-            } else {
-              return value;
-            }
-          })
-          .build();
+            .Id(field.name)
+            .Name('<span style="padding-left:20px;"><em class="' + this.getFieldTypeIconClass(field.type) + '"></em>' + field.name + '</span>')
+            .Field(field.name)
+            .Behavior('select')
+            .Selectable(false)
+            .CssClass('cell-selection')
+            .Width(headerWidth)
+            .CannotTriggerInsert(true)
+            .Resizable(true)
+            .Unselectable(true)
+            .Sortable(true)
+            .ColumnType(field.type)
+            .Formatter(( row, cell, value, columnDef ) => {
+                if (field.type === 'STRING') {
+                value = (value) ? value.toString().replace(/</gi, '&lt;') : value;
+                value = (value) ? value.toString().replace(/>/gi, '&gt;') : value;
+                value = (value) ? value.toString().replace(/\n/gi, '&crarr;') : value;
+                let tag = '<span style="color:#ff00ff; font-size: 9pt; letter-spacing: 0px">&middot;</span>';
+                value = (value) ? value.toString().replace(/\s/gi, tag) : value;
+                }
+                if (isNull(value)) {
+                    return '<div style=\'position:absolute; top:0; left:0; right:0; bottom:0; line-height:30px; padding:0 10px; font-style: italic ; color:#b8bac2;\'>' + '(null)' + '</div>';
+                } else {
+                    return value;
+                }
+            })
+            .build();
       }
     );
   }
