@@ -279,19 +279,19 @@ export class PrepListComponent extends AbstractComponent {
              if( this.prepPopCreateComponent) {
                  this.prepPopCreateComponent.init();
              }
-             console.log(this.prepPopCreateComponent);
+             // console.log(this.prepPopCreateComponent);
         }else if('prep-pop-flow-create' === mode ) {
             if( this.prepPopFlowCreateComponent) {
             this.prepPopFlowCreateComponent.init();
             }
-            console.log(this.prepPopFlowCreateComponent);
+            // console.log(this.prepPopFlowCreateComponent);
 
         }else if('prep-pop-connection-create' === mode ) {
             if( this.prepPopConnectionCreateComponent) {
            this.prepPopConnectionCreateComponent.init();
            }
 
-            console.log(this.prepPopConnectionCreateComponent);
+            // console.log(this.prepPopConnectionCreateComponent);
         }
         this.mode = mode;
     } // function - changeMode

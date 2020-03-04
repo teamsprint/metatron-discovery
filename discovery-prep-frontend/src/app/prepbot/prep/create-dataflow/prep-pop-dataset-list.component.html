@@ -1,7 +1,7 @@
-<div class="pb-layout-popup" *ngIf="isShow">
+<div class="pb-layout-popup">
     <!-- box popup -->
     <div class="pb-box-popup">
-        <a href="javascript:" class="pb-btn-pop-close" (click)="isShow = false"></a>
+        <a href="javascript:" class="pb-btn-pop-close" (click)="close()"></a>
         <!-- step -->
         <div class="pb-ui-step">
             <span class="pb-txt-step is-selected">1</span>
@@ -23,8 +23,8 @@
                     <!-- grid top -->
                     <div class="pb-ui-grid-top">
                         <div class="pb-component-search">
-                            <input type="text" placeholder="{{'msg.dp.ui.ds.search.description' | translate}}" (keypress)="onKeyPress($event)" [(ngModel)]="searchText">
-                            <em class="ddp-btn-search-close" *ngIf="searchText" (click)="refreshSearch()"></em>
+                            <input type="text" placeholder="{{'msg.dp.ui.ds.search.description' | translate}}" (keypress)="searchEventPressKey($event)" [(ngModel)]="searchText">
+                            <em class="ddp-btn-search-close" *ngIf="searchText" (click)="resetSearchText()"></em>
                         </div>
                     </div>
                     <!-- //grid top -->
@@ -40,32 +40,32 @@
                             <thead>
                             <tr>
                                 <th class="pb-txt-center">
-                                    <label class="pb-compomnent-checkbox type-all type-checkbox" (click)="checkAll();">
-                                        <input type="checkbox" [checked]="isAllChecked()" [disabled]="isCheckAllDisabled()">
-                                        <i></i>
+                                    <label class="pb-compomnent-checkbox type-all type-checkbox" (click)="checkAll($event);">
+                                        <input type="checkbox" [checked]="isAllCheckedStatus==true" [disabled]="isCheckAllDisabled()">
+                                        <i class="ddp-icon-checkbox"></i>
 
                                     </label>
                                 </th>
-                                <th (click)="sortList('dsName')">
+                                <th (click)="changeOrder('dsName')">
                                     {{'msg.comm.menu.manage.prep.set' | translate}}
                                     <em class="pb-icon-array" *ngIf="selectedContentSort.key !== 'dsName' || selectedContentSort.sort === 'default'"></em>
-                                    <em class="pb-icon-array-asc" *ngIf="selectedContentSort.key === 'dsName' && selectedContentSort.sort === 'asc'"></em>
-                                    <em class="pb-icon-array-des" *ngIf="selectedContentSort.key === 'dsName' && selectedContentSort.sort === 'desc'"></em>
+                                    <em class="pb-icon-array type-asc" *ngIf="selectedContentSort.key === 'dsName' && selectedContentSort.sort === 'asc'"></em>
+                                    <em class="pb-icon-array type-des" *ngIf="selectedContentSort.key === 'dsName' && selectedContentSort.sort === 'desc'"></em>
                                 </th>
                                 <th>{{'msg.comm.menu.manage.prep.set' | translate}}
                                 </th>
-                                <th (click)="sortList('modifiedTime')">
+                                <th (click)="changeOrder('modifiedTime')">
                                     {{'msg.comm.ui.list.last' | translate}}
                                     <em class="pb-icon-array" *ngIf="selectedContentSort.key !== 'modifiedTime' || selectedContentSort.sort === 'default'"></em>
-                                    <em class="pb-icon-array-asc" *ngIf="selectedContentSort.key === 'modifiedTime' && selectedContentSort.sort === 'asc'"></em>
-                                    <em class="pb-icon-array-des" *ngIf="selectedContentSort.key === 'modifiedTime' && selectedContentSort.sort === 'desc'"></em>
+                                    <em class="pb-icon-array type-asc" *ngIf="selectedContentSort.key === 'modifiedTime' && selectedContentSort.sort === 'asc'"></em>
+                                    <em class="pb-icon-array type-des" *ngIf="selectedContentSort.key === 'modifiedTime' && selectedContentSort.sort === 'desc'"></em>
                                 </th>
                             </tr>
                             </thead>
                             <tbody>
                             <tr *ngFor="let dsItem of datasets">
                                 <td class="pb-txt-center">
-                                    <label class="pb-compomnent-checkbox type-checkbox" (click)="check(dsItem);">
+                                    <label class="pb-compomnent-checkbox type-checkbox" (click)="check($event, dsItem);">
                                         <input type="checkbox" type="checkbox" [checked]="dsItem.selected && !dsItem.origin" [disabled]="dsItem.origin">
                                         <i class="ddp-icon-checkbox"></i>
 
@@ -241,8 +241,9 @@
         <!-- //contents -->
         <!-- bottom -->
         <div class="pb-popup-bottom ">
-            <a href="javascript:" class="pb-component-btn-pop type-line" (click)="isShow = false">CANCEL</a>
-            <a href="javascript:" class="pb-component-btn-pop type-bg" (click)="goto('dataflow-name');">NEXT</a>
+            <a href="javascript:" class="pb-component-btn-pop type-line" (click)="close()">CANCEL</a>
+            <!--(click)="goto('dataflow-name');"-->
+            <a href="javascript:" class="pb-component-btn-pop type-bg" (click)="next()">NEXT</a>
         </div>
         <!-- //bottom -->
     </div>

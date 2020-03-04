@@ -1,7 +1,7 @@
-<div class="pb-layout-popup" *ngIf="isShow">
+<div class="pb-layout-popup">
     <!-- box popup -->
     <div class="pb-box-popup">
-        <a href="javascript:" class="pb-btn-pop-close" (click)="isShow = false"></a>
+        <a href="javascript:" class="pb-btn-pop-close" (click)="close()"></a>
         <!-- step -->
         <div class="pb-ui-step">
             <span class="pb-txt-step">1</span>
@@ -51,7 +51,9 @@
                     <div class="pb-form-create">
                         <div class="pb-create-label">Name</div>
                         <div class="pb-form-edit">
-                            <input type="text" class="pb-component-input"  maxlength="50" placeholder="Please enter a name" (input)="onSetIntoDataflow($event.target)">
+                            <input type="text" class="pb-component-input"  maxlength="50" placeholder="Please enter a name"
+                            [(ngModel)]="dataflowInfo.dfName">
+                            <span class="pb-form-error" *ngIf="showNameError">{{'msg.storage.ui.required' | translate}}</span>
                         </div>
                     </div>
                     <!-- //form create -->
@@ -59,8 +61,9 @@
                     <div class="pb-form-create">
                         <div class="pb-create-label">Description</div>
                         <div class="pb-form-edit">
-                            <input type="text" class="pb-component-input" maxlength="150" placeholder="Please enter a description" name="dfDesc" (input)="onSetIntoDataflow($event.target)">
-                            <span class="pb-ui-error"></span>
+                            <input type="text" class="pb-component-input" maxlength="150" placeholder="Please enter a description" name="dfDesc"
+                                   [(ngModel)]="dataflowInfo.dfDesc">
+                            <span class="pb-form-error" *ngIf="showDescError">{{'msg.storage.ui.required' | translate}}</span>
                         </div>
                     </div>
                     <!-- //form create -->
