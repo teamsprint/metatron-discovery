@@ -5,14 +5,14 @@ const PROXY_CONFIG = [
       "/oauth",
       "/extensions"
     ],
-    target: "http://metatron-web-05:8180",
+    target: "http://localhost:8180",
     secure: false
   },
   {
     context: [
       "/stomp"
     ],
-    target: "http://metatron-web-05:8180",
+    target: "http://localhost:8180",
     secure: false
   }
 ];

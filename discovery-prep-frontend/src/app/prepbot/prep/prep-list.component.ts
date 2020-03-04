@@ -98,10 +98,10 @@ export class PrepListComponent extends AbstractComponent {
    |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
   // 생성자
-    constructor(private _dataflowService: DataflowService,
-                private _datasetService: DatasetService,
-                private _dataSnapshotService: SnapshotService,
-                private _prepbotService: PrepbotService,
+  constructor(private _dataflowService: DataflowService,
+              private _datasetService: DatasetService,
+              private _dataSnapshotService: SnapshotService,
+              private _prepbotService: PrepbotService,
               public elementRef: ElementRef,
               public injector: Injector,
               private activatedRoute: ActivatedRoute) {
@@ -267,7 +267,7 @@ export class PrepListComponent extends AbstractComponent {
     this.reloadPage();
   }
 
-    /**
+  /**
    * Change order of list
    * @param key
    */
@@ -574,6 +574,6 @@ export class PrepListComponent extends AbstractComponent {
 }
 
 class Order {
-  key: string = 'modifiedTime';
+  key: string = 'createdTime';
   sort: string = 'default';
 }
