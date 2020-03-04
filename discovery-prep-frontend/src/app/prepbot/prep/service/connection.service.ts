@@ -25,8 +25,8 @@ export class PrConnectionService extends AbstractService {
   // Dictionary url
   private URL_CONNECTIONS = this.API_URL + 'preparationconnections';
 
-  constructor(protected injectior: Injector) {
-    super(injectior);
+  constructor(protected injector: Injector) {
+    super(injector);
   }
 
   /**

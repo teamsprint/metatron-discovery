@@ -13,7 +13,7 @@
  */
 
 import {DsType, FileFormat, ImportType, PrDataset} from '../../domain/data-preparation/pr-dataset';
-import {SsType} from '../../domain/data-preparation/pr-snapshot';
+import {PrDataSnapshot, SsType, Status} from '../../domain/data-preparation/pr-snapshot';
 import {isNullOrUndefined} from "util";
 import * as _ from "lodash";
 
@@ -637,4 +637,47 @@ export class PreparationCommonUtil {
     }
     return `${iType}${result}`
   }
+
+  public static getDatabaseIconClass(type: string): string {
+    if (type) {
+      switch (type) {
+        case 'MYSQL':
+          return 'type-mysql';
+        case 'TIBERO':
+          return 'type-tibero';
+        case 'HIVE':
+          return 'type-hive';
+        case 'ORACLE':
+          return 'type-oracle';
+        case 'PHOENIX':
+          return 'type-phoenix';
+        case 'POSTGRESQL':
+          return 'type-post';
+        case 'PRESTO':
+          return 'type-presto';
+        case 'DRUID':
+          return 'type-druid';
+        case 'RDS':
+          return 'type-rds';
+        case 'MSSQL':
+          return 'type-mssql';
+        default:
+          return 'type-custom';
+      }
+    } else {
+      return 'type-db'
+    }
+  }
+
+  public static getDataresultStatusClass(status: Status): string {
+    const inprogress = [Status.INITIALIZING,Status.RUNNING,Status.WRITING,Status.TABLE_CREATING,Status.CANCELING];
+    if ([Status.SUCCEEDED].indexOf(status) >= 0) {
+      return 'type-success';
+    } else if (inprogress.indexOf(status) >= 0) {
+      return 'type-inprogress';
+    } else  {
+      return 'type-error';
+    }
+  }
+
 }

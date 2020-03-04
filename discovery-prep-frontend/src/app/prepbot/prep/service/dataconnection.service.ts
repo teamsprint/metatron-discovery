@@ -26,8 +26,8 @@ export class DataconnectionService extends AbstractService {
   // Dictionary url
   private URL_CONNECTIONS = this.API_URL + 'connections';
 
-  constructor(protected injectior: Injector) {
-    super(injectior);
+  constructor(protected injector: Injector) {
+    super(injector);
   }
 
   // 데이터커넥션 목록
