@@ -16,7 +16,6 @@ export class LoaderInterceptor implements HttpInterceptor {
     if (showLoading) {
       this.totalRequests += 1
     }
-    console.log(request)
     if (request.responseType === 'json') {
       let jsonHeaders = request.headers.append('x-requested-with', 'XMLHttpRequest')
       request = request.clone({headers: jsonHeaders})
