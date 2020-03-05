@@ -1,7 +1,7 @@
-<div class="pb-layout-popup" *ngIf="isShow">
+<div class="pb-layout-popup">
     <!-- box popup -->
     <div class="pb-box-popup">
-        <a href="javascript:" class="pb-btn-pop-close" (click)="isShow = false"></a>
+        <a href="javascript:" class="pb-btn-pop-close" ((click)="close()"></a>
         <!-- step -->
         <div class="pb-ui-step">
             <span class="pb-txt-step is-selected">1</span>
