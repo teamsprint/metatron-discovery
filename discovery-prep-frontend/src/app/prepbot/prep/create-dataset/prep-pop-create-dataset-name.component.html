@@ -1,7 +1,8 @@
-<div class="pb-layout-popup" *ngIf="isShow">
+<script src="../../../../../../../CreateDatasetNameComponent.ts"></script>
+<div class="pb-layout-popup">
     <!-- box popup -->
     <div class="pb-box-popup">
-        <a href="javascript:" class="pb-btn-pop-close" (click)="isShow = false"></a>
+        <a href="javascript:" class="pb-btn-pop-close" (click)="close()"></a>
         <!-- step -->
         <div class="pb-ui-step">
             <span class="pb-txt-step">1</span>
@@ -9,11 +10,13 @@
             <span class="pb-txt-step">3</span>
             <span class="pb-txt-step is-selected">4</span>
         </div>
+
+
+
         <!-- //step -->
         <!-- top -->
         <div class="pb-popup-top">
             <div class="pb-txt-title">CREATE DATASET</div>
-
         </div>
         <!-- //top -->
 
@@ -59,26 +62,29 @@
                 <div class="pb-ui-create">
                     <!-- form create -->
                     <div class="pb-form-create">
-                        <div class="pb-create-label">Name</div>
+                        <div class="pb-create-label">{{'msg.comm.ui.name' | translate}}</div>
                         <div class="pb-form-edit">
-                            <input type="text" class="pb-component-input" placeholder="Placeholder">
+                            <input type="text" class="pb-component-input" [(ngModel)]="names[0]" maxlength="50" placeholder="{{'msg.comm.ui.create.name' | translate}}">
+                            <span class="pb-form-error" *ngIf="showNameError">{{'msg.storage.ui.required' | translate}}</span>
                         </div>
                     </div>
                     <!-- //form create -->
                     <!-- form create -->
                     <div class="pb-form-create">
-                        <div class="pb-create-label">Description</div>
+                        <div class="pb-create-label">{{'msg.comm.ui.description' | translate}}</div>
                         <div class="pb-form-edit">
-                            <input type="text" class="pb-component-input" placeholder="Placeholder">
+                            <input type="text" class="pb-component-input" [(ngModel)]="descriptions[0]" maxlength="150" placeholder="{{'msg.comm.ui.create.desc' | translate}}">
+                            <span class="pb-form-error" *ngIf="showDescError">{{'msg.storage.ui.required' | translate}}</span>
                         </div>
                     </div>
                     <!-- //form create -->
                     <!-- form create -->
                     <div class="pb-form-create">
                         <label class="pb-compomnent-checkbox">
-                            <input type="checkbox">
+                            <input type="checkbox" [(ngModel)]="isChecked" [checked]="isChecked" disabled="disabled" *ngIf="!isFromDatasetList">
+                            <input type="checkbox" [(ngModel)]="isChecked" [checked]="isChecked" *ngIf="isFromDatasetList">
                             <i></i>
-                            <span class="pb-txt-checkbox">Continue to edit rules with this dataset in a new dataflow</span>
+                            <span class="pb-txt-checkbox">{{'mgs.dp.ui.continue.new.rule' | translate}}</span>
                         </label>
                     </div>
                     <!-- //form create -->

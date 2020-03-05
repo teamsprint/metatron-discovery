@@ -19,7 +19,8 @@ FileFormat, PrDatasetHive, PrDatasetJdbc,
 RsType
 } from '../../../domain/data-preparation/pr-dataset';
 import {PopupService} from '../../../common/service/popup.service';
-import { DatasetService } from '../service/dataset.service';
+import {DatasetService} from '../service/dataset.service';
+import {DataflowService} from "../service/dataflow.service";
 import {isNullOrUndefined, isUndefined} from 'util';
 import {StringUtil} from '../../../common/util/string.util';
 import {Alert} from '../../../common/util/alert.util';
@@ -56,6 +57,10 @@ export class PrepPopCreateDatasetNameComponent extends AbstractPopupComponent im
 
   @Output()
   public createClose : EventEmitter<void> = new EventEmitter();
+
+  @Output()
+  public createComplete : EventEmitter<void> = new EventEmitter();
+
 
   @Input()
   public datasetHive: PrDatasetHive;
@@ -111,6 +116,7 @@ export class PrepPopCreateDatasetNameComponent extends AbstractPopupComponent im
   |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
   constructor(private popupService: PopupService,
               private datasetService: DatasetService,
+              private dataflowService: DataflowService,
               protected elementRef: ElementRef,
               protected injector: Injector) {
     super(elementRef, injector);
@@ -147,108 +153,111 @@ export class PrepPopCreateDatasetNameComponent extends AbstractPopupComponent im
     | Public Method
     |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
-  /** Complete */
-  public complete() {
+    /** Complete */
+    public complete() {
+        this.resetErrorMessage();
 
-    // Name validation
-    this.names.forEach((item, index) => {
-      if (isUndefined(item) || item.trim() === '' || item.length < 1) {
-        this.nameErrors[index] = this.translateService.instant('msg.dp.alert.name.error');
-        this.showNameError = true;
-      }
-
-      if (item.length > 150) {
-        this.showNameError = true;
-        this.nameErrors[index] = this.translateService.instant('msg.dp.alert.name.error.description');
-      }
-
-    });
-
-
-    // description validation
-    this.descriptions.forEach((item, index) => {
-      if (!StringUtil.isEmpty(this.descriptions[index]) && this.descriptions[index].length > 150) {
-        this.descriptionErrors[index] = this.translateService.instant('msg.dp.alert.description.error.description');
-      }
-    });
-
-    if (this.showNameError || this.showDescError) {
-      return;
-    }
-
-
-    let params = {};
-    if (this.type === 'STAGING') {
-
-      this.datasetHive.dsName = this.names[0];
-      this.datasetHive.dsDesc = this.descriptions[0];
-      params = this._getHiveParams(this.datasetHive);
-      this._createDataset(params);
-    }
-
-    if (this.type === 'DB') {
-
-      this.datasetJdbc.dsName = this.names[0];
-      this.datasetJdbc.dsDesc = this.descriptions[0];
-      params = this._getJdbcParams(this.datasetJdbc);
-      this._createDataset(params);
-
-    }
-
-    if (this.type === 'FILE' || 'URL' === this.type) {
-
-      // List of parameters used to make multiple dataSets
-      const params = this.names.map((name:string,index:number) => {
-        this.datasetFiles[this.dsfileInformations[index].datasetFileIndex].dsName = name;
-        this.datasetFiles[this.dsfileInformations[index].datasetFileIndex].dsDesc = this.descriptions[index];
-        this.datasetFiles[this.dsfileInformations[index].datasetFileIndex].sheetName = this.dsfileInformations[index].sheetName;
-        if (this.datasetFiles[this.dsfileInformations[index].datasetFileIndex].fileFormat != FileFormat.JSON) {
-          this.datasetFiles[this.dsfileInformations[index].datasetFileIndex].manualColumnCount = this.dsfileInformations[index].manualColumnCount;
+        const name : string = this.names[0];
+        if(name==null || name.replace(/ /g,'') =='') {
+            this.showNameError =true;
         }
-        return this._getFileParams(this.datasetFiles[this.dsfileInformations[index].datasetFileIndex]);
-      });
-
-      // Make list of params into observable using from.
-      // used concatMap to send multiple sequential HTTP requests
-      this.flag = true;
-      this.results = [];
-      const streams = from(params).pipe(
-        concatMap(stream => this._createFileDataset(stream)
-          .catch((error) => {
-            console.info(error)
-          })));
-
-      this.loadingShow();
-      streams.subscribe((result) => {
-
-        // push only successful result into an array
-        // because this information is required in
-        // complete() but no way to access them
-        if (result) {
-          this.results.push({dsId: result.dsId, dsName: result.dsName, link : result['_links'].self.href});
+        const desc : string = this.descriptions[0];
+        if(desc==null || desc.replace(/ /g,'') =='') {
+            this.showDescError =true;
         }
 
-      },(error) => {
-        console.error(error);
-      },() => {
-
-        this.flag = false;
-        this.loadingHide();
-
-        // Find number of errors
-        const errorNum = this.names.length - this.results.length;
-        if (errorNum > 0) {
-          Alert.error(this.translateService.instant('msg.dp.alert.num.fail.dataset', {value : errorNum}));
+        if (this.showNameError || this.showDescError) {
+          return;
         }
 
 
-      })
+
+
+        let params = {};
+        if (this.type === 'STAGING') {
+
+            this.datasetHive.dsName = this.names[0];
+            this.datasetHive.dsDesc = this.descriptions[0];
+            params = this._getHiveParams(this.datasetHive);
+            this._createDataset(params);
+        }
+
+        if (this.type === 'DB') {
+
+            this.datasetJdbc.dsName = this.names[0];
+            this.datasetJdbc.dsDesc = this.descriptions[0];
+            params = this._getJdbcParams(this.datasetJdbc);
+            this._createDataset(params);
+
+        }
+
+        if (this.type === 'FILE' || 'URL' === this.type) {
+
+            // List of parameters used to make multiple dataSets
+            const params = this.names.map((name:string,index:number) => {
+                this.datasetFiles[this.dsfileInformations[index].datasetFileIndex].dsName = name;
+                this.datasetFiles[this.dsfileInformations[index].datasetFileIndex].dsDesc = this.descriptions[index];
+                this.datasetFiles[this.dsfileInformations[index].datasetFileIndex].sheetName = this.dsfileInformations[index].sheetName;
+                if (this.datasetFiles[this.dsfileInformations[index].datasetFileIndex].fileFormat != FileFormat.JSON) {
+                    this.datasetFiles[this.dsfileInformations[index].datasetFileIndex].manualColumnCount = this.dsfileInformations[index].manualColumnCount;
+                }
+                return this._getFileParams(this.datasetFiles[this.dsfileInformations[index].datasetFileIndex]);
+            });
+
+            // Make list of params into observable using from.
+            // used concatMap to send multiple sequential HTTP requests
+            this.flag = true;
+            this.results = [];
+            const streams = from(params).pipe(
+                concatMap(stream => this._createFileDataset(stream)
+                    .catch((error) => {
+                        console.info(error)
+                    })));
+
+            this.loadingShow();
+            streams.subscribe((result) => {
+
+                // push only successful result into an array
+                // because this information is required in
+                // complete() but no way to access them
+                if (result) {
+                    this.results.push({dsId: result.dsId, dsName: result.dsName, link : result['_links'].self.href});
+                }
+
+            },(error) => {
+                console.error(error);
+            },() => {
+
+                this.flag = false;
+                this.loadingHide();
+
+                // Find number of errors
+                const errorNum = this.names.length - this.results.length;
+                if (errorNum > 0) {
+                    Alert.error(this.translateService.instant('msg.dp.alert.num.fail.dataset', {value : errorNum}));
+                }
+
+                // 데이터셋 리스트에서 진입과 체크됐다면(데이터플로우로 바로 이동)
+                if (this.isChecked && this.isFromDatasetList) {
+                    this._makeShortCutToDataFlow();
+                } else {
+
+                  this.createComplete.emit();
+                    // // 리스트로 돌아간다.
+                    // this.popupService.notiPopup({
+                    //     name: 'complete-dataset-create',
+                    //     data: this.results.length > 0 ? this.results[0].dsId : null
+                    // });
+
+
+                }
+            })
+
+        }
+
+
 
     }
-
-    this.close();
-
-  }
 
   public goto(step) {
       // this.step = step;
@@ -256,17 +265,16 @@ export class PrepPopCreateDatasetNameComponent extends AbstractPopupComponent im
     }
   /** go to previous step */
   public prev() {
+    let step_string: string ='';
+    if (this.type === 'FILE') {
+        step_string = 'select-sheet';
+    }else if(this.type === 'DB') {
+        step_string = 'DB';
+    }else if(this.type === 'KAFKA') {
+        step_string = 'complete-create-dataset';
+    }
 
-    // if (this.type === 'FILE') {
-    //   this.goto('select-sheet');
-    //  } else if (this.type === 'DB') {
-    //
-    //   this.goto('DB');
-    // } else if (this.type === 'KAFKA') {
-    //
-    //   this.goto('complete-create-dataset');
-    // }
-      this.stepChange.emit( 'complete-create-dataset');
+    this.stepChange.emit( step_string);
   }
 
 
@@ -420,6 +428,12 @@ export class PrepPopCreateDatasetNameComponent extends AbstractPopupComponent im
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   | Private Method
   |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
+    private resetErrorMessage(): void{
+        this.showNameError = false;
+        this.showDescError = false;
+
+    }
+
   /**
    * 데이터셋 이름의 default값을 넣는다.
    * @param {string} type
@@ -507,7 +521,7 @@ export class PrepPopCreateDatasetNameComponent extends AbstractPopupComponent im
     // For placeholder
     this.clonedNames = _.cloneDeep(this.names);
 
-    this.nameElement && setTimeout(() => { this.nameElement.nativeElement.select(); });
+    // this.nameElement && setTimeout(() => { this.nameElement.nativeElement.select(); });
   } // function - _setDefaultDatasetName
 
 
@@ -769,6 +783,48 @@ export class PrepPopCreateDatasetNameComponent extends AbstractPopupComponent im
     });
   }
 
+
+
+    private _makeShortCutToDataFlow() {
+
+        let today = moment();
+        const df = new PrDataflow();
+        this.loadingShow();
+
+        // 데이터셋이 생성이 됐다면 데이터플로우 생성을 한다.
+        if (this.results[0] && !isNullOrUndefined(this.results[0].link)) {
+            df.datasets = [this.results[0].link];
+            df.dfName = `${this.results[0].dsName}_${today.format('MM')}${today.format('DD')}_${today.format('HH')}${today.format('mm')}`  ;
+
+            // 1. create dataflow with dataset
+            this.dataflowService.createDataflow(df).then((result1) => {
+                this.loadingHide();
+                if (result1) {
+
+                    // 2. Find wrangled dataset
+                    // 3. Move to dataFlow main grid (navigate)
+                    // this.router.navigate([`/management/prepbot/dataflow/${result1['dfId']}/rule/${result1.datasets[1].dsId}`]);
+                    this.router.navigate([`/management/prepbot/dataflow/${result1['dfId']}/dataset/${result1.datasets[1].dsId}`]);
+                } else {
+
+                    // If error move to dataset list
+                    // this.close();
+                    this.createComplete.emit();
+                }
+
+            }).catch(() => {
+
+                // If error move to dataset list
+                this.loadingHide();
+                this.close();
+            });
+        } else {
+            // If error move to dataset list
+            this.loadingHide();
+            // this.close();
+            this.createComplete.emit();
+        }
+    }
 
 }
 

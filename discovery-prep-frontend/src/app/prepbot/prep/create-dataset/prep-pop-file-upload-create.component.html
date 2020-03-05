@@ -1,7 +1,7 @@
-<div class="pb-layout-popup" *ngIf="isShow">
+<div class="pb-layout-popup" >
     <!-- box popup -->
     <div class="pb-box-popup">
-        <a href="javascript:" class="pb-btn-pop-close" (click)="isShow = false"></a>
+        <a href="javascript:" class="pb-btn-pop-close" (click)="close()"></a>
         <!-- step -->
         <div class="pb-ui-step">
             <span class="pb-txt-step">1</span>
@@ -84,7 +84,7 @@
 
 
                 <!-- drop file -->
-                <div class="pb-box-drop-file" #drop_container >
+                <div class="pb-box-drop-file" #drop_container2>
                     <div class="pb-txt-description">
                         <span class="pb-txt-title">Drop your file</span>
                         <span class="pb-txt-sub">xls, .xlsx and .csv formats are allowed</span>

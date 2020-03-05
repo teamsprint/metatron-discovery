@@ -182,7 +182,7 @@ export class PrepPopFileUploadCreateComponent extends AbstractPopupComponent imp
     this.chunk_uploader = new plupload.Uploader({
       runtimes : 'html5,html4',
       chunk_size: '0',
-      drop_element : this.drop_container.nativeElement,
+      drop_element : [this.drop_container.nativeElement, this.drop_container2.nativeElement],
       url : CommonConstant.API_CONSTANT.API_URL + 'preparationdatasets/file_upload',
       headers:{
         'Accept': 'application/json, text/plain, */*',

@@ -8,4 +8,7 @@
 <!-- FILE -->
 <prep-pop-file-upload-create *ngIf="step=='FILE'" [datasetFiles]="datasetFiles" [(step)]="step" (createClose)="createClose()" (stepChange)="stepChange($event)"></prep-pop-file-upload-create>
 <prep-pop-file-selectsheet *ngIf="step=='select-sheet'" [datasetFiles]="datasetFiles" [(step)]="step" (createClose)="createClose()" (stepChange)="stepChange($event)"></prep-pop-file-selectsheet>
+
+
+<!-- NAME -->
 <prep-pop-create-dataset-name *ngIf="step=='create-dataset-name'" [type]="type" [datasetFiles]="datasetFiles" [(step)]="step" (createClose)="createClose()"  (stepChange)="stepChange($event)" (createComplete)="createCompleteEvent();"></prep-pop-create-dataset-name>

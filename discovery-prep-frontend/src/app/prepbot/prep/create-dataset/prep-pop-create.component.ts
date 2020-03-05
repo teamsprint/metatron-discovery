@@ -88,8 +88,7 @@ export class PrepPopCreateComponent  extends AbstractComponent implements OnInit
     public init() {
         this.step='';
         if(this.prepPopType){
-
-        this.prepPopType.init();
+            this.prepPopType.init();
         }
     }
 
@@ -98,9 +97,7 @@ export class PrepPopCreateComponent  extends AbstractComponent implements OnInit
     }
 
     public stepChange(step) {
-        // console.info('stepChange', step);
         this.step = step;
-        // console.info('this.step', this.step);
     }
 
     public selectedTypeEvent(type: string) {
@@ -125,7 +122,7 @@ export class PrepPopCreateComponent  extends AbstractComponent implements OnInit
     }
 
     public createCompleteEvent(): void{
-
+        this.createComplete.emit();
     }
 
     /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
