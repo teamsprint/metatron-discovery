@@ -12,7 +12,7 @@
 .pb-wrap-data-connect .pb-txt-title {padding:25px 0 0 0;color:#000; font-size:30px;}
 .pb-wrap-data-connect .pb-txt-det {padding:20px 0 0 0;color:rgba(0,0,0,0.7); font-size:18px; text-align:center;}
 
-.pb-ui-data-expression {flex:auto; position:relative; height:100%; padding:20px 37px 0 37px;}
+.pb-ui-data-expression {flex:auto; position:relative; height:100%; padding:20px 10% 0 10%;}
 .pb-ui-data-expression .pb-ui-grid {position:absolute; top:60px; left:37px; right:37px; bottom:0; overflow:auto;}
 .pb-ui-data-expression .pb-ui-grid-option .pb-grid-input {display:inline-block; position:relative; float:left; padding:5px 9px; margin:-5px 0 0 14px;width:61px; height:25px; border-radius:3px; border:1px solid #929292; font-size:15px;}
 .pb-ui-data-expression .pb-ui-grid-option {}
