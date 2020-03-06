@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-import {Component, ElementRef, HostListener, Injector, OnChanges, ViewChild} from '@angular/core';
+import {Component, ElementRef, HostListener, Injector, ViewChild} from '@angular/core';
 import {AbstractComponent} from '../../common/component/abstract.component';
 import {DataflowService} from './service/dataflow.service';
 import {PrDataflow} from '../../domain/data-preparation/pr-dataflow';
@@ -57,7 +57,7 @@ export class PrepListComponent extends AbstractComponent {
   public ViewMode = ViewMode;
 
   // 프로필 기본 이미지 경로
-  public defaultProfileImageSrc = '../../assets/images/img_photo.png';
+  public defaultProfileImageSrc = '/assets/images/img_photo.png';
 
   public prepCommonUtil = PreparationCommonUtil;
   public DsType = DsType;
@@ -70,7 +70,7 @@ export class PrepListComponent extends AbstractComponent {
 
   public SelectType = SelectType;
   public selectType: SelectType = SelectType.ALL;
-  public isShowSelectType:boolean = false
+  public isShowSelectType:boolean = false;
 
   // search text
   public searchText: string;
@@ -341,10 +341,7 @@ export class PrepListComponent extends AbstractComponent {
     } else {
       return `${this.prepCommonUtil.getSnapshotType(item.ssType)} / ${item.dbName} / ${item.tblName}`;
     }
-
-
   }
-
 
   /**
    * Returns formatted elapsed time
@@ -449,7 +446,7 @@ export class PrepListComponent extends AbstractComponent {
       })
 
     }).catch((err) => {
-      console.log(err)
+      console.log(err);
       // 로딩 종료
       this.loadingHide();
     });
@@ -574,6 +571,6 @@ export class PrepListComponent extends AbstractComponent {
 }
 
 class Order {
-  key: string = 'createdTime';
+  key: string = 'modifiedTime';
   sort: string = 'default';
 }

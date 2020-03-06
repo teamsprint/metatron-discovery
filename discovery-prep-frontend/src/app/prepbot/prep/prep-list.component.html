@@ -128,10 +128,10 @@
           <div class="pb-ui-graph">
             그래프 영역
           </div>
-          <div class="pb-ui-name ddp-ellipsis" title=" {{item.dfName}}">
+          <div class="pb-ui-name ddp-ellipsis" title="{{item.dfName}}">
             {{item.dfName}}
           </div>
-          <div class="pb-ui-des ddp-ellipsis" title=" {{item.dfDesc}}">
+          <div class="pb-ui-des ddp-ellipsis" title="{{item.dfDesc}}">
             {{item.dfDesc}}
           </div>
           <!-- num -->
@@ -159,10 +159,10 @@
             <span class="pb-component-tag type-new" *ngIf="item.createdTime | moment: 'isNew'">NEW</span>
           </div>
           <!-- // tag -->
-          <div class="pb-ui-name ddp-ellipsis" title=" {{item.dsName}}">
+          <div class="pb-ui-name ddp-ellipsis" title="{{item.dsName}}">
             {{item.dsName}}
           </div>
-          <div class="pb-ui-des ddp-ellipsis" title=" {{item.dsDesc}}">
+          <div class="pb-ui-des ddp-ellipsis" title="{{item.dsDesc}}">
             {{item.dsDesc}}
           </div>
         </div>
@@ -185,10 +185,10 @@
           <div class="pb-ui-result">
             <em class="pb-img-state {{prepCommonUtil.getDataresultStatusClass(item.status)}}"></em>
             <span class="pb-txt-state {{prepCommonUtil.getDataresultStatusClass(item.status)}}">{{item.status}}</span>
-            <div class="pb-ui-name ddp-ellipsis" title=" {{item.ssName}}">
+            <div class="pb-ui-name ddp-ellipsis" title="{{item.ssName}}">
               {{item.ssName}}
             </div>
-            <div class="pb-ui-des ddp-ellipsis" title=" {{item.ssDesc}}">
+            <div class="pb-ui-des ddp-ellipsis" title="{{item.ssDesc}}">
               {{item.ssDesc}}
             </div>
             <div class="pb-ui-time">
@@ -255,7 +255,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let item of list; let i = index" (click)="goToDfDetail(item.dfId)" class="ddp-cursor">
+              <tr *ngFor="let item of list; let i = index" (click)="goToDfDetail(item)" class="ddp-cursor">
                 <ng-container *ngIf="isDataflow(item)">
                   <td>
                     DATA FLOW
