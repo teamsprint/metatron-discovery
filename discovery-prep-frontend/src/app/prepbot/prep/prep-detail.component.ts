@@ -93,6 +93,8 @@ export class PrepDetailComponent extends AbstractComponent {
 
     public dataflows: PrDataflow[] = [];
 
+    public datasets: PrDataset[] = [];
+
     // 타입별 아이콘 정보
     private symbolInfo: any;
 
@@ -508,6 +510,28 @@ export class PrepDetailComponent extends AbstractComponent {
                 this.closeEditRule();
             } else {
                 this.getDataflow();
+                //
+                // for(int inx=0;inx<this.dataflows.count;inx++){
+                //
+                // }
+
+
+                // this.dataflows.forEach((list, index, array) => {
+                //     // set list filters
+                //     list.datasets.push(this.dataflows[index].datasets);
+                // });
+
+                // this.dataflows.forEach((item)=> {
+                //     this.datasets.push(item['datasets']);
+                //
+                // });
+
+                this.dataflows.forEach((item)=> {
+                    item.datasets.forEach((item2)=> {
+                        this.datasets.push(item2);
+                    });
+                });
+
                 if (sessionStorage.getItem('DATASET_ID')) { // From dataflow detail
                     //this.addDatasets();
                 }
