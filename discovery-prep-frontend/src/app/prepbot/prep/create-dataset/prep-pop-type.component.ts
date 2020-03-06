@@ -32,6 +32,9 @@ export class PrepPopTypeComponent extends AbstractComponent {
     public step: string = '';
     @Output()
     public stepChange : EventEmitter<string> = new EventEmitter();
+    @Output()
+    public selectedType : EventEmitter<string> = new EventEmitter();
+
 
     @Output()
     public createClose : EventEmitter<void> = new EventEmitter();
@@ -83,37 +86,41 @@ export class PrepPopTypeComponent extends AbstractComponent {
      * Create new db
      */
     public goToDB() {
-        this.stepChange.emit( "DB" );
-        // this.popupService.notiPopup({
-        //     name: 'DB',
-        //     data: null
-        // });
+        // this.stepChange.emit( "DB" );
+        // // this.popupService.notiPopup({
+        // //     name: 'DB',
+        // //     data: null
+        // // });
+        this.selectedType.emit("DB");
     }
 
     /**
      * Create new file
      */
     public goToFile() {
-        this.stepChange.emit( "FILE" );
+        // this.stepChange.emit( "FILE" );
     //     this.popupService.notiPopup({
     //         name: 'FILE',
     //         data: null
     //     });
+        this.selectedType.emit("FILE");
     }
 
     /**
      * Create new kafka
      */
     public goToKafka() {
-        this.goto("KAFKA");
-        }
+        // this.goto("KAFKA");
+        // }
 
     // public goToDB() {
     //     const params = this._getDfParams();
     //     this.router.navigate(
     //         ['/management/prepbot/dataflow'])
     //         .then();
-    // }
+        this.selectedType.emit("KAFKA");
+    }
+
     public goto(step) {
         this.step = step;
         this.stepChange.emit( step );

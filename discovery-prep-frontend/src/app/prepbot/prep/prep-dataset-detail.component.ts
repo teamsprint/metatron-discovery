@@ -413,6 +413,77 @@ export class PrepDatasetDetailComponent extends AbstractComponent {
     this.editorUseFlag = false;
   }
 
+  /**
+   * Rule cancel or 초기 세팅
+   * @param data
+   */
+  public initRule(data?) {
+
+    // default 는 append
+    this.opString = 'APPEND';
+
+    // 룰 리스트에서 선택된 룰이 없게 this.ruleNo 초기화
+    this.ruleNo = null;
+
+    this.ruleVO = new Rule();
+    // this.inputRuleCmd = '';
+
+    // redo, undo를 초기화 한다.
+    if (data) this.initRedoUndo(data);
+
+  } // function - initRule
+
+  /**
+   * Initialise redo and undo buttons
+   * @param data
+   */
+  public initRedoUndo(data) {
+
+    switch (data.redoable) {
+      case 'true':
+        this.redoable = true;
+        break;
+      case 'false' :
+        this.redoable = false;
+        break;
+    }
+
+    switch (data.undoable) {
+      case 'true':
+        this.undoable = true;
+        break;
+      case 'false' :
+        this.undoable = false;
+        break;
+    }
+  } // function - initRedoUndo
+
+  /**
+   * Redo or undo
+   * @param {string} action
+   */
+  public transformAction(action : string) {
+    this.refreshEditMode();
+    const rule = { op: action };
+    if (action === 'UNDO') {
+      if (!this.undoable) {
+        return;
+      }
+      if (this.isUndoRunning === false) {
+        this.isUndoRunning = true;
+      }
+    } else if (action === 'REDO') {
+      if (!this.redoable) {
+        return;
+      }
+      if (this.isRedoRunning === false) {
+        this.isRedoRunning = true;
+      }
+
+    }
+    this.applyRule(rule, action === 'UNDO')
+  }
+
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   | Private Method
   |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
@@ -563,6 +634,9 @@ export class PrepDatasetDetailComponent extends AbstractComponent {
           // Set rule list
           this.setRuleList(apiData['transformRules']);
           this.isAggregationIncluded = this._hasAggregation();
+
+          // init ruleVO
+          this.initRule(apiData);
 
           this.loadingHide();
         }

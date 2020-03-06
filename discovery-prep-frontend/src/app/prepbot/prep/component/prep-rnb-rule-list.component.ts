@@ -13,7 +13,7 @@
  */
 
 import {
-  Component, ElementRef, Injector, OnInit, OnDestroy, Input, Output, EventEmitter, OnChanges
+  Component, ElementRef, Injector, OnInit, OnDestroy, Input, Output, EventEmitter
 } from '@angular/core';
 import {AbstractComponent} from "../../../common/component/abstract.component";
 import {Rule} from '../../../domain/data-preparation/pr-dataset';
@@ -22,7 +22,7 @@ import {Rule} from '../../../domain/data-preparation/pr-dataset';
   selector: 'prep-rnb-rule-list',
   templateUrl: './prep-rnb-rule-list.component.html',
 })
-export class PrepRnbRuleListComponent extends AbstractComponent implements OnInit, OnChanges, OnDestroy{
+export class PrepRnbRuleListComponent extends AbstractComponent implements OnInit, OnDestroy{
 
 
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
@@ -79,10 +79,6 @@ export class PrepRnbRuleListComponent extends AbstractComponent implements OnIni
   // Destroy
   public ngOnDestroy() {
     super.ngOnDestroy();
-  }
-
-  public ngOnChanges() {
-    console.log(this.ruleList)
   }
 
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=

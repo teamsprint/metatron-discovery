@@ -47,38 +47,40 @@
           <div class="pb-select-popup">
             <ul class="pb-list-selectbox">
               <li>
-                <a href="javascript:">1</a>
+                <a href="javascript:">Recently</a>
               </li>
               <li>
-                <a href="javascript:">1</a>
-              </li>
-              <li>
-                <a href="javascript:">1</a>
+                <a href="javascript:">Name</a>
               </li>
             </ul>
           </div>
           <!-- //popup -->
         </div>
         <!-- //selectbox -->
+
         <!-- selectbox -->
         <!--
             클릭시 : is-selected 추가
             값 입력시 : is-value 추가
 
         -->
-        <div class="pb-component-selectbox type-white type-icon-selectbox ">
-          <span class="pb-txt-selectbox"><em class="pb-icon-contents"></em>All Contents</span>
+        <div #selectTypeSelectBox
+                class="pb-component-selectbox type-white type-icon-selectbox " [class.is-selected]="isShowSelectType" (click)="isShowSelectType = !isShowSelectType">
+          <span class="pb-txt-selectbox"><em class="pb-icon-contents"></em>{{selectType}}</span>
           <!-- popup -->
           <div class="pb-select-popup">
             <ul class="pb-list-selectbox">
               <li>
-                <a href="javascript:">1</a>
+                <a href="javascript:" (click)="changeSelectType(SelectType.ALL)">ALL</a>
               </li>
               <li>
-                <a href="javascript:">1</a>
+                <a href="javascript:" (click)="changeSelectType(SelectType.DATAFLOW)">DATA FLOW</a>
               </li>
               <li>
-                <a href="javascript:">1</a>
+                <a href="javascript:" (click)="changeSelectType(SelectType.DATASETS)">DATA SETS</a>
+              </li>
+              <li>
+                <a href="javascript:" (click)="changeSelectType(SelectType.DATARESULTS)">DATA RESULTS</a>
               </li>
             </ul>
           </div>
@@ -90,10 +92,10 @@
       <!-- right -->
       <div class="pb-set-right">
         <ul class="pb-list-toggle">
-          <li [class.is-selected]="viewMode === 'CARD'" (click)="toggleViewMode('CARD')">
+          <li [class.is-selected]="isCardView" (click)="toggleViewMode(ViewMode.CARD)">
             <a href="javascript:"><em class="pb-icon-grid"></em></a>
           </li>
-          <li [class.is-selected]="viewMode === 'LIST'" (click)="toggleViewMode('LIST')">
+          <li [class.is-selected]="isListView" (click)="toggleViewMode(ViewMode.LIST)">
             <a href="javascript:"><em class="pb-icon-list"></em></a>
           </li>
         </ul>
@@ -108,183 +110,184 @@
   </div>
   <!-- //intro setting -->
   <!-- intro contents -->
-  <div class="pb-wrap-main pb-clear" *ngIf="viewMode == 'CARD'">
+  <div class="pb-wrap-main pb-clear" *ngIf="isCardView">
     <!--<div class="pb-intro-contents-in" *ngIf="dataflows.length > 0">-->
 
-      <!-- box -->
-      <div class="pb-box-main" *ngFor="let item of dataflows; let i = index" [attr.data-index]="i" (click)="goToDfDetail(item.dfId)" style="cursor: pointer;">
+    <div class="pb-box-main {{isDataresult(item) ? prepCommonUtil.getDataresultStatusClass(item.status) : ''}} ddp-cursor"
+         [class.type-dataset]="isDataflow(item)"
+         (click)="goToDfDetail(item)"
+         *ngFor="let item of list">
+      <ng-container *ngIf="isDataflow(item)">
         <!-- main summary -->
         <div class="pb-ui-main-summary">
           <!-- tag -->
-          <div class="pb-ui-tags">
-            <span class="pb-component-tag type-new">NEW</span>
+          <div class="pb-ui-tags" *ngIf="item.createdTime | moment: 'isNew'">
+            <span class="pb-component-tag type-new">{{'msg.common.ui.new' | translate}}</span>
           </div>
           <!-- // tag -->
           <div class="pb-ui-graph">
             그래프 영역
-
           </div>
-          <div class="pb-ui-name">
-            Dataflow - {{item.dfName}}
+          <div class="pb-ui-name ddp-ellipsis" title="{{item.dfName}}">
+            {{item.dfName}}
           </div>
-          <div class="pb-ui-des">
+          <div class="pb-ui-des ddp-ellipsis" title="{{item.dfDesc}}">
             {{item.dfDesc}}
           </div>
           <!-- num -->
           <div class="pb-data-num">
             <span class="pb-txt-num">
                 <em class="pb-file-type type-db"></em>
-                {{item.importedDsCount}}/{{item.wrangledDsCount}}
+              {{item.importedDsCount}}
             </span>
             <span class="pb-txt-num">
                 <em class="pb-file-type type-dataset"></em>
-                99
+              {{item.wrangledDsCount}}
             </span>
           </div>
           <!-- //num -->
         </div>
         <!-- //main summary -->
-
-        <!-- bottom -->
-        <div class="pb-box-bottom pb-clear">
-          <span class="pb-data-name">
-            <em class="pb-img-photo"></em>{{item.createdBy.fullName}}
-            <!--<img src="{{defaultProfileImageSrc}}" #profileImage>{{item.createdBy.fullName}}-->
-          </span>
-          <span class="pb-data-calen">
-              {{'msg.comm.th.created' | translate}}
-          </span>
+      </ng-container>
+      <ng-container *ngIf="isDataset(item)">
+        <!-- main summary -->
+        <div class="pb-ui-main-summary" [ngStyle]="{'min-height': item.dcImplementor ? '137px' : ''}">
+          <!-- tag -->
+          <div class="pb-ui-tags">
+            <span class="pb-component-tag type-imported" *ngIf="item.dsType === DsType.IMPORTED">Imported</span>
+            <span class="pb-component-tag type-wrangled" *ngIf="item.dsType === DsType.WRANGLED">Wrangled</span>
+            <span class="pb-component-tag type-new" *ngIf="item.createdTime | moment: 'isNew'">NEW</span>
+          </div>
+          <!-- // tag -->
+          <div class="pb-ui-name ddp-ellipsis" title="{{item.dsName}}">
+            {{item.dsName}}
+          </div>
+          <div class="pb-ui-des ddp-ellipsis" title="{{item.dsDesc}}">
+            {{item.dsDesc}}
+          </div>
         </div>
-        <!-- //bottom -->
+        <!-- //main summary -->
+        <!-- data summary -->
+        <div class="pb-data-summary">
+          <div class="pb-txt-data">
+            <span class="pb-data-label">Used in</span>{{item.refDfCount}}
+          </div>
+          <div class="pb-txt-data">
+            {{item.dsType === DsType.IMPORTED ? prepCommonUtil.getDatasetType(item) : item.creatorDfName}}
+          </div>
+        </div>
+        <!-- //data summary -->
+      </ng-container>
+      <ng-container *ngIf="isDataresult(item)">
+        <!-- main summary -->
+        <div class="pb-ui-main-summary">
+          <!-- result -->
+          <div class="pb-ui-result">
+            <em class="pb-img-state {{prepCommonUtil.getDataresultStatusClass(item.status)}}"></em>
+            <span class="pb-txt-state {{prepCommonUtil.getDataresultStatusClass(item.status)}}">{{item.status}}</span>
+            <div class="pb-ui-name ddp-ellipsis" title="{{item.ssName}}">
+              {{item.ssName}}
+            </div>
+            <div class="pb-ui-des ddp-ellipsis" title="{{item.ssDesc}}">
+              {{item.ssDesc}}
+            </div>
+            <div class="pb-ui-time">
+              Elapsed time
+              <strong><span *ngIf="getElapsedDay(item) > 0">{{getElapsedDay(item) + '일'}}</span>
+                {{getElapsedTime(item)}}
+              </strong>
+            </div>
+          </div>
+          <!-- //result -->
+        </div>
+        <!-- //main summary -->
+        <!-- data summary -->
+        <div class="pb-data-summary">
+          <div class="pb-txt-data ddp-ellipsis" title="{{item.dfName}} / {{item.dsName}}">
+            <span class="pb-data-label">Dataflow / Dataset</span>{{item.dfName}} / {{item.dsName}}
+          </div>
+          <div class="pb-txt-data ddp-ellipsis" title="{{getDataresultDestination(item)}}">
+            <span class="pb-data-label">Destination</span>{{getDataresultDestination(item)}}
+          </div>
+        </div>
+        <!-- //data summary -->
+      </ng-container>
+      <!-- bottom -->
+      <div class="pb-box-bottom pb-clear">
+        <span class="pb-data-name">
+          <em class="pb-img-photo"></em>{{item.modifiedBy.fullName}}
+          <!--<img src="{{defaultProfileImageSrc}}" #profileImage>{{item.createdBy.fullName}}-->
+        </span>
+        <span class="pb-data-calen">
+          {{item.modifiedTime | mdate:'YYYY-MM-DD HH:mm'}}
+        </span>
       </div>
-      <!-- //box -->
-
-
-
-
-
-      <!--<div class="pb-wrap-box" *ngFor="let item of dataflows; let i = index" [attr.data-index]="i" (click)="goToDfDetail(item.dfId)" style="cursor: pointer;">-->
-        <!--&lt;!&ndash; box &ndash;&gt;-->
-        <!--<div class="pb-box-intro">-->
-          <!--<span class="pb-tag-new">NEW</span>-->
-          <!--&lt;!&ndash; data intro &ndash;&gt;-->
-          <!--<div class="pb-data-intro">-->
-            <!--<div class="pb-data-det">-->
-              <!--{{item.dfName}}-->
-            <!--</div>-->
-            <!--<div class="pb-data-day">{{'msg.comm.th.created' | translate}}</div>-->
-            <!--<a href="javascript:" class="pb-icon-pin"></a>-->
-          <!--</div>-->
-          <!--&lt;!&ndash; //data intro &ndash;&gt;-->
-          <!--&lt;!&ndash; bottom &ndash;&gt;-->
-          <!--<div class="pb-data-bottom">-->
-            <!--&lt;!&ndash; user &ndash;&gt;-->
-            <!--<div class="pb-box-user">-->
-              <!--<span class="pb-data-photo">-->
-                  <!--<img src="{{defaultProfileImageSrc}}" #profileImage>-->
-              <!--</span>-->
-              <!--{{item.createdBy.fullName}}-->
-            <!--</div>-->
-            <!--&lt;!&ndash; //user &ndash;&gt;-->
-            <!--&lt;!&ndash; right &ndash;&gt;-->
-            <!--<div class="pb-data-right">-->
-              <!--<span class="pb-txt-data"><em class="pb-icon-dataset"></em>DATASET <strong>7</strong></span>-->
-              <!--<span class="pb-txt-data"><em class="pb-icon-result"></em>RESULT<strong>7</strong></span>-->
-              <!--&lt;!&ndash;<span class="pb-data-num">&ndash;&gt;-->
-                  <!--&lt;!&ndash;<em class="pb-icon-data1"></em>5&ndash;&gt;-->
-              <!--&lt;!&ndash;</span>&ndash;&gt;-->
-              <!--&lt;!&ndash;<span class="pb-data-num">&ndash;&gt;-->
-                  <!--&lt;!&ndash;<em class="pb-icon-data2"></em>5&ndash;&gt;-->
-              <!--&lt;!&ndash;</span>&ndash;&gt;-->
-              <!--&lt;!&ndash;<span class="pb-data-num">&ndash;&gt;-->
-                  <!--&lt;!&ndash;<em class="pb-icon-data3"></em>5&ndash;&gt;-->
-              <!--&lt;!&ndash;</span>&ndash;&gt;-->
-            <!--</div>-->
-            <!--&lt;!&ndash; //right &ndash;&gt;-->
-
-          <!--</div>-->
-          <!--&lt;!&ndash; //bottom &ndash;&gt;-->
-        <!--</div>-->
-        <!--&lt;!&ndash; //box &ndash;&gt;-->
-      <!--</div>-->
-
-
+      <!-- //bottom -->
+    </div>
 
   </div>
 
   <!-- //list -->
-  <div class="pb-intro-contents" *ngIf="viewMode == 'LIST'">
+  <div class="pb-intro-contents" *ngIf="isListView">
     <div class="pb-intro-contents-in">
 
       <!-- new table -->
-      <div class="pb-ui-data-expression" *ngIf="dataflows.length > 0">
-        <!-- option -->
-        <!--<div class="pb-ui-grid-option">-->
-          <!--&lt;!&ndash; left &ndash;&gt;-->
-          <!--<div class="pb-fleft">-->
-            <!--<a href="javascript:" class="pb-icon-grid"></a>-->
-            <!--<a href="javascript:" class="pb-icon-grid-set"></a>-->
-            <!--<input type="text" class="pb-grid-input">-->
-          <!--</div>-->
-          <!--&lt;!&ndash; //left &ndash;&gt;-->
-          <!--&lt;!&ndash; left &ndash;&gt;-->
-          <!--<div class="pb-fright">-->
-            <!--<a href="javascript:" class="pb-icon-grid-search"></a>-->
-            <!--<a href="javascript:" class="pb-icon-grid-pause"></a>-->
-            <!--<a href="javascript:" class="pb-icon-grid-refresh"></a>-->
-
-
-            <!--<div class="pb-wrap-slider3">-->
-              <!--<a href="javascript:" class="pb-btn-minus"></a>-->
-              <!--<a href="javascript:" class="pb-btn-plus"></a>-->
-              <!--<span class="irs js-irs-0"><span class="irs"><span class="irs-line" tabindex="-1"><span class="irs-line-left"></span><span class="irs-line-mid"></span><span class="irs-line-right"></span></span><span class="irs-min" style="visibility: visible;">0</span><span class="irs-max" style="visibility: visible;">100</span><span class="irs-from" style="visibility: hidden;">0</span><span class="irs-to" style="visibility: hidden;">0</span><span class="irs-single" style="left: 27.7397%;">50</span></span><span class="irs-grid"></span><span class="irs-bar" style="left: 3.08219%; width: 46.9178%;"></span><span class="irs-bar-edge"></span><span class="irs-shadow shadow-single" style="display: none;"></span><span class="irs-slider single" style="left: 46.9178%;"></span></span><input type="text" id="rangeslider3" class="irs-hidden-input" readonly="">-->
-            <!--</div>-->
-            <!--<a href="javascript:" class="pb-icon-grid-resize"></a>-->
-          <!--</div>-->
-          <!--&lt;!&ndash; //left &ndash;&gt;-->
-        <!--</div>-->
-        <!-- //option -->
-        <!-- grid -->
-        <div class="pb-ui-grid">
-          <table class="pb-table-grid">
+      <div class="pb-ui-data-expression" *ngIf="list.length > 0">
+        <!-- //grid top -->
+        <div class="pb-wrap-table" style="background-color: #fff;">
+          <table class="pb-component-table">
             <colgroup>
-              <col width="">
-              <col width="">
-              <col width="">
-              <col width="">
+              <col width="150px">
+              <col width="*">
+              <col width="20%">
             </colgroup>
             <thead>
-            <tr style="background:#fff;">
-              <th (click)="changeOrder('dfName')">
-                <span class="pb-data-txt">{{'msg.comm.ui.name' | translate}}</span>
-              </th>
-              <th>
-                <span class="pb-data-txt">{{'msg.comm.menu.manage.prep.set' | translate}}</span>
-              </th>
-              <th>
-                <span class="pb-data-txt">{{'msg.comm.menu.manage.prep.set' | translate}}</span>
-              </th>
-              <th (click)="changeOrder('createdTime')">
-                <span class="pb-data-txt">{{'msg.comm.th.created' | translate}}</span>
-              </th>
-            </tr>
+              <tr>
+                <th>
+                  Type
+                </th>
+                <th>
+                  Name
+                </th>
+                <th>
+                  Modified
+                </th>
+              </tr>
             </thead>
             <tbody>
-            <tr *ngFor="let item of dataflows; let i = index" [attr.data-index]="i" (click)="goToDfDetail(item.dfId)">
-              <td>{{item.dfName}} - {{item.dfDesc}}</td>
-              <td>{{item.importedDsCount}}</td>
-              <td>{{item.wrangledDsCount}}</td>
-              <td>{{item.createdTime | mdate:'YYYY-MM-DD HH:mm'}} <em class="ddp-icon-by">{{'msg.dp.ui.by' | translate}}</em>{{item.createdBy.fullName}}</td>
-            </tr>
+              <tr *ngFor="let item of list; let i = index" (click)="goToDfDetail(item)" class="ddp-cursor">
+                <ng-container *ngIf="isDataflow(item)">
+                  <td>
+                    DATA FLOW
+                  </td>
+                  <td class="ddp-ellipsis">
+                    {{item.dfName}}<span>{{item.dfDesc ? ' - ' + item.dfDesc : ''}}</span>
+                  </td>
+                </ng-container>
+                <ng-container *ngIf="isDataset(item)">
+                  <td>
+                    DATA SET
+                  </td>
+                  <td class="ddp-ellipsis">
+                    {{item.dsName}}<span>{{item.dsDesc ? ' - ' + item.dsDesc : ''}}</span>
+                  </td>
+                </ng-container>
+                <ng-container *ngIf="isDataresult(item)">
+                  <td>
+                    DATA RESULT
+                  </td>
+                  <td class="ddp-ellipsis">
+                    {{item.ssName}}<span>{{item.ssDesc ? ' - ' + item.ssDesc : ''}}</span>
+                  </td>
+                </ng-container>
+                <td>
+                  {{item.modifiedTime | mdate:'YYYY-MM-DD HH:mm'}} <span>by</span> {{item.modifiedBy.fullName}}
+                </td>
+              </tr>
             </tbody>
           </table>
         </div>
-        <!-- //grid -->
       </div>
-
-
-
-
     </div>
   </div>
   <!-- //list -->

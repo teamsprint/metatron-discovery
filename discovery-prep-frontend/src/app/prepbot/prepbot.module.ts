@@ -104,6 +104,7 @@ import {DataconnectionService} from "../dataconnection/service/dataconnection.se
 import {PrepRnbRuleComponent} from "./prep/component/prep-rnb-rule.component";
 import {PrepRnbRuleListComponent} from "./prep/component/prep-rnb-rule-list.component";
 import {PrepRnbRecommendComponent} from "./prep/component/prep-rnb-recommend.component";
+import {SnapshotService} from "./prep/service/snapshot.service";
 
 const dataPreparationRoutes: Routes = [
 { path: '', component: PrepListComponent },
@@ -219,7 +220,8 @@ const dataPreparationRoutes: Routes = [
     DatasetService,
     PrepbotGuard,
     DataflowModelService,
-    DataconnectionService
+    DataconnectionService,
+    SnapshotService
   ],
   exports: [
   ]

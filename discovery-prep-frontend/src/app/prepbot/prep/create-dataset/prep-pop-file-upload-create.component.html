@@ -1,12 +1,13 @@
-<div class="pb-layout-popup" *ngIf="isShow">
+<div class="pb-layout-popup" >
     <!-- box popup -->
     <div class="pb-box-popup">
-        <a href="javascript:" class="pb-btn-pop-close" (click)="isShow = false"></a>
+        <a href="javascript:" class="pb-btn-pop-close" (click)="close()"></a>
         <!-- step -->
         <div class="pb-ui-step">
             <span class="pb-txt-step">1</span>
             <span class="pb-txt-step is-selected">2</span>
             <span class="pb-txt-step">3</span>
+            <span class="pb-txt-step">4</span>
         </div>
         <!-- //step -->
         <!-- top -->
@@ -83,7 +84,7 @@
 
 
                 <!-- drop file -->
-                <div class="pb-box-drop-file" #drop_container >
+                <div class="pb-box-drop-file" #drop_container2>
                     <div class="pb-txt-description">
                         <span class="pb-txt-title">Drop your file</span>
                         <span class="pb-txt-sub">xls, .xlsx and .csv formats are allowed</span>
@@ -127,9 +128,9 @@
         <!-- //contents -->
         <!-- bottom -->
         <div class="pb-popup-bottom ">
-            <a href="javascript:" (click)="goPre();" class="pb-component-btn-pop type-line">PREV</a>
-            <a href="javascript:" (click)="close();" class="pb-component-btn-pop type-line">CANCEL</a>
-            <a href="javascript:" (click)="next();" class="pb-component-btn-pop type-bg">NEXT</a>
+            <a href="javascript:;" (click)="goPre()" class="pb-component-btn-pop type-line">PREV</a>
+            <a href="javascript:;" (click)="close()" class="pb-component-btn-pop type-line">CANCEL</a>
+            <a href="javascript:;" (click)="next()" class="pb-component-btn-pop type-bg">NEXT</a>
         </div>
 
         <!-- //bottom -->

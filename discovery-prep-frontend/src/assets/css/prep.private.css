@@ -152,7 +152,8 @@ prep-detail, prep-dataset-detail {height:100%;}
 .slick-header::-webkit-scrollbar {display: none;}
 
 .ddp-cursor {cursor: pointer}
-
+.ddp-ellipsis {text-overflow: ellipsis; white-space: nowrap; overflow: hidden;}
+.ddp-disabled {opacity: .4; cursor: no-drop;}
 /**************************************************************
     프리퍼레이션 그리드
 **************************************************************/

@@ -1,7 +1,7 @@
-<div class="pb-layout-popup" *ngIf="isShow">
+<div class="pb-layout-popup">
     <!-- box popup -->
     <div class="pb-box-popup">
-        <a href="javascript:" class="pb-btn-pop-close" (click)="isShow = false"></a>
+        <a href="javascript:" class="pb-btn-pop-close" (click)="close()"></a>
         <!-- step -->
         <div class="pb-ui-step">
             <span class="pb-txt-step">1</span>
@@ -31,13 +31,13 @@
                         -->
                         <div class="pb-component-selectbox type-icons is-value ">
                             <span class="pb-txt-selectbox" (click)="toggleList()">
-                                <em class="pb-icon-datasource"></em>Select data
+                                <em class="pb-icon-datasource"></em>{{selectedFormMessage}}
                             </span>
                             <!-- popup -->
                             <div class="pb-select-popup" *ngIf="listShow" [style.display]="'block'">
                                 <ul class="pb-list-selectbox">
-                                    <li *ngFor="let connection of connections">
-                                        <a href="javascript:">
+                                    <li *ngFor="let connection of connectionList">
+                                        <a href="javascript:;" (click)="onConnectionSelected(connection)">
                                             <em class="pb-icon-datasource">{{connection.connectionType}}</em>
                                             <span>{{connection.name}}</span>
                                             <span>{{connection.desc}}</span>
@@ -68,9 +68,14 @@
         <!-- //contents -->
         <!-- bottom -->
         <div class="pb-popup-bottom">
-            <a href="javascript:" class="pb-component-btn type-line" (click)="goPre();">PRE</a>
-            <a href="javascript:" class="pb-component-btn type-bg" (click)="close()">CANCEL</a>
-            <a href="javascript:" class="pb-component-btn type-line" (click)="next()">NEXT</a>
+            <a href="javascript:;" (click)="goPre()" class="pb-component-btn-pop type-line">PREV</a>
+            <a href="javascript:;" (click)="close()" class="pb-component-btn-pop type-line">CANCEL</a>
+            <a href="javascript:;" (click)="next()" class="pb-component-btn-pop type-bg">NEXT</a>
+
+            <!---->
+            <!--<a href="javascript:" class="pb-component-btn type-line" (click)="goPre();">PRE</a>-->
+            <!--<a href="javascript:" class="pb-component-btn type-bg" (click)="close()">CANCEL</a>-->
+            <!--<a href="javascript:" class="pb-component-btn type-line" (click)="next()">NEXT</a>-->
         </div>
         <!-- //bottom -->
     </div>

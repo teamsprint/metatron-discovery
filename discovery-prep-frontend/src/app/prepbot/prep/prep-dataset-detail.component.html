@@ -146,8 +146,8 @@
             <div class="pb-ui-buttons">
                 <!-- icon button -->
                 <div class="pb-btn-icons">
-                    <a href="javascript:" class="pb-icon-top-undo"></a>
-                    <a href="javascript:" class="pb-icon-top-redo"></a>
+                    <a href="javascript:" class="pb-icon-top-undo" (click)="transformAction('UNDO')" [ngClass]="{'ddp-disabled': !undoable}"></a>
+                    <a href="javascript:" class="pb-icon-top-redo" (click)="transformAction('REDO')" [ngClass]="{'ddp-disabled': !redoable}"></a>
                 </div>
                 <!-- //icon button -->
                 <div class="pb-ui-part">

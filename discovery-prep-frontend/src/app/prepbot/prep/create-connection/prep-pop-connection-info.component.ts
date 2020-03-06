@@ -40,8 +40,6 @@ export enum ConnectionValid {
 })
 export class PrepPopConnectionInfoComponent extends AbstractComponent {
 
-    public isShow = false;
-
     @Input()
     public step: string = '';
     @Output()
@@ -146,7 +144,6 @@ export class PrepPopConnectionInfoComponent extends AbstractComponent {
     }
 
     public init() {
-        this.isShow = true;
         this.selectedAuthenticationType = this.authenticationTypeList[0];
         // if (isNullOrUndefined(connection)) {
         //     this.properties = [];

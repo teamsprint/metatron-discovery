@@ -38,27 +38,28 @@ export class PrepPopCreateComponent  extends AbstractComponent implements OnInit
     /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
      | Public Variables
      |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
+    public datasetFiles: any = [];
 
-  public datasetFiles: any = [];
+    @ViewChild(PrepPopTypeComponent)
+    public prepPopType : PrepPopTypeComponent;
 
-  @ViewChild(PrepPopTypeComponent)
-  public prepPopType : PrepPopTypeComponent;
+    @ViewChild(PrepPopDBCreateComponent)
+    public prepPopDbCreate : PrepPopDBCreateComponent;
 
-  @ViewChild(PrepPopDBCreateComponent)
-  public prepPopDbCreate : PrepPopDBCreateComponent;
-
-  @ViewChild(PrepPopFileUploadCreateComponent)
-  public prepPopFileUploadCreate : PrepPopFileUploadCreateComponent;
+    @ViewChild(PrepPopFileUploadCreateComponent)
+    public prepPopFileUploadCreate : PrepPopFileUploadCreateComponent;
 
 
-      @Output()
-        public closeEvent: EventEmitter<string> = new EventEmitter();
+    @Output()
+    public closeEvent: EventEmitter<string> = new EventEmitter();
 
-        @Output()
-        public createComplete: EventEmitter<void> = new EventEmitter();
+    @Output()
+    public createComplete: EventEmitter<void> = new EventEmitter();
 
-       @Input()
-        public step: string = '';
+    @Input()
+    public step: string = '';
+
+    public type : string;
 
     // 새로 생성될 데이터소스 정보
     public importType: PrDataset = new PrDataset();
@@ -87,8 +88,7 @@ export class PrepPopCreateComponent  extends AbstractComponent implements OnInit
     public init() {
         this.step='';
         if(this.prepPopType){
-
-        this.prepPopType.init();
+            this.prepPopType.init();
         }
     }
 
@@ -100,18 +100,34 @@ export class PrepPopCreateComponent  extends AbstractComponent implements OnInit
         this.step = step;
     }
 
-    /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-     | Public Method
-     |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
+    public selectedTypeEvent(type: string) {
+        this.type = type;
+        // this.stepChange.emit( "DB" );
+        if("DB" == type || "FILE" == type) {
+            this.step = type;
+        }else {
+
+        }
+    }
+
+
 
     /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-     | Protected Method
+     | Public Method
      |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
     // 닫기
     public createClose() {
         this.closeEvent.emit('complete-create-dataset');
     }
+
+    public createCompleteEvent(): void{
+        this.createComplete.emit();
+    }
+
+    /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+     | Protected Method
+     |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
 
     /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=

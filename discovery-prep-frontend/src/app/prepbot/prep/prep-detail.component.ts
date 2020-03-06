@@ -626,26 +626,50 @@ export class PrepDetailComponent extends AbstractComponent {
 
     private initViewPage() {
 
+        // this.symbolInfo = {
+        //     IMPORTED: {
+        //         UPLOAD: {
+        //             DEFAULT: 'image://' + window.location.origin + '/assets/images/datapreparation/icon_db.png',
+        //         },
+        //         DATABASE: {
+        //             DEFAULT: 'image://' + window.location.origin + '/assets/images/datapreparation/icon_db.png',
+        //         },
+        //         STAGING_DB: {
+        //             DEFAULT: 'image://' + window.location.origin + '/assets/images/datapreparation/icon_db.png'
+        //         }
+        //     },
+        //     WRANGLED: {
+        //         DEFAULT: 'image://' + window.location.origin + '/assets/images/datapreparation/icon_wrangled.png',
+        //     },
+        //     SELECTED: {
+        //         IMPORTED: 'image://' + window.location.origin + '/assets/images/datapreparation/icon_db_focus.png',
+        //         WRANGLED: 'image://' + window.location.origin + '/assets/images/datapreparation/icon_dataset_focus.png'
+        //     }
+        // };
+
+
         this.symbolInfo = {
             IMPORTED: {
                 UPLOAD: {
-                    DEFAULT: 'image://' + window.location.origin + '/assets/images/datapreparation/icon_db.png',
+                    DEFAULT: 'image://' + window.location.origin + '/assets/images/dataflow/img_db.png',
                 },
                 DATABASE: {
-                    DEFAULT: 'image://' + window.location.origin + '/assets/images/datapreparation/icon_db.png',
+                    DEFAULT: 'image://' + window.location.origin + '/assets/images/dataflow/img_db.png',
                 },
                 STAGING_DB: {
-                    DEFAULT: 'image://' + window.location.origin + '/assets/images/datapreparation/icon_db.png'
+                    DEFAULT: 'image://' + window.location.origin + '/assets/images/dataflow/img_db.png'
                 }
             },
             WRANGLED: {
-                DEFAULT: 'image://' + window.location.origin + '/assets/images/datapreparation/icon_wrangled.png',
+                DEFAULT: 'image://' + window.location.origin + '/assets/images/dataflow/img_dataset.png',
             },
             SELECTED: {
-                IMPORTED: 'image://' + window.location.origin + '/assets/images/datapreparation/icon_db_focus.png',
-                WRANGLED: 'image://' + window.location.origin + '/assets/images/datapreparation/icon_dataset_focus.png'
+                IMPORTED: 'image://' + window.location.origin + '/assets/images/dataflow/img_db_focus.png',
+                WRANGLED: 'image://' + window.location.origin + '/assets/images/dataflow/img_dataset_focus.png'
             }
         };
+
+
 
         this.label = {
             normal: {
@@ -703,15 +727,15 @@ export class PrepDetailComponent extends AbstractComponent {
                     layout: 'none',
                     coordinateSystem: 'cartesian2d',
                     focusNodeAdjacency: false,
-                    symbolSize: 40,
+                    symbolSize: 44,
                     hoverAnimation: true,
                     roam: false,
-                    edgeSymbol: ['none', 'arrow'],
+                    // edgeSymbol: ['none', 'arrow'],
                     draggable: true,
-                    itemStyle: { normal: { color: '#ccc', borderColor: '#1af' } },
+                    itemStyle: { normal: { color: '#aaa', borderColor: '#1af' } },
                     nodes: null,
                     links: null,
-                    lineStyle: { normal: { opacity: 1, width: 0.5 } }
+                    lineStyle: { normal: { opacity: 0.4, width: 3 } }
                 }
             ], animation: false
         };

@@ -1,11 +1,14 @@
 
 <!-- make dataset -->
-<prep-pop-type *ngIf="step == '' || step == 'complete-create-dataset'" [importType]="importType" [(step)]="step" (createClose)="createClose();" ></prep-pop-type>
+<prep-pop-type *ngIf="step == '' || step == 'complete-create-dataset'" [importType]="importType" [(step)]="step" (createClose)="createClose()" (selectedType)="selectedTypeEvent($event)" ></prep-pop-type>
 
 <!-- DB -->
 <prep-pop-db-create *ngIf="step=='DB'" [(step)]="step" (createClose)="createClose();"  ></prep-pop-db-create>
 
 <!-- FILE -->
-<prep-pop-file-upload-create *ngIf="step=='FILE'" [datasetFiles]="datasetFiles" [(step)]="step" (createClose)="createClose();" ></prep-pop-file-upload-create>
-<prep-pop-file-selectsheet *ngIf="step=='select-sheet'" [datasetFiles]="datasetFiles" [(step)]="step" (createClose)="createClose();" ></prep-pop-file-selectsheet>
-<prep-pop-create-dataset-name *ngIf="step=='create-dataset-name'" [datasetFiles]="datasetFiles" [(step)]="step" (createClose)="createClose();"  (createComplete)="createCompleteEvent();"></prep-pop-create-dataset-name>
+<prep-pop-file-upload-create *ngIf="step=='FILE'" [datasetFiles]="datasetFiles" [(step)]="step" (createClose)="createClose()" (stepChange)="stepChange($event)"></prep-pop-file-upload-create>
+<prep-pop-file-selectsheet *ngIf="step=='select-sheet'" [datasetFiles]="datasetFiles" [(step)]="step" (createClose)="createClose()" (stepChange)="stepChange($event)"></prep-pop-file-selectsheet>
+
+
+<!-- NAME -->
+<prep-pop-create-dataset-name *ngIf="step=='create-dataset-name'" [type]="type" [datasetFiles]="datasetFiles" [(step)]="step" (createClose)="createClose()"  (stepChange)="stepChange($event)" (createComplete)="createCompleteEvent();"></prep-pop-create-dataset-name>

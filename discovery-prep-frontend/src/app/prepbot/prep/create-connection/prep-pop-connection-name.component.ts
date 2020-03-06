@@ -77,8 +77,12 @@ export class PrepPopConnectionNameComponent extends AbstractPopupComponent imple
     public showDescError: boolean = false;
 
 
-    public connectionName: string;
-    public description: string;
+
+    public connectInfo: any = {dcName:"",dcDesc:""};
+
+
+    // public connectionName: string;
+    // public description: string;
 
 
   public prepCommonUtil = PreparationCommonUtil;
@@ -115,12 +119,24 @@ export class PrepPopConnectionNameComponent extends AbstractPopupComponent imple
     | Public Method
     |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
-    public getConnectionName() {
-        return this.connectionName;
+    public getConnectionInfo() {
+        return this.connectInfo;
     }
 
     /** Complete */
     public complete() {
+        this.resetErrorMessage();
+
+        const name : string = this.connectInfo.dcName;
+        if(name==null || name.replace(/ /g,'') =='') {
+            this.showNameError =true;
+        }
+        const desc : string = this.connectInfo.dcDesc;
+        if(desc==null || desc.replace(/ /g,'') =='') {
+            this.showDescError =true;
+        }
+        if( this.showNameError || this.showDescError) return;
+
       this.createComplete.emit();
     }
 
@@ -155,6 +171,11 @@ export class PrepPopConnectionNameComponent extends AbstractPopupComponent imple
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   | Private Method
   |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
+    private resetErrorMessage(): void{
+        this.showNameError = false;
+        this.showDescError = false;
+
+    }
 }
 
 

@@ -144,9 +144,9 @@ export class PrepPopConnectionCreateComponent extends AbstractComponent implemen
     // 완료
     public createCompleteEvent() {
         // this.createComplete.emit();
-        const connectionName = this.popConnectionNameComponent.getConnectionName();
-        if(connectionName == null || connectionName == undefined || connectionName.replace(/ /g,'') == '') return;
-        this.connectionParam['name'] = connectionName;
+        const connectionInfo= this.popConnectionNameComponent.getConnectionInfo();
+        this.connectionParam['name'] = connectionInfo.dcName;
+        this.connectionParam['description'] = connectionInfo.dcDesc;
 
 
         // loading show

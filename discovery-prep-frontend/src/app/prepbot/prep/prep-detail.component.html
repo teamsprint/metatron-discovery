@@ -295,12 +295,31 @@
         <div class="pb-wrap-box-contents"  [ngStyle]="{'display': (viewMode == 'FLOW')?'block':'none'}">
             <!-- box navi -->
             <div class="pb-box-contents">
-                <div class="pb-box-title">
+
+                <div class="pb-box-title" *ngIf="dataSetList!==null && dataSetList.length > 0">
                     DATA FLOW
                 </div>
-                <div class="pb-ui-graph">
+
+                <div class="pb-ui-graph" [hidden]="dataSetList==null || dataSetList.length == 0">
                     <div id="chartCanvas" style="width:100%;height:100%;"></div>
                 </div>
+
+
+
+                <div class="pb-box-dataflow-empty" *ngIf="dataSetList==null || dataSetList.length == 0">
+
+                    <em class="pb-img-dataflow"></em>
+                    <div class="pb-txt-title">Get started with your dataflow</div>
+                    <div class="pb-txt-det">
+                        Add dataset to your flow from your local file, database or staging database like HIVE
+                    </div>
+                    <a href="javascript:;" class="pb-component-btn type-bg tpye-normal"><em class="pb-icon-add-r"></em>Add dataset to this flow</a>
+
+                </div>
+
+
+
+
                 <!-- 그리드 아이콘 클릭시 데이터셋 상세 팝업 -->
                 <div *ngIf="selectedDataSet.dsId"
                      class="sys-dataflow-right-panel ddp-box-flowdetail" >

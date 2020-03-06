@@ -19,17 +19,49 @@ import 'rxjs/add/operator/toPromise';
 @Injectable()
 export class PrepbotService extends AbstractService {
 
+  private _mainViewMode: ViewMode;
+
+  private _prepbotListParams: any = null;
+
   constructor (protected injector: Injector) {
     super(injector);
   }
 
-    /**
-     * 1st step of 3-way negotiation for file uploading
-     */
-    public getFileUploadNegotiation() {
-        let url = this.API_URL + 'preparationdatasets/file_upload';
-        return this.get(url);
-    }
+  /**
+   * 1st step of 3-way negotiation for file uploading
+   */
+  public getFileUploadNegotiation() {
+    let url = this.API_URL + 'preparationdatasets/file_upload';
+    return this.get(url);
+  }
 
+  public getParamsForPrepbotList() {
+    return this._prepbotListParams?this._prepbotListParams:{};
+  }
 
+  public setParamsForPrepbotList(params: any) {
+    this._prepbotListParams = params;
+  }
+
+  public getMainViewMode():ViewMode {
+    return this._mainViewMode ? this._mainViewMode : ViewMode.CARD;
+  }
+
+  public setMainViewMode(viewMode: ViewMode) {
+    this._mainViewMode = viewMode;
+  }
+
+}
+
+export enum ViewMode {
+  CARD = <any>'CARD',
+  LIST = <any>'LIST'
+}
+
+export enum SelectType {
+  ALL = <any>'ALL',
+  DATASETS = <any>'DATASETS',
+  DATAFLOW = <any>'DATAFLOW',
+  DATARESULTS = <any>'DATARESULTS',
+  DATACONNECTION = <any>'DATACONNECTION'
 }

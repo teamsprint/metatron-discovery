@@ -29,6 +29,7 @@ import { from} from "rxjs/observable/from";
 import {DataflowService} from "../service/dataflow.service";
 import {PrDataflow} from "../../../domain/data-preparation/pr-dataflow";
 import {PreparationCommonUtil} from "../../util/preparation-common.util";
+import {PrDataset} from '../../../domain/data-preparation/pr-dataset';
 declare let moment;
 
 @Component({
@@ -49,42 +50,43 @@ export class PrepPopDataflowNameComponent extends AbstractPopupComponent impleme
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   | Public Variables
   |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
-@Input()
+    @Input()
     public step: string = '';
     @Output()
     public stepChange : EventEmitter<string> = new EventEmitter();
 
- @Output()
+    @Output()
     public createClose : EventEmitter<void> = new EventEmitter();
 
 
     @Output()
     public createComplete: EventEmitter<void> = new EventEmitter();
-@Input()
-    public selectedDatasets: any;
- @Output()
+    @Input()
+    public selectedDatasets : PrDataset[] = [];
+
+    @Output()
     public selectedDatasetsChange : EventEmitter<any> = new EventEmitter();
 
 
 
-  @Input() // [DB, STAGING, FILE]
-  public type : string;
+    @Input() // [DB, STAGING, FILE]
+    public type : string;
 
-public dataflowInfo: any = {dfName:"",dfDesc:""};
+    public dataflowInfo: any = {dfName:"",dfDesc:""};
 
-  // name error msg show/hide
-  public showNameError: boolean = false;
+    // name error msg show/hide
+    public showNameError: boolean = false;
 
-  // desc error msg show/hide
-  public showDescError: boolean = false;
+    // desc error msg show/hide
+    public showDescError: boolean = false;
 
-  // to check request is only sent once.
-  public flag: boolean = false;
+    // to check request is only sent once.
+    public flag: boolean = false;
 
-  @ViewChild('nameElement')
-  public nameElement : ElementRef;
+    @ViewChild('nameElement')
+    public nameElement : ElementRef;
 
-  public isShow = false;
+  // public isShow = false;
 
   public datasetInfo : DatasetInfo[] = [];
   public fileExtension: string;
@@ -135,7 +137,7 @@ public dataflowInfo: any = {dfName:"",dfDesc:""};
   }
 
     public init() {
-        this.isShow = true;
+        // this.isShow = true;
     }
 
 
@@ -143,50 +145,128 @@ public dataflowInfo: any = {dfName:"",dfDesc:""};
     | Public Method
     |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
-    public onSetIntoDataflow(target) {
-        this.dataflowInfo[target.name] = target.value;
-    }
-  /** Complete */
-  public complete() {
 
- let today = moment();
-    const df = new PrDataflow();
 
-  df.datasets = this.selectedDatasets.map((ds)=>{
-return ds._links.self.href;
-});
+
+
+    /** Complete */
+    public complete() {
+      this.resetErrorMessage();
+
+      const name : string = this.dataflowInfo.dfName;
+      if(name==null || name.replace(/ /g,'') =='') {
+          this.showNameError =true;
+      }
+      const desc : string = this.dataflowInfo.dfDesc;
+      if(desc==null || desc.replace(/ /g,'') =='') {
+            this.showDescError =true;
+      }
+      if( this.showNameError || this.showDescError) return;
+
+
+      const df = new PrDataflow();
+      df.datasets = [];
       df.dfName =  this.dataflowInfo.dfName;
-        df.dfDesc =  this.dataflowInfo.dfDesc;
+      df.dfDesc =  this.dataflowInfo.dfDesc;
 
 
-    this.loadingShow();
+
+
+      this.loadingShow();
       this.dataflowService.createDataflow(df).then((result) => {
         this.loadingHide();
         if (result) {
+          // console.info('result', result)
 
-          this.createCompleteEvent();
+          // this.createCompleteEvent();
+            if(this.selectedDatasets==null || this.selectedDatasets.length==0) {
+                this.createCompleteEvent();
+            }else{
+                this.updateDatasets(result.dfId);
+            }
+
         } else {
 
-          this.close();
+          // this.close();
         }
 
       }).catch(() => {
         this.loadingHide();
-        this.close();
+        // this.close();
       });
+
+
+
+//  let today = moment();
+//     const df = new PrDataflow();
+//
+//   df.datasets = this.selectedDatasets.map((ds)=>{
+// return ds._links.self.href;
+// });
+//       df.dfName =  this.dataflowInfo.dfName;
+//         df.dfDesc =  this.dataflowInfo.dfDesc;
+//
+//
+//     this.loadingShow();
+//       this.dataflowService.createDataflow(df).then((result) => {
+//         this.loadingHide();
+//         if (result) {
+//
+//           this.createCompleteEvent();
+//         } else {
+//
+//           this.close();
+//         }
+//
+//       }).catch(() => {
+//         this.loadingHide();
+//         this.close();
+//       });
+
+  }
+
+  private updateDatasets(dfId: string) {
+      const dsIds: any = {};
+      dsIds.dsIds = [];
+
+      this.selectedDatasets.forEach((item) => {
+          dsIds.dsIds.push(item.dsId);
+          // }
+      })
+
+      this.dataflowService.updateDataSets(dfId, dsIds).then((result) => {
+          this.loadingHide();
+          if (result) {
+              // console.info('result', result)
+
+              this.createCompleteEvent();
+
+          } else {
+
+              // this.close();
+          }
+
+      }).catch(() => {
+          this.loadingHide();
+          // this.close();
+      });
+
+
 
 
   }
 
-    // 완료
+
+    /** go to done step */
     public createCompleteEvent() {
-        this.createComplete.emit();
+      this.createComplete.emit();
+
     }
 
 
   /** go to previous step */
   public prev() {
-      this.goto('complete-dataflow-create');
+      this.stepChange.emit( '' );
   }
 
 
@@ -386,6 +466,13 @@ return ds._links.self.href;
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   | Private Method
   |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
+    private resetErrorMessage(): void{
+        this.showNameError = false;
+        this.showDescError = false;
+
+    }
+
+
   /**
    * 데이터셋 이름의 default값을 넣는다.
    * @param {string} type

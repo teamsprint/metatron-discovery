@@ -15,7 +15,7 @@
 
 import {Component, ElementRef, EventEmitter, Injector, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import {AbstractComponent} from '../../../common/component/abstract.component';
-import { PrDataset, ImportType } from '../../../domain/data-preparation/pr-dataset';
+import {PrDataset, ImportType} from '../../../domain/data-preparation/pr-dataset';
 import {PrepPopDatasetListComponent} from "./prep-pop-dataset-list.component";
 import {PrepPopDataflowNameComponent} from "./prep-pop-dataflow-name.component";
 
@@ -37,14 +37,14 @@ export class PrepPopFlowCreateComponent extends AbstractComponent implements OnI
      | Public Variables
      |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
-      @Output()
-       public closeEvent: EventEmitter<string> = new EventEmitter();
+    @Output()
+    public closeEvent: EventEmitter<string> = new EventEmitter();
 
     @Output()
     public createComplete: EventEmitter<void> = new EventEmitter();
 
     @Input()
-    public selectedDatasets : any = [];
+    public selectedDatasets : PrDataset[] = [];
 
     @Input()
     public step: string = '';
@@ -83,7 +83,7 @@ export class PrepPopFlowCreateComponent extends AbstractComponent implements OnI
     public init() {
         this.step='';
         if(this.prepPopDatasetListComponent) {
-        this.prepPopDatasetListComponent.init();
+            this.prepPopDatasetListComponent.init();
         }
     }
 
@@ -102,6 +102,11 @@ export class PrepPopFlowCreateComponent extends AbstractComponent implements OnI
     }
 
     public stepChange(step) {
+        if("dataflow-name"==step) {
+            this.selectedDatasets = this.prepPopDatasetListComponent.getSelectedDatasets();
+            // console.info('this.selectedDatasets', this.selectedDatasets);
+        }
+
         this.step = step;
     }
 
@@ -115,7 +120,7 @@ export class PrepPopFlowCreateComponent extends AbstractComponent implements OnI
 
     // 닫기
     public createClose() {
-        this.closeEvent.emit('complete-dataflow-create');
+        this.closeEvent.emit('');
     }
 
     // 완료
