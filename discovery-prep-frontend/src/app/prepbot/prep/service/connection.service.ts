@@ -29,6 +29,20 @@ export class PrConnectionService extends AbstractService {
     super(injector);
   }
 
+    // 데이터 커넥션 모든 목록
+    public getAllDataconnections(param: any, projection: string = 'list'): Promise<any[]> {
+        let url = this.API_URL + `connections`;
+        if (param) {
+            url += '?' + CommonUtil.objectToUrlString(param);
+        }
+        return this.get(url + '&projection=' + projection);
+    }
+    // 커넥션 상세정보 조회
+    public getDataconnectionDetail(connectionId: string, projection: string = 'default'): Promise<any> {
+        const url = this.API_URL + `connections/${connectionId}`;
+        return this.get(url + '?projection=' + projection);
+    }
+
   /**
      * Create connection
      * @param param
@@ -39,5 +53,5 @@ export class PrConnectionService extends AbstractService {
     }
     public getConnections() : Promise<any>  {
           return this.get(this.API_URL + 'preparationconnections' );
-        }
+    }
 }
