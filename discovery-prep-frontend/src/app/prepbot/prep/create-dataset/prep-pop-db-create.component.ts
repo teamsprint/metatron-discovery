@@ -92,12 +92,14 @@ export class PrepPopDBCreateComponent extends AbstractComponent {
         // this.isShow = true;
     }
   public goto(step) {
-      this.step = step;
+      // this.step = step;
       this.stepChange.emit( step );
     }
 
     public next() {
          // this.goto('create-dataset-name');
+        this.stepChange.emit( 'DB-QUERY' );
+
     }
 
     public close() {
@@ -122,7 +124,7 @@ export class PrepPopDBCreateComponent extends AbstractComponent {
      * @param event
      */
     public onConnectionSelected(event) {
-        console.info(event);
+        // console.info(event);
 
         // only fetch data when it's different
         if (this.datasetJdbc.dcId !== event.id) {
