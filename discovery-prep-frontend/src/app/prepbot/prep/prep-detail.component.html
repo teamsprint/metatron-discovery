@@ -362,32 +362,57 @@
                                         <col width="*">
                                         <col width="15%">
                                         <col width="20%">
+                                        <col width="8%">
+                                        <col width="7%">
+                                        <col width="10%">
+                                        <col width="15%">
+                                        <col width="20%">
                                     </colgroup>
                                     <thead>
                                     <tr>
-                                        <th>
-                                            Dataset
-                                            <em class="pb-icon-array type-des"> </em>
+                                        <th>No
+                                        </th>
+                                        <th>Name
+                                        </th>
+                                        <th>Description
                                         </th>
                                         <th>Type
-                                            <em class="pb-icon-array "></em>
                                         </th>
-                                        <th>
-                                            Last Updated
-                                            <em class="pb-icon-array type-asc"> </em>
+                                        <th>Source
+                                        </th>
+                                        <th>Source Resource
+                                        </th>
+                                        <th>Parent Dataset
+                                        </th>
+                                        <th>Created
                                         </th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr>
+                                    <tr *ngFor="let dataset of dataSetList; let i = index">
                                         <td>
-                                            Dataset name Dataset nameDataset nameDataset nameDataset name
+                                            {{ i + 0}}
                                         </td>
                                         <td>
-                                            File (Excel)
+                                            {{dataset.dsName}}
                                         </td>
                                         <td>
-                                            Last Updated
+                                            {{dataset.dsDesc}}
+                                        </td>
+                                        <td>
+                                            {{dataset.dsType}}
+                                        </td>
+                                        <td>
+                                            {{dataset.dsType === DsType.IMPORTED ? prepCommonUtil.getImportType(dataset.importType) : ''}}
+                                        </td>
+                                        <td>
+                                            {{dataset.dsType === DsType.IMPORTED ? getSourceType(dataset) : ''}}
+                                        </td>
+                                        <td>
+                                            {{dataset.rootDataset ? dataset.rootDataset.dsName : ''}}
+                                        </td>
+                                        <td>
+                                            {{dataset.createdTime | mdate:'YYYY-MM-DD HH:mm'}} <span>by</span> {{dataset.createdBy}}
                                         </td>
                                     </tr>
                                     </tbody>
