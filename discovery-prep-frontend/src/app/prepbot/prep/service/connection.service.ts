@@ -54,4 +54,20 @@ export class PrConnectionService extends AbstractService {
     public getConnections() : Promise<any>  {
           return this.get(this.API_URL + 'preparationconnections' );
     }
+
+
+    // 커넥션 정보로만 데이터베이스 조회
+    public getDatabasesWithoutId(param: any): Promise<any> {
+        return this.post(this.API_URL + 'connections/query/databases', param);
+    }
+
+    // 커넥션 정보로 데이터 테이블 조회
+    public getTablesWitoutId(param: any): Promise<any>  {
+        return this.post(this.API_URL + 'connections/query/tables?size=5000', param);
+    }
+
+    // 테이블 상세조회
+    public getTableDetailWitoutId(param: any, extractColumnName: boolean, limit: number = 50): Promise<any>  {
+        return this.post(this.API_URL + `connections/query/data?extractColumnName=${extractColumnName}&limit=${limit}`, param);
+    }
 }

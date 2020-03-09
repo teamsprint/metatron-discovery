@@ -3,8 +3,8 @@
 <prep-pop-type *ngIf="step == '' || step == 'complete-create-dataset'" [importType]="importType" [(step)]="step" (createClose)="createClose()" (selectedType)="selectedTypeEvent($event)" ></prep-pop-type>
 
 <!-- DB -->
-<prep-pop-db-create *ngIf="step=='DB'" (createClose)="createClose()" (stepChange)="stepChange($event)"></prep-pop-db-create>
-<prep-pop-db-query *ngIf="step=='DB-QUERY'" (createClose)="createClose()" (stepChange)="stepChange($event)"></prep-pop-db-query>
+<prep-pop-db-create *ngIf="step=='DB'" [datasetJdbc]="datasetJdbc" (createClose)="createClose()" (stepChange)="stepChange($event)"></prep-pop-db-create>
+<prep-pop-db-query *ngIf="step=='DB-QUERY'" [datasetJdbc]="datasetJdbc" (createClose)="createClose()" (stepChange)="stepChange($event)"></prep-pop-db-query>
 
 <!-- FILE -->
 <prep-pop-file-upload-create *ngIf="step=='FILE'" [datasetFiles]="datasetFiles" [(step)]="step" (createClose)="createClose()" (stepChange)="stepChange($event)"></prep-pop-file-upload-create>
@@ -12,4 +12,4 @@
 
 
 <!-- NAME -->
-<prep-pop-create-dataset-name *ngIf="step=='create-dataset-name'" [type]="type" [datasetFiles]="datasetFiles" [(step)]="step" (createClose)="createClose()"  (stepChange)="stepChange($event)" (createComplete)="createCompleteEvent();"></prep-pop-create-dataset-name>
+<prep-pop-create-dataset-name *ngIf="step=='create-dataset-name'" [type]="type" [datasetFiles]="datasetFiles" [datasetJdbc]="datasetJdbc" [(step)]="step" (createClose)="createClose()"  (stepChange)="stepChange($event)" (createComplete)="createCompleteEvent();"></prep-pop-create-dataset-name>

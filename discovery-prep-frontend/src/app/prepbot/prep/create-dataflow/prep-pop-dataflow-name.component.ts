@@ -130,6 +130,8 @@ export class PrepPopDataflowNameComponent extends AbstractPopupComponent impleme
     this._setDatasetInfo();
     this.init();
 
+    console.info('selectedDatasets', this.selectedDatasets);
+
   }
 
   public ngOnDestroy() {

@@ -15,7 +15,7 @@
 
 import {Component, ElementRef, EventEmitter, Injector, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import {AbstractComponent} from '../../../common/component/abstract.component';
-import { PrDataset, ImportType } from '../../../domain/data-preparation/pr-dataset';
+import { PrDataset, PrDatasetJdbc, ImportType } from '../../../domain/data-preparation/pr-dataset';
 import {PrepPopTypeComponent} from "./prep-pop-type.component";
 import {PrepPopDBCreateComponent} from "./prep-pop-db-create.component";
 import {PrepPopFileUploadCreateComponent} from "./prep-pop-file-upload-create.component";
@@ -62,7 +62,9 @@ export class PrepPopCreateComponent  extends AbstractComponent implements OnInit
     public type : string;
 
     // 새로 생성될 데이터소스 정보
-    public importType: PrDataset = new PrDataset();
+    public importType: PrDataset;
+    public datasetJdbc: PrDatasetJdbc;
+
 
     /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
      | Constructor
@@ -72,6 +74,10 @@ export class PrepPopCreateComponent  extends AbstractComponent implements OnInit
     constructor(protected elementRef: ElementRef,
                 protected injector: Injector) {
         super(elementRef, injector);
+
+        this.importType = new PrDataset();
+        this.datasetJdbc = new PrDatasetJdbc();
+
     }
 
     /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
@@ -82,14 +88,11 @@ export class PrepPopCreateComponent  extends AbstractComponent implements OnInit
     public ngOnInit() {
         // Init
         super.ngOnInit();
-        this.init();
+        // this.init();
     }
 
     public init() {
-        this.step='';
-        if(this.prepPopType){
-            this.prepPopType.init();
-        }
+        // this.step='';
     }
 
     public ngOnDestroy() {

@@ -2,9 +2,17 @@
     <!-- box popup -->
     <div class="pb-box-popup">
         <a href="javascript:;" class="pb-btn-pop-close" (click)="close()"></a>
+        <!-- step -->
+        <div class="pb-ui-step">
+            <span class="pb-txt-step">1</span>
+            <span class="pb-txt-step">2</span>
+            <span class="pb-txt-step is-selected">3</span>
+            <span class="pb-txt-step">4</span>
+        </div>
+        <!-- //step -->
         <!-- top -->
         <div class="pb-popup-top">
-            <div class="pb-txt-title">DATA CONNECT</div>
+            <div class="pb-txt-title">CREATE DATASET</div>
 
         </div>
         <!-- //top -->
@@ -22,24 +30,25 @@
                             값 입력시 : is-value 추가
 
                         -->
-                        <div class="pb-component-selectbox type-icons is-value ">
-                            <span class="pb-txt-selectbox">
-                                <em class="pb-icon-datasource"></em>Select data
+                        <div class="pb-component-selectbox type-icons is-value " (clickOutside)="isDatabaseListShow =false">
+                            <span class="pb-txt-selectbox" (click)="toggleDatabaseList()">
+                                <em class="pb-icon-datasource"></em>
+                                {{datasetJdbc.tableInfo.databaseName === undefined ? ('msg.dp.ui.sel.db' | translate) :datasetJdbc.tableInfo.databaseName }}
                             </span>
                             <!-- popup -->
-                            <div class="pb-select-popup">
+                            <div class="pb-select-popup" *ngIf="isDatabaseListShow" [style.display]="'block'" style="z-index: 10001;">
                                 <ul class="pb-list-selectbox">
-                                    <li>
-                                        <a href="javascript:">
-                                            <em class="pb-icon-datasource"></em>1
+                                    <li *ngFor="let database of databaseList">
+                                        <a href="javascript:;" (click)="selectDatabase(database)">
+                                            <em class="pb-icon-datasource"></em>{{database.name}}
                                         </a>
                                     </li>
-                                    <li>
-                                        <a href="javascript:"><em class="pb-icon-datasource"></em>1</a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:"><em class="pb-icon-datasource"></em>1</a>
-                                    </li>
+                                    <!--<li>-->
+                                        <!--<a href="javascript:"><em class="pb-icon-datasource"></em>1</a>-->
+                                    <!--</li>-->
+                                    <!--<li>-->
+                                        <!--<a href="javascript:"><em class="pb-icon-datasource"></em>1</a>-->
+                                    <!--</li>-->
                                 </ul>
                             </div>
                             <!-- //popup -->
@@ -48,23 +57,18 @@
 
 
 
-                        <div class="pb-component-selectbox type-icons is-value ">
-                            <span class="pb-txt-selectbox">
-                                <em class="pb-icon-datasource"></em>Select data
+                        <div class="pb-component-selectbox type-icons is-value " (clickOutside)="isSchemaListShow =false">
+                            <span class="pb-txt-selectbox" (click)="toggleTableList()">
+                                <em class="pb-icon-datasource"></em>
+                                {{datasetJdbc.tableInfo.tableName === undefined? ('msg.storage.ui.dsource.create.choose-table' | translate) : datasetJdbc.tableInfo.tableName}}
                             </span>
                             <!-- popup -->
-                            <div class="pb-select-popup">
+                            <div class="pb-select-popup" *ngIf="isSchemaListShow" [style.display]="'block'" style="z-index: 10002">
                                 <ul class="pb-list-selectbox">
-                                    <li>
-                                        <a href="javascript:">
-                                            <em class="pb-icon-datasource"></em>1
+                                    <li *ngFor="let schema of schemaList">
+                                        <a href="javascript:;" (click)="onChangeTable($event,schema)">
+                                            <em class="pb-icon-datasource"></em> {{schema.name}}
                                         </a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:"><em class="pb-icon-datasource"></em>1</a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:"><em class="pb-icon-datasource"></em>1</a>
                                     </li>
                                 </ul>
                             </div>
@@ -112,157 +116,32 @@
                 <!-- //option -->
                 <!-- grid -->
                 <div class="pb-ui-grid" >
-                    <table class="pb-table-grid">
-                        <colgroup>
-                            <col width="">
-                            <col width="">
-                            <col width="">
-                            <col width="">
-                        </colgroup>
-                        <thead>
-                        <tr>
-                            <th>
-                                <span class="pb-data-txt">ab text</span>
-                                <span class="pb-data-txt2">sale02</span>
-                                <span class="pb-data-name">Category</span>
-                            </th>
-                            <th>
-                                <span class="pb-data-txt">ab text</span>
-                                <span class="pb-data-txt2">sale02</span>
-                                <span class="pb-data-name">Category</span>
-                            </th>
+                    <div class="ddp-ui-empty" *ngIf="clearGrid || datasetJdbc.tableInfo.databaseName === undefined || datasetJdbc.tableInfo.tableName === undefined">
+                        <!--{{'msg.dp.ui.no.preview' | translate}}-->
+                        <table class="pb-table-grid">
+                            <colgroup>
+                                <col width="">
+                                <col width="">
+                                <col width="">
+                                <col width="">
+                            </colgroup>
+                            <thead>
+                            <tr>
+                                <th colspan="10" style="height:50px;">
+                                    <!--<span class="pb-data-txt">ab text</span>-->
+                                    <span class="pb-data-name">{{'msg.dp.ui.sel.db' | translate}} & {{'msg.storage.ui.dsource.create.choose-table' | translate}}</span>
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td colspan="10" style="height:32px;">{{'msg.dp.ui.no.preview' | translate}}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div [hidden]="clearGrid || datasetJdbc.tableInfo.databaseName === undefined || datasetJdbc.tableInfo.tableName === undefined" grid-component style="width:100%; height:100%;" ></div>
 
-                            <th>
-                                <span class="pb-data-txt">ab text</span>
-                                <span class="pb-data-txt2">sale02</span>
-                                <span class="pb-data-name">Category</span>
-                            </th>
-                            <th>
-                                <span class="pb-data-txt">ab text</span>
-                                <span class="pb-data-txt2">sale02</span>
-                                <span class="pb-data-name">Category</span>
-                            </th>
-
-                            <th>
-                                <span class="pb-data-txt">ab text</span>
-                                <span class="pb-data-txt2">sale02</span>
-                                <span class="pb-data-name">Category</span>
-                            </th>
-                            <th>
-                                <span class="pb-data-txt">ab text</span>
-                                <span class="pb-data-txt2">sale02</span>
-                                <span class="pb-data-name">Category</span>
-                            </th>
-
-                            <th>
-                                <span class="pb-data-txt">ab text</span>
-                                <span class="pb-data-txt2">sale02</span>
-                                <span class="pb-data-name">Category</span>
-                            </th>
-                            <th>
-                                <span class="pb-data-txt">ab text</span>
-                                <span class="pb-data-txt2">sale02</span>
-                                <span class="pb-data-name">Category</span>
-                            </th>
-
-                            <th>
-                                <span class="pb-data-txt">ab text</span>
-                                <span class="pb-data-txt2">sale02</span>
-                                <span class="pb-data-name">Category</span>
-                            </th>
-                            <th>
-                                <span class="pb-data-txt">ab text</span>
-                                <span class="pb-data-txt2">sale02</span>
-                                <span class="pb-data-name">Category</span>
-                            </th>
-                            <th>
-                                <span class="pb-data-txt">ab text</span>
-                                <span class="pb-data-txt2">sale02</span>
-                                <span class="pb-data-name">Category</span>
-                            </th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td>Office Supplies</td>
-                            <td>Office Supplies</td>
-                            <td>Office Supplies</td>
-                            <td>Office Supplies</td>
-                            <td>Office Supplies</td>
-                            <td>Office Supplies</td>
-                            <td>Office Supplies</td>
-                            <td>Office Supplies</td>
-                            <td>Office Supplies</td>
-                            <td>Office Supplies</td>
-                            <td>Office Supplies</td>
-                        </tr>
-                        <tr>
-                            <td>Office Supplies</td>
-                            <td>Office Supplies</td>
-                            <td>Office Supplies</td>
-                            <td>Office Supplies</td>
-                            <td>Office Supplies</td>
-                            <td>Office Supplies</td>
-                            <td>Office Supplies</td>
-                            <td>Office Supplies</td>
-                            <td>Office Supplies</td>
-                            <td>Office Supplies</td>
-                            <td>Office Supplies</td>
-                        </tr>
-                        <tr>
-                            <td>Office Supplies</td>
-                            <td>Office Supplies</td>
-                            <td>Office Supplies</td>
-                            <td>Office Supplies</td>
-                            <td>Office Supplies</td>
-                            <td>Office Supplies</td>
-                            <td>Office Supplies</td>
-                            <td>Office Supplies</td>
-                            <td>Office Supplies</td>
-                            <td>Office Supplies</td>
-                            <td>Office Supplies</td>
-                        </tr>
-                        <tr>
-                            <td>Office Supplies</td>
-                            <td>Office Supplies</td>
-                            <td>Office Supplies</td>
-                            <td>Office Supplies</td>
-                            <td>Office Supplies</td>
-                            <td>Office Supplies</td>
-                            <td>Office Supplies</td>
-                            <td>Office Supplies</td>
-                            <td>Office Supplies</td>
-                            <td>Office Supplies</td>
-                            <td>Office Supplies</td>
-                        </tr>
-                        <tr>
-                            <td>Office Supplies</td>
-                            <td>Office Supplies</td>
-                            <td>Office Supplies</td>
-                            <td>Office Supplies</td>
-                            <td>Office Supplies</td>
-                            <td>Office Supplies</td>
-                            <td>Office Supplies</td>
-                            <td>Office Supplies</td>
-                            <td>Office Supplies</td>
-                            <td>Office Supplies</td>
-                            <td>Office Supplies</td>
-                        </tr>
-                        <tr>
-                            <td>Office Supplies</td>
-                            <td>Office Supplies</td>
-                            <td>Office Supplies</td>
-                            <td>Office Supplies</td>
-                            <td>Office Supplies</td>
-                            <td>Office Supplies</td>
-                            <td>Office Supplies</td>
-                            <td>Office Supplies</td>
-                            <td>Office Supplies</td>
-                            <td>Office Supplies</td>
-                            <td>Office Supplies</td>
-                        </tr>
-                        </tbody>
-                    </table>
                 </div>
                 <!-- //grid -->
             </div>
@@ -273,11 +152,11 @@
         <div class="pb-popup-bottom">
             <a href="javascript:;" (click)="goPre()" class="pb-component-btn-pop type-line">PREV</a>
             <a href="javascript:;" (click)="close()" class="pb-component-btn-pop type-line">CANCEL</a>
-            <a href="javascript:;" (click)="complete()" class="pb-component-btn-pop type-bg">COMPLETE</a>
+            <a href="javascript:;" (click)="next()" class="pb-component-btn-pop type-bg">NEXT</a>
         </div>
         <!-- //bottom -->
     </div>
     <!-- //box popup -->
 
-    
+
 </div>

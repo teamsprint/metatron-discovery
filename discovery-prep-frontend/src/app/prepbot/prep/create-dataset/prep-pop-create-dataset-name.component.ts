@@ -128,6 +128,7 @@ export class PrepPopCreateDatasetNameComponent extends AbstractPopupComponent im
   public ngOnInit() {
     super.ngOnInit();
 
+
     this.dsfileInformations = [];
 
     // this.type='FILE'; // temporary
@@ -136,7 +137,7 @@ export class PrepPopCreateDatasetNameComponent extends AbstractPopupComponent im
 
     // Set dataset information
     this._setDatasetInfo();
-    this.init();
+    // this.init();
 
   }
 
@@ -145,7 +146,7 @@ export class PrepPopCreateDatasetNameComponent extends AbstractPopupComponent im
   }
 
     public init() {
-        this.isShow = true;
+        // this.isShow = true;
     }
 
 
@@ -269,12 +270,11 @@ export class PrepPopCreateDatasetNameComponent extends AbstractPopupComponent im
     if (this.type === 'FILE') {
         step_string = 'select-sheet';
     }else if(this.type === 'DB') {
-        step_string = 'DB';
+        step_string = 'DB-QUERY';
     }else if(this.type === 'KAFKA') {
         step_string = 'complete-create-dataset';
     }
-
-    this.stepChange.emit( step_string);
+    this.stepChange.emit(step_string);
   }
 
 

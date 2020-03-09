@@ -473,10 +473,10 @@ export class PrepPopDatasetListComponent extends AbstractComponent {
     /**
      * 체크박스 선택
      */
-    public check(ds: PrDataset) {
+    public check($event,  ds: PrDataset) {
 
         // 중복 체크 방지
-        event.stopImmediatePropagation();
+        $event.preventDefault();
 
         // Original dataset cannot be checked
         if (ds.origin) {

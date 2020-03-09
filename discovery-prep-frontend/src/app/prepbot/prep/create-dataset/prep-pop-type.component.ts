@@ -67,7 +67,7 @@ export class PrepPopTypeComponent extends AbstractComponent {
 
     public ngOnInit() {
         super.ngOnInit();
-        this.init();
+        // this.init();
     }
 
 
@@ -79,7 +79,7 @@ export class PrepPopTypeComponent extends AbstractComponent {
     }
 
     public init() {
-        this.isShow = true;
+
     }
 
     /**
