@@ -106,7 +106,7 @@ export class PrepPopCreateDatasetNameComponent extends AbstractPopupComponent im
   public isMaxLengthError: boolean = false;
   public results: any[] = [];
 
-  public isChecked: boolean = true; // jump to dataflow main grid
+  public isChecked: boolean = false; // jump to dataflow main grid
 
   public prepCommonUtil = PreparationCommonUtil;
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
@@ -334,10 +334,15 @@ export class PrepPopCreateDatasetNameComponent extends AbstractPopupComponent im
    * Keyup event
    * @param event
    */
-  public keyupEvent(event) {
-    if (event.keyCode === 13) {
-      this.complete();
-    }
+  public keyupEvent(event, index) {
+    // if (event.keyCode === 13) {
+    //   this.complete();
+      if(index==0) {
+          this.showNameError= false;
+      }
+      if(index==1) {
+          this.showDescError =false;
+      }
   }
 
 
@@ -751,7 +756,13 @@ export class PrepPopCreateDatasetNameComponent extends AbstractPopupComponent im
       this.flag = false;
       this.loadingHide();
       if (result) {
-        this.results = [];
+          this.results = [];
+          this.results.push({dsId: result.dsId, dsName: result.dsName, link : result['_links'].self.href});
+          if (this.isChecked && this.isFromDatasetList) {
+              this._makeShortCutToDataFlow();
+          }else{
+              this.createComplete.emit();
+          }
 
       }
     }).catch((error) => {

@@ -29,29 +29,24 @@
 
 
                 <!-- box file detail -->
-                <div class="pb-box-file-detail">
-                    <table class="pb-table-det" *ngFor="let ds of datasetInfo;let index=index">
+                <div class="pb-box-file-detail" *ngIf="!isMultiSheet">
+                    <table class="pb-table-det">
                         <colgroup>
                             <col width="125px">
                             <col width="*">
                         </colgroup>
                         <tbody>
 
-                        <tr>
-                            <th>File</th>
+                        <tr *ngFor="let ds of datasetInfo;let index=index">
+                            <th>{{ds.name}}</th>
                             <td>
                                 <span class="pb-data-file-name">
-                                    <em class="pb-img-file type-xls"></em>
-                                    Sheet
+                                    <em class="pb-img-file type-xls" *ngIf="ds.svg"></em>
+                                    {{ds.value}}
                                 </span>
                             </td>
                         </tr>
-                        <tr>
-                            <th>Sheet</th>
-                            <td>
-                                Sheet1
-                            </td>
-                        </tr>
+
 
                         </tbody>
                     </table>
@@ -64,7 +59,7 @@
                     <div class="pb-form-create">
                         <div class="pb-create-label">{{'msg.comm.ui.name' | translate}}</div>
                         <div class="pb-form-edit">
-                            <input type="text" class="pb-component-input" [(ngModel)]="names[0]" maxlength="50" placeholder="{{'msg.comm.ui.create.name' | translate}}">
+                            <input type="text" class="pb-component-input" [(ngModel)]="names[0]" maxlength="50" placeholder="{{'msg.comm.ui.create.name' | translate}}" (keyup)="keyupEvent($event, 0)">
                             <span class="pb-form-error" *ngIf="showNameError">{{'msg.storage.ui.required' | translate}}</span>
                         </div>
                     </div>
@@ -73,13 +68,13 @@
                     <div class="pb-form-create">
                         <div class="pb-create-label">{{'msg.comm.ui.description' | translate}}</div>
                         <div class="pb-form-edit">
-                            <input type="text" class="pb-component-input" [(ngModel)]="descriptions[0]" maxlength="150" placeholder="{{'msg.comm.ui.create.desc' | translate}}">
+                            <input type="text" class="pb-component-input" [(ngModel)]="descriptions[0]" maxlength="150" placeholder="{{'msg.comm.ui.create.desc' | translate}}" (keyup)="keyupEvent($event, 1)">
                             <span class="pb-form-error" *ngIf="showDescError">{{'msg.storage.ui.required' | translate}}</span>
                         </div>
                     </div>
                     <!-- //form create -->
                     <!-- form create -->
-                    <div class="pb-form-create">
+                    <div class="pb-form-create" *ngIf="names.length==1">
                         <label class="pb-compomnent-checkbox">
                             <input type="checkbox" [(ngModel)]="isChecked" [checked]="isChecked" disabled="disabled" *ngIf="!isFromDatasetList">
                             <input type="checkbox" [(ngModel)]="isChecked" [checked]="isChecked" *ngIf="isFromDatasetList">
