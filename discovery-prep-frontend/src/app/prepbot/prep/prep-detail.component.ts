@@ -42,6 +42,7 @@ import {Location} from "@angular/common";
 import {DatasetInfoPopupComponent} from "../dataflow/dataflow-detail/component/dataset-info-popup/dataset-info-popup.component";
 import {PrepPopCreateComponent} from "./create-dataset/prep-pop-create.component";
 import {PreparationCommonUtil} from "../util/preparation-common.util";
+import {PrDataSnapshot} from "../../domain/data-preparation/pr-snapshot";
 declare let echarts: any;
 
 @Component({
@@ -95,6 +96,8 @@ export class PrepDetailComponent extends AbstractComponent {
   public dataflows: PrDataflow[] = [];
 
   public datasets: PrDataset[] = [];
+
+  public datasnapshots: PrDataSnapshot[] = [];
 
   public prepCommonUtil = PreparationCommonUtil;
   public DsType = DsType;
@@ -240,8 +243,22 @@ export class PrepDetailComponent extends AbstractComponent {
 
 
   public changeViewMode(mode:string){
+    if (mode === 'DATARESULT') {
+      this.datasnapshots = [];
+      const promise = [];
+      for (let dataset of this.dataSetList) {
+        promise.push(this._getWorkList(dataset.dsId));
+      }
+      Promise.all(promise).then((result) => {
+        for (let worklist of result) {
+          this.datasnapshots = worklist? this.datasnapshots.concat(worklist.snapshots) : [];
+        }
+      });
+    }
+
     this.viewMode = mode;
   }
+
   // public addDatasets() {
   //     this.openAddDatasetPopup(null);
   // }
@@ -311,8 +328,6 @@ export class PrepDetailComponent extends AbstractComponent {
       this.dataflowDesc = this.dataflow.dfDesc;
     }
   }
-
-
 
   /**
    * chart에서 icon에 selected/unselected표시
@@ -632,6 +647,19 @@ export class PrepDetailComponent extends AbstractComponent {
     return result;
   }
 
+  public getTargetResource(dataSnapshot: PrDataSnapshot) {
+    let result:any = '';
+    const iType: string = this.prepCommonUtil.getImportType(dataSnapshot.origDsImportType);
+
+    if ('FILE' === iType || 'URI' === iType) {
+      const ext = this.prepCommonUtil.getFileNameAndExtension(dataSnapshot.origDsStoredUri)[1];
+      result = this.prepCommonUtil.getFileFormatWithExtension(ext)
+    } else if ('DB' === iType) {
+      result = dataSnapshot.origDsDcImplementor;
+    }
+    return result;
+  }
+
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
    | Protected Method
    |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
@@ -781,8 +809,6 @@ export class PrepDetailComponent extends AbstractComponent {
       { command: 'move', alias: 'Mv' },
       { command: 'union', alias: 'Ui' }
     ];
-
-
   }
 
   /**
@@ -806,8 +832,6 @@ export class PrepDetailComponent extends AbstractComponent {
     this.getDataflow(true);
 
   }
-
-
 
   /**
    * 데이터플로우 차트 Height Resize
@@ -917,8 +941,6 @@ export class PrepDetailComponent extends AbstractComponent {
       $chart.dataflowChartAreaResize(true);
     });
   } // function - initChart
-
-
 
   /**
    * 특정 데이터셋의 최상위 데이터셋 정보를 탐색한다
@@ -1145,13 +1167,13 @@ export class PrepDetailComponent extends AbstractComponent {
     });
   } // function - chartClickEventListener
 
+  private _getWorkList(dsId: string) {
+    return new Promise<any>((resolve, reject) => {
+      this.dataflowService.getWorkList({dsId : dsId}).then((result) => {
+        resolve(result);
+      }).catch((err) => reject(err));
+    });
+  }
 
-}
 
-class SwapParam {
-  oldDsId : string;
-  newDsId : string;
-  dfId : string;
-  wrangledDsId? : string;
-  dsList? : string[];
 }

@@ -101,11 +101,12 @@ import {PrepPopConnectionCreateComponent} from "./prep/create-connection/prep-po
 import {PrepPopConnectionInfoComponent} from "./prep/create-connection/prep-pop-connection-info.component";
 import {PrepPopConnectionNameComponent} from "./prep/create-connection/prep-pop-connection-name.component";
 import {PrConnectionService} from "./prep/service/connection.service"
-import {DataconnectionService} from "../dataconnection/service/dataconnection.service";
 import {PrepRnbRuleComponent} from "./prep/component/prep-rnb-rule.component";
 import {PrepRnbRuleListComponent} from "./prep/component/prep-rnb-rule-list.component";
 import {PrepRnbRecommendComponent} from "./prep/component/prep-rnb-recommend.component";
 import {SnapshotService} from "./prep/service/snapshot.service";
+import {DataconnectionService} from "./prep/service/dataconnection.service";
+import {StorageService} from "../data-storage/service/storage.service";
 
 const dataPreparationRoutes: Routes = [
 { path: '', component: PrepListComponent },
@@ -223,6 +224,7 @@ const dataPreparationRoutes: Routes = [
       PrepbotGuard,
       DataflowModelService,
       DataconnectionService,
+      StorageService,
       SnapshotService
   ],
   exports: [

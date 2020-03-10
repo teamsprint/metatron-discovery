@@ -29,8 +29,11 @@ import {PrepbotService, SelectType, ViewMode} from "../service/prepbot.service";
 import {PreparationCommonUtil} from "../util/preparation-common.util";
 import {PrDataSnapshot} from "../../domain/data-preparation/pr-snapshot";
 import {SnapshotService} from "./service/snapshot.service";
-
+import {DataconnectionService} from "./service/dataconnection.service";
+import {Dataconnection, ImplementorType} from "../../domain/dataconnection/dataconnection";
 import Masonry from 'masonry-layout';
+import {StorageService} from "../../data-storage/service/storage.service";
+
 
 @Component({
   selector: 'prep-list',
@@ -67,6 +70,7 @@ export class PrepListComponent extends AbstractComponent {
   public dataflows : PrDataflow[];
   public datasets : PrDataset[];
   public datasnapshots: PrDataSnapshot[];
+  public dataconnections: Dataconnection[];
 
   public SelectType = SelectType;
   public selectType: SelectType = SelectType.ALL;
@@ -101,6 +105,8 @@ export class PrepListComponent extends AbstractComponent {
   constructor(private _dataflowService: DataflowService,
               private _datasetService: DatasetService,
               private _dataSnapshotService: SnapshotService,
+              private _dataconnectionService: DataconnectionService,
+              private _storageService: StorageService,
               private _prepbotService: PrepbotService,
               public elementRef: ElementRef,
               public injector: Injector,
@@ -187,7 +193,8 @@ export class PrepListComponent extends AbstractComponent {
   }
 
   public toggleViewMode(viewMode){
-    this._prepbotService.setMainViewMode(viewMode)
+    this._prepbotService.setMainViewMode(viewMode);
+    this._initCardView();
   }
 
   /**
@@ -323,15 +330,8 @@ export class PrepListComponent extends AbstractComponent {
     return !isNullOrUndefined(item.ssId)
   }
 
-  /**
-   * Get elapsed day
-   * @param item
-   */
-  public getElapsedDay(item) {
-    if (isNullOrUndefined(item) || isNullOrUndefined(item.elapsedTime) ) {
-      return 0;
-    }
-    return item.elapsedTime.days;
+  public isDataConnection(item: any): boolean {
+    return !isNullOrUndefined(item.id)
   }
 
   public getDataresultDestination(item) {
@@ -343,23 +343,13 @@ export class PrepListComponent extends AbstractComponent {
     }
   }
 
-  /**
-   * Returns formatted elapsed time
-   * hour:minute:second.millisecond
-   * @param item
-   */
-  public getElapsedTime(item: PrDataSnapshot) {
-
-    if (isNullOrUndefined(item) ||
-      isNullOrUndefined(item.elapsedTime) ||
-      isNullOrUndefined(item.elapsedTime.hours) ||
-      isNullOrUndefined(item.elapsedTime.minutes) ||
-      isNullOrUndefined(item.elapsedTime.seconds) ||
-      isNullOrUndefined(item.elapsedTime.milliseconds)
-    ) {
-      return '--:--:--';
+  public getConnectionImplementorLabel(implementor: ImplementorType): string {
+    const jdbc = this._storageService.findConnectionType(implementor);
+    if (_.isNil(jdbc)) {
+      return implementor.toString();
+    } else {
+      return jdbc.name;
     }
-    return `${this.prepCommonUtil.padLeft(item.elapsedTime.hours)}:${this.prepCommonUtil.padLeft(item.elapsedTime.minutes)}:${this.prepCommonUtil.padLeft(item.elapsedTime.seconds)}.${this.prepCommonUtil.padLeft(item.elapsedTime.milliseconds)}`;
   }
 
   //
@@ -388,18 +378,22 @@ export class PrepListComponent extends AbstractComponent {
       promise.push(this._getDatasets());
     }
     if (this.selectType === SelectType.ALL || this.selectType === SelectType.DATARESULTS) {
-      promise.push(this._getDataresults())
+      promise.push(this._getDataresults());
+    }
+    if (this.selectType === SelectType.ALL || this.selectType === SelectType.DATACONNECTION) {
+      promise.push(this._getDataconnections());
     }
 
 
     Promise.all(promise).then((result) => {
-      console.info('promise finish -->', result);
+      //console.info('promise finish -->', result);
       this._searchParams = this._getPrepParams();
 
       this.list = [];
       this.dataflows = [];
       this.datasets = [];
       this.datasnapshots = [];
+      this.dataconnections = [];
 
       let dataflowList = [];
       let datasetList = [];
@@ -410,7 +404,7 @@ export class PrepListComponent extends AbstractComponent {
         dataflowList = result[0];
         datasetList = result[1];
         dataresultList = result[2];
-        //dataconnectionList = result[3];
+        dataconnectionList = result[3];
       } else if (this.selectType === SelectType.DATAFLOW) {
         dataflowList = result[0];
       } else if (this.selectType === SelectType.DATASETS) {
@@ -418,15 +412,16 @@ export class PrepListComponent extends AbstractComponent {
       } else if (this.selectType === SelectType.DATARESULTS) {
         dataresultList = result[0];
       } else if (this.selectType === SelectType.DATACONNECTION) {
-        //dataconnectionList = result[0];
+        dataconnectionList = result[0];
       }
       this.loadingHide();
 
       this.dataflows = dataflowList['_embedded']? this.dataflows.concat(dataflowList['_embedded']['preparationdataflows']) : [];
       this.datasets = datasetList['_embedded'] ? this.datasets.concat(datasetList['_embedded']['preparationdatasets']) : [];
       this.datasnapshots = dataresultList['_embedded'] ? this.datasnapshots.concat(dataresultList['_embedded']['preparationsnapshots']) : [];
+      this.dataconnections = dataconnectionList['_embedded'] ? this.dataconnections.concat(dataconnectionList['_embedded']['connections']) : [];
 
-      this.list = this.list.concat(this.dataflows).concat(this.datasets).concat(this.datasnapshots);
+      this.list = this.list.concat(this.dataflows).concat(this.datasets).concat(this.datasnapshots).concat(this.dataconnections);
       this.list = this.list.sort(function (left, right) {
         const leftTime = Date.parse(left.modifiedTime);
         const rightTime = Date.parse(right.modifiedTime);
@@ -438,12 +433,7 @@ export class PrepListComponent extends AbstractComponent {
         return leftTime < rightTime ? 1 : leftTime > rightTime ? -1 : 0;
       });
 
-      setTimeout(()=> {
-        new Masonry( '.pb-wrap-main', {
-          itemSelector: '.pb-box-main',
-          horizontalOrder: true
-        })
-      })
+      this._initCardView();
 
     }).catch((err) => {
       console.log(err);
@@ -462,7 +452,6 @@ export class PrepListComponent extends AbstractComponent {
         resolve(result);
       }).catch((err) => reject(err));
     });
-
   }
 
   /**
@@ -486,6 +475,15 @@ export class PrepListComponent extends AbstractComponent {
       this._dataSnapshotService.getSnapshots(params).then(result => {
         resolve(result);
       }).catch((err) => reject(err));
+    });
+  }
+
+  private _getDataconnections() {
+    return new Promise<any>((resolve, reject) => {
+      this._dataconnectionService.getConnectionList(this.page.page, this.page.size, this.selectedContentSort.key + ',' + this.selectedContentSort.sort, this._getConnectionParams())
+          .then((result) => {
+            resolve(result);
+          }).catch((err) => reject(err));
     });
   }
 
@@ -557,6 +555,18 @@ export class PrepListComponent extends AbstractComponent {
     return params;
   }
 
+  /**
+   * Get connection params
+   * @returns {Object}
+   * @private
+   */
+  private _getConnectionParams(): object {
+    const params = {
+      containsText: this.searchText
+    };
+    return params;
+  }
+
 
   /**
    * Initialise values
@@ -566,6 +576,17 @@ export class PrepListComponent extends AbstractComponent {
     this.searchText = '';
     this.selectedContentSort.sort = 'desc';
     this.selectedContentSort.key = 'modifiedTime';
+  }
+
+  private _initCardView() {
+    if (this.isCardView) {
+      setTimeout(()=> {
+        new Masonry( '.pb-wrap-main', {
+          itemSelector: '.pb-box-main',
+          horizontalOrder: true
+        }, 200)
+      });
+    }
   }
 
 }

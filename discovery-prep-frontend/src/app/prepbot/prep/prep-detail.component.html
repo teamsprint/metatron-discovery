@@ -430,6 +430,82 @@
                     DATA RESULTS
                 </div>
                 <div class="pb-ui-graph">
+                    <div class="pb-wrap-connect type-connect">
+                        <!-- data grid -->
+                        <div class="pb-wrap-data-grid">
+                            <!-- grid top -->
+                            <div class="pb-ui-grid-top">
+                                <div class="pb-component-search">
+                                    <input type="text" placeholder="Search for values">
+                                </div>
+                            </div>
+                            <!-- //grid top -->
+                            <div class="pb-wrap-table">
+                                <table class="pb-component-table">
+                                    <colgroup>
+                                        <col width="*">
+                                        <col width="15%">
+                                        <col width="10%">
+                                        <col width="15%">
+                                        <col width="15%">
+                                        <col width="10%">
+                                        <col width="10%">
+                                        <col width="20%">
+                                    </colgroup>
+                                    <thead>
+                                    <tr>
+                                        <th>No
+                                        </th>
+                                        <th>Name
+                                        </th>
+                                        <th>Target
+                                        </th>
+                                        <th>Target Resource
+                                        </th>
+                                        <th>Target Dataset
+                                        </th>
+                                        <th>Status
+                                        </th>
+                                        <th>Elapsed time
+                                        </th>
+                                        <th>Created
+                                        </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr *ngFor="let dataSnapshot of datasnapshots; let i = index">
+                                        <td>
+                                            {{ i + 0}}
+                                        </td>
+                                        <td>
+                                            {{dataSnapshot.ssName}}
+                                        </td>
+                                        <td>
+                                            {{dataSnapshot.origDsImportType ? prepCommonUtil.getImportType(dataSnapshot.origDsImportType) : ''}}
+                                        </td>
+                                        <td>
+                                            {{getTargetResource(dataSnapshot)}}
+                                        </td>
+                                        <td>
+                                            {{dataSnapshot.dsName}}
+                                        </td>
+                                        <td>
+                                            {{dataSnapshot.status}}
+                                        </td>
+                                        <td>
+                                            <span *ngIf="prepCommonUtil.getElapsedDay(dataSnapshot) > 0">{{prepCommonUtil.getElapsedDay(dataSnapshot) + '일'}}</span>
+                                                {{prepCommonUtil.getElapsedTime(dataSnapshot)}}
+                                        </td>
+                                        <td>
+                                            {{dataSnapshot.createdTime | mdate:'YYYY-MM-DD HH:mm'}} <span>by</span> {{dataSnapshot.createdBy}}
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <!-- //data grid -->
+                    </div>
                 </div>
             </div>
         </div>

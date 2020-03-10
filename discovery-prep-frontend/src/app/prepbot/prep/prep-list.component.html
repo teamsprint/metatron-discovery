@@ -82,6 +82,9 @@
               <li>
                 <a href="javascript:" (click)="changeSelectType(SelectType.DATARESULTS)">DATA RESULTS</a>
               </li>
+              <li>
+                <a href="javascript:" (click)="changeSelectType(SelectType.DATACONNECTION)">DATA CONNECTIONS</a>
+              </li>
             </ul>
           </div>
           <!-- //popup -->
@@ -193,8 +196,8 @@
             </div>
             <div class="pb-ui-time">
               Elapsed time
-              <strong><span *ngIf="getElapsedDay(item) > 0">{{getElapsedDay(item) + '일'}}</span>
-                {{getElapsedTime(item)}}
+              <strong><span *ngIf="prepCommonUtil.getElapsedDay(item) > 0">{{prepCommonUtil.getElapsedDay(item) + '일'}}</span>
+                {{prepCommonUtil.getElapsedTime(item)}}
               </strong>
             </div>
           </div>
@@ -208,6 +211,37 @@
           </div>
           <div class="pb-txt-data ddp-ellipsis" title="{{getDataresultDestination(item)}}">
             <span class="pb-data-label">Destination</span>{{getDataresultDestination(item)}}
+          </div>
+        </div>
+        <!-- //data summary -->
+      </ng-container>
+      <ng-container *ngIf="isDataConnection(item)">
+        <!-- main summary -->
+        <div class="pb-ui-main-summary">
+          <!-- tag -->
+          <div class="pb-ui-tags">
+            <span class="pb-component-tag type-new" *ngIf="item.createdTime | moment: 'isNew'">NEW</span>
+          </div>
+          <div class="pb-ui-type" style="min-height: 80px;">
+            <span class="pb-wrap-type">
+              <em class="pb-img-dataset2 {{prepCommonUtil.getDatabaseIconClass(item.implementor)}}"></em>
+            </span>
+            <div class="pb-ui-name ddp-ellipsis" title="{{item.name}}">
+              {{item.name}}
+            </div>
+            <div class="pb-ui-des ddp-ellipsis" title="{{item.description}}">
+              {{item.description}}
+            </div>
+          </div>
+        </div>
+        <!-- //main summary -->
+        <!-- data summary -->
+        <div class="pb-data-summary">
+          <div class="pb-txt-data">
+            <span class="pb-data-label">DB Type</span>{{getConnectionImplementorLabel(item.implementor)}}
+          </div>
+          <div class="pb-txt-data">
+            <span class="pb-data-label">Host/Port(URL)</span> {{item.url ? item.url : item.hostname + ' / ' + item.port}}
           </div>
         </div>
         <!-- //data summary -->
@@ -237,7 +271,7 @@
         <div class="pb-wrap-table" style="background-color: #fff;">
           <table class="pb-component-table">
             <colgroup>
-              <col width="150px">
+              <col width="170px">
               <col width="*">
               <col width="20%">
             </colgroup>
@@ -278,6 +312,14 @@
                   </td>
                   <td class="ddp-ellipsis">
                     {{item.ssName}}<span>{{item.ssDesc ? ' - ' + item.ssDesc : ''}}</span>
+                  </td>
+                </ng-container>
+                <ng-container *ngIf="isDataConnection(item)">
+                  <td>
+                    DATA CONNECTION
+                  </td>
+                  <td class="ddp-ellipsis">
+                    {{item.name}}<span>{{item.description ? ' - ' + item.description : ''}}</span>
                   </td>
                 </ng-container>
                 <td>

@@ -13,6 +13,7 @@
 */
 
 import { AbstractHistoryEntity } from '../common/abstract-history-entity';
+import {ImportType} from "./pr-dataset";
 export class PrDataSnapshot extends AbstractHistoryEntity{
 
 public ssId: string;
@@ -34,6 +35,9 @@ public storedUri : string;
 public sourceInfo: LineageInfo;
 public connectionInfo: ConnectionInfo;
 public ruleStringInfo: any;
+public origDsImportType: ImportType;
+public origDsStoredUri: string;
+public origDsDcImplementor: string;
 
 // 생성시 필요한 필드
 public ssType: SsType;

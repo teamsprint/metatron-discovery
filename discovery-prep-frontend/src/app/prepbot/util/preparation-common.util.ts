@@ -680,4 +680,30 @@ export class PreparationCommonUtil {
     }
   }
 
+  public static getElapsedDay(item) {
+    if (isNullOrUndefined(item) || isNullOrUndefined(item.elapsedTime) ) {
+      return 0;
+    }
+    return item.elapsedTime.days;
+  }
+
+  /**
+   * Returns formatted elapsed time
+   * hour:minute:second.millisecond
+   * @param item
+   */
+  public static getElapsedTime(item: PrDataSnapshot) {
+
+    if (isNullOrUndefined(item) ||
+        isNullOrUndefined(item.elapsedTime) ||
+        isNullOrUndefined(item.elapsedTime.hours) ||
+        isNullOrUndefined(item.elapsedTime.minutes) ||
+        isNullOrUndefined(item.elapsedTime.seconds) ||
+        isNullOrUndefined(item.elapsedTime.milliseconds)
+    ) {
+      return '--:--:--';
+    }
+    return `${this.padLeft(item.elapsedTime.hours)}:${this.padLeft(item.elapsedTime.minutes)}:${this.padLeft(item.elapsedTime.seconds)}.${this.padLeft(item.elapsedTime.milliseconds)}`;
+  }
+
 }
