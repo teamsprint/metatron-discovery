@@ -29,7 +29,7 @@ import {PrepbotService, SelectType, ViewMode} from "../service/prepbot.service";
 import {PreparationCommonUtil} from "../util/preparation-common.util";
 import {PrDataSnapshot} from "../../domain/data-preparation/pr-snapshot";
 import {SnapshotService} from "./service/snapshot.service";
-import {DataconnectionService} from "./service/dataconnection.service";
+import {DataconnectionService} from "../../dataconnection/service/dataconnection.service";
 import {Dataconnection, ImplementorType} from "../../domain/dataconnection/dataconnection";
 import Masonry from 'masonry-layout';
 import {StorageService} from "../../data-storage/service/storage.service";

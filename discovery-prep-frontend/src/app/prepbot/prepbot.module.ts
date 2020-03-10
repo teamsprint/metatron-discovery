@@ -105,8 +105,8 @@ import {PrepRnbRuleComponent} from "./prep/component/prep-rnb-rule.component";
 import {PrepRnbRuleListComponent} from "./prep/component/prep-rnb-rule-list.component";
 import {PrepRnbRecommendComponent} from "./prep/component/prep-rnb-recommend.component";
 import {SnapshotService} from "./prep/service/snapshot.service";
-import {DataconnectionService} from "./prep/service/dataconnection.service";
 import {StorageService} from "../data-storage/service/storage.service";
+import {DataconnectionService} from "../dataconnection/service/dataconnection.service";
 
 const dataPreparationRoutes: Routes = [
 { path: '', component: PrepListComponent },
