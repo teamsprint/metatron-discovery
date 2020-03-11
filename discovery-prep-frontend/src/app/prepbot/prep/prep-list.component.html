@@ -350,3 +350,10 @@
                       (createComplete)="createComplete()"></prep-pop-connection-create>
 
 <!-- //생성 -->
+
+<!-- 수정 modify -->
+<prep-pop-connection-update *ngIf="mode=='prep-pop-connection-update'" [connectionId]="_selectedDataConnectionId"
+                            (closeEvent)="changeMode( '' )"
+                            (createComplete)="createComplete()"></prep-pop-connection-update>
+
+<!-- //수정 modify -->

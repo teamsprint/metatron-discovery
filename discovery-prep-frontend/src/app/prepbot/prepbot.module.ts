@@ -100,6 +100,7 @@ import {PrepPopDatasetListComponent} from "./prep/create-dataflow/prep-pop-datas
 import {PrepPopConnectionCreateComponent} from "./prep/create-connection/prep-pop-connection-create.component";
 import {PrepPopConnectionInfoComponent} from "./prep/create-connection/prep-pop-connection-info.component";
 import {PrepPopConnectionNameComponent} from "./prep/create-connection/prep-pop-connection-name.component";
+import {PrepPopConnectionUpdateComponent} from "./prep/update-connection/prep-pop-connection-update.component";
 import {PrConnectionService} from "./prep/service/connection.service"
 import {PrepRnbRuleComponent} from "./prep/component/prep-rnb-rule.component";
 import {PrepRnbRuleListComponent} from "./prep/component/prep-rnb-rule-list.component";
@@ -208,6 +209,7 @@ const dataPreparationRoutes: Routes = [
       PrepPopConnectionCreateComponent,
       PrepPopConnectionInfoComponent,
       PrepPopConnectionNameComponent,
+      PrepPopConnectionUpdateComponent,
       CreateSnapshotPopup,
       PrepRnbRuleComponent,
       PrepRnbRuleListComponent,

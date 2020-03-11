@@ -1,0 +1,278 @@
+<div class="pb-layout-popup">
+    <!-- box popup -->
+    <div class="pb-box-popup">
+        <a href="javascript:" class="pb-btn-pop-close" (click)="close()"></a>
+        <!-- step -->
+        <!--<div class="pb-ui-step">-->
+            <!--<span class="pb-txt-step is-selected">1</span>-->
+            <!--<span class="pb-txt-step">2</span>-->
+        <!--</div>-->
+        <!-- //step -->
+        <!-- top -->
+        <div class="pb-popup-top pb-clear">
+            <div class="pb-txt-title">CREATE DATA CONNECTION</div>
+
+        </div>
+        <!-- //top -->
+        <!-- contents -->
+        <div class="pb-popup-contents ">
+            <div class="pb-popup-contents-in pb-wrap-dataset">
+                <!-- dataset type -->
+                <div class="pb-wrap-dataset-type">
+                    <ul class="pb-list-dataset-type">
+                        <li [ngClass]="{'is-selected': selectedConnectionType!=null && selectedConnectionType.name=='MySQL'}">
+                            <div class="pb-box-dataset" (click)="onChangeConnectionType('MySQL')">
+                                <em class="pb-img-dataset type-mysql"></em>
+                                MySQL
+                            </div>
+                        </li>
+                        <li [ngClass]="{'is-selected': selectedConnectionType!=null && selectedConnectionType.name=='PostgreSQL'}">
+                            <div class="pb-box-dataset" (click)="onChangeConnectionType('PostgreSQL')">
+                                <em class="pb-img-dataset type-post"></em>
+                                PostgreSQL
+                            </div>
+                        </li>
+
+                        <li [ngClass]="{'is-selected': selectedConnectionType!=null && selectedConnectionType.name=='Hive'}">
+                            <div class="pb-box-dataset" (click)="onChangeConnectionType('Hive')">
+                                <em class="pb-img-dataset type-hive"></em>
+                                Hive
+                            </div>
+                        </li>
+
+                        <li [ngClass]="{'is-selected': selectedConnectionType!=null && selectedConnectionType.name=='Presto'}">
+                            <div class="pb-box-dataset" (click)="onChangeConnectionType('Presto')">
+                                <em class="pb-img-dataset type-presto"></em>
+                                Presto
+                            </div>
+                        </li>
+
+                        <li class="is-disabled">
+                            <div class="pb-box-dataset">
+                                <em class="pb-img-dataset type-druid"></em>
+                                Druid
+                            </div>
+                        </li>
+
+                        <li class="is-disabled">
+                            <div class="pb-box-dataset">
+                                <em class="pb-img-dataset type-tibero"></em>
+                                Tibero
+                            </div>
+                        </li>
+
+                        <li class="is-disabled">
+                            <div class="pb-box-dataset">
+                                <em class="pb-img-dataset type-phoenix"></em>
+                                Phoenix
+                            </div>
+                        </li>
+
+
+
+                        <li class="is-disabled">
+                            <div class="pb-box-dataset">
+                                <em class="pb-img-dataset type-oracle"></em>
+                                Oracle
+                            </div>
+                        </li>
+
+
+                        <li class="is-disabled">
+                            <div class="pb-box-dataset">
+                                <em class="pb-img-dataset type-rds"></em>
+                                Rds
+                            </div>
+                        </li>
+
+                        <li class="is-disabled">
+                            <div class="pb-box-dataset">
+                                <em class="pb-img-dataset type-custom"></em>
+                                Custom
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <!-- //dataset type -->
+
+
+
+                <div class="pb-ui-create">
+
+                    <!-- clear -->
+                    <div class="pb-ui-create-in pb-clear" *ngIf="isUsedUrl">
+                        <div class="pb-col-12">
+                            <!-- form create -->
+                            <div class="pb-form-create">
+                                <div class="pb-create-label">{{'msg.storage.ui.conn.url' | translate}}</div>
+                                <div class="pb-form-edit">
+                                    <input type="text" class="pb-component-input" placeholder="{{'msg.storage.ui.conn.url.ph' | translate}}" [readOnly]="isDisableChangeConnectionInfo"
+                                           [ngModel]="url" (ngModelChange)="url = $event; isUrlError = undefined; connectionValidInitialize()">
+                                    <span class="pb-form-error" *ngIf="isUrlError">{{'msg.storage.ui.required' | translate}}</span>
+
+                                </div>
+                                <label class="pb-compomnent-checkbox type-font-s" (click)="onChangeUseUrl(); $event.defaultPrevented;">
+                                    <input type="checkbox" [checked]="isUsedUrl" tabindex="-1" [disabled]="isDisableChangeConnectionInfo">
+                                    <i></i>
+                                    <span class="pb-txt-checkbox">{{'msg.storage.ui.conn.url.only' | translate}}</span>
+                                </label>
+                            </div>
+                            <!-- //form create -->
+                        </div>
+                    </div>
+                    <!-- //clear -->
+
+
+
+                    <!-- clear -->
+                    <div class="pb-ui-create-in pb-clear" *ngIf="!isUsedUrl">
+                        <div class="pb-col-6">
+                            <!-- form create -->
+                            <div class="pb-form-create">
+                                <div class="pb-create-label">{{'msg.comm.th.host' | translate}}</div>
+                                <div class="pb-form-edit">
+                                    <input type="text" class="pb-component-input" placeholder="{{'msg.comm.th.host' | translate}}"[readOnly]="isDisableChangeConnectionInfo"
+                                           [ngModel]="hostname" (ngModelChange)="hostname = $event; isHostnameError = undefined; connectionValidInitialize()">
+                                    <span class="pb-form-error" *ngIf="isHostnameError">{{'msg.storage.ui.required' | translate}}</span>
+
+                                </div>
+                                <label class="pb-compomnent-checkbox type-font-s" (click)="onChangeUseUrl(); $event.defaultPrevented;">
+                                    <input type="checkbox" [checked]="isUsedUrl" tabindex="-1" [disabled]="isDisableChangeConnectionInfo">
+                                    <i></i>
+                                    <span class="pb-txt-checkbox">{{'msg.storage.ui.conn.url.only' | translate}}</span>
+                                </label>
+                            </div>
+                            <!-- //form create -->
+                        </div>
+                        <div class="pb-col-3">
+                            <!-- form create -->
+                            <div class="pb-form-create">
+                                <div class="pb-create-label">{{'msg.comm.th.port' | translate}}</div>
+                                <div class="pb-form-edit">
+                                    <input type="text" class="pb-component-input" placeholder="{{'msg.comm.th.port' | translate}}" maxlength="5" input-mask="number" [readOnly]="isDisableChangeConnectionInfo"
+                                           [ngModel]="port" (ngModelChange)="port = $event; isPortError = undefined; connectionValidInitialize()">
+                                    <span class="pb-form-error" *ngIf="isPortError">{{'msg.storage.ui.required' | translate}}</span>
+                                </div>
+                            </div>
+                            <!-- //form create -->
+                        </div>
+                        <div class="pb-col-3">
+                            <!-- form create -->
+                            <div class="pb-form-create" *ngIf="!isDisableSid()">
+                                <div class="pb-create-label">{{'msg.storage.th.sid' | translate}}</div>
+                                <div class="pb-form-edit">
+                                    <input type="text" class="pb-component-input" placeholder="{{'msg.storage.ui.conn.sid.ph' | translate}}" [readOnly]="isDisableChangeConnectionInfo"
+                                           [ngModel]="sid" (ngModelChange)="sid = $event; isSidError = undefined; connectionValidInitialize()">
+                                    <span class="pb-form-error" *ngIf="isSidError">{{'msg.storage.ui.required' | translate}}</span>
+                                </div>
+                            </div>
+                            <!-- //form create -->
+
+                            <!-- form create -->
+                            <div class="pb-form-create" *ngIf="!isDisableDatabase()">
+                                <div class="pb-create-label">{{'msg.storage.th.db_name' | translate}}</div>
+                                <div class="pb-form-edit">
+                                    <input type="text" class="pb-component-input" placeholder="{{'msg.storage.th.db_name.ph' | translate}}" [readOnly]="isDisableChangeConnectionInfo"
+                                           [ngModel]="database" (ngModelChange)="database = $event; isDatabaseError = undefined; connectionValidInitialize()">
+                                    <span class="pb-form-error" *ngIf="isDatabaseError">{{'msg.storage.ui.required' | translate}}</span>
+                                </div>
+                            </div>
+                            <!-- //form create -->
+
+                            <!-- form create -->
+                            <div class="pb-form-create" *ngIf="!isDisableCatalog()">
+                                <div class="pb-create-label">{{'msg.storage.th.catalog' | translate}}</div>
+                                <div class="pb-form-edit">
+                                    <input type="text" class="pb-component-input" placeholder="{{'msg.storage.ui.conn.catalog.ph' | translate}}" [readOnly]="isDisableChangeConnectionInfo"
+                                           [ngModel]="catalog" (ngModelChange)="catalog = $event; isCatalogError = undefined; connectionValidInitialize()">
+                                    <span class="pb-form-error" *ngIf="isCatalogError">{{'msg.storage.ui.required' | translate}}</span>
+                                </div>
+                            </div>
+                            <!-- //form create -->
+                        </div>
+                    </div>
+                    <!-- //clear -->
+
+
+                    <!-- clear -->
+                    <div class="pb-ui-create-in pb-clear">
+                        <div class="pb-col-6">
+                            <!-- form create -->
+                            <div class="pb-form-create">
+                                <div class="pb-create-label">{{'msg.storage.th.user_name' | translate}}</div>
+                                <div class="pb-form-edit">
+                                    <input type="text" class="pb-component-input" placeholder="{{'msg.storage.th.user_name.ph' | translate}}" [readOnly]="selectedAuthenticationType.value !== AUTHENTICATION_TYPE.DIALOG && isDisableChangeConnectionInfo"
+                                           [ngModel]="username" (ngModelChange)="username = $event; isUsernameError = undefined; connectionValidInitialize()">
+                                    <span class="pb-form-error" *ngIf="isUsernameError">{{'msg.storage.ui.required' | translate}}</span>
+                                </div>
+
+                            </div>
+                            <!-- //form create -->
+                        </div>
+                        <div class="pb-col-6">
+                            <!-- form create -->
+                            <div class="pb-form-create">
+                                <div class="pb-create-label">{{'msg.storage.th.pwd' | translate}}</div>
+                                <div class="pb-form-edit">
+                                    <input type="password" class="pb-component-input" placeholder="{{'msg.storage.th.pwd.ph' | translate}}" [readOnly]="selectedAuthenticationType.value !== AUTHENTICATION_TYPE.DIALOG && isDisableChangeConnectionInfo"
+                                           [ngModel]="password" (ngModelChange)="password = $event; isPasswordError = undefined; connectionValidInitialize()">
+                                    <span class="pb-form-error" *ngIf="isPasswordError">{{'msg.storage.ui.required' | translate}}</span>
+                                </div>
+                            </div>
+                            <!-- //form create -->
+                        </div>
+                    </div>
+                    <!-- //clear -->
+
+
+
+
+                    <!-- clear -->
+                    <div class="pb-ui-create-in pb-clear">
+                        <!-- form create -->
+                        <!--<div class="pb-form-create">-->
+                        <!--<div class="pb-create-label">{{'msg.storage.ui.security' | translate}}</div>-->
+                        <!--<ul class="pb-list-create-check">-->
+                        <!--<li *ngFor="let type of authenticationTypeList">-->
+                        <!--<label class="pb-compomnent-radio" (change)="onChangeAuthenticationType(type)">-->
+                        <!--&lt;!&ndash;[checked]="type.value === selectedAuthenticationType.value" [disabled]="isDisableChangeConnectionInfo && type.value !== selectedAuthenticationType.value"&ndash;&gt;-->
+                        <!--<input type="radio" [checked]="type.value === selectedAuthenticationType.value" [disabled]="isDisableChangeConnectionInfo && type.value !== selectedAuthenticationType.value">-->
+                        <!--<i></i>-->
+                        <!--<span class="pb-txt-radio">{{type.label}}<span class="pb-txt-sub" *ngIf="type.value === AUTHENTICATION_TYPE.DIALOG">{{'msg.storage.ui.conn.dialog.desc' | translate}}</span></span>-->
+                        <!--</label>-->
+                        <!--</li>-->
+                        <!--</ul>-->
+                        <!--</div>-->
+                        <!-- //form create -->
+                        <!-- form create -->
+                        <div class="pb-form-create">
+                            <div class="pb-form-valid">
+                                <a href="javascirpt:;" class="pb-component-btn-valid" (click)="checkConnection()">Validation Check</a>
+                                <span class="pb-txt-valid type-invalid" *ngIf="isRequireCheckConnection()">{{'msg.storage.ui.required' | translate}}</span>
+                                <span class="pb-txt-valid type-invalid" *ngIf="isDisableConnection()"><em class="ddp-icon-error"></em>{{'msg.storage.ui.invalid.conn' | translate}}</span>
+                                <span class="pb-txt-valid" *ngIf="isEnableConnection()"><em class="ddp-icon-ok"></em>{{'msg.storage.ui.valid.conn' | translate}}</span>
+                            </div>
+
+                            <!--<div class="pb-form-valid">-->
+                            <!--<a href="javascirpt:" class="pb-component-btn-valid">Validation Check</a>-->
+                            <!--<span class="pb-txt-valid">Valid Connection</span>-->
+                            <!--</div>-->
+                        </div>
+                        <!-- //form create -->
+                    </div>
+                    <!-- //clear -->
+                </div>
+
+
+
+            </div>
+
+        </div>
+        <!-- //contents -->
+        <div class="pb-popup-bottom">
+            <a href="javascript:;" class="pb-component-btn-pop type-line" (click)="close()">CANCEL</a>
+            <a href="javascript:;" class="pb-component-btn-pop type-bg" (click)="next()">DONE</a>
+        </div>
+    </div>
+    <!-- //box popup -->
+</div>

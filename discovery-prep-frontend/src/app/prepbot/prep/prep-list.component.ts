@@ -23,6 +23,7 @@ import * as _ from 'lodash';
 import {PrepPopCreateComponent} from "./create-dataset/prep-pop-create.component";
 import {PrepPopFlowCreateComponent} from "./create-dataflow/prep-pop-flow-create.component";
 import {PrepPopConnectionCreateComponent} from "./create-connection/prep-pop-connection-create.component";
+import {PrepPopConnectionUpdateComponent} from "./update-connection/prep-pop-connection-update.component";
 import {DatasetService} from "./service/dataset.service";
 import {DsType, PrDataset} from "../../domain/data-preparation/pr-dataset";
 import {PrepbotService, SelectType, ViewMode} from "../service/prepbot.service";
@@ -82,6 +83,10 @@ export class PrepListComponent extends AbstractComponent {
   // create step
   public mode: string;
 
+
+  // select dataconnection id
+  public _selectedDataConnectionId: string;
+
   // 정렬
   public selectedContentSort: Order = new Order();
 
@@ -93,6 +98,10 @@ export class PrepListComponent extends AbstractComponent {
 
   @ViewChild(PrepPopConnectionCreateComponent)
   public prepPopConnectionCreateComponent : PrepPopConnectionCreateComponent;
+
+  @ViewChild(PrepPopConnectionUpdateComponent)
+  public prepPopConnectionUpdateComponent : PrepPopConnectionUpdateComponent;
+
 
   @ViewChild('selectTypeSelectBox')
   private _selectTypeSelectBox: ElementRef
@@ -230,13 +239,18 @@ export class PrepListComponent extends AbstractComponent {
    * @param dfId
    */
   public goToDfDetail(item) {
-    if (this.isDataflow(item)) {
-      const params = this._getPrepParams();
-      this._prepbotService.setParamsForPrepbotList(params);
-      this.router.navigate(
-        ['/management/prepbot/dataflow', item.dfId])
-        .then();
-    }
+      if (this.isDataflow(item)) {
+            const params = this._getPrepParams();
+            this._prepbotService.setParamsForPrepbotList(params);
+            this.router.navigate(
+                ['/management/prepbot/dataflow', item.dfId])
+                .then();
+        }
+
+      if (this.isDataConnection(item)) {
+          this._selectedDataConnectionId  = item.id;
+          this.changeMode('prep-pop-connection-update');
+      }
 
   }
 
