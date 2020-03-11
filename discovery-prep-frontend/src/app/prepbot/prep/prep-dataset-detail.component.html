@@ -151,8 +151,7 @@
                 </div>
                 <!-- //icon button -->
                 <div class="pb-ui-part">
-                    <a href="javascript:" class="pb-component-btn type-line">CANCEL</a>
-                    <a href="javascript:" class="pb-component-btn type-bg">DONE</a>
+                    <a href="javascript:" class="pb-component-btn type-line">+ CREATE DATA RESULT</a>
                 </div>
             </div>
             <!-- //button -->
@@ -192,15 +191,9 @@
     <div class="pb-rnb-menu is-selected">
         <a href="javascript:" class="pb-btn-menu-close"></a>
         <ul class="pb-list-rnb type-list">
-            <li>
-                <a href="javascript:">
-                    <span class="pb-txt-rnb">RULE</span>
-                </a>
-                <prep-rnb-rule></prep-rnb-rule>
-            </li>
             <li class="is-selected">
                 <a href="javascript:">
-                    <span class="pb-txt-rnb">Rule list</span>
+                    <span class="pb-txt-rnb">RULE</span>
                 </a>
                 <prep-rnb-rule-list
                         [ruleList]="ruleList"
@@ -217,7 +210,7 @@
             </li>
         </ul>
         <!-- bottom -->
-        <div class="pb-btn-bottom">
+        <div class="pb-btn-bottom" style="display:none;">
             <a href="javascript:" class="pb-component-btn type-dark">
                 <em class="pb-icon-dictionary"></em>Rule Dictionary
             </a>

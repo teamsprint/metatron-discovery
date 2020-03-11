@@ -20,7 +20,7 @@
                     </li>
                 </ul>
             </div>
-            <a href="javascript:" class="pb-link-schedule" [class.is-selected]="viewMode === 'SCHEDULE'" (click)="changeViewMode('SCHEDULE')"></a>
+            <a href="javascript:" class="pb-link-schedule" style="display:none;" [class.is-selected]="viewMode === 'SCHEDULE'" (click)="changeViewMode('SCHEDULE')"></a>
         </div>
         <!-- lnb navi -->
         <div class="pb-lnb-navigation">
@@ -297,7 +297,7 @@
             <div class="pb-box-contents">
 
                 <div class="pb-box-title" *ngIf="dataSetList!==null && dataSetList.length > 0">
-                    DATA FLOW
+                    DATA FLOW DIAGRAM
                 </div>
 
                 <div class="pb-ui-graph" [hidden]="dataSetList==null || dataSetList.length == 0">

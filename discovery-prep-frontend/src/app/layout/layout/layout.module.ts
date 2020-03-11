@@ -39,26 +39,11 @@ const layoutRoutes: Routes = [
     children: [
       {path: '', redirectTo: 'management/prepbot', pathMatch: 'full'},
       {
-        path: 'management/storage',
-        loadChildren: 'app/data-storage/data-storage.module#DataStorageModule',
-        canActivate: [DatasourceManagementGuard]
-      },
-      {
-        path: 'management/datapreparation',
-        loadChildren: 'app/data-preparation/data-preparation.module#DataPreparationModule',
-        canActivate: [PrepbotGuard]
-      },
-      {
       path: 'management/prepbot',
       loadChildren: 'app/prepbot/prepbot.module#PrepbotModule',
       canActivate: [PrepbotGuard]
       },
-      {path: 'admin', loadChildren: 'app/admin/admin.module#AdminModule'},
-      {path: 'external', loadChildren: 'app/external/external-view.module#ExternalViewModule'},
-      {
-        path: 'samplecomponent',
-        loadChildren: 'app/sample-component/sample-component.module#SampleComponentModule'
-      }
+      {path: 'admin', loadChildren: 'app/admin/admin.module#AdminModule'}
     ]
   }
 ];
