@@ -231,20 +231,19 @@
                     <!-- clear -->
                     <div class="pb-ui-create-in pb-clear">
                         <!-- form create -->
-                        <div class="pb-form-create">
-                            <div class="pb-create-label">{{'msg.storage.ui.security' | translate}}</div>
-                            <ul class="pb-list-create-check">
-                                <li *ngFor="let type of authenticationTypeList">
-                                    <label class="pb-compomnent-radio" (change)="onChangeAuthenticationType(type)">
-                                        <!--[checked]="type.value === selectedAuthenticationType.value" [disabled]="isDisableChangeConnectionInfo && type.value !== selectedAuthenticationType.value"-->
-                                        <input type="radio" [checked]="type.value === selectedAuthenticationType.value" [disabled]="isDisableChangeConnectionInfo && type.value !== selectedAuthenticationType.value">
-                                        <i></i>
-                                        <span class="pb-txt-radio">{{type.label}}<span class="pb-txt-sub" *ngIf="type.value === AUTHENTICATION_TYPE.DIALOG">{{'msg.storage.ui.conn.dialog.desc' | translate}}</span></span>
-                                    </label>
-                                </li>
-                            </ul>
-
-                        </div>
+                        <!--<div class="pb-form-create">-->
+                            <!--<div class="pb-create-label">{{'msg.storage.ui.security' | translate}}</div>-->
+                            <!--<ul class="pb-list-create-check">-->
+                                <!--<li *ngFor="let type of authenticationTypeList">-->
+                                    <!--<label class="pb-compomnent-radio" (change)="onChangeAuthenticationType(type)">-->
+                                        <!--&lt;!&ndash;[checked]="type.value === selectedAuthenticationType.value" [disabled]="isDisableChangeConnectionInfo && type.value !== selectedAuthenticationType.value"&ndash;&gt;-->
+                                        <!--<input type="radio" [checked]="type.value === selectedAuthenticationType.value" [disabled]="isDisableChangeConnectionInfo && type.value !== selectedAuthenticationType.value">-->
+                                        <!--<i></i>-->
+                                        <!--<span class="pb-txt-radio">{{type.label}}<span class="pb-txt-sub" *ngIf="type.value === AUTHENTICATION_TYPE.DIALOG">{{'msg.storage.ui.conn.dialog.desc' | translate}}</span></span>-->
+                                    <!--</label>-->
+                                <!--</li>-->
+                            <!--</ul>-->
+                        <!--</div>-->
                         <!-- //form create -->
                         <!-- form create -->
                         <div class="pb-form-create">
