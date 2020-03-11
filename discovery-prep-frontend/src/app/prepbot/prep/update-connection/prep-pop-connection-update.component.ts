@@ -646,7 +646,7 @@ export class PrepPopConnectionUpdateComponent extends AbstractComponent {
     public selectType(type: string) {
         this.connectionType = type;
     }
-    
+
 
     /**
      * Get update params in PATCH method

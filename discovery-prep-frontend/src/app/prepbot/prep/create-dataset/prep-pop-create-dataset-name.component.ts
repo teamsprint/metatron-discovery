@@ -106,7 +106,7 @@ export class PrepPopCreateDatasetNameComponent extends AbstractPopupComponent im
   public isMaxLengthError: boolean = false;
   public results: any[] = [];
 
-  public isChecked: boolean = false; // jump to dataflow main grid
+  public isChecked: boolean = true; // jump to dataflow main grid
 
   public prepCommonUtil = PreparationCommonUtil;
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=

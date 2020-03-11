@@ -59,8 +59,8 @@
                                     <!--<div class="pb-ui-bar">-->
                                         <!--<em class="ddp-data-progressbar" [ngStyle]="{'width': item.progressPercent>0? item.progressPercent+'%':'0%'}"></em>-->
                                     <!--</div>-->
-                                    <div class="pb-ui-bar ddp-type-progressbar2">
-                                        <em class="ddp-data-progressbar" [ngStyle]="{'width': item.progressPercent>0? item.progressPercent+'%':'0%'}"></em>
+                                    <div class="pb-ui-bar">
+                                        <span [ngStyle]="{'width': item.progressPercent>0? item.progressPercent+'%':'0%'}"></span>
                                     </div>
                                     <a href="javascript:" class="pb-component-btn" *ngIf="item.isCanceled==true">{{'msg.dp.ui.file.upload.canceled' | translate}}</a>
                                     <a href="javascript:" class="pb-component-btn" *ngIf="item.isUploaded==true">{{'msg.dp.ui.file.upload.uploaded' | translate}}</a>

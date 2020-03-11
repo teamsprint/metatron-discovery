@@ -5,9 +5,9 @@
         <!-- step -->
         <div class="pb-ui-step">
             <span class="pb-txt-step">1</span>
-            <span class="pb-txt-step">2</span>
-            <span class="pb-txt-step is-selected">3</span>
-            <span class="pb-txt-step">4</span>
+            <span class="pb-txt-step is-selected">2</span>
+            <span class="pb-txt-step">3</span>
+            <!--<span class="pb-txt-step">4</span>-->
         </div>
         <!-- //step -->
         <!-- top -->
@@ -22,14 +22,38 @@
             <div class="pb-ui-data-option ">
                 <!-- form -->
                 <div class="pb-form-option pb-clear">
-                    <label class="pb-label-title">Database Name</label>
-                    <div class="pb-component-select-button" style="width:880px;">
-                        <!-- selectbox -->
-                        <!--
-                            클릭시 : is-selected 추가
-                            값 입력시 : is-value 추가
 
-                        -->
+
+                    <label class="pb-label-title">Database Source</label>
+                    <div class="pb-component-select-button" style="width:350px;">
+                        <div class="pb-component-selectbox type-icons is-value " (clickOutside)="listShow =false">
+                            <span class="pb-txt-selectbox" (click)="toggleList()">
+                                <em class="pb-icon-datasource"></em>
+                                <!--{{datasetJdbc.tableInfo.databaseName === undefined ? ('msg.dp.ui.sel.db' | translate) :datasetJdbc.tableInfo.databaseName }}-->
+                                <span *ngIf="selectedConnection == null || selectedConnection.name == undefined">{{'msg.storage.ui.load.dconn' | translate}}</span>
+                                <span *ngIf="selectedConnection != null && selectedConnection.name != undefined">{{selectedConnection.name}}</span>
+                            </span>
+                            <!-- popup -->
+                            <div class="pb-select-popup" *ngIf="listShow" [style.display]="'block'" style="z-index: 10001;">
+                                <ul class="pb-list-selectbox">
+                                    <li *ngFor="let connection of connectionList">
+                                        <a href="javascript:;" (click)="onConnectionSelected(connection)">
+                                            <em class="pb-icon-datasource">{{connection.connectionType}}</em>
+                                            <span>{{connection.name}}</span>
+                                            <span>{{connection.desc}}</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <!-- //popup -->
+                        </div>
+                    </div>
+
+
+
+
+                    <label class="pb-label-title">Database Name</label>
+                    <div class="pb-component-select-button" style="width:350px;">
                         <div class="pb-component-selectbox type-icons is-value " (clickOutside)="isDatabaseListShow =false">
                             <span class="pb-txt-selectbox" (click)="toggleDatabaseList()">
                                 <em class="pb-icon-datasource"></em>
@@ -43,20 +67,16 @@
                                             <em class="pb-icon-datasource"></em>{{database.name}}
                                         </a>
                                     </li>
-                                    <!--<li>-->
-                                        <!--<a href="javascript:"><em class="pb-icon-datasource"></em>1</a>-->
-                                    <!--</li>-->
-                                    <!--<li>-->
-                                        <!--<a href="javascript:"><em class="pb-icon-datasource"></em>1</a>-->
-                                    <!--</li>-->
                                 </ul>
                             </div>
                             <!-- //popup -->
                         </div>
-                        <label class="pb-label-title">Table Name</label>
+                    </div>
 
 
 
+                    <label class="pb-label-title">Table Name</label>
+                    <div class="pb-component-select-button" style="width:350px;">
                         <div class="pb-component-selectbox type-icons is-value " (clickOutside)="isSchemaListShow =false">
                             <span class="pb-txt-selectbox" (click)="toggleTableList()">
                                 <em class="pb-icon-datasource"></em>
@@ -74,13 +94,13 @@
                             </div>
                             <!-- //popup -->
                         </div>
+                    </div>
 
 
 
 
                         <!-- //selectbox -->
                         <!--<a href="javascript:" class="pb-btn-select">SELECT</a>-->
-                    </div>
                 </div>
                 <!-- //form -->
             </div>
@@ -129,7 +149,7 @@
                             <tr>
                                 <th colspan="10" style="height:50px;">
                                     <!--<span class="pb-data-txt">ab text</span>-->
-                                    <span class="pb-data-name">{{'msg.dp.ui.sel.db' | translate}} & {{'msg.storage.ui.dsource.create.choose-table' | translate}}</span>
+                                    <span class="pb-data-name">Choose database source & {{'msg.dp.ui.sel.db' | translate}} & {{'msg.storage.ui.dsource.create.choose-table' | translate}}</span>
                                 </th>
                             </tr>
                             </thead>

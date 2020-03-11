@@ -16,6 +16,8 @@ import {Component, ElementRef, HostListener, Injector, OnDestroy, OnInit, ViewCh
 import {AbstractComponent} from '../../../common/component/abstract.component';
 import {DsType, ImportType, PrDatasetJdbc, QueryInfo, TableInfo, RsType, Field} from '../../../domain/data-preparation/pr-dataset';
 import {DataconnectionService} from '../../../dataconnection/service/dataconnection.service';
+import {ConnectionParam} from "../../../data-storage/service/data-connection-create.service";
+import {Dataconnection} from "../../../domain/dataconnection/dataconnection";
 import {ActivatedRoute} from "@angular/router";
 import {PopupService} from '../../../common/service/popup.service';
 import {PageResult} from "../../../domain/common/page";
@@ -23,6 +25,7 @@ import {PrConnectionService} from '../service/connection.service';
 import {header, SlickGridHeader} from '../../../common/component/grid/grid.header';
 import {GridOption} from '../../../common/component/grid/grid.option';
 import {ConnectionComponent, ConnectionValid} from "../../../data-storage/component/connection/connection.component";
+import {AuthenticationType} from "../../../domain/dataconnection/dataconnection";
 import {GridComponent} from '../../../common/component/grid/grid.component';
 import {isNullOrUndefined} from 'util';
 import * as _ from 'lodash';
@@ -47,8 +50,6 @@ export class PrepPopDBQueryComponent extends AbstractComponent {
 
     public clickable: boolean = false;            // is next btn clickable
 
-
-
     public flag: boolean = false;
 
     public clearGrid : boolean = false;
@@ -56,6 +57,10 @@ export class PrepPopDBQueryComponent extends AbstractComponent {
     public isTableEmpty: boolean = false;
 
     public rsType = RsType;
+
+    public connectionList : any = [];
+    public selectedConnection: Dataconnection = null;
+    public listShow :boolean = false;
 
 
     public databaseList: any[] = [];
@@ -83,34 +88,38 @@ export class PrepPopDBQueryComponent extends AbstractComponent {
 
     // 생성자
     constructor(protected elementRef: ElementRef,
-                private popupService: PopupService,
                 private connectionService: PrConnectionService,
-                protected injector: Injector,
-                private activatedRoute: ActivatedRoute) {
+                private dataConnectionService: DataconnectionService,
+                protected injector: Injector) {
 
         super(elementRef, injector);
     }
 
     public ngOnInit() {
         super.ngOnInit();
-        // console.info('PrepPopDBQueryComponent datasetJdbc', this.datasetJdbc);
 
-        // get database list
-        this.getDatabases();
+        this.pageResult.number = 0;
+        this.pageResult.size = 20;
 
-        // Only initialise sqlInfo when sqlInfo doesn't have value
-        // if (isNullOrUndefined(this.datasetJdbc.sqlInfo)) {
-        //     this.datasetJdbc.sqlInfo = new QueryInfo();
-        // }
+        // 처음
+        if (isNullOrUndefined(this.datasetJdbc.connectionList)) {
+            this.datasetJdbc.dsType = DsType.IMPORTED;
+            this.datasetJdbc.importType = ImportType.DATABASE;
+            this._getConnections();
+        } else {
+
+            // 이미 커넥션 리스트가 있음
+            this.connectionList = this.datasetJdbc.connectionList;
+            if(isNullOrUndefined(this.datasetJdbc.dcId) && this.connectionList.length > 0) {
+                this.datasetJdbc.dcId = this.connectionList[0].id;
+            }
+            this.getConnectionDetail();
+        }
+
         this.datasetJdbc.sqlInfo = new QueryInfo();
-
-        // Only initialise tableInfo when tableInfo doesn't have value
-        // if (isNullOrUndefined(this.datasetJdbc.tableInfo)) {
-        //     this.datasetJdbc.tableInfo = new TableInfo();
-        // }
         this.datasetJdbc.tableInfo = new TableInfo();
 
-        this._setDefaultValues();
+        // this._setDefaultValues();
 
     }
     public ngAfterViewInit() {
@@ -126,7 +135,42 @@ export class PrepPopDBQueryComponent extends AbstractComponent {
         // this.isShow = true;
     }
 
+    public onConnectionSelected(event) {
+        // only fetch data when it's different
+        if (this.datasetJdbc.dcId !== event.id) {
+            this.datasetJdbc.dcId = event.id;
+            this.getConnectionDetail();
 
+            // refresh existing data
+            this.datasetJdbc.sqlInfo = new QueryInfo();
+            this.datasetJdbc.tableInfo = new TableInfo();
+            this.datasetJdbc.rsType = undefined;
+        }
+        this.listShow = !this.listShow;
+    }
+
+    /**
+     * Get connection detail information
+     */
+    public getConnectionDetail() {
+
+        this.loadingShow();
+        //  get connection data in preset
+        this.connectionService.getDataconnectionDetail(this.datasetJdbc.dcId)
+            .then((connection: Dataconnection) => {
+                // loading hide
+                this.loadingHide();
+                this.selectConnection(connection);
+            })
+            .catch(error => this.commonExceptionHandler(error));
+    }
+
+    public toggleList() {
+        if(this.connectionList == null || this.connectionList.length==0){
+            return;
+        }
+        this.listShow = !this.listShow;
+    }
 
     public toggleDatabaseList(): void {
         if(this.databaseList == null || this.databaseList.length ==0) {
@@ -152,7 +196,8 @@ export class PrepPopDBQueryComponent extends AbstractComponent {
     }
 
     public goPre(){
-        this.stepChange.emit( 'DB' );
+        // this.stepChange.emit( 'DB' );
+        this.stepChange.emit( 'complete-create-dataset' );
     }
 
     public next() {
@@ -265,6 +310,87 @@ export class PrepPopDBQueryComponent extends AbstractComponent {
 
 
 
+    /**
+     * Initialise _connection component
+     * @param connection
+     */
+    private selectConnection(connection) {
+
+        this.databaseList = [];
+        this.schemaList = [];
+
+        this.selectedConnection = connection;
+        this.datasetJdbc.sqlInfo = new QueryInfo();
+        this.datasetJdbc.tableInfo = new TableInfo();
+        if(this.selectedConnection == null || isNullOrUndefined(this.selectedConnection)) return;
+        this.checkConnection();
+    }
+    /**
+     * Check valid connection
+     */
+    private checkConnection(): void {
+        // init connection validation
+        this.loadingShow();
+        // check connection
+        this.dataConnectionService.checkConnection({connection: this.getConnectionParams(this.selectedConnection)})
+            .then((result: {connected: boolean}) => {
+                // set connection validation result
+
+                if(result.connected) {
+                    this.datasetJdbc.dataconnection = this.getConnectionParams(this.selectedConnection);
+                    this.datasetJdbc.connectionList = this.connectionList;
+                    // this.stepChange.emit( 'DB-QUERY');
+
+                    this.datasetJdbc.sqlInfo = new QueryInfo();
+                    this.datasetJdbc.tableInfo = new TableInfo();
+
+                    this.getDatabases();
+                    this._setDefaultValues();
+                }
+            })
+            .catch((error) => {
+                this.loadingHide();
+                console.info('getConnections err)', error.toString());
+            });
+    }
+
+    /**
+     * Get connection params
+     * @return {ConnectionParam}
+     */
+    private getConnectionParams(connection: Dataconnection) {
+        let connectionParam: ConnectionParam = {
+            implementor: connection.implementor
+        };
+        connectionParam.username = connection.username;
+        connectionParam.password = connection.password;
+
+
+        // not use URL
+        if (isNullOrUndefined(connection.url)) {
+            // HOST
+            connectionParam.hostname = connection.hostname;
+            connectionParam.port = connection.port;
+            if (!isNullOrUndefined(connection.sid)) {
+                connectionParam.sid = connection.sid;
+            } else if (!isNullOrUndefined(connection.database)) {
+                connectionParam.database = connection.database;
+            } else if (!isNullOrUndefined(connection.catalog)) {
+                connectionParam.catalog = connection.catalog
+            }
+        } else {  // use URL
+            connectionParam.url = connection.url;
+        }
+        // check enable authentication
+        if (!isNullOrUndefined(connection.authenticationType)) {
+            connectionParam.authenticationType = connection.authenticationType;
+        } else { // if disable authentication, set default type
+            connectionParam.authenticationType = AuthenticationType.MANUAL;
+        }
+
+        return connectionParam;
+    }
+
 
 
     /**
@@ -274,10 +400,7 @@ export class PrepPopDBQueryComponent extends AbstractComponent {
         this.loadingShow();
 
         if (!this.datasetJdbc.dataconnection.connection) {
-            // this.datasetJdbc.dcId = this.datasetJdbc.dataconnection.id;
-
             const connectionInfo = _.clone(this.datasetJdbc.dataconnection);
-
             this.datasetJdbc.dataconnection = {connection : {
                 hostname: connectionInfo.hostname,
                 implementor: connectionInfo.implementor,
@@ -369,6 +492,63 @@ export class PrepPopDBQueryComponent extends AbstractComponent {
         })
     } // function - initSelectedCommand
 
+
+
+    /**
+     * Fetch dataset connections
+     */
+
+    private _getConnectionPresetListParams(pageResult: PageResult): object {
+        return {
+            authenticationType:'MANUAL',
+            size: pageResult.size,
+            page: pageResult.number,
+            type: 'jdbc'
+        };
+    }
+
+
+    private _getConnections() {
+
+        this.loadingShow();
+
+        this.connectionService.getAllDataconnections(this._getConnectionPresetListParams(this.pageResult), 'forSimpleListView')
+            .then((data) => {
+
+                // 리스트가 있다면
+                if (data.hasOwnProperty('_embedded')) {
+
+                    // 리스트 추가
+                    this.connectionList = this.connectionList.concat(data['_embedded'].connections);
+
+                    if (this.connectionList.length !== 0 ) {
+
+                        // 첫번째 커넥션 등록
+                        this.datasetJdbc.dcId = this.connectionList[0].id;
+
+                        this.getConnectionDetail();
+                    } else {
+
+                        this.loadingHide();
+                        // 커넥션 리스트가 0개 라면
+                        this.selectConnection(null);
+                    }
+
+                } else {
+                    this.loadingHide();
+                    // no connections
+                    this.connectionList = [];
+                    this.selectConnection(null)
+                }
+
+                this.pageResult = data['page'];
+
+            })
+            .catch((err) => {
+                this.loadingHide();
+                console.info('getConnections err)', err.toString());
+            });
+    }
 
 
     /**
