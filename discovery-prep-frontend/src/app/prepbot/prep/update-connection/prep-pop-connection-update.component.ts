@@ -40,10 +40,6 @@ export enum ConnectionValid {
 })
 export class PrepPopConnectionUpdateComponent extends AbstractComponent {
 
-    @Input()
-    public connectionInfo: any;
-    @Output()
-    public connectionInfoChange : EventEmitter<any> = new EventEmitter();
     @Output()
     public closeEvent : EventEmitter<void> = new EventEmitter();
 
@@ -51,8 +47,8 @@ export class PrepPopConnectionUpdateComponent extends AbstractComponent {
 
 
 
-    @Input()
-    public readonly isShowDialogGuide: boolean;
+    // @Input()
+    // public readonly isShowDialogGuide: boolean;
     @Input()
     public readonly isDisableChangeConnectionInfo: boolean;
     @Input()
@@ -105,10 +101,8 @@ export class PrepPopConnectionUpdateComponent extends AbstractComponent {
 
     // 생성자
     constructor(protected elementRef: ElementRef,
-                private popupService: PopupService,
                 private connectionService: DataconnectionService,
-                protected injector: Injector,
-                private activatedRoute: ActivatedRoute) {
+                protected injector: Injector) {
 
         super(elementRef, injector);
         this._translateService = injector.get(TranslateService);
@@ -595,7 +589,7 @@ export class PrepPopConnectionUpdateComponent extends AbstractComponent {
         this.connectionType = type;
     }
 
-    public onSetIntoConnection(target) {
-        this.connectionInfo[target.name] = target.value;
-    }
+    // public onSetIntoConnection(target) {
+    //     this.connectionInfo[target.name] = target.value;
+    // }
 }
