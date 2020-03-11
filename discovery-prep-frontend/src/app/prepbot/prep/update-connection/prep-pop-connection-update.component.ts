@@ -23,7 +23,7 @@ import {ConnectionParam} from "../../../data-storage/service/data-connection-cre
 
 
 import {TranslateService} from "@ngx-translate/core";
-import {AuthenticationType, InputMandatory, JdbcDialect} from "../../../domain/dataconnection/dataconnection";
+import {AuthenticationType, InputMandatory, JdbcDialect, Dataconnection} from "../../../domain/dataconnection/dataconnection";
 import {StringUtil} from "../../../common/util/string.util";
 import {isNullOrUndefined} from "util";
 import * as _ from 'lodash';
@@ -42,6 +42,8 @@ export class PrepPopConnectionUpdateComponent extends AbstractComponent {
 
     @Output()
     public closeEvent : EventEmitter<void> = new EventEmitter();
+    @Output()
+    public createComplete: EventEmitter<void> = new EventEmitter();
 
     public connectionType = '';
 
@@ -58,8 +60,11 @@ export class PrepPopConnectionUpdateComponent extends AbstractComponent {
 
     @Input()
     public readonly isUsedNameInitial: boolean;
-    @Input()
-    public readonly connectionName: string;
+
+    public connectionName: string;
+    public connectionDescription: string;
+
+
     @Input()
     public readonly connectionId: string;
 
@@ -96,6 +101,11 @@ export class PrepPopConnectionUpdateComponent extends AbstractComponent {
     public username: string;
     public password: string;
     public properties: {key: string, value: string, keyError?: boolean, valueError?: boolean, keyValidMessage?: string, valueValidMessage?: string}[];
+
+
+    private originConnectionData: Dataconnection = null;
+    // name error msg show/hide
+    public showNameError: boolean = false;
 
 
 
@@ -137,9 +147,45 @@ export class PrepPopConnectionUpdateComponent extends AbstractComponent {
         this.properties = [];
         this.selectedAuthenticationType = this.authenticationTypeList[0];
         this.selectedConnectionType = this.connectionTypeList[0];
-        console.info('connectionId', this.connectionId);
+        //console.info('connectionId', this.connectionId);
+
+
+        this.connectionService.getDataconnectionDetail(this.connectionId)
+            .then((result: Dataconnection) => {
+                // console.info("result", result);
+                // // loading hide
+                this.loadingHide();
+                // set origin connection data
+                this.originConnectionData = result;
+                // this.published = result.published;
+                // this.linkedWorkspaces = result.linkedWorkspaces;
+                this.connectionName = result.name;
+                this.connectionDescription = result.description;
+                this.setConnectionInput(result);
+            })
+            .catch(error => this.commonExceptionHandler(error));
 
     }
+
+    /**
+     * Set connection input
+     * @param {Dataconnection} connection
+     */
+    public setConnectionInput(connection: Dataconnection | ConnectionParam): void {
+        this.hostname = StringUtil.isNotEmpty(connection.hostname) ?connection.hostname : undefined;
+        this.port = connection.port || undefined;
+        this.catalog = StringUtil.isNotEmpty(connection.catalog) ?connection.catalog : undefined;
+        this.database = StringUtil.isNotEmpty(connection.database) ?connection.database : undefined;
+        this.sid = StringUtil.isNotEmpty(connection.sid) ?connection.sid : undefined;
+        this.url = StringUtil.isNotEmpty(connection.url) ?connection.url : undefined;
+        this.username = StringUtil.isNotEmpty(connection.username) ? connection.username : undefined;
+        this.password = StringUtil.isNotEmpty(connection.password) ? connection.password : undefined;
+        // this.selectedAuthenticationType = this.authenticationTypeList.find(authenticationType => authenticationType.value === connection.authenticationType) || this.authenticationTypeList[0];
+        this.selectedConnectionType = connection.implementor ? this.connectionTypeList.find(type => type.implementor.toString() === connection.implementor.toString()) : this.connectionTypeList[0];
+        // this.properties = connection.properties ? this.getConvertedProperties(connection.properties) : [];
+        this.isUsedUrl = StringUtil.isNotEmpty(connection.url);
+    }
+
 
 
     /**
@@ -549,6 +595,7 @@ export class PrepPopConnectionUpdateComponent extends AbstractComponent {
         this.username = undefined;
         this.password = undefined;
         this.isUsedUrl = undefined;
+        this.showNameError = undefined;
     }
 
 
@@ -569,11 +616,22 @@ export class PrepPopConnectionUpdateComponent extends AbstractComponent {
 
 
     public next() {
-        // this.stepChange.emit( 'connection-name' );
-        // // this.goto('connection-name');
-        // // if(this.connectionType!=='') {
-        // //     this.goto('connection-name');
-        // // }
+        if (this.isEmptyConnectionValidation()) {
+            this.setRequireCheckConnection();
+            return;
+        }
+
+        if (this.isEnableConnection()) {
+            const name : string = this.connectionName;
+            if(name==null || name.replace(/ /g,'') =='') {
+                this.showNameError = true;
+                return;
+            }
+            const param: any = this._getUpdateParams();
+            this._updateConnection(param);
+        }else{
+            return;
+        }
     }
 
 
@@ -588,8 +646,105 @@ export class PrepPopConnectionUpdateComponent extends AbstractComponent {
     public selectType(type: string) {
         this.connectionType = type;
     }
+    
 
-    // public onSetIntoConnection(target) {
-    //     this.connectionInfo[target.name] = target.value;
-    // }
+    /**
+     * Get update params in PATCH method
+     * @returns {Object}
+     * @private
+     */
+    private _updateConnection(params: any): void {
+        // loading show
+        this.loadingShow();
+        // update connection
+        this.connectionService.updateConnection(this.connectionId, params)
+            .then((result) => {
+                this.loadingHide();
+                this.createComplete.emit();
+            })
+            .catch(error => this.commonExceptionHandler(error));
+    }
+
+
+
+    /**
+     * Get update params in PATCH method
+     * @returns {Object}
+     * @private
+     */
+    private _getUpdateParams(): object {
+        // only the changed, update
+        const params: any = {};
+        // if different connection name
+        if (this.connectionName.trim() !== this.originConnectionData.name) {
+            params.name = this.connectionName.trim();
+        }
+        if (this.connectionDescription.trim() !== this.originConnectionData.description) {
+            params.description = this.connectionDescription.trim();
+        }
+
+        // not use URL
+        if (!this.isUsedUrl) {
+            // 입력한 host가 다른경우
+            if (this.hostname.trim() !== this.originConnectionData.hostname) {
+                params.hostname = this.hostname.trim();
+            }
+            // 입력한 port가 다른경우
+            if (this.port !== this.originConnectionData.port) {
+                params.port = this.port;
+            }
+            // 기존에 URL이 있었다면
+            if (StringUtil.isNotEmpty(this.originConnectionData.url)) {
+                params.url = '';
+            }
+            // if enable database and different database
+            if (!this.isDisableDatabase() && this.database.trim() !== this.originConnectionData.database) {
+                params.database = this.database.trim();
+            }
+            // if enable SID and different SID
+            if (!this.isDisableSid() && this.sid.trim() !== this.originConnectionData.sid) {
+                params.sid = this.sid.trim();
+            }
+            // if enable catalog and different catalog
+            if (!this.isDisableCatalog() && this.catalog.trim() !== this.originConnectionData.catalog) {
+                params.catalog = this.catalog.trim();
+            }
+            // if enable URL and different URL
+        } else if (this.url.trim() !== this.originConnectionData.url) {
+            params.url = this.url.trim();
+            // if exist hostname or port in origin connection data
+            if (this.originConnectionData.hostname || this.originConnectionData.port) {
+                params.hostname = '';
+                params.port = '';
+            }
+        }
+        // if enable authentication type
+        if (!this.isDisableAuthenticationType()) {
+            // if security type is MANUAL
+            if (this.selectedAuthenticationType.value === AuthenticationType.MANUAL) {
+                // if password different
+                if (this.password.trim() !== this.originConnectionData.password) {
+                    params.password = this.password.trim();
+                }
+                // if username different
+                if (this.username.trim() !== this.originConnectionData.username) {
+                    params.username = this.username.trim();
+                }
+            }
+            // if changed security type
+            // if (this.originConnectionData.authenticationType !== this._connectionComponent.selectedAuthenticationType.value) {
+            //     params.authenticationType = this._connectionComponent.selectedAuthenticationType.value;
+            //     // if origin security type is MANUAL, delete username and password
+            //     if (this.originConnectionData.authenticationType === AuthenticationType.MANUAL) {
+            //         params.username = '';
+            //         params.password = '';
+            //     }
+            // }
+        }
+        // if changed property
+        // if (this._isChangedProperties()) {
+        //     params.properties = this._connectionComponent.getProperties();
+        // }
+        return params;
+    }
 }

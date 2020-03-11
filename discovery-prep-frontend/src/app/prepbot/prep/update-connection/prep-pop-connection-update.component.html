@@ -264,8 +264,9 @@
                         <div class="pb-form-create">
                             <div class="pb-create-label">Name</div>
                             <div class="pb-form-edit">
-                                <input type="text" class="pb-component-input"  maxlength="50" placeholder="Please enter a name">
-                                <!--<span class="pb-form-error">{{'msg.storage.ui.required' | translate}}</span>-->
+                                <input type="text" class="pb-component-input"  maxlength="50" placeholder="Please enter a name"
+                                [(ngModel)]="connectionName">
+                                <span class="pb-form-error" *ngIf="showNameError">{{'msg.storage.ui.required' | translate}}</span>
                             </div>
                         </div>
                         <!-- //form create -->
@@ -273,7 +274,8 @@
                         <div class="pb-form-create">
                             <div class="pb-create-label">Description</div>
                             <div class="pb-form-edit">
-                                <input type="text" class="pb-component-input" maxlength="150" placeholder="Please enter a description" name="dfDesc">
+                                <input type="text" class="pb-component-input" maxlength="150" placeholder="Please enter a description"
+                                [(ngModel)]="connectionDescription">
                                 <!--<span class="pb-form-error" >{{'msg.storage.ui.required' | translate}}</span>-->
                             </div>
                         </div>
