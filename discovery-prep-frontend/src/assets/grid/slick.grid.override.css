@@ -140,7 +140,7 @@
 
 :host /deep/ .slick-viewport {
   position: absolute !important;
-  top: 31px;
+  top: 50px;
   bottom: 0;
   right: 0;
   left: 0;

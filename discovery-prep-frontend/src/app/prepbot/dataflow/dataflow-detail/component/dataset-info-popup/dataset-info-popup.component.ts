@@ -30,7 +30,14 @@ import {
   ViewChild
 } from '@angular/core';
 import {AbstractComponent} from '../../../../../common/component/abstract.component';
-import {DsType, ImportType, PrDataset, RsType, Rule} from '../../../../../domain/data-preparation/pr-dataset';
+import {
+  DsType,
+  Field,
+  ImportType,
+  PrDataset,
+  RsType,
+  Rule
+} from '../../../../../domain/data-preparation/pr-dataset';
 import {DeleteModalComponent} from '../../../../../common/component/modal/delete/delete.component';
 import {PrDataflow} from '../../../../../domain/data-preparation/pr-dataflow';
 import {Alert} from '../../../../../common/util/alert.util';
@@ -49,7 +56,7 @@ declare let Split;
 
 @Component({
   selector: 'app-dataset-info-popup',
-  templateUrl: './dataset-info-popup.component.html',
+  templateUrl: './dataset-info-popup.component.html'
 })
 export class DatasetInfoPopupComponent extends AbstractComponent implements OnInit, OnDestroy {
 
@@ -201,12 +208,12 @@ export class DatasetInfoPopupComponent extends AbstractComponent implements OnIn
   }
 
   public ngAfterViewInit() {
-    /*setTimeout( () => {
-      this._split = Split(['.sys-dataflow-left-panel', '.sys-dataflow-right-panel'], { sizes: [80, 20], minSize: [300,300], onDragEnd : (() => {
+    setTimeout( () => {
+      //this._split = Split(['.sys-dataflow-left-panel', '.sys-dataflow-right-panel'], { sizes: [80, 20], minSize: [300,300], onDragEnd : (() => {
           this.gridComponent.resize();
           this.datasetEventHandler.emit('resize');
-        }) });
-    }, 500 );*/
+        //}) });
+    }, 500 );
   } // function -  ngAfterViewInit
 
   public ngOnDestroy() {
@@ -814,7 +821,78 @@ export class DatasetInfoPopupComponent extends AbstractComponent implements OnIn
    */
   private updateGrid(data: any) {
 
+    const maxDataLen: any = {};
+    let fields: Field[] = data.fields;
+    let rows: any[] = data.data.splice(0,50); // preview는 50 rows 까지만
+    const maxLength = 500;
+    if (rows.length > 0) {
+      rows.forEach((row: any, idx: number) => {
+        // 컬럼 길이 측정
+        fields.forEach((field: Field) => {
+          let colWidth: number = 0;
+          if (typeof row[field.name] === 'string') {
+            colWidth = Math.floor((row[field.name]).length * 12);
+          }
+          if (!maxDataLen[field.name] || (maxDataLen[field.name] < colWidth)) {
+            if (colWidth > 500) {
+              maxDataLen[field.name] = maxLength;
+            } else {
+              maxDataLen[field.name] = colWidth;
+            }
+          }
+        });
+        // row id 설정
+        (row.hasOwnProperty('id')) || (row.id = idx);
 
+      });
+    }
+
+    // 헤더정보 생성
+    const headers: header[] = fields.map((field: Field) => {
+
+      /* 72 는 CSS 상의 padding 수치의 합산임 */
+      const headerWidth: number = Math.floor(pixelWidth(field.name, { size: 12 })) + 72;
+
+      return new SlickGridHeader()
+          .Id(field.name)
+          .Name('<span style="padding-left:20px;"><em class="' + this.getFieldTypeIconClass(field.type) + '"></em>' + field.name + '</span>')
+          .Field(field.name)
+          .Behavior('select')
+          .Selectable(false)
+          .CssClass('cell-selection')
+          .Width(headerWidth > maxDataLen[field.name] ? headerWidth : isUndefined(maxDataLen[field.name]) ? headerWidth : maxDataLen[field.name])
+          .MinWidth(100)
+          .CannotTriggerInsert(true)
+          .Resizable(true)
+          .Unselectable(true)
+          .Sortable(false)
+          .ColumnType(field.type)
+          .Formatter((row, cell, value, columnDef) => {
+            const colDescs = (this.selectedDataSet.gridResponse && this.selectedDataSet.gridResponse.colDescs) ? this.selectedDataSet.gridResponse.colDescs[cell] : {};
+            value = PreparationCommonUtil.setFieldFormatter(value, columnDef.columnType, colDescs);
+
+            if (isNull(value)) {
+              return '<div style=\'position:absolute; top:0; left:0; right:0; bottom:0; line-height:30px; padding:0 10px; font-style: italic ; color:#b8bac2;\'>' + '(null)' + '</div>';
+            } else {
+              return value;
+            }
+          }).build();
+    });
+
+    // 헤더 필수
+    // 로우 데이터 필수
+    // 그리드 옵션은 선택
+    if (!isNullOrUndefined(this.gridComponent)) {
+      this.gridComponent.create(headers, rows, new GridOption()
+          .EnableHeaderClick(false)
+          .SyncColumnCellResize(true)
+          .NullCellStyleActivate(true)
+          .RowHeight(32)
+          .EnableColumnReorder(false)
+          .NullCellStyleActivate(true)
+          .build()
+      );
+    }
   }
 
 

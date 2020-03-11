@@ -168,9 +168,7 @@
                 <div class="pb-box-top">
                     <div class="pb-fleft">
                         <span class="pb-top-label">적용항목</span>
-                        <span class="pb-box-data-analysis">Derive A Column</span>
-                        <span class="pb-box-data-analysis">Substring A Column and B Column</span>
-                        <span class="pb-box-data-analysis">Derive A Column</span>
+                        <span class="pb-box-data-analysis" *ngFor="let rule of ruleList">{{rule.simplifiedRule}}</span>
                     </div>
                     <a href="javascript:" class="pb-icon-top-edit2"></a>
                 </div>
