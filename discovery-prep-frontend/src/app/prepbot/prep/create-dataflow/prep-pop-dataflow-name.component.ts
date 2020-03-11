@@ -163,7 +163,7 @@ export class PrepPopDataflowNameComponent extends AbstractPopupComponent impleme
       if(desc==null || desc.replace(/ /g,'') =='') {
             this.showDescError =true;
       }
-      if( this.showNameError || this.showDescError) return;
+      if( this.showNameError) return;
 
 
       const df = new PrDataflow();

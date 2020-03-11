@@ -121,7 +121,7 @@ export class PrepPopFileUploadCreateComponent extends AbstractPopupComponent imp
   }
 
     public init() {
-        this.isShow = true;
+        // this.isShow = true;
     }
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
    | Override Method
@@ -504,6 +504,9 @@ export class PrepPopFileUploadCreateComponent extends AbstractPopupComponent imp
 
       this.chunk_uploader.splice();
 
+
+      console.info('upFiles', this.upFiles);
+
   }
 
   /**
@@ -582,6 +585,12 @@ export class PrepPopFileUploadCreateComponent extends AbstractPopupComponent imp
     return parseFloat((a/Math.pow(c,f)).toFixed(d))+" "+e[f]
   }
 
+  public getFileItemIconClassName(fileExtension: string ): string {
+    const className: string = this._getFileFormatForIcon(fileExtension).toString();
+    return "type-" + className.toLowerCase();
+  }
+
+
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
    | Protected Method
    |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
@@ -654,5 +663,30 @@ export class PrepPopFileUploadCreateComponent extends AbstractPopupComponent imp
       return formats[0].fileFormat
     }
   }
+
+
+    private _getFileFormatForIcon(fileExtension) {
+        let fileType : string = fileExtension.toUpperCase();
+
+        const formats = [
+            {extension:'CSV', fileFormat:FileFormat.CSV},
+            {extension:'TXT', fileFormat:FileFormat.TXT},
+            {extension:'JSON', fileFormat:FileFormat.JSON},
+            {extension:'XLSX', fileFormat:'xlsx'},
+            {extension:'XLS', fileFormat:'xls'},
+        ];
+
+        const idx = _.findIndex(formats, {extension: fileType});
+
+        if (idx !== -1) {
+            return formats[idx].fileFormat
+        } else {
+            return formats[0].fileFormat
+        }
+    }
+
+
+
+
 }
 

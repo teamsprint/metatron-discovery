@@ -28,6 +28,26 @@
                         <div class="pb-txt-det">
                             You can create data.
                         </div>
+
+                        <!--<div class="pb-wrap-option">-->
+                            <!--<span class="pb-label-option">Upload Location</span>-->
+                            <!--&lt;!&ndash; selectbox &ndash;&gt;-->
+                            <!--<div class="pb-component-selectbox ">-->
+                                <!--<span class="pb-txt-selectbox">Select data</span>-->
+                                <!--&lt;!&ndash; popup &ndash;&gt;-->
+                                <!--<div class="pb-select-popup">-->
+                                    <!--<ul class="pb-list-selectbox">-->
+                                        <!--<li *ngFor="let fileLocation of fileLocations">-->
+                                            <!--<a href="javascript:">{{fileLocation.label}}</a>-->
+                                        <!--</li>-->
+                                    <!--</ul>-->
+                                <!--</div>-->
+                                <!--&lt;!&ndash; //popup &ndash;&gt;-->
+                            <!--</div>-->
+                            <!--&lt;!&ndash; //selectbox &ndash;&gt;-->
+                        <!--</div>-->
+
+
                     </div>
                 </div>
             </div>
@@ -48,9 +68,22 @@
                         <li *ngFor="let item of upFiles" [ngClass]="{'ddp-disabled' : item.isCanceled}" >
                             <div class="pb-box-file">
                                 <!--<svg-icon-component [name]="preparationUtil.getFileFormat(item.fileExtension)" [isBlackAndWhite]="true"></svg-icon-component>-->
-                                <em class="pb-img-file type-xls"></em>
+                                <!--<em class="pb-img-file type-xls" *ngIf="item.fileExtension=='xls'"></em>-->
+                                <!--<em class="pb-img-file type-xlsx" *ngIf="item.fileExtension=='xlsx'"></em>-->
+                                <!--<em class="pb-img-file type-txt" *ngIf="item.fileExtension=='txt'"></em>-->
+                                <!--<em class="pb-img-file type-csv" *ngIf="item.fileExtension=='csv'"></em>-->
+
+
+                                <em class="pb-img-file" [ngClass]="getFileItemIconClassName(item.fileExtension).trim()"></em>
+
+                                <!--<em class="pb-img-file type-json"></em>-->
+                                <!--<em class="pb-img-file type-xml"></em>-->
+                                <!--<em class="pb-img-file type-xls"></em>-->
+                                <!--<em class="pb-img-file type-file"></em>-->
+
+
                                 <div class="pb-file-name">
-                                    <span class="pb-data-name">{{item.fileName}}.{{item.fileExtension}}</span>
+                                    <span class="pb-data-name">{{getFileItemIconClassName(item.fileExtension).trim()}}  {{item.fileName}}.{{item.fileExtension}}</span>
 
                                     <span class="pb-data-size">{{formatBytes(item.size,1)}} | {{item.storage_type}}</span>
                                 </div>
@@ -103,15 +136,15 @@
                             <!-- popup -->
                             <div class="pb-select-popup">
                                 <ul class="pb-list-selectbox">
-                                    <li>
-                                        <a href="javascript:">1</a>
+                                    <li *ngFor="let fileLocation of fileLocations">
+                                        <a href="javascript:">{{fileLocation.label}}</a>
                                     </li>
-                                    <li>
-                                        <a href="javascript:">1</a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:">1</a>
-                                    </li>
+                                    <!--<li>-->
+                                        <!--<a href="javascript:">1</a>-->
+                                    <!--</li>-->
+                                    <!--<li>-->
+                                        <!--<a href="javascript:">1</a>-->
+                                    <!--</li>-->
                                 </ul>
                             </div>
                             <!-- //popup -->

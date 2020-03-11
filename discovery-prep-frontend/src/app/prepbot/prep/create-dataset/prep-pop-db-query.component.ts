@@ -30,6 +30,8 @@ import {GridComponent} from '../../../common/component/grid/grid.component';
 import {isNullOrUndefined} from 'util';
 import * as _ from 'lodash';
 
+declare var $: any;
+
 @Component({
     selector: 'prep-pop-db-query',
     templateUrl: './prep-pop-db-query.component.html'
@@ -121,10 +123,25 @@ export class PrepPopDBQueryComponent extends AbstractComponent {
 
         // this._setDefaultValues();
 
-    }
-    public ngAfterViewInit() {
 
     }
+    public ngAfterViewInit() {
+        let sVar = this;
+        $("#rangeslider3").ionRangeSlider({
+            min: 0,
+            max: 200,
+            from: 100,
+
+            onFinish: function (data) {
+                sVar.zoomInOutGrid(data.from);
+            // Called then action is done and mouse is released
+            },
+        });
+    }
+
+
+
+
 
     // Destory
     public ngOnDestroy() {
@@ -210,8 +227,10 @@ export class PrepPopDBQueryComponent extends AbstractComponent {
 
         this.stepChange.emit( 'create-dataset-name' );
 
+    }
 
-        // console.info('next','nextClick');
+    private zoomInOutGrid(num: number ): void{
+        // ZOOM IN OUT
 
     }
 
