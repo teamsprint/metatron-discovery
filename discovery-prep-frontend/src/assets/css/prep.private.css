@@ -144,12 +144,15 @@ prep-detail, prep-dataset-detail {height:100%;}
      }
 
 /**************************************************************
-    뭔지모르곘음
+    데이터 미리보기 그리드
 **************************************************************/
 .slick-headerrow-columns {border-top:1px solid rgba(144,150,156,0.25);}
 .slick-headerrow-column.ui-state-default {border-right:1px solid rgba(144,150,156,0.25);}
 .slick-headerrow::-webkit-scrollbar {display: none;}
 .slick-header::-webkit-scrollbar {display: none;}
+.pb-ui-part .slick-header-columns {height:30px !important;}
+.pb-ui-part .slick-column-name {line-height:2.4em !important;}
+.pb-ui-part .slick-viewport {top:30px !important;}
 
 .ddp-cursor {cursor: pointer}
 .ddp-ellipsis {text-overflow: ellipsis; white-space: nowrap; overflow: hidden;}

@@ -27,36 +27,14 @@
     </div>
     <!-- //설명 -->
 
-    <a href="javascript:" class="pb-component-btn type-dark" (click)="goToDetail()"><!--em class="pb-icon-move"></em-->Go to dataset</a>
+    <a href="javascript:" class="pb-component-btn type-dark" (click)="goToDetail()" *ngIf="selectedDataSet.dsType === DsType.WRANGLED"><!--em class="pb-icon-move"></em-->Go to dataset</a>
   </div>
 
   <!-- part -->
   <div class="pb-ui-part">
     <div class="pb-label-part">DATA PREVIEW</div>
     <!-- box table -->
-    <div class="pb-box-table">
-      <table class="pb-table-grid">
-        <thead>
-        <tr>
-          <th>
-            <span class="pb-data-txt">ab text</span>
-            <span class="pb-data-txt2">sale02</span>
-            <span class="pb-data-name">Category</span>
-          </th>
-          <th>
-            <span class="pb-data-txt">ab text</span>
-            <span class="pb-data-txt2">sale02</span>
-            <span class="pb-data-name">Category</span>
-          </th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-          <td>Office Supplies</td>
-          <td>Office Supplies</td>
-        </tr>
-        </tbody>
-      </table>
+    <div class="pb-box-table" grid-component style="width:100%;" >
     </div>
     <!-- //box table -->
 

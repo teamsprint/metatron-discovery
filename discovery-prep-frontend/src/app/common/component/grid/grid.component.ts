@@ -1330,7 +1330,7 @@ export class GridComponent implements AfterViewInit, OnDestroy {
 
     if (this.option.showHeaderRow) {
       if (this.option.headerRowHeight !== 25) {
-        $('.slick-viewport').css('top', this.option.headerRowHeight + 30 + 'px');
+        $('.slick-viewport').css('top', this.option.headerRowHeight + 50 + 'px');
       }
       this.grid.onHeaderRowCellRendered.subscribe(
         (function (scope) {
