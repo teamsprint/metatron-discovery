@@ -268,64 +268,64 @@
       <!-- new table -->
       <div class="pb-ui-data-expression" *ngIf="list.length > 0">
         <!-- //grid top -->
-        <div class="pb-wrap-table" style="background-color: #fff;">
-          <table class="pb-component-table">
+        <div class="pb-wrap-table">
+          <table class="pb-table-grid">
             <colgroup>
-              <col width="170px">
+              <col width="150px">
               <col width="*">
               <col width="20%">
             </colgroup>
             <thead>
-              <tr>
-                <th>
-                  Type
-                </th>
-                <th>
-                  Name
-                </th>
-                <th>
-                  Modified
-                </th>
-              </tr>
+            <tr>
+              <th>
+                <span class="pb-data-name">Type</span>
+              </th>
+              <th>
+                <span class="pb-data-name">Name</span>
+              </th>
+              <th>
+                <span class="pb-data-name">Modified</span>
+              </th>
+            </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let item of list; let i = index" (click)="goToDfDetail(item)" class="ddp-cursor">
-                <ng-container *ngIf="isDataflow(item)">
-                  <td>
-                    DATA FLOW
-                  </td>
-                  <td class="ddp-ellipsis">
-                    {{item.dfName}}<span>{{item.dfDesc ? ' - ' + item.dfDesc : ''}}</span>
-                  </td>
-                </ng-container>
-                <ng-container *ngIf="isDataset(item)">
-                  <td>
-                    DATA SET
-                  </td>
-                  <td class="ddp-ellipsis">
-                    {{item.dsName}}<span>{{item.dsDesc ? ' - ' + item.dsDesc : ''}}</span>
-                  </td>
-                </ng-container>
-                <ng-container *ngIf="isDataresult(item)">
-                  <td>
-                    DATA RESULT
-                  </td>
-                  <td class="ddp-ellipsis">
-                    {{item.ssName}}<span>{{item.ssDesc ? ' - ' + item.ssDesc : ''}}</span>
-                  </td>
-                </ng-container>
-                <ng-container *ngIf="isDataConnection(item)">
-                  <td>
-                    DATA CONNECTION
-                  </td>
-                  <td class="ddp-ellipsis">
-                    {{item.name}}<span>{{item.description ? ' - ' + item.description : ''}}</span>
-                  </td>
-                </ng-container>
+            <tr *ngFor="let item of list; let i = index" (click)="goToDfDetail(item)" class="ddp-cursor">
+              <ng-container *ngIf="isDataflow(item)">
                 <td>
-                  {{item.modifiedTime | mdate:'YYYY-MM-DD HH:mm'}} <span>by</span> {{item.modifiedBy.fullName}}
+                  DATA FLOW
                 </td>
-              </tr>
+                <td class="ddp-ellipsis">
+                  {{item.dfName}}<span>{{item.dfDesc ? ' - ' + item.dfDesc : ''}}</span>
+                </td>
+              </ng-container>
+              <ng-container *ngIf="isDataset(item)">
+                <td>
+                  DATA SET
+                </td>
+                <td class="ddp-ellipsis">
+                  {{item.dsName}}<span>{{item.dsDesc ? ' - ' + item.dsDesc : ''}}</span>
+                </td>
+              </ng-container>
+              <ng-container *ngIf="isDataresult(item)">
+                <td>
+                  DATA RESULT
+                </td>
+                <td class="ddp-ellipsis">
+                  {{item.ssName}}<span>{{item.ssDesc ? ' - ' + item.ssDesc : ''}}</span>
+                </td>
+              </ng-container>
+              <ng-container *ngIf="isDataConnection(item)">
+                <td>
+                  DATA CONNECTION
+                </td>
+                <td class="ddp-ellipsis">
+                  {{item.name}}<span>{{item.description ? ' - ' + item.description : ''}}</span>
+                </td>
+              </ng-container>
+              <td>
+                {{item.modifiedTime | mdate:'YYYY-MM-DD HH:mm'}} <span>by</span> {{item.modifiedBy.fullName}}
+              </td>
+            </tr>
             </tbody>
           </table>
         </div>
