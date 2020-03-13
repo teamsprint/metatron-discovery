@@ -1,3 +1,4 @@
+
 <div class="pb-layout-contents">
     <!-- navi -->
     <!--
@@ -313,7 +314,7 @@
                     <div class="pb-txt-det">
                         Add dataset to your flow from your local file, database or staging database like HIVE
                     </div>
-                    <a href="javascript:;" class="pb-component-btn type-bg tpye-normal"><em class="pb-icon-add-r"></em>Add dataset to this flow</a>
+                    <a href="javascript:;" class="pb-component-btn type-bg tpye-normal" (click)="addDatasets()"><em class="pb-icon-add-r"></em>Add dataset to this flow</a>
 
                 </div>
 
@@ -523,6 +524,13 @@
     <!-- //wrap contents -->
 </div>
 <!-- 생성 -->
-<prep-pop-create  *ngIf="isSelectDatasetPopupOpen"
-                 (closeEvent)="closeAddDatasets()"
-                 (createComplete)="closeAddDatasets()"></prep-pop-create>
+<!--<prep-pop-create  *ngIf="isSelectDatasetPopupOpen"-->
+<!--                 (closeEvent)="closeAddDatasets()"-->
+<!--                 (createComplete)="closeAddDatasets()"></prep-pop-create>-->
+
+
+<prep-pop-dataset-list *ngIf="isSelectDatasetPopupOpen"
+                       [targetType]="'SELECT'"
+                       [originalDatasetList]="dataSetList"
+                       (addEvent)="datasetPopupAddEvent($event)"
+                       (closeEvent)="closeAddDatasets()"></prep-pop-dataset-list>

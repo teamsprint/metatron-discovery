@@ -1,4 +1,5 @@
-<prep-pop-dataset-list *ngIf="step == '' || step == 'complete-dataflow-create'" (createClose)="createClose()" (stepChange)="stepChange($event)"></prep-pop-dataset-list>
+<prep-pop-dataset-list *ngIf="step == '' || step == 'complete-dataflow-create'" [targetType]="'CREATE'"
+                       (createClose)="createClose()" (stepChange)="stepChange($event)"></prep-pop-dataset-list>
 
 
 <!--<prep-pop-dataset-list *ngIf="step == '' || step == 'complete-dataflow-create'" [(step)]="step"  [(selectedDatasets)]="selectedDatasets"  (close)="createClose();"></prep-pop-dataset-list>-->

@@ -660,6 +660,32 @@ export class PrepDetailComponent extends AbstractComponent {
     return result;
   }
 
+    /**
+     * Add dataset
+     * @param event
+     */
+    public datasetPopupAddEvent(data): void {
+        if (data == undefined || data == null || data.length === 0 ) {
+            return
+        }
+        this.loadingShow();
+        this.dataSetList.forEach((ds) => {
+            data.push(ds.dsId);
+        });
+        this.dataflowService.updateDataSets(this.dataflow.dfId, { dsIds : data }).then((result) => {
+            this.loadingHide();
+            this.selectedDataSet.dsId = '';
+            this.isSelectDatasetPopupOpen = false;
+            Alert.success(this.translateService.instant('msg.dp.alert.add.ds.success'));
+            this.getDataflow();
+        }).catch((error) => {
+            this.loadingHide();
+            Alert.error(this.translateService.instant(error.message));
+            console.info('error -> ', error);
+        });
+    }
+
+
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
    | Protected Method
    |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/

@@ -3,14 +3,15 @@
     <div class="pb-box-popup">
         <a href="javascript:" class="pb-btn-pop-close" (click)="close()"></a>
         <!-- step -->
-        <div class="pb-ui-step">
+        <div class="pb-ui-step" *ngIf="targetType == 'CREATE'">
             <span class="pb-txt-step is-selected">1</span>
             <span class="pb-txt-step">2</span>
         </div>
         <!-- //step -->
         <!-- top -->
         <div class="pb-popup-top">
-            <div class="pb-txt-title">CREATE DATAFLOW - Select Datasets</div>
+            <div class="pb-txt-title" *ngIf="targetType == 'CREATE'">CREATE DATAFLOW - Select Datasets</div>
+            <div class="pb-txt-title" *ngIf="targetType != 'CREATE'">SELECT DATASET</div>
 
         </div>
         <!-- //top -->
@@ -242,8 +243,9 @@
         <!-- bottom -->
         <div class="pb-popup-bottom ">
             <a href="javascript:" class="pb-component-btn-pop type-line" (click)="close()">CANCEL</a>
-            <!--(click)="goto('dataflow-name');"-->
-            <a href="javascript:" class="pb-component-btn-pop type-bg" (click)="next()">NEXT</a>
+
+            <a href="javascript:" class="pb-component-btn-pop type-bg" (click)="next()" *ngIf="targetType == 'CREATE'">NEXT</a>
+            <a href="javascript:" class="pb-component-btn-pop type-bg" (click)="done()" *ngIf="targetType != 'CREATE'">DONE</a>
         </div>
         <!-- //bottom -->
     </div>

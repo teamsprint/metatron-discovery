@@ -44,6 +44,11 @@ export class PrepPopDatasetListComponent extends AbstractComponent {
     public title : string;
     public layoutType: string ='ADD'; // 새로운 데이터셋 추가 ADD, 기존 데이터셋 치환 SWAP
 
+
+    @Input()
+    public targetType: string ; //생성화면 CREATE, dataflow 상세화면 SELECT
+
+    @Input()
     public selectedDatasets : PrDataset[]; // 선택된 데이터셋 리스트
 
     // 정렬
@@ -83,7 +88,11 @@ export class PrepPopDatasetListComponent extends AbstractComponent {
     @Output()
     public createClose : EventEmitter<void> = new EventEmitter();
     @Output()
+    public closeEvent : EventEmitter<void> = new EventEmitter();
+    @Output()
     public stepChange : EventEmitter<string> = new EventEmitter();
+    @Output()
+    public addEvent : EventEmitter<string[]>= new EventEmitter();
 
 
 
@@ -102,8 +111,6 @@ export class PrepPopDatasetListComponent extends AbstractComponent {
      |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
     public init() {
         // this.isShow = true;
-        this.isAllCheckedStatus =false;
-        this.selectedDatasets = [];
     }
 
 
@@ -144,8 +151,11 @@ export class PrepPopDatasetListComponent extends AbstractComponent {
             this.title = this.translateService.instant('msg.dp.ui.change.input.dataset');
         }
 
-        // console.info(' this.layoutType',  this.layoutType);
 
+        this.isAllCheckedStatus =false;
+        if(this.selectedDatasets == null) {
+            this.selectedDatasets = [];
+        }
         this._initViewPage();
     }
 
@@ -164,7 +174,11 @@ export class PrepPopDatasetListComponent extends AbstractComponent {
     public close() {
         this.datasets = [];
         this.page.page = 0;
-        this.createClose.emit();
+        if(this.targetType == 'CREATE'){
+            this.createClose.emit();
+        }else{
+            this.closeEvent.emit();
+        }
     } // function - close
 
     /**
@@ -173,14 +187,18 @@ export class PrepPopDatasetListComponent extends AbstractComponent {
     public next() {
         this.stepChange.emit( 'dataflow-name' );
     }
+
+
+
+
+
+
     /**
      * 반환
      */
     public getSelectedDatasets(): PrDataset[] {
         return this.selectedDatasets;
-
     }
-
     /**
      * 다음 단계로 이동
      */
@@ -194,7 +212,7 @@ export class PrepPopDatasetListComponent extends AbstractComponent {
             this.selectedDatasets.forEach((ds) => {
                 datasetLists.push(ds.dsId);
             });
-            // this.addEvent.emit(datasetLists);
+            this.addEvent.emit(datasetLists);
         }else if(this.layoutType == 'SWAP') {
             let param = {oldDsId:this.originalDatasetId, newDsId : this.swappingDatasetId};
             param['type'] = this.popType;
