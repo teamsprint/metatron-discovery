@@ -26,10 +26,10 @@
                 <!-- box select -->
                     <div class="pb-box-select">
                         <ul class="pb-list-select" *ngFor="let file of datasetFiles; let i = index">
-                            <li [ngClass]="{'ddp-selected':currDSIndex===i && file.fileFormat !== fileFormat.EXCEL}">
+                            <li [ngClass]="{'is-selected':currDSIndex===i && file.fileFormat !== fileFormat.EXCEL}">
 
                                 <!--<ng-container *ngIf="file.fileFormat !== fileFormat.EXCEL">-->
-                                    <div class="pb-ui-select " (click)="selectFile($event,i)" *ngIf="file.fileFormat !== fileFormat.EXCEL">>
+                                    <div class="pb-ui-select " (click)="selectFile($event,i)" *ngIf="file.fileFormat !== fileFormat.EXCEL">
                                         <label class="pb-compomnent-checkbox type-checkbox" (click)="checkGroup($event, i)">
                                             <input type="checkbox" [checked]="file.selected">
                                             <i></i>
@@ -52,13 +52,14 @@
 
 
                                 <ul class="pb-list-sub" *ngFor="let item of file.sheetInfo; let j = index">
-                                    <li class="" [ngClass]="{'ddp-selected':currSheetIndex===j && currDSIndex===i}">
+                                    <li class="" [ngClass]="{'is-selected':currSheetIndex===j && currDSIndex===i}" *ngIf="item.sheetName">
 
                                         <div class="pb-ui-select " (click)="selectSheet($event, i, item.sheetName, j)">
                                             <label class="pb-compomnent-checkbox type-checkbox" (click)="checkSheet($event, i, j)">
                                                 <input type="checkbox" [checked]="item.selected">
                                                 <i></i>
                                             </label>
+                                            <span class="pb-txt-checkbox">{{item.sheetName}}</span>
                                             <span class="pb-txt-checkbox">{{item.sheetName}}</span>
                                         </div>
                                     </li>
@@ -78,7 +79,8 @@
                     <!-- top -->
                     <div class="pb-grid-top">
                         <div class="pb-grid-name">
-                            <em class="pb-img-file type-xls"></em>
+                            <!--<em class="pb-img-file type-xls"></em>-->
+                            <em class="pb-img-file" [ngClass]="getFileItemIconClassName(currDetail.fileExtension).trim()"></em>
                             {{currDetail.detailName}}
                         </div>
 
@@ -104,7 +106,7 @@
                             <div class="pb-setting-edit">
                                 <div class="pb-edit-label">Upload Location</div>
                                 <div class="pb-form-edit">
-                                    <input type="text" class="pb-component-input">
+                                    <input type="text" class="pb-component-input" [(ngModel)]="currDetail.uploadLocation" readonly>
                                 </div>
                             </div>
                             <!-- //setting edit -->
@@ -116,10 +118,11 @@
                         <!-- setting sub -->
                         <div class="pb-setting-sub pb-clear">
                             <!-- setting edit -->
-                            <div class="pb-setting-edit">
+                            <div class="pb-setting-edit" *ngIf="isCSV">
                                 <div class="pb-edit-label">Column delimiter</div>
                                 <div class="pb-form-edit">
-                                    <input type="text" class="pb-component-input" placeholder="Enter column delimiter">
+                                    <input type="text" class="pb-component-input" placeholder="Enter column delimiter" [(ngModel)]="currDelimiter"
+                                           (keydown)="keyDownEvent($event, 'delimiter')">
                                 </div>
                             </div>
                             <!-- //setting edit -->
@@ -146,44 +149,44 @@
                     <!--
                        클릭시 is-selected 추가
                     -->
-                    <div class="pb-box-setting">
-                        <div class="pb-box-fold pb-clear">
-                            <!-- setting edit -->
-                            <div class="pb-setting-edit">
-                                <div class="pb-edit-label">Upload Location</div>
-                                <div class="pb-form-edit">
-                                    <input type="text" class="pb-component-input">
-                                </div>
-                            </div>
-                            <!-- //setting edit -->
+                    <!--<div class="pb-box-setting">-->
+                        <!--<div class="pb-box-fold pb-clear">-->
+                            <!--&lt;!&ndash; setting edit &ndash;&gt;-->
+                            <!--<div class="pb-setting-edit">-->
+                                <!--<div class="pb-edit-label">Upload Location</div>-->
+                                <!--<div class="pb-form-edit">-->
+                                    <!--<input type="text" class="pb-component-input">-->
+                                <!--</div>-->
+                            <!--</div>-->
+                            <!--&lt;!&ndash; //setting edit &ndash;&gt;-->
 
-                            <a href="javascript:" class="pb-btn-setting">
-                                Advanced setting
-                            </a>
-                        </div>
-                        <!-- setting sub -->
-                        <div class="pb-setting-sub pb-clear">
-                            <!-- setting edit -->
-                            <div class="pb-setting-edit">
-                                <div class="pb-edit-label">Column delimiter</div>
-                                <div class="pb-form-edit">
-                                    <input type="text" class="pb-component-input">
-                                </div>
-                            </div>
-                            <!-- //setting edit -->
-                            <!-- setting edit -->
-                            <div class="pb-setting-edit">
-                                <div class="pb-edit-label">Manual Column count</div>
-                                <div class="pb-form-edit">
-                                    <input type="text" class="pb-component-input">
-                                </div>
-                            </div>
-                            <!-- //setting edit -->
-                        </div>
-                        <!-- //setting sub -->
-                    </div>
-                    <!-- //box setting -->
-                </div>
+                            <!--<a href="javascript:" class="pb-btn-setting">-->
+                                <!--Advanced setting-->
+                            <!--</a>-->
+                        <!--</div>-->
+                        <!--&lt;!&ndash; setting sub &ndash;&gt;-->
+                        <!--<div class="pb-setting-sub pb-clear">-->
+                            <!--&lt;!&ndash; setting edit &ndash;&gt;-->
+                            <!--<div class="pb-setting-edit">-->
+                                <!--<div class="pb-edit-label">Column delimiter</div>-->
+                                <!--<div class="pb-form-edit">-->
+                                    <!--<input type="text" class="pb-component-input">-->
+                                <!--</div>-->
+                            <!--</div>-->
+                            <!--&lt;!&ndash; //setting edit &ndash;&gt;-->
+                            <!--&lt;!&ndash; setting edit &ndash;&gt;-->
+                            <!--<div class="pb-setting-edit">-->
+                                <!--<div class="pb-edit-label">Manual Column count</div>-->
+                                <!--<div class="pb-form-edit">-->
+                                    <!--<input type="text" class="pb-component-input">-->
+                                <!--</div>-->
+                            <!--</div>-->
+                            <!--&lt;!&ndash; //setting edit &ndash;&gt;-->
+                        <!--</div>-->
+                        <!--&lt;!&ndash; //setting sub &ndash;&gt;-->
+                    <!--</div>-->
+                    <!--&lt;!&ndash; //box setting &ndash;&gt;-->
+                <!--</div>-->
                 <!--//upload -->
 
 

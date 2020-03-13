@@ -137,7 +137,7 @@ export class PrepPopCreateDatasetNameComponent extends AbstractPopupComponent im
 
     // Set dataset information
     this._setDatasetInfo();
-    // this.init();
+    this.init();
 
   }
 
@@ -147,6 +147,7 @@ export class PrepPopCreateDatasetNameComponent extends AbstractPopupComponent im
 
     public init() {
         // this.isShow = true;
+        console.info('dsfileInformations', this.dsfileInformations);
     }
 
 
@@ -157,22 +158,42 @@ export class PrepPopCreateDatasetNameComponent extends AbstractPopupComponent im
     /** Complete */
     public complete() {
         this.resetErrorMessage();
+        //
+        // const name : string = this.names[0];
+        // if(name==null || name.replace(/ /g,'') =='') {
+        //     this.showNameError =true;
+        // }
+        // const desc : string = this.descriptions[0];
+        // if(desc==null || desc.replace(/ /g,'') =='') {
+        //     this.showDescError =true;
+        // }
+        //
+        // if (this.showNameError || this.showDescError) {
+        //   return;
+        // }
+        // Name validation
+        this.names.forEach((item, index) => {
+            if (isUndefined(item) || item.trim() === '' || item.length < 1) {
+                this.nameErrors[index] = this.translateService.instant('msg.dp.alert.name.error');
+                this.showNameError = true;
+            }
+            if (item.length > 150) {
+                this.showNameError = true;
+                this.nameErrors[index] = this.translateService.instant('msg.dp.alert.name.error.description');
+            }
+        });
+        // description validation
+        this.descriptions.forEach((item, index) => {
+            if (!StringUtil.isEmpty(this.descriptions[index]) && this.descriptions[index].length > 150) {
+                this.descriptionErrors[index] = this.translateService.instant('msg.dp.alert.description.error.description');
+            }
+        });
 
-        const name : string = this.names[0];
-        if(name==null || name.replace(/ /g,'') =='') {
-            this.showNameError =true;
-        }
-        const desc : string = this.descriptions[0];
-        if(desc==null || desc.replace(/ /g,'') =='') {
-            this.showDescError =true;
-        }
+
 
         if (this.showNameError || this.showDescError) {
-          return;
+            return;
         }
-
-
-
 
         let params = {};
         if (this.type === 'STAGING') {
@@ -239,7 +260,7 @@ export class PrepPopCreateDatasetNameComponent extends AbstractPopupComponent im
                 }
 
                 // 데이터셋 리스트에서 진입과 체크됐다면(데이터플로우로 바로 이동)
-                if (this.isChecked && this.isFromDatasetList) {
+                if (this.isChecked && this.isFromDatasetList && this.names.length == 1) {
                     this._makeShortCutToDataFlow();
                 } else {
 
@@ -426,6 +447,13 @@ export class PrepPopCreateDatasetNameComponent extends AbstractPopupComponent im
     return result;
 
   }
+
+    public getFileItemIconClassName(fileExtension: string ): string {
+        const className: string = this._getFileFormatForIcon(fileExtension).toString();
+        return "type-" + className.toLowerCase();
+    }
+
+
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   | Protected Method
   |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
@@ -433,6 +461,28 @@ export class PrepPopCreateDatasetNameComponent extends AbstractPopupComponent im
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   | Private Method
   |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
+
+    private _getFileFormatForIcon(fileName) {
+        const fileTypeArray : any[] = fileName.toUpperCase().split('.');
+        const fileType: string = fileTypeArray[fileTypeArray.length-1];
+
+        const formats = [
+            {extension:'CSV', fileFormat:FileFormat.CSV},
+            {extension:'EXCEL', fileFormat:FileFormat.TXT},
+            {extension:'JSON', fileFormat:FileFormat.JSON},
+            {extension:'XLSX', fileFormat:'xlsx'},
+            {extension:'XLS', fileFormat:'xls'},
+        ];
+
+        const idx = _.findIndex(formats, {extension: fileType});
+
+        if (idx !== -1) {
+            return formats[idx].fileFormat
+        } else {
+            return formats[0].fileFormat
+        }
+    }
+
     private resetErrorMessage(): void{
         this.showNameError = false;
         this.showDescError = false;

@@ -1,5 +1,5 @@
-<script src="../../../../../../../CreateDatasetNameComponent.ts"></script>
-<div class="pb-layout-popup">
+<!--<script src="../../../../../../../CreateDatasetNameComponent.ts"></script>-->
+<div class="pb-layout-popup" *ngIf="names.length === 1">
     <!-- box popup -->
     <div class="pb-box-popup">
         <a href="javascript:" class="pb-btn-pop-close" (click)="close()"></a>
@@ -64,7 +64,7 @@
                         <div class="pb-create-label">{{'msg.comm.ui.name' | translate}}</div>
                         <div class="pb-form-edit">
                             <input type="text" class="pb-component-input" [(ngModel)]="names[0]" maxlength="50" placeholder="{{'msg.comm.ui.create.name' | translate}}" (keyup)="keyupEvent($event, 0)">
-                            <span class="pb-form-error" *ngIf="showNameError">{{'msg.storage.ui.required' | translate}}</span>
+                            <span class="pb-form-error" *ngIf="nameErrors[0] !== ''">{{'msg.storage.ui.required' | translate}}</span>
                         </div>
                     </div>
                     <!-- //form create -->
@@ -73,7 +73,7 @@
                         <div class="pb-create-label">{{'msg.comm.ui.description' | translate}}</div>
                         <div class="pb-form-edit">
                             <input type="text" class="pb-component-input" [(ngModel)]="descriptions[0]" maxlength="150" placeholder="{{'msg.comm.ui.create.desc' | translate}}" (keyup)="keyupEvent($event, 1)">
-                            <span class="pb-form-error" *ngIf="showDescError">{{'msg.storage.ui.required' | translate}}</span>
+                            <span class="pb-form-error" *ngIf="descriptionErrors[0] !== ''">{{'msg.dp.alert.name.error.description' | translate}}</span>
                         </div>
                     </div>
                     <!-- //form create -->
@@ -116,3 +116,97 @@
 </div>
 
 
+
+
+
+<div class="pb-layout-popup" *ngIf="(type==='FILE' || type === 'URL') && names.length > 1">
+    <!-- box popup -->
+    <div class="pb-box-popup">
+        <a href="javascript:" class="pb-btn-pop-close" (click)="close()"></a>
+        <!-- step -->
+        <div class="pb-ui-step" *ngIf="type!='DB'">
+            <span class="pb-txt-step">1</span>
+            <span class="pb-txt-step">2</span>
+            <span class="pb-txt-step">3</span>
+            <span class="pb-txt-step is-selected">4</span>
+        </div>
+
+        <div class="pb-ui-step" *ngIf="type=='DB'">
+            <span class="pb-txt-step">1</span>
+            <span class="pb-txt-step">2</span>
+            <span class="pb-txt-step is-selected">3</span>
+        </div>
+
+        <!-- //step -->
+        <!-- top -->
+        <div class="pb-popup-top pb-clear">
+            <div class="pb-txt-title">CREATE DATASET</div>
+
+        </div>
+        <!-- //top -->
+        <!-- contents -->
+        <div class="pb-popup-contents ">
+            <div class="pb-wrap-connect type-connect">
+                <!-- data grid -->
+                <div class="pb-wrap-data-grid">
+                    <!-- grid top -->
+                    <div class="pb-ui-grid-top">
+                        <!--
+                            focus 일때 type-focus 추가
+                        -->
+                        <div class="pb-component-search type-focus ">
+                            <input type="text" placeholder="Search for values">
+                            <a href="javascript:" class="pb-btn-delete"></a>
+                        </div>
+                    </div>
+                    <!-- //grid top -->
+                    <div class="pb-wrap-table">
+                        <table class="pb-component-table">
+                            <colgroup>
+                                <col width="33%">
+                                <col width="33%">
+                                <col width="33%">
+                            </colgroup>
+                            <thead>
+                            <tr>
+                                <th>Dataset</th>
+                                <th>Name</th>
+                                <th>Description</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr *ngFor="let name of dsfileInformations; let index = index">
+                                <td>
+                                    <em class="pb-img-file" [ngClass]="getFileItemIconClassName(name.fileName).trim()"></em>
+                                    {{name.fileName}}
+                                </td>
+                                <td>
+                                    <input type="text" class="pb-component-input" placeholder="Placeholder" [(ngModel)]="names[index]">
+                                    <span class="pb-form-error" *ngIf="nameErrors[index] !== ''">{{'msg.storage.ui.required' | translate}}</span>
+                                </td>
+                                <td>
+                                    <textarea class="pb-component-textarea-auto" placeholder="Please enter a description" [(ngModel)]="descriptions[index]"></textarea>
+                                    <span class="pb-form-error" *ngIf="descriptionErrors[index] !== ''">{{'msg.dp.alert.name.error.description' | translate}}</span>
+                                </td>
+                            </tr>
+
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- //data grid -->
+            </div>
+        </div>
+        <!-- //contents -->
+        <!-- buttons -->
+        <div class="pb-popup-bottom">
+            <a href="javascript:;" class="pb-component-btn-pop type-line" (click)="prev()">PREV</a>
+            <a href="javascript:;" class="pb-component-btn-pop type-line" (click)="close()">CANCEL</a>
+            <!-- disabled 시 ddp-disabled 추가 -->
+            <a href="javascript:;" class="pb-component-btn-pop type-bg" (click)="complete()">DONE</a>
+        </div>
+        <!-- //bottom -->
+    </div>
+    <!-- //box popup -->
+</div>

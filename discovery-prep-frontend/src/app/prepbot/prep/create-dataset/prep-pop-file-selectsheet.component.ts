@@ -26,6 +26,7 @@ import * as pixelWidth from 'string-pixel-width';
 import {PreparationCommonUtil} from "../../util/preparation-common.util";
 import {CommonUtil} from "../../../common/util/common.util";
 import {Alert} from "../../../common/util/alert.util";
+import * as _ from 'lodash';
 
 @Component({
   selector: 'prep-pop-file-selectsheet',
@@ -86,7 +87,7 @@ export class PrepPopFileSelectsheetComponent extends AbstractPopupComponent impl
     public currQuote: string = '';
     public currSheetIndex : number = 0;
     public currDSIndex: number = 0;
-    public currDetail : {fileFormat: FileFormat, detailName: string, columns: number} ;
+    public currDetail : {fileFormat: FileFormat, detailName: string, columns: number, fileExtension: string, uploadLocation: string} ;
     public currColumnCount: number;
     public prevColumnCount: number;
 
@@ -112,7 +113,7 @@ export class PrepPopFileSelectsheetComponent extends AbstractPopupComponent impl
 
     super.ngOnInit();
 
-    this.currDetail = {fileFormat: null, detailName: null, columns: null};
+    this.currDetail = {fileFormat: null, detailName: null, columns: null, fileExtension: null, uploadLocation: null};
 
     // Check init by selected count
     this._checkNextBtn();
@@ -132,6 +133,9 @@ export class PrepPopFileSelectsheetComponent extends AbstractPopupComponent impl
         if(index === 0) {
           this.currDelimiter = (this.isCSV ? ',' : '');
           this.currQuote = (this.isCSV ? '\"' : '');
+        }
+        if(this.datasetFiles[index].fileFormat == FileFormat.CSV) {
+            this.datasetFiles[index].sheetInfo = null;
         }
 
         // FIXME : UI에서 각자 따로 오는 response를 어떻게 처리할지
@@ -227,7 +231,7 @@ export class PrepPopFileSelectsheetComponent extends AbstractPopupComponent impl
         // this.isShow = false;
         // this.step = 'select-sheet';
         // this.stepChange.emit( 'select-sheet');
-        this.stepChange.emit( 'complete-create-dataset');
+        this.stepChange.emit( 'FILE');
     }
 
   /**
@@ -511,11 +515,37 @@ export class PrepPopFileSelectsheetComponent extends AbstractPopupComponent impl
     }
   }
 
+    public getFileItemIconClassName(fileExtension: string ): string {
+      if(fileExtension == null || fileExtension == undefined) return '';
+        const className: string = this._getFileFormatForIcon(fileExtension).toString();
+        return "type-" + className.toLowerCase();
+    }
+
 
 
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
    | Private Method
    |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
+    private _getFileFormatForIcon(fileExtension) {
+        let fileType : string = fileExtension.toUpperCase();
+
+        const formats = [
+            {extension:'CSV', fileFormat:FileFormat.CSV},
+            {extension:'TXT', fileFormat:FileFormat.TXT},
+            {extension:'JSON', fileFormat:FileFormat.JSON},
+            {extension:'XLSX', fileFormat:'xlsx'},
+            {extension:'XLS', fileFormat:'xls'},
+        ];
+
+        const idx = _.findIndex(formats, {extension: fileType});
+
+        if (idx !== -1) {
+            return formats[idx].fileFormat
+        } else {
+            return formats[0].fileFormat
+        }
+    }
+
   /**
    * Returns true if something is typed on the keyboard
    * Returns false if shift, tab etc is pressed
@@ -781,7 +811,6 @@ export class PrepPopFileSelectsheetComponent extends AbstractPopupComponent impl
    * @private
    */
   private _setDetailInformation(dsIdx:number, sheetIdx?:number){
-
     if (this.datasetFiles[dsIdx].fileFormat === FileFormat.EXCEL) {
       this.currDetail.detailName = this.datasetFiles[dsIdx].fileName;
       if(this.datasetFiles[dsIdx].sheetInfo) this.currDetail.detailName += '-' + this.datasetFiles[dsIdx].sheetInfo[sheetIdx].sheetName;
@@ -790,6 +819,9 @@ export class PrepPopFileSelectsheetComponent extends AbstractPopupComponent impl
     }
     this.currDetail.fileFormat = this.datasetFiles[dsIdx].fileFormat;
     this.currDetail.columns = ( (this.datasetFiles[dsIdx].sheetInfo)?this.datasetFiles[dsIdx].sheetInfo[sheetIdx].fields.length : null );
+    this.currDetail.fileExtension = this.datasetFiles[dsIdx].fileExtension;
+    this.currDetail.uploadLocation  = this.datasetFiles[dsIdx].storageType;
+
   }
 
 

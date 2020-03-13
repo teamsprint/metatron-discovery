@@ -469,7 +469,7 @@ export class PrepPopFileUploadCreateComponent extends AbstractPopupComponent imp
    */
   public fileUploadComplete(pluploadNo:number){
     if (this.sucessFileCount < 1 && isUndefined(this.datasetFiles)) {
-      console.log('fileUploadComplete : this.sucessFileCount < 1 ');
+      // console.log('fileUploadComplete : this.sucessFileCount < 1 ');
       return;
     }
     this.datasetFiles.splice(0, this.datasetFiles.length);
@@ -481,7 +481,9 @@ export class PrepPopFileUploadCreateComponent extends AbstractPopupComponent imp
         datasetFile.storedUri = this.upFiles[i].storedUri;
         datasetFile.storageType = this._getStorageType(this.fileLocation);
         let fileFormat = this._getFileFormat(this.upFiles[i].fileExtension);
+        // console.info('fileFormat', fileFormat);
         datasetFile.fileFormat = fileFormat;
+        // console.info('fileFormat A', datasetFile.fileFormat);
 
         // Delimiter is , when fileFormat is csv or excel or txt
         const formatWithCommaDel = ['CSV','EXCEL', 'TXT'];
@@ -503,10 +505,6 @@ export class PrepPopFileUploadCreateComponent extends AbstractPopupComponent imp
     this.isNext = ( !this.isUploading && this.sucessFileCount > 0) ;
 
       this.chunk_uploader.splice();
-
-
-      console.info('upFiles', this.upFiles);
-
   }
 
   /**
