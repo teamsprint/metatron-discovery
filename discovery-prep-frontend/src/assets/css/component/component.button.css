@@ -60,7 +60,7 @@
 .pb-component-tab-btn li a {display:block; position:relative;width:40px; height:28px; background-color:#e4e3de;}
 .pb-component-tab-btn a:before {display:inline-block; position:absolute; top:50%; left:50%; background:url(../../images/btn_tab.png) no-repeat;content:'';}
 .pb-component-tab-btn li a:hover {background-color:#cfcec7;}
-.pb-component-tab-btn .pb-icon-grid:before {width:11px; height:10px; margin:-5px 0 0 -6px;}
+.pb-component-tab-btn .pb-icon-grid:before {width:11px; height:11px; margin:-5px 0 0 -6px;}
 .pb-component-tab-btn .pb-icon-list:before {width:12px; height:10px; margin:-5px 0 0 -6px;background-position:left -11px;}
 .pb-component-tab-btn li.is-selected .pb-icon-grid:before {background-position-x:-12px;}
 .pb-component-tab-btn li.is-selected .pb-icon-list:before {background-position-x:-13px;}

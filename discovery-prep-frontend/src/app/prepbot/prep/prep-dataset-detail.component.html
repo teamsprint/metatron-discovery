@@ -145,14 +145,13 @@
             <!-- button -->
             <div class="pb-ui-buttons">
                 <!-- icon button -->
-                <div class="pb-btn-icons">
-                    <a href="javascript:" class="pb-icon-top-undo" (click)="transformAction('UNDO')" [ngClass]="{'ddp-disabled': !undoable}"></a>
-                    <a href="javascript:" class="pb-icon-top-redo" (click)="transformAction('REDO')" [ngClass]="{'ddp-disabled': !redoable}"></a>
-                </div>
+                <!--<div class="pb-btn-icons">-->
+                    <!--<a href="javascript:" class="pb-icon-top-undo" (click)="transformAction('UNDO')" [ngClass]="{'ddp-disabled': !undoable}"></a>-->
+                    <!--<a href="javascript:" class="pb-icon-top-redo" (click)="transformAction('REDO')" [ngClass]="{'ddp-disabled': !redoable}"></a>-->
+                <!--</div>-->
+
+                <a href="javascript:" class="pb-component-btn type-line"><em class="pb-icon-add-r"></em>CREATE DATA RESULT</a>
                 <!-- //icon button -->
-                <div class="pb-ui-part">
-                    <a href="javascript:" class="pb-component-btn type-line">+ CREATE DATA RESULT</a>
-                </div>
             </div>
             <!-- //button -->
             <!-- txt navi -->
@@ -195,6 +194,34 @@
                 <a href="javascript:">
                     <span class="pb-txt-rnb">RULE</span>
                 </a>
+                <ul class="pb-list-tab-button">
+                    <li (click)="transformAction('UNDO')" [ngClass]="{'is-selected': !undoable}">
+                        <a href="javascript:"><em class="pb-icon-grid"></em></a>
+                        <div class="pb-ui-tooltip-info">
+                            <em class="pb-icon-view-top"></em>
+                        </div>
+
+                    </li>
+                    <li (click)="transformAction('REDO')" [ngClass]="{'ddp-disabled': !redoable}">
+                        <a href="javascript:"><em class="pb-icon-listgrid"></em></a>
+                        <div class="pb-ui-tooltip-info">
+                            <em class="pb-icon-view-top"></em>
+                        </div>
+                    </li>
+                </ul>
+                <!--<ul class="pb-list-rnb-tab pb-clear">-->
+                    <!--<li (click)="transformAction('UNDO')" [ngClass]="{'is-selected': !undoable}">-->
+                        <!--<a href="javascript:">-->
+                            <!--<em class="pb-icon-tab-data"></em>-->
+                        <!--</a>-->
+                    <!--</li>-->
+                    <!--<li (click)="transformAction('REDO')" [ngClass]="{'ddp-disabled': !redoable}">-->
+                        <!--<a href="javascript:">-->
+                            <!--<em class="pb-icon-tab-rule"></em>-->
+
+                        <!--</a>-->
+                    <!--</li>-->
+                <!--</ul>-->
                 <prep-rnb-rule-list
                         [ruleList]="ruleList"
                         (jumpEvent)="jump($event)"

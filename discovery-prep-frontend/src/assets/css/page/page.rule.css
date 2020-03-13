@@ -175,7 +175,7 @@ ul.pb-list-type-data li a .pb-icon-type-sharp {width:16px; height:11px; backgrou
 .pb-wrap-box-rule .pb-box-rule .pb-ui-graph2 .pb-component-search {margin:5px 0 0 0;}
 .pb-wrap-box-rule .pb-box-rule .pb-ui-graph2 .pb-data-set-num {float:left; padding:14px 0 0 0;}
 .pb-wrap-box-rule .pb-box-rule .pb-ui-graph2 .pb-data-set-num .pb-data-txt {float:left; padding-left:10px; color:#222; font-size:12px;}
-.pb-wrap-box-rule .pb-box-rule .pb-ui-graph2 .pb-component-tab-btn {float:left; margin:7px 20px 0 15px}
+.pb-wrap-box-rule .pb-box-rule .pb-ui-graph2 .pb-component-tab-btn {float:left; margin:7px 5px 0 15px}
 .pb-wrap-box-rule .pb-box-rule .pb-wrap-grid {flex:auto; padding:0 20px 20px 20px; height:100%; overflow:auto;}
 .pb-wrap-box-rule .pb-box-rule .pb-wrap-grid .pb-table-grid {white-space:nowrap;}
 .pb-rnb-apply {padding:18px 15px; border-bottom:1px solid #cfcec7;}
@@ -227,5 +227,3 @@ ul.pb-list-type-data li a .pb-icon-type-sharp {width:16px; height:11px; backgrou
 
 .pb-part-content .pb-form-create .pb-create-label {font-weight: normal;color: #4e4e4e;font-size: 14px;}
 .pb-part-content .pb-form-create {margin-bottom:0;}
-
-

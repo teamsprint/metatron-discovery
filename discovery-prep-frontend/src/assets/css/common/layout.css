@@ -50,12 +50,12 @@
 .pb-contents-top .pb-txt-navi .pb-txt-super:hover {text-decoration: underline;}
 .pb-contents-top .pb-txt-super .pb-icon-super {display:inline-block; position:relative; top:-1px; width:13px; height:16px; margin-right:5px; background:url(../../images/icon_navi.png) no-repeat; background-position:left -114px; vertical-align:middle;}
 
-.pb-contents-top .pb-ui-buttons {float:right; padding:16px 18px 0 0;}
+.pb-contents-top .pb-ui-buttons {float:right;padding:17px 20px 0 0;}
 .pb-contents-top .pb-ui-buttons .pb-component-btn {float:left; margin-left:6px;}
-.pb-contents-top .pb-ui-buttons .pb-ui-part {position:relative; float:left; padding-left:15px; margin-left:20px;}
+.pb-contents-top .pb-ui-buttons .pb-ui-part {position:relative; float:left; padding-left:15px; margin-left:15px;}
 .pb-contents-top .pb-ui-buttons .pb-ui-part:before {display:inline-block; position:absolute; top:50%; left:0; margin-top:-12px; height:24px; border-left:1px solid #cfcec7; content:''; }
 .pb-contents-top [class*="pb-icon-top-"] {display:inline-block; float:left; width:17px; height:14px; margin-left:6px; background:url(../../images/icon_navi.png) no-repeat;}
-.pb-contents-top .pb-ui-buttons .pb-btn-icons {position:relative; top:8px; float:left; }
+.pb-contents-top .pb-ui-buttons .pb-btn-icons {position:relative; top:8px; float:left; padding-left: 15px; margin-left: 20px; }
 .pb-contents-top .pb-ui-part2 {float:left; position:relative;  margin-left:20px; padding-left:17px;}
 .pb-contents-top .pb-ui-part2:before {display:inline-block; position:absolute; top:50%; left:0; margin-top:-9px; height:17px; border-left:1px solid #b4b4b2; content:'';}
 .pb-contents-top .pb-icon-top-prev,
@@ -68,6 +68,45 @@
 .pb-contents-top .pb-icon-top-redo {width:15px; height:16px; }
 .pb-contents-top .pb-icon-top-undo {background-position:left -131px;}
 .pb-contents-top .pb-icon-top-redo {background-position:left -148px; margin-left:14px}
+
+/***********************************************************************
+     Layout : TOP TOGGLE BUTTON
+ *************************************************************************/
+.pb-contents-top .pb-icon-top-list {width:17px; height:17px;background-position:left -211px;}
+.pb-contents-top .pb-icon-top-grid {width:19px;height:18px;background-position:left -228px;}
+.pb-contents-top .pb-list-toggle {float:left; padding:6px 0 0 0;}
+.pb-contents-top .pb-list-toggle li {float:left; padding:0 5px;}
+.pb-contents-top .pb-list-toggle li a em.pb-icon-list,
+.pb-contents-top .pb-list-toggle li a em.pb-icon-grid {display:inline-block; opacity:0.4; background:url(../../images/icon_intro.png) no-repeat;}
+.pb-contents-top .pb-list-toggle li a em.pb-icon-list {width:19px; height:17px; background-position: -39px -192px}
+.pb-contents-top .pb-list-toggle li a em.pb-icon-grid {width:19px; height:17px; background-position: -39px -209px}
+.pb-contents-top .pb-list-toggle li a:hover em.pb-icon-list,
+.pb-contents-top .pb-list-toggle li a:hover em.pb-icon-grid,
+.pb-contents-top .pb-list-toggle li.is-selected a em.pb-icon-list,
+.pb-contents-top .pb-list-toggle li.is-selected a em.pb-icon-grid {/*background-position-x:0;*/opacity:1;}
+
+/***********************************************************************
+     Layout : CAROSSEL TOGGLE BUTTON
+ *************************************************************************/
+.pb-rnb-menu.is-selected ul.pb-list-rnb > li.is-selected {position:relative;}
+.pb-wrap-grid-option .pb-list-tab-button {float: left;}
+.page-prep-dataflow .pb-wrap-flow-grid .pb-wrap-grid-option .pb-list-tab-button {margin-left: 10px;}
+.pb-contents-top .pb-ui-buttons .pb-btn-icons:before {display: inline-block;position: absolute;top: 50%;left: 0;margin-top: -12px;height: 24px;border-left: 1px solid #cfcec7;content: '';}
+ul.pb-list-tab-button {position: absolute;float: left;margin: 15px 0 0 14px;top: 0;right: 10px;z-index: 9999;}
+ul.pb-list-tab-button li a {display: block;position: relative;width: 23px;height: 23px;box-sizing: border-box;}
+ul.pb-list-tab-button li:first-of-type a {border-left: none;}
+em[class*="pb-icon-"] {font-size: 0px;vertical-align: middle;}
+ul.pb-list-tab-button li {float: left;position: relative;}
+ul.pb-list-tab-button li a {position: relative;display: block;width: 23px;height: 23px;box-sizing: border-box;}
+ul.pb-list-tab-button li a em:hover {opacity:0.4;}
+ul.pb-list-tab-button li.pb-selected a:before {position: absolute;top: -1px;left: -1px;right: -1px;bottom: -1px;content: '';}
+em.pb-icon-grid, em.pb-icon-listgrid, em.pb-icon-lineage {display: inline-block;width: 17px;height: 17px;background: url(../../images/icon_navi.png) no-repeat;}
+ul.pb-list-tab-button li a em.pb-icon-grid {position: absolute;top: 50%;left: 50%;margin: -7px 0 0 -7px;background-position: left -132px;}
+ul.pb-list-tab-button li .pb-ui-tooltip-info em.pb-icon-view-top {left: 15px;}
+em.pb-icon-listgrid {width: 17px;height: 15px;background-position:left -149px;}
+ul.pb-list-tab-button li.pb-selected a em.pb-icon-listgrid {background-position: left -149px;}
+ul.pb-list-tab-button li a em.pb-icon-listgrid {position: absolute;top: 50%;left: 50%;margin:-7px 0 0 -8px;}
+
 /***********************************************************************
      Layout : LNB
  *************************************************************************/
