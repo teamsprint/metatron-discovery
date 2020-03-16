@@ -3,7 +3,7 @@
 /***********************************************************************
      Popup : Create1
  *************************************************************************/
-.pb-wrap-connect {display:flex; align-items: center; padding:0 40px; height:100%;}
+.pb-wrap-connect {display:flex; align-items: center; padding:27px 40px; height:100%;}
 .pb-wrap-connect.type-connect {padding-bottom:0;}
 .pb-wrap-connect .pb-ui-file-list {flex:auto; height:100%; overflow:auto;}
 .pb-wrap-connect .pb-ui-file-list .pb-ui-top {padding-bottom:16px;}

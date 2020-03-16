@@ -1,40 +1,5 @@
-.blinking{
-    -webkit-animation:blink 3s ease-in-out infinite alternate;
-    -moz-animation:blink 3s ease-in-out infinite alternate;
-    animation:blink 3s ease-in-out infinite alternate;
-}
-@-webkit-keyframes blink{
-    0% {opacity:0.5;}
-    100% {opacity:1;}
-}
-@-moz-keyframes blink{
-    0% {opacity:0.5;}
-    100% {opacity:1;}
-}
-@keyframes blink{
-    0% {opacity:0.5;}
-    100% {opacity:1;}
-}
-
-prep-detail, prep-dataset-detail {
-    height:100%;
-}
-.ddp-box-in {
-    background: #d0e1e9;
-    color: white;
-    float: right;
-    top: 130px;
-    position: absolute;
-    left: 482px;
-    height: 300px;
-    width: 300px;
-    overflow-y: scroll;
-    overflow-x: hidden;
-    border: 3px solid #3c65ab;
-    border-radius: 5px;
-    font-size: 14px;
-    padding: 10px;
-}
+prep-detail, prep-dataset-detail {height:100%;}
+.ddp-box-in {background: #d0e1e9;color: white;float: right;top: 130px;position: absolute;left: 482px;height: 300px;width: 300px; overflow-y: scroll;overflow-x: hidden;border: 3px solid #3c65ab;border-radius: 5px;font-size: 14px;padding: 10px;}
 prep-detail, prep-dataset-detail {height:100%;}
 .ddp-box-in {background: #d0e1e9;color: white;float: right;top: 130px;position: absolute;left: 482px;height: 300px;width: 300px;overflow-y: scroll;overflow-x: hidden;border: 3px solid #3c65ab;border-radius: 5px;font-size: 14px;padding: 10px;}
 .ddp-icon-file-svg {display:none;}
@@ -44,104 +9,23 @@ prep-detail, prep-dataset-detail {height:100%;}
 .pb-ui-graph2 .ddp-box-gridarea .ddp-ui-gridbody {top:35px;}
 
 /**************************************************************
-    임시-File upload
+    File upload
 **************************************************************/
-.ddp-box-file-progress .ddp-file-progress .ddp-wrap-file-title {
-    padding: 10px;
-    color: #000;
-    font-size: 20px;
-    overflow: hidden;
-    box-sizing: border-box;
-}
-.ddp-box-file-progress .ddp-list-file-progress {
-    position: relative;
-    margin: 0 39px;
-}
-.ddp-box-file-progress .ddp-file-name {
-    position: relative;
-    height: 35px;
-}
-.ddp-box-file-progress .ddp-data-filename{
-    position: absolute;
-    top: 5px;
-    left: 32px;
-}
-.ddp-box-file-progress .ddp-data-size{
-    position: absolute;
-    top: 5px;
-}
-.ddp-box-file-progress .ddp-import-file {
-    position: absolute;
-    left: -1px;
-    right: -1px;
-    bottom: -1px;
-    padding: 27px 0 0 30px;
-    height: 100px;
-    border: 1px solid #d0d1d8;
-    background-color: #f6f6f7;
-    box-sizing: border-box;
-}
-.ddp-box-file-progress .ddp-list-file-progress li .ddp-file-name .ddp-data-filename {
-    display: inline-block;
-    max-width: 100%;
-    padding-bottom: 8px;
-    color: #4b515b;
-    font-size: 14px;
-    font-weight: 700;
-}
-.ddp-box-file-progress .ddp-list-file-progress li .ddp-file-name .ddp-data-filename .ddp-txt-subname {
-    float: right;
-}
-.ddp-box-file-progress .ddp-list-file-progress li .ddp-file-name .ddp-data-filename .ddp-txt-filename {
-    display: block;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
-}
-.ddp-box-file-progress .ddp-list-file-progress li .ddp-file-name .ddp-data-size {
-    display: block;
-    color: #91969e;
-    font-size: 12px;
-}
-.ddp-type-progressbar2 {
-    display: inline-block;
-    position: relative;
-    height: 7px;
-    width: 100%;
-    border-radius: 4px;
-    background-color: #e7e7ea;
-    overflow: hidden;
-}
-.ddp-type-progressbar2 .ddp-data-progressbar {
-    display: inline-block;
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    border-radius: 4px;
-    background-color: #666eb2;
-}
-.ddp-box-file-progress .ddp-list-file-progress .ddp-ui-condition .ddp-type-progressbar2 {
-    width: 200px;
-}
-.ddp-box-file-progress .ddp-list-file-progress .ddp-ui-condition .ddp-data-condition {
-    display: inline-block;
-    width: 65px;
-    padding-left: 7px;
-    text-align: center;
-    color: #90969f;
-    vertical-align: middle;
-}
-
-.pb-drop-file.file-done{
-     position: absolute!important;
-     bottom: 72px;
-     width: 98%;
-     height: 193px;
-     overflow: hidden;
-     margin: 22px;
-     }
+.ddp-box-file-progress .ddp-file-progress .ddp-wrap-file-title {padding: 10px;color: #000;font-size: 20px;overflow: hidden;box-sizing: border-box;}
+.ddp-box-file-progress .ddp-list-file-progress {position: relative;margin: 0 39px;}
+.ddp-box-file-progress .ddp-file-name {position: relative;height: 35px;}
+.ddp-box-file-progress .ddp-data-filename{position: absolute;top: 5px;left: 32px;}
+.ddp-box-file-progress .ddp-data-size{position: absolute;top: 5px;}
+.ddp-box-file-progress .ddp-import-file {position: absolute;left: -1px;right: -1px;bottom: -1px;padding: 27px 0 0 30px;height: 100px;border: 1px solid #d0d1d8;background-color: #f6f6f7;box-sizing: border-box;}
+.ddp-box-file-progress .ddp-list-file-progress li .ddp-file-name .ddp-data-filename {display: inline-block;max-width: 100%;padding-bottom: 8px;color: #4b515b;font-size: 14px;font-weight: 700;}
+.ddp-box-file-progress .ddp-list-file-progress li .ddp-file-name .ddp-data-filename .ddp-txt-subname {float: right;}
+.ddp-box-file-progress .ddp-list-file-progress li .ddp-file-name .ddp-data-filename .ddp-txt-filename {display: block;white-space: nowrap;text-overflow: ellipsis;overflow: hidden;}
+.ddp-box-file-progress .ddp-list-file-progress li .ddp-file-name .ddp-data-size {display: block;color: #91969e;font-size: 12px;}
+.ddp-type-progressbar2 {display: inline-block;position: relative;height: 7px;width: 100%;border-radius: 4px;background-color: #e7e7ea;overflow: hidden;}
+.ddp-type-progressbar2 .ddp-data-progressbar {display: inline-block;content: '';position: absolute;top: 0;left: 0;bottom: 0;border-radius: 4px;background-color: #666eb2;}
+.ddp-box-file-progress .ddp-list-file-progress .ddp-ui-condition .ddp-type-progressbar2 {width: 200px;}
+.ddp-box-file-progress .ddp-list-file-progress .ddp-ui-condition .ddp-data-condition {display: inline-block;width: 65px;padding-left: 7px;text-align: center;color: #90969f;vertical-align: middle;}
+.pb-drop-file.file-done{position: absolute!important;bottom: 72px;width: 98%;height: 193px;overflow: hidden;margin: 22px;}
 
 /**************************************************************
     데이터 미리보기 그리드
@@ -372,3 +256,9 @@ ul.ddp-list-popup li.ddp-sub:hover .ddp-wrap-popup2 {display:block;}
     버튼 Selected 시 margin 변경
 **************************************************************/
 .pb-wrap-box-rule.is-selected {margin-left:17px;}
+
+/**************************************************************
+    LNB 막기
+**************************************************************/
+.pb-layout-gnb .pb-gnb-left {left: 20px;}
+app-lnb {display:none;}
