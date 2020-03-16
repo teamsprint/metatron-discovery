@@ -50,7 +50,8 @@
 .pb-wrap-connect .pb-wrap-upload .pb-grid-top .pb-grid-total strong {margin-right:3px;font-weight:bold;}
 .pb-wrap-connect .pb-wrap-upload .pb-grid-area {flex:auto; margin-bottom:10px; border:1px solid rgba(144,150,156,0.25);overflow:auto;}
 
-.pb-wrap-connect .pb-wrap-upload .pb-box-setting {position:relative; padding:6px 0; margin-bottom:10px; border-radius:5px; background-color:#f7f7f5;}
+.pb-wrap-connect .pb-wrap-upload .pb-box-setting {position:relative; padding:20px 0; margin-bottom:10px; border-radius:5px; background-color:#f7f7f5;}
+.pb-wrap-connect .pb-wrap-upload .pb-box-setting.is-selected {padding:6px 0;}
 .pb-wrap-connect .pb-wrap-upload .pb-box-setting.is-selected .pb-setting-sub {display:block;}
 .pb-wrap-connect .pb-wrap-upload .pb-box-setting .pb-setting-sub {display:none; padding:6px 0 0 0;}
 .pb-wrap-connect .pb-wrap-upload .pb-box-setting .pb-box-fold {position:relative;}

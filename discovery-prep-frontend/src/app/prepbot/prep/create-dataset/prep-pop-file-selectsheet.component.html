@@ -103,7 +103,7 @@
                     <div class="pb-box-setting is-selected" [ngClass]="{'is-selected':settingFoldFlag}" >
                         <div class="pb-box-fold pb-clear">
                             <!-- setting edit -->
-                            <div class="pb-setting-edit">
+                            <div class="pb-setting-edit" *ngIf="settingFoldFlag">
                                 <div class="pb-edit-label">Upload Location</div>
                                 <div class="pb-form-edit">
                                     <input type="text" class="pb-component-input" [(ngModel)]="currDetail.uploadLocation" readonly>
