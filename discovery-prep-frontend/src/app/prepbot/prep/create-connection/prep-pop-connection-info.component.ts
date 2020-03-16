@@ -155,6 +155,7 @@ export class PrepPopConnectionInfoComponent extends AbstractComponent {
         this.properties = [];
         this.selectedAuthenticationType = this.authenticationTypeList[0];
         this.selectedConnectionType = this.connectionTypeList[0];
+
     }
 
     // public goto(step) {

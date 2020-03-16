@@ -126,17 +126,17 @@ export class PrepPopDBQueryComponent extends AbstractComponent {
 
     }
     public ngAfterViewInit() {
-        let sVar = this;
-        $("#rangeslider3").ionRangeSlider({
-            min: 0,
-            max: 200,
-            from: 100,
-
-            onFinish: function (data) {
-                sVar.zoomInOutGrid(data.from);
-            // Called then action is done and mouse is released
-            },
-        });
+        // let sVar = this;
+        // $("#rangeslider3").ionRangeSlider({
+        //     min: 0,
+        //     max: 200,
+        //     from: 100,
+        //
+        //     onFinish: function (data) {
+        //         sVar.zoomInOutGrid(data.from);
+        //     // Called then action is done and mouse is released
+        //     },
+        // });
     }
 
 

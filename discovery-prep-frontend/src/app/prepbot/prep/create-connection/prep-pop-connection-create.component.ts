@@ -159,7 +159,7 @@ export class PrepPopConnectionCreateComponent extends AbstractComponent implemen
                 // loading hide
                 this.loadingHide();
                 // close
-                this.createClose();
+                this.createComplete.emit();
             })
             .catch(error => this.commonExceptionHandler(error));
 

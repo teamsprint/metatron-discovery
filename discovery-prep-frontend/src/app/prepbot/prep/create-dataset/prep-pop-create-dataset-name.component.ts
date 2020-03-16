@@ -147,7 +147,7 @@ export class PrepPopCreateDatasetNameComponent extends AbstractPopupComponent im
 
     public init() {
         // this.isShow = true;
-        console.info('dsfileInformations', this.dsfileInformations);
+        // console.info('dsfileInformations', this.dsfileInformations);
     }
 
 
@@ -291,7 +291,7 @@ export class PrepPopCreateDatasetNameComponent extends AbstractPopupComponent im
     if (this.type === 'FILE') {
         step_string = 'select-sheet';
     }else if(this.type === 'DB') {
-        step_string = 'DB-QUERY';
+        step_string = 'DB';
     }else if(this.type === 'KAFKA') {
         step_string = 'complete-create-dataset';
     }
@@ -468,7 +468,7 @@ export class PrepPopCreateDatasetNameComponent extends AbstractPopupComponent im
 
         const formats = [
             {extension:'CSV', fileFormat:FileFormat.CSV},
-            {extension:'EXCEL', fileFormat:FileFormat.TXT},
+            {extension:'TXT', fileFormat:FileFormat.TXT},
             {extension:'JSON', fileFormat:FileFormat.JSON},
             {extension:'XLSX', fileFormat:'xlsx'},
             {extension:'XLS', fileFormat:'xls'},
@@ -495,11 +495,7 @@ export class PrepPopCreateDatasetNameComponent extends AbstractPopupComponent im
    * @private
    */
   private _setDefaultDatasetName(type : string) : void {
-
-      // console.info('type', type);
-      // console.info('this.datasetFiles', this.datasetFiles);
-
-
+      
     if ('FILE' === type || 'URL' === type) {
 
       // FIXME: no idea why dsfileInformations is used instead of datasetInfo
@@ -519,7 +515,8 @@ export class PrepPopCreateDatasetNameComponent extends AbstractPopupComponent im
                   fileFormat: dsFile.fileFormat.toString(),
                   sheetName:sheet.sheetName,
                   manualColumnCount:sheet.columnCount,
-                  svg: dsFile.fileFormat.toUpperCase(),
+                  // svg: dsFile.fileFormat.toUpperCase(),
+                    svg: dsFile.fileExtension.toUpperCase(),
                 });
               }
             })
@@ -536,7 +533,8 @@ export class PrepPopCreateDatasetNameComponent extends AbstractPopupComponent im
                   fileName: dsFile.filenameBeforeUpload,
                   fileFormat: dsFile.fileFormat.toString(),
                   sheetName:'',
-                  svg: dsFile.fileFormat.toUpperCase(),
+                  // svg: dsFile.fileFormat.toUpperCase(),
+                    svg: dsFile.fileExtension.toUpperCase(),
                 });
               } else {
                 this.dsfileInformations.push({
@@ -545,7 +543,8 @@ export class PrepPopCreateDatasetNameComponent extends AbstractPopupComponent im
                   fileFormat: dsFile.fileFormat.toString(),
                   sheetName:'',
                   manualColumnCount:dsFile.sheetInfo[0].columnCount,
-                  svg: dsFile.fileFormat.toUpperCase(),
+                  // svg: dsFile.fileFormat.toUpperCase(),
+                    svg: dsFile.fileExtension.toUpperCase(),
                 });
               }
             }
@@ -561,6 +560,9 @@ export class PrepPopCreateDatasetNameComponent extends AbstractPopupComponent im
       } else {
         this.names[0] = '';
       }
+        this.nameErrors.push('');
+        this.descriptionErrors.push('');
+
 
     } else if ('STAGING' === type) {
 
@@ -570,12 +572,13 @@ export class PrepPopCreateDatasetNameComponent extends AbstractPopupComponent im
       } else {
         this.names[0] = '';
       }
-
+        this.nameErrors.push('');
+        this.descriptionErrors.push('');
     }
+
 
     // For placeholder
     this.clonedNames = _.cloneDeep(this.names);
-
     // this.nameElement && setTimeout(() => { this.nameElement.nativeElement.select(); });
   } // function - _setDefaultDatasetName
 

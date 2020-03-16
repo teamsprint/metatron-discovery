@@ -33,8 +33,8 @@ import {isNullOrUndefined} from 'util';
 })
 export class PrepPopDBCreateComponent extends AbstractComponent {
 
-    @ViewChild(ConnectionComponent)
-    private readonly _connectionComponent: ConnectionComponent;
+    // @ViewChild(ConnectionComponent)
+    // private readonly _connectionComponent: ConnectionComponent;
 
 
     @Input()

@@ -45,7 +45,18 @@
                             <th>{{ds.name}}</th>
                             <td>
                                 <span class="pb-data-file-name">
-                                    <em class="pb-img-file type-xls" *ngIf="ds.svg"></em>
+                                    <em class="pb-img-file type-csv" *ngIf="ds.svg && ds.svg=='CSV'"></em>
+                                    <em class="pb-img-file type-xlsx" *ngIf="ds.svg && ds.svg=='XLSX'"></em>
+                                    <em class="pb-img-file type-xls" *ngIf="ds.svg && ds.svg=='XLS'"></em>
+                                    <em class="pb-img-file type-txt" *ngIf="ds.svg && ds.svg=='TXT'"></em>
+                                    <em class="pb-img-file type-json" *ngIf="ds.svg && ds.svg=='JSON'"></em>
+                                    <em class="pb-img-dataset type-mysql" *ngIf="ds.svg && ds.svg=='MYSQL'"></em>
+                                    <em class="pb-img-dataset type-hive" *ngIf="ds.svg && ds.svg=='HIVE'"></em>
+                                    <em class="pb-img-dataset type-tibero" *ngIf="ds.svg && ds.svg=='TIBERO'"></em>
+                                    <em class="pb-img-dataset type-presto" *ngIf="ds.svg && ds.svg=='PRESTO'"></em>
+                                    <em class="pb-img-dataset type-post" *ngIf="ds.svg && ds.svg=='POSTGRESQL'"></em>
+
+
                                     {{ds.value}}
                                 </span>
                             </td>

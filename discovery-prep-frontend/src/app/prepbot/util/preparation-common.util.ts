@@ -577,8 +577,8 @@ export class PreparationCommonUtil {
       {extension:'CSV', fileFormat:FileFormat.CSV},
       {extension:'TXT', fileFormat:FileFormat.TXT},
       {extension:'JSON', fileFormat:FileFormat.JSON},
-      {extension:'XLSX', fileFormat:FileFormat.EXCEL},
-      {extension:'XLS', fileFormat:FileFormat.EXCEL},
+      {extension:'XLSX', fileFormat:"XLSX"},
+      {extension:'XLS', fileFormat:"XLS"},
     ];
 
     const idx = _.findIndex(formats, {extension: fileType});
