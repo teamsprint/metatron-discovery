@@ -124,8 +124,9 @@
         <!-- main summary -->
         <div class="pb-ui-main-summary">
           <!-- tag -->
-          <div class="pb-ui-tags" *ngIf="item.createdTime | moment: 'isNew'">
-            <span class="pb-component-tag type-new">{{'msg.common.ui.new' | translate}}</span>
+          <div class="pb-ui-tags">
+            <span class="pb-component-tag type-type">Dataflow</span>
+            <span class="pb-component-tag type-new" *ngIf="item.createdTime | moment: 'isNew'">{{'msg.common.ui.new' | translate}}</span>
           </div>
           <!-- // tag -->
           <div class="pb-ui-graph">
@@ -157,6 +158,7 @@
         <div class="pb-ui-main-summary" [ngStyle]="{'min-height': item.dcImplementor ? '137px' : ''}">
           <!-- tag -->
           <div class="pb-ui-tags">
+            <span class="pb-component-tag type-type">Dataset</span>
             <span class="pb-component-tag type-imported" *ngIf="item.dsType === DsType.IMPORTED">Imported</span>
             <span class="pb-component-tag type-wrangled" *ngIf="item.dsType === DsType.WRANGLED">Wrangled</span>
             <span class="pb-component-tag type-new" *ngIf="item.createdTime | moment: 'isNew'">NEW</span>
@@ -220,6 +222,7 @@
         <div class="pb-ui-main-summary">
           <!-- tag -->
           <div class="pb-ui-tags">
+            <span class="pb-component-tag type-type">Data Connection</span>
             <span class="pb-component-tag type-new" *ngIf="item.createdTime | moment: 'isNew'">NEW</span>
           </div>
           <div class="pb-ui-type" style="min-height: 80px;">
