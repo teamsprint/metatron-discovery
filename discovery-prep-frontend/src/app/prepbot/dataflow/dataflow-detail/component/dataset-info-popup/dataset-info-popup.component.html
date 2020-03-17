@@ -27,7 +27,7 @@
     </div>
     <!-- //설명 -->
 
-    <a href="javascript:" class="pb-component-btn type-dark" (click)="goToDetail()" *ngIf="selectedDataSet.dsType === DsType.WRANGLED"><!--em class="pb-icon-move"></em-->Go to dataset</a>
+    <!--<a href="javascript:" class="pb-component-btn type-dark" (click)="goToDetail()" *ngIf="selectedDataSet.dsType === DsType.WRANGLED">&lt;!&ndash;em class="pb-icon-move"></em&ndash;&gt;Go to dataset</a>-->
   </div>
 
   <!-- part -->
@@ -83,6 +83,11 @@
     <!--</div>-->
   <!--</div>-->
   <!-- //part -->
+
+
+  <div class="pb-dataflow-bottom">
+    <a href="javascript:" class="pb-component-btn type-dark" (click)="goToDetail()" *ngIf="selectedDataSet.dsType === DsType.WRANGLED"><em class="pb-icon-move"></em>GO TO DATASET</a>
+  </div>
 </div>
 
 
