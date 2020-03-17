@@ -279,7 +279,7 @@
             <!-- txt navi -->
             <div class="pb-txt-navi">
                 <a href="javascript:;" class="pb-btn-back" (click)="onClickPrev()"></a>
-                Dataset 01
+                {{datasetName}}
             </div>
             <!-- //txt navi -->
 
@@ -506,103 +506,61 @@
                         <!-- datadetail -->
                         <div class="ddp-ui-datadetail">
                             <label class="ddp-label-detail">DATA</label>
-                            <div class="ddp-form-box">
 
+                            <div class="ddp-form-box" [ngStyle]="getGridStyle()">
+                            <!--<div class="pb-grid-area" [ngStyle]="getGridStyle()">-->
+                                <div grid-component style="width:100%; height:100%;"></div>
                             </div>
                         </div>
                         <!-- //datadetail -->
+
+
+
                         <!-- datadetail -->
-                        <div class="ddp-ui-datadetail">
+                        <div class="ddp-ui-datadetail" *ngIf="dataset!=null && dataset.dataflows != null && dataset.dataflows.length > 0">
                             <label class="ddp-label-detail">
                                 USED IN
                             </label>
                             <!--<div class="ddp-data-none">No log</div>-->
                             <ul class="ddp-list-detail">
-                                <li>
-                                    <span class="ddp-box-tag2">Created in</span>
+
+
+                                <li *ngFor="let item of dataset.dataflows; let index = index">
+                                    <span class="ddp-box-tag2" *ngIf="index == 0">Created in</span>
 
                                     <!-- data -->
                                     <div class="ddp-wrap-detailinfo">
                                         <div class="ddp-wrap-detaildata">
-                                            <span class="ddp-data-num"><em class="ddp-icon-dbdata-s"></em>99+</span>
-                                            <span class="ddp-data-num"><em class="ddp-icon-imported-s"></em>99+</span>
+                                            <span class="ddp-data-num"><em class="ddp-icon-dbdata-s"></em>{{item.wrangledDsCount}}+</span>
+                                            <span class="ddp-data-num"><em class="ddp-icon-imported-s"></em>{{item.importedDsCount}}+</span>
                                         </div>
 
                                         <div class="ddp-data-by2">
-                                            2015. 01. 01 <em class="ddp-icon-by">by</em> 오상식
+                                            <!--{{'msg.common.ui.updated' | translate: { modifiedTime : item.modifiedTime | mdate:'YYYY-MM-DD HH:mm'} }}-->
+                                            {{item.modifiedTime | mdate:'YYYY.MM.DD'}} <em class="ddp-icon-by">by</em>
+                                            {{item.modifiedBy}}
+
+
+
+                                            <!--2015. 01. 01 <em class="ddp-icon-by">by</em> 오상식-->
                                         </div>
                                     </div>
                                     <!-- //data -->
                                     <!-- 플로우 설명 이름 -->
                                     <div class="ddp-wrap-detailname">
-                                        <span class="ddp-data-detailname">새로운 데이터 플로우 01</span> <span class="ddp-data-summary">- Suspendisse scelerisque ex sit amet placerat euismod.</span>
+                                        <span class="ddp-data-detailname">{{item.dfName}}</span> <span class="ddp-data-summary">- {{item.dfDesc}}</span>
                                     </div>
                                     <!-- //플로우 설명 이름 -->
                                 </li>
-                                <li>
 
-                                    <!-- data -->
-                                    <div class="ddp-wrap-detailinfo">
-                                        <div class="ddp-wrap-detaildata">
-                                            <span class="ddp-data-num"><em class="ddp-icon-dbdata-s"></em>99+</span>
-                                            <span class="ddp-data-num"><em class="ddp-icon-imported-s"></em>99+</span>
-                                        </div>
-
-                                        <div class="ddp-data-by2">
-                                            2015. 01. 01 <em class="ddp-icon-by">by</em> 오상식
-                                        </div>
-                                    </div>
-                                    <!-- //data -->
-                                    <!-- 플로우 설명 이름 -->
-                                    <div class="ddp-wrap-detailname">
-                                        <span class="ddp-data-detailname">새로운 데이터 플로우 01</span> <span class="ddp-data-summary">- Suspendisse scelerisque ex sit amet placerat euismod.</span>
-                                    </div>
-                                    <!-- //플로우 설명 이름 -->
-                                </li>
-                                <li>
-
-                                    <!-- data -->
-                                    <div class="ddp-wrap-detailinfo">
-                                        <div class="ddp-wrap-detaildata">
-                                            <span class="ddp-data-num"><em class="ddp-icon-dbdata-s"></em>99+</span>
-                                            <span class="ddp-data-num"><em class="ddp-icon-imported-s"></em>99+</span>
-                                        </div>
-
-                                        <div class="ddp-data-by2">
-                                            2015. 01. 01 <em class="ddp-icon-by">by</em> 오상식
-                                        </div>
-                                    </div>
-                                    <!-- //data -->
-                                    <!-- 플로우 설명 이름 -->
-                                    <div class="ddp-wrap-detailname">
-                                        <span class="ddp-data-detailname">새로운 데이터 플로우 01</span> <span class="ddp-data-summary">- Suspendisse scelerisque ex sit amet placerat euismod.</span>
-                                    </div>
-                                    <!-- //플로우 설명 이름 -->
-                                </li>
-                                <li>
-
-                                    <!-- data -->
-                                    <div class="ddp-wrap-detailinfo">
-                                        <div class="ddp-wrap-detaildata">
-                                            <span class="ddp-data-num"><em class="ddp-icon-dbdata-s"></em>99+</span>
-                                            <span class="ddp-data-num"><em class="ddp-icon-imported-s"></em>99+</span>
-                                        </div>
-
-                                        <div class="ddp-data-by2">
-                                            2015. 01. 01 <em class="ddp-icon-by">by</em> 오..
-                                        </div>
-                                    </div>
-                                    <!-- //data -->
-                                    <!-- 플로우 설명 이름 -->
-                                    <div class="ddp-wrap-detailname">
-                                        <span class="ddp-data-detailname">새로운 데이터 플로우 01</span> <span class="ddp-data-summary">- Suspendisse scelerisque ex sit amet placerat euismod.</span>
-                                    </div>
-                                    <!-- //플로우 설명 이름 -->
-                                </li>
 
                             </ul>
                         </div>
                         <!-- //datadetail -->
+
+
+
+
 
                     </div>
                     <!-- //right -->
