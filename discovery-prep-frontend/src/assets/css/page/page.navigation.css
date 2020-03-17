@@ -22,8 +22,8 @@
 .pb-ui-navi-menu .pb-list-navi-menu li a:hover {background-color:#3d556f;}
 
 .pb-ui-navi-menu .pb-list-navi-menu li a.pb-icon-home:before {width:19px; margin:-9px 0 0 -9px; height:20px;}
-.pb-ui-navi-menu .pb-list-navi-menu li a.pb-icon-home.is-selected:before {background-position-x:-20px;}
-.pb-ui-navi-menu .pb-list-navi-menu li a.pb-icon-home:hover:before {background-position-x:-20px;background-color:#3d556f;}
+.pb-ui-navi-menu .pb-list-navi-menu li a.pb-icon-home.is-selected:before {background-position-x:-19px;}
+.pb-ui-navi-menu .pb-list-navi-menu li a.pb-icon-home:hover:before {background-position-x:-19px;background-color:#3d556f;}
 
 .pb-ui-navi-menu .pb-list-navi-menu li a.pb-icon-dataset:before {width:18px; margin:-9px 0 0 -9px; height:17px;background-position:left -20px;}
 .pb-ui-navi-menu .pb-list-navi-menu li a.pb-icon-dataset.is-selected:before {background-position-x:-19px;}
@@ -52,7 +52,7 @@
 .pb-list-navi-tab > li.is-selected > a:after {display:inline-block; width:11px; height:6px; position:absolute; bottom:0; left:50%; margin-left:-6px; background:url(../../images/icon_navigation.png) no-repeat; background-position:left -154px; content:'';}
 .pb-list-navi-tab > li:before {display:inline-block; position:absolute; top:0; left:0;height:24px;border-left:1px solid rgba(184,212,238,0.75); content:'';}
 .pb-list-navi-tab > li:first-of-type:before {display:none;}
-.pb-ui-navi-contents {position:absolute; top:194px; left:0; right:0; bottom:56px; overflow:auto;}
+.pb-ui-navi-contents {position:absolute; top:194px; left:0; right:0; /*bottom:56px;*/ bottom:0; overflow:auto;}
 .pb-ui-navi-contents .pb-list-menu {}
 .pb-ui-navi-contents .pb-list-menu > li > a {position:relative; display:block;padding:22px 0 19px 63px; color:#fff; font-size:16px; border-bottom:1px solid rgba(184,212, 238, 0.18);}
 .pb-ui-navi-contents .pb-list-menu > li > a [class*="pb-icon-lnb-"] {display:inline-block; position:absolute; top:50%; left:29px; background:url(../../images/icon_navigation.png) no-repeat;}
@@ -70,7 +70,7 @@
 .pb-ui-navi-contents .pb-list-menu-sub > li.is-selected .pb-box-image {display:block;}
 .pb-ui-navi-contents .pb-list-menu-sub > li.is-selected > a:before {background:none; width:13px; height:3px; margin-top:-2px; background-color:#54d8fe; border-radius:1px;}
 
-.pb-lnb-navi-bottom {position:absolute; bottom:0; left:0; right:0;}
+.pb-lnb-navi-bottom {display:none; position:absolute; bottom:0; left:0; right:0;}
 .pb-lnb-navi-bottom .pb-list-navi-bottom {padding:0 0 18px 0; overflow:hidden;}
 .pb-lnb-navi-bottom .pb-list-navi-bottom > li {float:left; width:14.28%;}
 .pb-lnb-navi-bottom .pb-list-navi-bottom > li > a {display:block; text-align:center;}
