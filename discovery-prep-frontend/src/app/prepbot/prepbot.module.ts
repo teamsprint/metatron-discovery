@@ -108,6 +108,7 @@ import {PrepRnbRecommendComponent} from "./prep/component/prep-rnb-recommend.com
 import {SnapshotService} from "./prep/service/snapshot.service";
 import {StorageService} from "../data-storage/service/storage.service";
 import {DataconnectionService} from "../dataconnection/service/dataconnection.service";
+import {PrepNormalDetailDatasetComponent} from "./prep/detail-dataset/prep-normal-detail-dataset.component";
 
 const dataPreparationRoutes: Routes = [
 { path: '', component: PrepListComponent },
@@ -119,7 +120,7 @@ const dataPreparationRoutes: Routes = [
 { path: 'dataflow/:dfId/rule/:dsId', component: EditDataflowRule2Component},
 // { path: 'dataset', component: DatasetComponent },
 { path: 'dataset/new', component: DatasetComponent },
-// { path: 'dataset/:id', component: DatasetDetailComponent },
+{ path: 'datasetdetail/:dsId', component: PrepNormalDetailDatasetComponent },
 { path: 'datasnapshot', component: DataSnapshotComponent }
 ];
 
@@ -213,7 +214,8 @@ const dataPreparationRoutes: Routes = [
       CreateSnapshotPopup,
       PrepRnbRuleComponent,
       PrepRnbRuleListComponent,
-      PrepRnbRecommendComponent
+      PrepRnbRecommendComponent,
+      PrepNormalDetailDatasetComponent
   ],
   providers: [
       PrepPopCreateComponent,

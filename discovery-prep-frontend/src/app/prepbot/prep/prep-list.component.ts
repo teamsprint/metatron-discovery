@@ -247,6 +247,12 @@ export class PrepListComponent extends AbstractComponent {
                 .then();
         }
 
+      if (this.isDataset(item)) {
+          this.router.navigate(
+              ['/management/prepbot/datasetdetail', item.dsId])
+              .then();
+      }
+
       if (this.isDataConnection(item)) {
           this._selectedDataConnectionId  = item.id;
           this.changeMode('prep-pop-connection-update');
