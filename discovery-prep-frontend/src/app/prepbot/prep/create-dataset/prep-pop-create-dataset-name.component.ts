@@ -495,7 +495,7 @@ export class PrepPopCreateDatasetNameComponent extends AbstractPopupComponent im
    * @private
    */
   private _setDefaultDatasetName(type : string) : void {
-      
+
     if ('FILE' === type || 'URL' === type) {
 
       // FIXME: no idea why dsfileInformations is used instead of datasetInfo

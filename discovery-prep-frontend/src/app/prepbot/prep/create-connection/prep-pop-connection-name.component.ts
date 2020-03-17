@@ -60,7 +60,8 @@ export class PrepPopConnectionNameComponent extends AbstractPopupComponent imple
     public isFromDatasetList: boolean = true;
 
     @Input()
-    public connectionInfo: any;
+    public connectionParam: any;
+
     @Output()
     public connectionInfoChange : EventEmitter<any> = new EventEmitter();
     @Output()
@@ -111,7 +112,8 @@ export class PrepPopConnectionNameComponent extends AbstractPopupComponent imple
     }
 
     public init() {
-        this.isShow = true;
+        // this.isShow = true;
+        // console.info(this.connectionParam);
     }
 
 

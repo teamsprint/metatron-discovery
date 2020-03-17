@@ -25,7 +25,8 @@
                     <div class="pb-ui-grid-top">
                         <div class="pb-component-search">
                             <input type="text" placeholder="{{'msg.dp.ui.ds.search.description' | translate}}" (keypress)="searchEventPressKey($event)" [(ngModel)]="searchText">
-                            <em class="ddp-btn-search-close" *ngIf="searchText" (click)="resetSearchText()"></em>
+                            <!--<em class="ddp-btn-search-close" *ngIf="searchText!=''" (click)="resetSearchText()"></em>-->
+                            <em class="ddp-btn-search-close"></em>
                         </div>
                     </div>
                     <!-- //grid top -->

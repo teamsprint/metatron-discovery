@@ -56,7 +56,8 @@ export class PrepPopConnectionCreateComponent extends AbstractComponent implemen
     public popConnectionNameComponent : PrepPopConnectionNameComponent;
 
     public connectionInfo = {};
-    private connectionParam: ConnectionParam;
+
+    public connectionParam: ConnectionParam;
 
     /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
      | Constructor

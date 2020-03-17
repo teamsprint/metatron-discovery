@@ -19,6 +19,82 @@
         <div class="pb-popup-contents">
             <div class="pb-wrap-connect type-connect">
 
+                <!-- box file detail -->
+                <div class="pb-box-file-detail">
+                    <table class="pb-table-det">
+                        <colgroup>
+                            <col width="125px">
+                            <col width="*">
+                        </colgroup>
+                        <tbody>
+                        <tr>
+                            <th>Type</th>
+                            <td>
+                                <span class="pb-data-file-name">
+                                    <em class="pb-img-dataset type-mysql" *ngIf="connectionParam.implementor=='MYSQL'"></em>
+                                    <em class="pb-img-dataset type-hive" *ngIf="connectionParam.implementor=='HIVE'"></em>
+                                    <em class="pb-img-dataset type-tibero" *ngIf="connectionParam.implementor=='TIBERO'"></em>
+                                    <em class="pb-img-dataset type-presto" *ngIf="connectionParam.implementor=='PRESTO'"></em>
+                                    <em class="pb-img-dataset type-post" *ngIf="connectionParam.implementor=='POSTGRESQL'"></em>
+                                    {{connectionParam.implementor}}
+                                </span>
+                            </td>
+                        </tr>
+
+
+                        <tr *ngIf="connectionParam.hasOwnProperty('hostname')">
+                            <th>Hostname</th>
+                            <td>
+                                <span class="pb-data-file-name">{{connectionParam.hostname}}</span>
+                            </td>
+                        </tr>
+
+
+                        <tr *ngIf="connectionParam.hasOwnProperty('port')">
+                            <th>Port</th>
+                            <td>
+                                <span class="pb-data-file-name">{{connectionParam.port}}</span>
+                            </td>
+                        </tr>
+
+                        <tr *ngIf="connectionParam.hasOwnProperty('sid')">
+                            <th>Sid</th>
+                            <td>
+                                <span class="pb-data-file-name">{{connectionParam.sid}}</span>
+                            </td>
+                        </tr>
+
+
+                        <tr *ngIf="connectionParam.hasOwnProperty('database')">
+                            <th>Database</th>
+                            <td>
+                                <span class="pb-data-file-name">{{connectionParam.database}}</span>
+                            </td>
+                        </tr>
+
+                        <tr *ngIf="connectionParam.hasOwnProperty('catalog')">
+                            <th>Catalog</th>
+                            <td>
+                                <span class="pb-data-file-name">{{connectionParam.catalog}}</span>
+                            </td>
+                        </tr>
+
+
+                        <tr *ngIf="connectionParam.hasOwnProperty('username')">
+                            <th>username</th>
+                            <td>
+                                <span class="pb-data-file-name">{{connectionParam.username}}</span>
+                            </td>
+                        </tr>
+
+
+                        </tbody>
+                    </table>
+                </div>
+                <!-- //box file detail -->
+
+
+
                 <!-- create -->
                 <div class="pb-ui-create">
                     <!-- form create -->
@@ -46,30 +122,6 @@
 
             </div>
 
-
-
-
-
-        <!--<div class="pb-popup-contents pb-pop-create">-->
-            <!--&lt;!&ndash; option &ndash;&gt;-->
-            <!--<div class="pb-ui-data-option ">-->
-                <!--&lt;!&ndash; form &ndash;&gt;-->
-                <!--<div class="pb-form-option pb-clear">-->
-                    <!--<label class="pb-label-title">Name</label>-->
-                    <!--<input type="text" class="pb-input-type" [(ngModel)]="connectionName" maxlength="50" placeholder="Please enter a name">-->
-                    <!--<span class="pb-ui-error"></span>-->
-                <!--</div>-->
-                <!--<div class="pb-form-option pb-clear">-->
-                    <!--<label class="pb-label-title">Description</label>-->
-                    <!--<input class="pb-input-type pb-input-long" [(ngModel)]="description" maxlength="150" type="text" placeholder="Please enter a description">-->
-                    <!--<span class="pb-ui-error"></span>-->
-                <!--</div>-->
-                <!--&lt;!&ndash; //form &ndash;&gt;-->
-            <!--</div>-->
-            <!--&lt;!&ndash; //option &ndash;&gt;-->
-            <!--&lt;!&ndash; data connect &ndash;&gt;-->
-
-            <!--&lt;!&ndash; //data connect &ndash;&gt;-->
         </div>
         <!-- //contents -->
 
@@ -81,18 +133,10 @@
 
         <!-- bottom -->
         <div class="pb-popup-bottom">
-            <!--<a href="javascript:;" class="pb-component-btn-pop type-bg" (click)="close()">CANCEL</a>-->
-            <!--<a href="javascript:;" class="pb-component-btn-pop type-line" (click)="next()">NEXT</a>-->
-
-
-
-
             <a href="javascript:" class="pb-component-btn-pop type-line" (click)="prev()">PREV</a>
             <a href="javascript:" class="pb-component-btn-pop type-line" (click)="close()">CANCEL</a>
             <!-- disabled 시 ddp-disabled 추가 -->
             <a href="javascript:" class="pb-component-btn-pop type-bg" (click)="complete()">DONE</a>
-
-            <!--[ngClass]="{'ddp-disabled': isBtnDisabled() }"-->
         </div>
         <!-- //bottom -->
     </div>
