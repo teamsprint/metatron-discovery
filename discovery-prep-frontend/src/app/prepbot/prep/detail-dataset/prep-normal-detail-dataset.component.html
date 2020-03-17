@@ -271,8 +271,8 @@
             <!-- right -->
             <div class="pb-ui-buttons">
                 <a href="javascript:" class="pb-component-btn type-line">DOWNLOAD</a>
-                <div class="pb-ui-part">
-                    <a href="javascript:" class="pb-component-btn type-bg" (click)="createNewFlow()"><em class="pb-icon-add-r"></em>CREATE DATAFLOW</a>
+                <div class="pb-ui-part" *ngIf="dataset != null && dataset.importType">
+                    <a href="javascript:" class="pb-component-btn type-bg" (click)="createNewFlow()" *ngIf="dataset != null && dataset.importType"><em class="pb-icon-add-r"></em>CREATE DATAFLOW</a>
                 </div>
             </div>
             <!-- //right -->

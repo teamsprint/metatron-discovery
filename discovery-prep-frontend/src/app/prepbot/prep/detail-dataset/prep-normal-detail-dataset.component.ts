@@ -641,6 +641,8 @@ export class PrepNormalDetailDatasetComponent extends AbstractComponent {
                     this.interval = setInterval(()=> {this._getDsDetail();},3000);
                 }
 
+                // console.info('this.dataset', this.dataset.dsType);
+
             }).catch((error) => {
                 this.loadingHide();
                 clearInterval(this.interval);
