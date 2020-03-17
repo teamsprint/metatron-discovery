@@ -17,7 +17,9 @@ import {AbstractComponent} from '../../../common/component/abstract.component';
 import {ActivatedRoute} from "@angular/router";
 import {Location} from "@angular/common";
 import {DatasetService} from '../service/dataset.service';
+import {DataflowService} from "../service/dataflow.service";
 import {DsType, Field, ImportType, PrDataset, RsType} from '../../../domain/data-preparation/pr-dataset';
+import {PrDataflow} from "../../../domain/data-preparation/pr-dataflow";
 import {isNull, isNullOrUndefined} from "util";
 import {PreparationCommonUtil} from "../../util/preparation-common.util";
 import { GridComponent } from '../../../common/component/grid/grid.component';
@@ -25,14 +27,14 @@ import {header, SlickGridHeader} from '../../../common/component/grid/grid.heade
 import {GridOption} from '../../../common/component/grid/grid.option';
 import * as pixelWidth from 'string-pixel-width';
 
+
+declare let moment: any;
+
+
 @Component({
     selector: 'prep-normal-detail-dataset',
     templateUrl: './prep-normal-detail-dataset.component.html'
 })
-
-
-
-
 
 export class PrepNormalDetailDatasetComponent extends AbstractComponent {
 
@@ -96,6 +98,7 @@ export class PrepNormalDetailDatasetComponent extends AbstractComponent {
                 private activatedRoute: ActivatedRoute,
                 private _location: Location,
                 private datasetService:DatasetService,
+                private dataflowService :DataflowService,
                 protected injector: Injector) {
 
         super(elementRef, injector);
@@ -341,6 +344,53 @@ export class PrepNormalDetailDatasetComponent extends AbstractComponent {
         }
         return {'width':gridWidth+'px', 'height':'350px'};
     }
+
+
+    /**
+     * Create new dataflow and add this dataset into that flow
+     */
+    public createNewFlow() {
+        let today = moment();
+        let param = new PrDataflow();
+        param.datasets = [];
+        param.dfName = `${this.dataset.dsName}_${today.format('MM')}${today.format('DD')}_${today.format('HH')}${today.format('mm')}`  ;
+        this.loadingShow();
+        this.dataflowService.createDataflow(param).then((result) => {
+            this.loadingHide();
+            if (result.dfId) {
+                // this.router.navigate(['/management/prepbot/dataflow', result.dfId]);
+                this.cookieService.set('FIND_WRANGLED',this.datasetId);
+                // Alert.success(this.translateService.instant('msg.dp.alert.create-df.success',{value:result.dfName}));
+                this.updateDatasets(result.dfId);
+            }
+        }).catch((error)=>{
+            this.loadingHide();
+            let prep_error = this.dataprepExceptionHandler(error);
+            // PreparationAlert.output(prep_error, this.translateService.instant(prep_error.message));
+        })
+    }
+
+
+    private updateDatasets(dfId: string) {
+        const dsIds: any = {};
+        dsIds.dsIds = [];
+        dsIds.dsIds.push(this.dataset.dsId);
+        this.loadingShow();
+
+        this.dataflowService.updateDataSets(dfId, dsIds).then((result) => {
+            this.loadingHide();
+            if (result) {
+                // console.info('result', result)
+                this.router.navigate(['/management/prepbot/dataflow', dfId]);
+            }
+
+        }).catch(() => {
+            this.loadingHide();
+            // this.close();
+        });
+    }
+
+
 
 
 

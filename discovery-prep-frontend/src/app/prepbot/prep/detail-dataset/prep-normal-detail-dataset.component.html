@@ -272,7 +272,7 @@
             <div class="pb-ui-buttons">
                 <a href="javascript:" class="pb-component-btn type-line">DOWNLOAD</a>
                 <div class="pb-ui-part">
-                    <a href="javascript:" class="pb-component-btn type-bg"><em class="pb-icon-add-r"></em>CREATE DATAFLOW</a>
+                    <a href="javascript:" class="pb-component-btn type-bg" (click)="createNewFlow()"><em class="pb-icon-add-r"></em>CREATE DATAFLOW</a>
                 </div>
             </div>
             <!-- //right -->
@@ -303,194 +303,40 @@
                                     <col width="*">
                                 </colgroup>
                                 <tbody>
-                                <tr>
+                                <tr *ngFor="let item of datasetInformationList">
                                     <th>
-                                        타입
+                                        {{item.name}}
                                     </th>
                                     <td>
-                                        <div class="ddp-txt-cut">DB (MySQL)</div>
+                                        <div class="ddp-txt-cut">{{item.value}}</div>
                                     </td>
 
-                                </tr>
-                                <tr>
-                                    <th>
-                                        용량
-                                    </th>
-                                    <td>
-                                        569.46 KB
-                                    </td>
-
-                                </tr>
-                                <tr>
-                                    <th>
-                                        사이즈
-                                    </th>
-                                    <td>
-                                        2열 / 2타입
-
-                                    </td>
-
-                                </tr>
-                                <tr>
-                                    <th>
-                                        HOST
-                                    </th>
-                                    <td>
-                                        51.22.22.22
-                                    </td>
-
-                                </tr>
-                                <tr>
-                                    <th>
-                                        PORT
-                                    </th>
-                                    <td>
-                                        808080
-                                    </td>
-
-                                </tr>
-                                <tr>
-                                    <th>
-                                        DATABASE
-                                    </th>
-                                    <td class="ddp-link-url">
-                                        <a href="javascript:">DATABASE</a>
-                                    </td>
-
-                                </tr>
-                                <tr>
-                                    <th>
-                                        Table/SQL
-                                    </th>
-                                    <td>
-                                        DATABASE
-                                    </td>
                                 </tr>
 
                                 </tbody>
 
                             </table>
                             <!-- rule -->
-                            <div class="ddp-wrap-rules-flow ddp-snapshot">
+                            <div class="ddp-wrap-rules-flow ddp-snapshot" *ngIf="dataset != null && dataset.dsType === dsType.WRANGLED">
 
                                 <!-- title -->
                                 <div class="ddp-box-title">
-                                    <em class="ddp-data-num">32</em>
-                                    Rules
+                                    <em class="ddp-data-num">{{dataset.transformRules.length}}</em>
+                                    {{'msg.dp.ui.rule.list' | translate}}
                                 </div>
                                 <!-- //title -->
 
                                 <div class="ddp-ui-rule-flow">
                                     <ul class="ddp-list-rule2">
-                                        <li>
+                                        <li *ngFor="let rule of ruleList; let idx = index">
                                                 <span class="ddp-data-type">
-                                                    <em class="ddp-ui-round">He</em>
-                                                    Header
+                                                    <em class="ddp-ui-round">{{rule.alias}}</em>
+                                                    <!--Header-->
                                                 </span>
-                                            <div class="ddp-ui-code">
-                                                dddddddddddddddddddddddddddddddddddddddddd
+                                            <div class="ddp-ui-code" title="{{idx !== 0 ? rule.ruleString : null}}">
+                                                {{rule.shortRuleString}}
                                             </div>
 
-                                        </li>
-                                        <li>
-                                                <span class="ddp-data-type">
-                                                    <em class="ddp-ui-round">He</em>
-                                                    Header
-                                                </span>
-                                            <div class="ddp-ui-code">
-                                                ddd
-                                            </div>
-                                        </li>
-
-                                        <li>
-                                                <span class="ddp-data-type">
-                                                    <em class="ddp-ui-round">He</em>
-                                                    Header
-                                                </span>
-                                            <div class="ddp-ui-code">
-                                                ddd
-                                            </div>
-                                        </li>
-                                        <li>
-                                                <span class="ddp-data-type">
-                                                    <em class="ddp-ui-round">He</em>
-                                                    Header
-                                                </span>
-                                            <div class="ddp-ui-code">
-                                                ddd
-                                            </div>
-                                        </li>
-                                        <li>
-                                                <span class="ddp-data-type">
-                                                    <em class="ddp-ui-round">He</em>
-                                                    Header
-                                                </span>
-                                            <div class="ddp-ui-code">
-                                                ddd
-                                            </div>
-                                        </li>
-                                        <li>
-                                                <span class="ddp-data-type">
-                                                    <em class="ddp-ui-round">He</em>
-                                                    Header
-                                                </span>
-                                            <div class="ddp-ui-code">
-                                                ddd
-                                            </div>
-                                        </li>
-                                        <li>
-                                                <span class="ddp-data-type">
-                                                    <em class="ddp-ui-round">He</em>
-                                                    Header
-                                                </span>
-                                            <div class="ddp-ui-code">
-                                                ddd
-                                            </div>
-                                        </li>
-                                        <li>
-                                                <span class="ddp-data-type">
-                                                    <em class="ddp-ui-round">He</em>
-                                                    Header
-                                                </span>
-                                            <div class="ddp-ui-code">
-                                                ddd
-                                            </div>
-                                        </li>
-                                        <li>
-                                                <span class="ddp-data-type">
-                                                    <em class="ddp-ui-round">He</em>
-                                                    Header
-                                                </span>
-                                            <div class="ddp-ui-code">
-                                                ddd
-                                            </div>
-                                        </li>
-                                        <li>
-                                                <span class="ddp-data-type">
-                                                    <em class="ddp-ui-round">He</em>
-                                                    Header
-                                                </span>
-                                            <div class="ddp-ui-code">
-                                                ddd
-                                            </div>
-                                        </li>
-                                        <li>
-                                                <span class="ddp-data-type">
-                                                    <em class="ddp-ui-round">He</em>
-                                                    Header
-                                                </span>
-                                            <div class="ddp-ui-code">
-                                                ddd
-                                            </div>
-                                        </li>
-                                        <li>
-                                                <span class="ddp-data-type">
-                                                    <em class="ddp-ui-round">He</em>
-                                                    Header
-                                                </span>
-                                            <div class="ddp-ui-code">
-                                                ddd
-                                            </div>
                                         </li>
                                     </ul>
                                 </div>
