@@ -22,8 +22,8 @@
 .pb-ui-navi-menu .pb-list-navi-menu li a:hover {background-color:#3d556f;}
 
 .pb-ui-navi-menu .pb-list-navi-menu li a.pb-icon-home:before {width:19px; margin:-9px 0 0 -9px; height:20px;}
-.pb-ui-navi-menu .pb-list-navi-menu li a.pb-icon-home.is-selected:before {background-position-x:-20px;}
-.pb-ui-navi-menu .pb-list-navi-menu li a.pb-icon-home:hover:before {background-position-x:-20px;background-color:#3d556f;}
+.pb-ui-navi-menu .pb-list-navi-menu li a.pb-icon-home.is-selected:before {background-position-x:-19px;}
+.pb-ui-navi-menu .pb-list-navi-menu li a.pb-icon-home:hover:before {background-position-x:-19px;background-color:#3d556f;}
 
 .pb-ui-navi-menu .pb-list-navi-menu li a.pb-icon-dataset:before {width:18px; margin:-9px 0 0 -9px; height:17px;background-position:left -20px;}
 .pb-ui-navi-menu .pb-list-navi-menu li a.pb-icon-dataset.is-selected:before {background-position-x:-19px;}
