@@ -18,13 +18,12 @@ import {ActivatedRoute} from "@angular/router";
 import {Location} from "@angular/common";
 
 @Component({
-    selector: 'pprep-normal-detail-dataset',
+    selector: 'prep-normal-detail-dataset',
     templateUrl: './prep-normal-detail-dataset.component.html'
 })
 
+
 export class PrepNormalDetailDatasetComponent extends AbstractComponent {
-
-
     private dsId: string;
 
     // 생성자

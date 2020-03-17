@@ -1,6 +1,6 @@
-prep-detail, prep-dataset-detail {height:100%;}
+prep-detail, prep-dataset-detail, prep-normal-detail-dataset {height:100%;}
 .ddp-box-in {background: #d0e1e9;color: white;float: right;top: 130px;position: absolute;left: 482px;height: 300px;width: 300px; overflow-y: scroll;overflow-x: hidden;border: 3px solid #3c65ab;border-radius: 5px;font-size: 14px;padding: 10px;}
-prep-detail, prep-dataset-detail {height:100%;}
+prep-detail, prep-dataset-detail, prep-normal-detail-dataset {height:100%;}
 .ddp-box-in {background: #d0e1e9;color: white;float: right;top: 130px;position: absolute;left: 482px;height: 300px;width: 300px;overflow-y: scroll;overflow-x: hidden;border: 3px solid #3c65ab;border-radius: 5px;font-size: 14px;padding: 10px;}
 .ddp-icon-file-svg {display:none;}
 .ddp-btn-go-detail {float: right;background: black;color: white;padding: 10px;cursor:pointer;margin-right:10px;border-radius: 3px;}
