@@ -277,7 +277,7 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr *ngFor="let dataset of dataSetList; let i = index">
+                                    <tr *ngFor="let dataset of dataSetList; let i = index" (click)="detailDatasetPopup(dataset.dsId)" style="cursor: pointer;">
                                         <td>
                                             {{ i + 0}}
                                         </td>
@@ -421,3 +421,7 @@
                        [originalDatasetList]="dataSetList"
                        (addEvent)="datasetPopupAddEvent($event)"
                        (closeEvent)="closeAddDatasets()"></prep-pop-dataset-list>
+
+<prep-pop-detail-dataset *ngIf="isDetailDatasetPopupOpen" [datasetId]="detailDatasetID"
+                         (createNewDataFlowEvent)="createNewDataFlowEvent($event)"
+                         (closeEvent)="closeDetailDataset()"></prep-pop-detail-dataset>

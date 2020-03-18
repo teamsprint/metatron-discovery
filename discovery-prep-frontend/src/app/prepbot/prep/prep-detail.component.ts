@@ -169,6 +169,9 @@ export class PrepDetailComponent extends AbstractComponent {
   public isSelectDatasetPopupOpen : boolean = false;    // Swap dataset popup open/close
   public isRadio : boolean = false;                     // If swapping -> true / if Adding -> false
   public swapDatasetId : string;                        // Swapping 대상 imported 면 dataset id wrangled 면 upstreamId
+
+  public isDetailDatasetPopupOpen: boolean = false;     // dataset detail popup
+  public detailDatasetID: string;
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
    | Override Method
    |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
@@ -502,6 +505,7 @@ export class PrepDetailComponent extends AbstractComponent {
 
 
   // 팝업끼리 관리하는 모델들 초기화
+  // 동일한 기능의 *** initRefresh(dfId) 추가
   public init() {
     this.dataflow = new PrDataflow();
     this.selectedDataSet = new PrDataset();
@@ -558,6 +562,10 @@ export class PrepDetailComponent extends AbstractComponent {
       }
     });
   }
+
+
+
+
 
   /** 데이터셋을 지우고 난 후에 init */
   public initEventAfterDelete() {
@@ -662,7 +670,7 @@ export class PrepDetailComponent extends AbstractComponent {
 
     /**
      * Add dataset
-     * @param event
+     * @param data
      */
     public datasetPopupAddEvent(data): void {
         if (data == undefined || data == null || data.length === 0 ) {
@@ -686,6 +694,31 @@ export class PrepDetailComponent extends AbstractComponent {
     }
 
 
+    /**
+     * Detail dataset
+     * @param dsid
+     */
+    public detailDatasetPopup(dsid: string): void {
+      this.isDetailDatasetPopupOpen = true;
+      this.detailDatasetID = dsid;
+
+    }
+    public createNewDataFlowEvent(dfId: string): void {
+        this.isDetailDatasetPopupOpen = false;
+        this.viewMode = 'FLOW';
+
+
+        // 초기 세팅
+        this.initViewPage();
+        //
+        // 초기화
+        this.initRefresh(dfId);
+    }
+
+    public closeDetailDataset(): void {
+        this.isDetailDatasetPopupOpen = false;
+    }
+
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
    | Protected Method
    |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
@@ -693,6 +726,43 @@ export class PrepDetailComponent extends AbstractComponent {
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
    | Private Method
    |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
+    // 팝업끼리 관리하는 모델들 초기화 -- 데이터셋 상세 팝업에서 신규 데이터 FLOW 를 생성한 경우 초기화에 사용
+    private initRefresh(dfId: string) {
+        this.dataflow = new PrDataflow();
+        this.selectedDataSet = new PrDataset();
+        this.dataflow.dfId = dfId;
+        if (this.cookieService.get('SELECTED_DATASET_ID')) { // From dataset detail
+
+            this.selectedDataSet.dsId = this.cookieService.get('SELECTED_DATASET_ID');
+            let type;
+            switch (this.cookieService.get('SELECTED_DATASET_TYPE')) {
+                case 'WRANGLED' :
+                    type = DsType.WRANGLED;
+                    break;
+                case 'IMPORTED' :
+                    type = DsType.IMPORTED;
+                    break;
+            }
+            this.selectedDataSet.dsType = type;
+            this.cookieService.delete('SELECTED_DATASET_ID');
+            this.cookieService.delete('SELECTED_DATASET_TYPE');
+            this.closeEditRule();
+        } else {
+            this.getDataflow();
+            this.dataflows.forEach((item)=> {
+                item.datasets.forEach((item2)=> {
+                    this.datasets.push(item2);
+                });
+            });
+
+            if (sessionStorage.getItem('DATASET_ID')) { // From dataflow detail
+                //this.addDatasets();
+            }
+
+        }
+    }
+
+
   private initViewPage() {
 
     // this.symbolInfo = {

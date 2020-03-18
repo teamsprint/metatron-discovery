@@ -270,9 +270,9 @@
         <div class="pb-contents-top">
             <!-- right -->
             <div class="pb-ui-buttons">
-                <a href="javascript:" class="pb-component-btn type-line">DOWNLOAD</a>
+                <a href="javascript:;" class="pb-component-btn type-line" (click)="downloadDataset()">DOWNLOAD</a>
                 <div class="pb-ui-part" *ngIf="dataset != null && dataset.importType">
-                    <a href="javascript:" class="pb-component-btn type-bg" (click)="createNewFlow()" *ngIf="dataset != null && dataset.importType"><em class="pb-icon-add-r"></em>CREATE DATAFLOW</a>
+                    <a href="javascript:;" class="pb-component-btn type-bg" (click)="createNewFlow()" *ngIf="dataset != null && dataset.importType"><em class="pb-icon-add-r"></em>CREATE DATAFLOW</a>
                 </div>
             </div>
             <!-- //right -->
@@ -307,8 +307,23 @@
                                     <th>
                                         {{item.name}}
                                     </th>
-                                    <td>
-                                        <div class="ddp-txt-cut">{{item.value}}</div>
+
+                                    <!--<a href="javascript:" *ngIf="dataset.importType === ImportType.UPLOAD || dataset.importType === ImportType.URI; else notUpload" (click)="downloadDataset()">-->
+                                        <!--{{item.value}}-->
+                                    <!--</a>-->
+
+                                    <td [ngClass]="{'ddp-link-url': (item.name === 'URI' && dataset.importType === ImportType.UPLOAD) || (item.name === 'URI' && dataset.importType === ImportType.URI)}">
+                                        <div class="ddp-txt-cut" *ngIf="item.name === 'URI'; else notURI" title="{{item.value}}" >
+                                            <a href="javascript:;" *ngIf="dataset.importType === ImportType.UPLOAD || dataset.importType === ImportType.URI; else notUpload" (click)="downloadDatasetForFile()">
+                                                {{item.value}}
+                                            </a>
+                                            <ng-template #notUpload>
+                                                {{item.value}}
+                                            </ng-template>
+                                        </div>
+                                        <ng-template #notURI>
+                                            {{item.value}}
+                                        </ng-template>
                                     </td>
 
                                 </tr>
@@ -363,12 +378,12 @@
 
 
                         <!-- datadetail -->
-                        <div class="ddp-ui-datadetail" *ngIf="dataset!=null && dataset.dataflows != null && dataset.dataflows.length > 0">
+                        <div class="ddp-ui-datadetail">
                             <label class="ddp-label-detail">
                                 USED IN
                             </label>
-                            <!--<div class="ddp-data-none">No log</div>-->
-                            <ul class="ddp-list-detail">
+                            <div class="ddp-data-none" *ngIf="dataset==null || dataset.dataflows == null || dataset.dataflows.length == 0">No log</div>
+                            <ul class="ddp-list-detail" *ngIf="dataset!=null && dataset.dataflows != null && dataset.dataflows.length > 0">
 
 
                                 <li *ngFor="let item of dataset.dataflows; let index = index">

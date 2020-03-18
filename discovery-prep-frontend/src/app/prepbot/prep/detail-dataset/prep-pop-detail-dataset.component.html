@@ -1,0 +1,164 @@
+<div class="pb-layout-popup">
+    <!-- box popup -->
+    <div class="pb-box-popup">
+        <a href="javascript:;" class="pb-btn-pop-close" (click)="close()"></a>
+        <!-- top -->
+        <div class="pb-popup-top">
+            <div class="pb-txt-title" *ngIf="datasetName != null && datasetName != ''">{{datasetName}}</div>
+            <div class="pb-txt-title" *ngIf="datasetName == null || datasetName == ''">Dataset</div>
+
+
+            <div style="margin:-25px 35px 0 0; text-align:right;">
+                <a href="javascript:;" class="pb-component-btn type-line" (click)="downloadDataset()">DOWNLOAD</a>
+                <span style="width:10px;" *ngIf="dataset != null && dataset.importType">&nbsp;</span>
+                <a href="javascript:;" class="pb-component-btn type-line" (click)="createNewFlow()" *ngIf="dataset != null && dataset.importType"><em class="pb-icon-add-r"></em>CREATE DATAFLOW</a>
+            </div>
+
+
+
+            <!--<div class="pb-ui-buttons">-->
+                <!--<div class="pb-ui-part">-->
+                    <!--<a href="javascript:;" class="pb-component-btn type-line">DOWNLOAD</a>-->
+                    <!--<a href="javascript:;" class="pb-component-btn type-line"><em class="pb-icon-add-r"></em>CREATE DATAFLOW</a>-->
+                    <!--&lt;!&ndash; <a href="javascript:" class="pb-component-btn type-bg">DONE</a> &ndash;&gt;-->
+                <!--</div>-->
+            <!--</div>-->
+        </div>
+        <!-- //top -->
+        <!-- contents -->
+        <div class="pb-popup-contents pb-pop-create">
+            <!-- option -->
+            <div class="pb-ui-data-option ">
+                <!-- form -->
+                <div class="pb-form-option pb-clear dataset-type">
+                    <div class="ddp-wrap-datadetail">
+                        <!-- left -->
+                        <div class="ddp-info-left">
+                            <!-- datadetail -->
+                            <div class="ddp-ui-datadetail">
+                                <label class="ddp-label-detail">INFORMATION</label>
+                                <table class="ddp-table-detail ">
+                                    <colgroup>
+                                        <col width="92px">
+                                        <col width="*">
+                                    </colgroup>
+                                    <tbody>
+
+                                    <tr *ngFor="let item of datasetInformationList">
+                                        <th>
+                                            {{item.name}}
+                                        </th>
+                                        <td [ngClass]="{'ddp-link-url': (item.name === 'URI' && dataset.importType === ImportType.UPLOAD) || (item.name === 'URI' && dataset.importType === ImportType.URI)}">
+                                            <div class="ddp-txt-cut" *ngIf="item.name === 'URI'; else notURI" title="{{item.value}}" >
+                                                <a href="javascript:;" *ngIf="dataset.importType === ImportType.UPLOAD || dataset.importType === ImportType.URI; else notUpload" (click)="downloadDatasetForFile()">
+                                                    {{item.value}}
+                                                </a>
+                                                <ng-template #notUpload>
+                                                    {{item.value}}
+                                                </ng-template>
+                                            </div>
+                                            <ng-template #notURI>
+                                                {{item.value}}
+                                            </ng-template>
+                                        </td>
+
+                                    </tr>
+
+                                    </tbody>
+
+                                </table>
+                                <!-- rule -->
+                                <div class="ddp-wrap-rules-flow ddp-snapshot" *ngIf="dataset != null && dataset.dsType === dsType.WRANGLED">
+
+                                    <!-- title -->
+                                    <div class="ddp-box-title">
+                                        <em class="ddp-data-num">{{dataset.transformRules.length}}</em>
+                                        {{'msg.dp.ui.rule.list' | translate}}
+                                    </div>
+                                    <!-- //title -->
+
+                                    <div class="ddp-ui-rule-flow">
+                                        <ul class="ddp-list-rule2">
+                                            <li *ngFor="let rule of ruleList; let idx = index">
+                                                <span class="ddp-data-type">
+                                                    <em class="ddp-ui-round">{{rule.alias}}</em>
+                                                </span>
+                                                <div class="ddp-ui-code" title="{{idx !== 0 ? rule.ruleString : null}}">
+                                                    {{rule.shortRuleString}}
+                                                </div>
+
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <!-- //rule -->
+                            </div>
+                            <!-- //datadetail -->
+
+                        </div>
+                        <!-- //left -->
+                        <!-- right -->
+                        <div class="ddp-info-right">
+                            <!-- datadetail -->
+                            <div class="ddp-ui-datadetail">
+                                <label class="ddp-label-detail">DATA</label>
+                                <div class="ddp-form-box" [ngStyle]="getGridStyle()">
+                                    <!--<div class="pb-grid-area" [ngStyle]="getGridStyle()">-->
+                                    <div grid-component style="width:100%; height:100%;"></div>
+                                </div>
+                            </div>
+                            <!-- //datadetail -->
+                            <!-- datadetail -->
+                            <div class="ddp-ui-datadetail">
+                                <label class="ddp-label-detail">
+                                    USED IN
+                                </label>
+                                <div class="ddp-data-none" *ngIf="dataset==null || dataset.dataflows == null || dataset.dataflows.length == 0">No log</div>
+                                <ul class="ddp-list-detail" *ngIf="dataset!=null && dataset.dataflows != null && dataset.dataflows.length > 0">
+                                    <li *ngFor="let item of dataset.dataflows; let index = index">
+                                        <span class="ddp-box-tag2" *ngIf="index == 0">Created in</span>
+
+                                        <!-- data -->
+                                        <div class="ddp-wrap-detailinfo">
+                                            <div class="ddp-wrap-detaildata">
+                                                <span class="ddp-data-num"><em class="ddp-icon-dbdata-s"></em>{{item.wrangledDsCount}}+</span>
+                                                <span class="ddp-data-num"><em class="ddp-icon-imported-s"></em>{{item.importedDsCount}}+</span>
+                                            </div>
+
+                                            <div class="ddp-data-by2">
+                                                {{item.modifiedTime | mdate:'YYYY.MM.DD'}} <em class="ddp-icon-by">by</em>
+                                                {{item.modifiedBy}}
+                                            </div>
+                                        </div>
+                                        <!-- //data -->
+                                        <!-- 플로우 설명 이름 -->
+                                        <div class="ddp-wrap-detailname">
+                                            <span class="ddp-data-detailname">{{item.dfName}}</span> <span class="ddp-data-summary">- {{item.dfDesc}}</span>
+                                        </div>
+                                        <!-- //플로우 설명 이름 -->
+                                    </li>
+
+                                </ul>
+                            </div>
+                            <!-- //datadetail -->
+
+                        </div>
+                        <!-- //right -->
+
+                    </div>
+                </div>
+                <!-- //form -->
+            </div>
+            <!-- //option -->
+
+        </div>
+        <!-- //contents -->
+        <!-- bottom -->
+        <!--         <div class="pb-popup-bottom">
+                    <a href="javascript:" class="pb-component-btn-pop type-bg">SKIP</a>
+                    <a href="javascript:" class="pb-component-btn-pop type-line">CANCEL</a>
+                </div> -->
+        <!-- //bottom -->
+    </div>
+    <!-- //box popup -->
+</div>

@@ -33,11 +33,11 @@ declare let moment: any;
 
 
 @Component({
-    selector: 'prep-normal-detail-dataset',
-    templateUrl: './prep-normal-detail-dataset.component.html'
+    selector: 'prep-pop-detail-dataset',
+    templateUrl: './prep-pop-detail-dataset.component.html'
 })
 
-export class PrepNormalDetailDatasetComponent extends AbstractComponent {
+export class PrepPopDetailDatasetComponent extends AbstractComponent {
 
 
     @ViewChild(GridComponent)
@@ -45,6 +45,17 @@ export class PrepNormalDetailDatasetComponent extends AbstractComponent {
 
     @Input()
     public dataset: PrDataset;
+
+    @Input()
+    public datasetId : string;
+
+
+    @Output()
+    public closeEvent: EventEmitter<void> = new EventEmitter();
+
+    @Output()
+    public createNewDataFlowEvent: EventEmitter<string> = new EventEmitter();
+
 
     public fields : Field[];
 
@@ -63,8 +74,6 @@ export class PrepNormalDetailDatasetComponent extends AbstractComponent {
     // container for dataset name & description - edit
     public datasetName: string = '';
     public datasetDesc: string = '';
-
-    public datasetId : string ='';
 
     public datasetInformationList : DatasetInformation[] ;
 
@@ -137,13 +146,14 @@ export class PrepNormalDetailDatasetComponent extends AbstractComponent {
         ];
 
 
-
-        this.activatedRoute.params.subscribe((params) => {
-            this.datasetId = params['dsId'];
+        if(this.datasetId == null || this.datasetId == undefined) {
+            this.activatedRoute.params.subscribe((params) => {
+                this.datasetId = params['dsId'];
+                this._getDsDetail(true);
+            });
+        }else{
             this._getDsDetail(true);
-        });
-
-
+        }
         super.ngOnInit();
         this.init();
     }
@@ -339,7 +349,7 @@ export class PrepNormalDetailDatasetComponent extends AbstractComponent {
         let elem, stayle;
         elem = document.querySelector('.pb-layout-contents');
         stayle = getComputedStyle(elem);
-        let gridWidth: number = Number(String(stayle.width).replace("px","")) - 972;
+        let gridWidth: number = Number(String(stayle.width).replace("px","")) - 670;
         if(gridWidth<805) {
             gridWidth = 805;
         }
@@ -438,6 +448,12 @@ export class PrepNormalDetailDatasetComponent extends AbstractComponent {
 
 
 
+    public close() {
+        this.closeEvent.emit();
+
+    }
+
+
     /**
      * Create new dataflow and add this dataset into that flow
      */
@@ -477,7 +493,8 @@ export class PrepNormalDetailDatasetComponent extends AbstractComponent {
             this.loadingHide();
             if (result) {
                 // console.info('result', result)
-                this.router.navigate(['/management/prepbot/dataflow', dfId]);
+                // this.router.navigate(['/management/prepbot/dataflow', dfId]);
+                this.createNewDataFlowEvent.emit(dfId);
             }
 
         }).catch(() => {
@@ -750,7 +767,7 @@ export class PrepNormalDetailDatasetComponent extends AbstractComponent {
 
 
 
-}
+    }
 
 
     /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
