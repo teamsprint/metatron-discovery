@@ -18,7 +18,7 @@
         <div class="pb-popup-contents">
             <div class="pb-wrap-connect type-connect">
                 <!-- box file detail -->
-                <div class="pb-box-file-detail">
+                <div class="pb-box-file-detail" *ngIf="selectedDatasets != null && selectedDatasets.length > 0">
                     <table class="pb-table-det">
                         <colgroup>
                             <col width="125px">

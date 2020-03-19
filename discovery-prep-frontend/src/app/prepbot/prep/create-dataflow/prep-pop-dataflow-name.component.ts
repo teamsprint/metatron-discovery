@@ -499,7 +499,7 @@ export class PrepPopDataflowNameComponent extends AbstractPopupComponent impleme
               this.datasetInformationList.push({name : this.translateService.instant('msg.comm.th.type'), value : dataset.dsType, header:true});
               this.datasetInformationList.push({name : this.translateService.instant('msg.dp.th.summary'), value : this.getRows(dataset), header:false});
 
-              
+
               // FILE
           }  else if (dataset.importType === ImportType.UPLOAD || dataset.importType === ImportType.URI) {
               let filepath : string = dataset.filenameBeforeUpload;
