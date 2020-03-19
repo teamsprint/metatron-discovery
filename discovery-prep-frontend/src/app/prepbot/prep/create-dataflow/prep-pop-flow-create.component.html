@@ -4,4 +4,4 @@
 
 <!--<prep-pop-dataset-list *ngIf="step == '' || step == 'complete-dataflow-create'" [(step)]="step"  [(selectedDatasets)]="selectedDatasets"  (close)="createClose();"></prep-pop-dataset-list>-->
 
-<prep-pop-dataflow-name *ngIf="step=='dataflow-name'" [selectedDatasets]="selectedDatasets" (createClose)="createClose();" (createComplete)="createCompleteEvent();"></prep-pop-dataflow-name>
+<prep-pop-dataflow-name *ngIf="step=='dataflow-name'" [selectedDatasets]="selectedDatasets" (createClose)="createClose();" (createComplete)="createCompleteEvent();" (stepChange)="stepChange($event)"></prep-pop-dataflow-name>

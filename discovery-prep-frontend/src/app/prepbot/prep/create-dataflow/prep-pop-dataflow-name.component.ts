@@ -15,8 +15,7 @@
 import {AbstractPopupComponent} from '../../../common/component/abstract-popup.component';
 import {Component, ElementRef, Injector, Input, Output, EventEmitter, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {
-FileFormat, PrDatasetHive, PrDatasetJdbc,
-RsType
+    FileFormat
 } from '../../../domain/data-preparation/pr-dataset';
 import {PopupService} from '../../../common/service/popup.service';
 import { DatasetService } from '../service/dataset.service';
@@ -29,7 +28,7 @@ import { from} from "rxjs/observable/from";
 import {DataflowService} from "../service/dataflow.service";
 import {PrDataflow} from "../../../domain/data-preparation/pr-dataflow";
 import {PreparationCommonUtil} from "../../util/preparation-common.util";
-import {PrDataset} from '../../../domain/data-preparation/pr-dataset';
+import {DsType, Field, ImportType, PrDataset, RsType} from '../../../domain/data-preparation/pr-dataset';
 declare let moment;
 
 @Component({
@@ -50,14 +49,12 @@ export class PrepPopDataflowNameComponent extends AbstractPopupComponent impleme
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   | Public Variables
   |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
-    @Input()
-    public step: string = '';
+
     @Output()
     public stepChange : EventEmitter<string> = new EventEmitter();
 
     @Output()
     public createClose : EventEmitter<void> = new EventEmitter();
-
 
     @Output()
     public createComplete: EventEmitter<void> = new EventEmitter();
@@ -91,7 +88,7 @@ export class PrepPopDataflowNameComponent extends AbstractPopupComponent impleme
   public datasetInfo : DatasetInfo[] = [];
   public fileExtension: string;
 
-  public dsfileInformations: any;
+  public datasetInformationList: any;
 
   public isMultiSheet: boolean = false;
   public names : string [] = [];
@@ -125,12 +122,10 @@ export class PrepPopDataflowNameComponent extends AbstractPopupComponent impleme
   public ngOnInit() {
     super.ngOnInit();
 
-    this.dsfileInformations = [];
+    this.datasetInformationList = [];
 
     this._setDatasetInfo();
     this.init();
-
-    // console.info('selectedDatasets', this.selectedDatasets);
 
   }
 
@@ -240,14 +235,8 @@ export class PrepPopDataflowNameComponent extends AbstractPopupComponent impleme
           this.loadingHide();
           if (result) {
               // console.info('result', result)
-
               this.createCompleteEvent();
-
-          } else {
-
-              // this.close();
           }
-
       }).catch(() => {
           this.loadingHide();
           // this.close();
@@ -323,10 +312,10 @@ export class PrepPopDataflowNameComponent extends AbstractPopupComponent impleme
     }
   }
 
-    public goto(step) {
-        this.step = step;
-        this.stepChange.emit( step );
-    }
+    // public goto(step) {
+    //     // this.step = step;
+    //     this.stepChange.emit( step );
+    // }
 
 
   /**
@@ -494,107 +483,190 @@ export class PrepPopDataflowNameComponent extends AbstractPopupComponent impleme
    */
   private _setDatasetInfo() {
 
-    // if ('FILE' === this.type || 'URL' === this.type) {
-    //
-    //   if (this.names.length === 1) {
-    //     const ext = this.prepCommonUtil.getFileNameAndExtension(this.datasetFiles[0].filenameBeforeUpload)[1];
-    //     if ('FILE' === this.type) {
-    //
-    //       this.datasetInfo.push({
-    //         name : this.translateService.instant('msg.dp.ui.list.file'),
-    //         value : this.datasetFiles[0].fileName,
-    //         svg : this.prepCommonUtil.getFileFormatWithExtension(ext).toString()
-    //       });
-    //     } else {
-    //       this.datasetInfo.push({
-    //         name : `URL(${this.prepCommonUtil.getFileFormatWithExtension(ext)})`,
-    //         value : this.datasetFiles[0].storedUri,
-    //         svg : this.prepCommonUtil.getFileFormatWithExtension(ext).toString()
-    //       });
-    //     }
-    //
-    //     if ('XLSX' === this.datasetFiles[0].fileExtension.toUpperCase() || 'XLS' === this.datasetFiles[0].fileExtension.toUpperCase()) {
-    //       this.datasetInfo.push({
-    //         name: this.translateService.instant('msg.dp.th.sheet'),
-    //         value: this.datasetFiles[0].sheetName
-    //       });
-    //     }
-    //   }
-    //
-    // } else if ('DB' === this.type) {
-    //
-    //   let ds = this.datasetJdbc;
-    //
-    //   // TYPE
-    //   this.datasetInfo.push({
-    //     name : this.translateService.instant('msg.comm.th.type'),
-    //     value : `DB(${ds.dataconnection['connection'].implementor})`,
-    //     svg : ds.dataconnection['connection'].implementor,
-    //   });
-    //
-    //   if (this.datasetJdbc.rsType === RsType.TABLE) {
-    //
-    //     // DATABASE NAME
-    //     this.datasetInfo.push({
-    //       name : this.translateService.instant('msg.dp.th.database'),
-    //       value : ds.tableInfo.databaseName
-    //     });
-    //
-    //     // TABLE NAME
-    //     this.datasetInfo.push({
-    //       name : this.translateService.instant('msg.dp.th.ss.table'),
-    //       value : ds.tableInfo.tableName
-    //     });
-    //
-    //   } else {
-    //
-    //     this.datasetInfo.push({
-    //       name : this.translateService.instant('msg.dp.th.database'),
-    //       value : ds.sqlInfo.databaseName
-    //     });
-    //
-    //     // QUERY STATEMENT
-    //     this.datasetInfo.push({
-    //       name : this.translateService.instant('msg.dp.btn.query'),
-    //       value : ds.sqlInfo.queryStmt
-    //     });
-    //
-    //   }
-    //
-    //   if (ds.dataconnection['connection'].hostname && ds.dataconnection['connection'].port) {
-    //
-    //     // HOST & PORT
-    //     this.datasetInfo.push(
-    //       {name : this.translateService.instant('msg.comm.th.host'), value : ds.dataconnection['connection'].hostname},
-    //       {name : this.translateService.instant('msg.comm.th.port'), value : ds.dataconnection['connection'].port}
-    //     );
-    //   } else {
-    //
-    //     // URL
-    //     this.datasetInfo.push(
-    //       {name : this.translateService.instant('msg.nbook.th.url'), value : ds.dataconnection['connection'].url}
-    //     );
-    //   }
-    //
-    // } else if ('STAGING' === this.type) {
-    //   this.datasetInfo.push({
-    //     name : this.translateService.instant('msg.comm.th.type'),
-    //     value : 'STAGING_DB',
-    //     svg : 'HIVE'
-    //   });
-    //
-    //   if (this.datasetHive.rsType === RsType.TABLE) {
-    //     this.datasetInfo.push(
-    //       {name : this.translateService.instant('msg.dp.th.database'), value : this.datasetHive.tableInfo.databaseName},
-    //       {name : this.translateService.instant('msg.dp.th.ss.table'), value : this.datasetHive.tableInfo.tableName}
-    //     );
-    //   } else {
-    //     this.datasetInfo.push({name : this.translateService.instant('msg.dp.btn.query'), value : this.datasetHive.sqlInfo.queryStmt});
-    //   }
-    //
-    // }
+      this.datasetInformationList = [];
+
+      for(let i=0; i<this.selectedDatasets.length; i++) {
+        const dataset: any = this.selectedDatasets[i];
+
+          // console.info('dataset.importType', dataset.importType);
+          // WRANGLED
+          if (dataset.dsType === DsType.WRANGLED) {
+              // this.datasetInformationList = [{ name : this.translateService.instant('msg.comm.th.type') , value : dataset.dsType },
+              //     {name : this.translateService.instant('msg.dp.th.summary'), value : this.getRows },
+              //     {name : '', value : dataset.gridResponse.colCnt + ' column(s)' }
+              // ]
+              //
+              this.datasetInformationList.push({name : this.translateService.instant('msg.comm.th.type'), value : dataset.dsType, header:true});
+              this.datasetInformationList.push({name : this.translateService.instant('msg.dp.th.summary'), value : this.getRows(dataset), header:false});
+
+              
+              // FILE
+          }  else if (dataset.importType === ImportType.UPLOAD || dataset.importType === ImportType.URI) {
+              let filepath : string = dataset.filenameBeforeUpload;
+
+              // this.datasetInformationList = [
+              //     { name : this.translateService.instant('msg.comm.th.type') ,
+              //         value : PreparationCommonUtil.getDatasetType(dataset)
+              //     },
+              //     {name : this.translateService.instant('msg.dp.th.file'),
+              //         value : `${filepath}`
+              //     },
+              // ];
+              this.datasetInformationList.push({name : this.translateService.instant('msg.comm.th.type'), value : PreparationCommonUtil.getDatasetType(dataset), header:true});
+              this.datasetInformationList.push({name : this.translateService.instant('msg.dp.th.file'), value : filepath, header:false});
+
+
+
+
+              // EXCEL
+              if (this._getFileType(dataset.importType, filepath) === 'EXCEL') {
+                  this.datasetInformationList.push({name : this.translateService.instant('msg.dp.th.sheet'), value : this.getSheetName(dataset), header:false })
+              }
+
+              // this.datasetInformationList.push(
+              //     {name : 'URI', value : dataset.storedUri},
+              //     {name : this.translateService.instant('msg.comm.detail.size'), value : this.getTotalBytes },
+              //     {name : this.translateService.instant('msg.dp.th.summary'), value : this.getRows(dataset) },
+              //     {name : '', value : dataset.gridResponse.colCnt + ' column(s)' })
+
+
+              // STAGING OR DB
+          } else if (dataset.importType === 'STAGING_DB' || dataset.importType === 'DATABASE') {
+
+              // this.datasetInformationList = [
+              //     { name : this.translateService.instant('msg.comm.th.type') ,
+              //         value : PreparationCommonUtil.getDatasetType(dataset) }];
+
+              this.datasetInformationList.push({name : this.translateService.instant('msg.comm.th.type'), value : PreparationCommonUtil.getDatasetType(dataset), header:true});
+
+
+              if (!isNullOrUndefined(this.getDatabase(dataset))) {
+                  this.datasetInformationList.push({ name : this.translateService.instant('msg.dp.th.database'), value : this.getDatabase(dataset), header:false});
+              }
+
+              if (dataset.rsType === 'TABLE') {
+                  this.datasetInformationList.push({ name : this.translateService.instant('msg.lineage.ui.list.search.table'), value : this.getTable(dataset), header:false })
+              } else {
+                  this.datasetInformationList.push({ name : this.translateService.instant('msg.lineage.ui.list.search.sql'), value : this.getQueryStmt(dataset), header:false })
+              }
+
+          }
+          this.datasetInformationList.push({name:null, value:null, header:false});
+
+      }
+      // this.datasetInformationList = [];
+      // console.info('this.datasetInformationList', this.datasetInformationList);
 
   }
+
+    /**
+     * Returns file type (csv, json, excel etc)
+     * @param {ImportType} type
+     * @param {string} fileName
+     * @returns {string}
+     */
+    private _getFileType(type: ImportType, fileName : string) : string {
+
+        let result = 'CSV';
+        if (type === ImportType.UPLOAD) {
+            let extension = new RegExp(/^.*\.(csv|xls|txt|xlsx|json)$/).exec(fileName)[1];
+            if(extension.toUpperCase() === 'XLSX' || extension.toUpperCase() === 'XLS') {
+                result =  'EXCEL'
+            }  else if (extension.toUpperCase() === 'JSON') {
+                result =  'JSON'
+            }
+        }
+        return result;
+    }
+
+
+    /**
+     * get names of sheet
+     */
+    private getSheetName(dataset: any) : string {
+
+        let result = "N/A";
+        if(dataset.sheetName) {
+            result = dataset.sheetName;
+        }
+        return result;
+    }
+
+    /** get total bytes */
+    public getTotalBytes(dataset: any) {
+        if( (dataset.importType===ImportType.STAGING_DB &&
+                dataset.rsType!==RsType.TABLE)  || dataset.importType===ImportType.DATABASE) {
+            return null
+        } else {
+            let size = -1;
+            if(Number.isInteger(dataset.totalBytes)) {
+                size = dataset.totalBytes;
+            }
+            return this._formatBytes(size,1);
+        }
+    }
+
+    /**
+     * Format bytes
+     * @param a 크기
+     * @param b 소숫점 자릿
+     * @private
+     */
+    private _formatBytes(a,b) {
+        if (-1 === a)  {
+            return "0 Bytes";
+        }
+
+        let c=1024,d=b||2,e=["Bytes","KB","MB","GB","TB","PB","EB","ZB","YB"],f=Math.floor(Math.log(a)/Math.log(c));
+        return parseFloat((a/Math.pow(c,f)).toFixed(d))+" "+e[f]
+    }
+
+
+
+
+    private getHost(dataset: any) {
+        if(dataset.importType===ImportType.DATABASE && !isNullOrUndefined(dataset.dcHostname)) {
+            return dataset.dcHostname;
+        }
+        return null;
+    }
+
+    private getPort(dataset: any) {
+        if( dataset.importType===ImportType.DATABASE && !isNullOrUndefined(dataset.dcPort)) {
+            return dataset.dcPort;
+        }
+        return null;
+    }
+
+    private getDatabase(dataset: any) {
+        return dataset.dbName;
+    }
+
+    private getUrl(dataset: any) {
+        return dataset.dcUrl;
+    }
+
+    private getTable(dataset: any) {
+        return dataset.tblName;
+    }
+
+    private getQueryStmt(dataset: any) {
+        return dataset.queryStmt;
+    }
+
+
+    /** get row count */
+    private getRows(dataset: any) {
+        let rows = '0 row(s)';
+        if(!isNullOrUndefined(dataset.totalLines) && Number.isInteger(dataset.totalLines)) {
+            if (dataset.totalLines === -1) {
+                rows = '(counting)';
+            } else {
+                rows = new Intl.NumberFormat().format(dataset.totalLines) + ' row(s)';
+            }
+        }
+        return rows;
+    }
 
 
   /**
