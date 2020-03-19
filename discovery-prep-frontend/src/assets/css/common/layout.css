@@ -141,10 +141,24 @@ ul.pb-list-tab-button li a em.pb-icon-listgrid {position: absolute;top: 50%;left
 .pb-box-popup .pb-ui-step .pb-txt-step.is-selected {border:1px solid #f37135; background-color:#f37135; color:#fff;}
 .pb-box-popup .pb-ui-step .pb-txt-step.is-selected + .pb-txt-step,
 .pb-box-popup .pb-ui-step .pb-txt-step.is-selected + .pb-txt-step + .pb-txt-step {border: solid 1px #737373; background-color:#fff; color:#737373;}
-.pb-box-popup .pb-popup-top {padding:24px 39px 24px 39px; color:#000; font-size:19px; font-weight:600;border-bottom:1px solid #d0d3d3;}
+.pb-box-popup .pb-popup-top {padding:24px 30px; color:#000; font-size:19px; font-weight:600;border-bottom:1px solid #d0d3d3;}
 .pb-box-popup .pb-popup-contents {display:flex; flex-direction:column;flex:auto; overflow:auto;}
 .pb-box-popup .pb-popup-contents .pb-popup-contents-in {padding:27px 40px 0 40px; height:100%;}
 .pb-box-popup .pb-popup-bottom {padding:20px 0; text-align:center;}
 .pb-box-popup .pb-popup-bottom .pb-component-btn-pop {margin:0 4px;}
 
 .pb-box-popup .pb-ui-buttons {position: absolute;padding: 0px 39px 0 0;top: 21px;right: 32px;}
+
+
+/***********************************************************************
+     Layout : Popup - Small
+ *************************************************************************/
+.pb-layout-popup.type-small {display: table;position: fixed;left: 0;right: 0;bottom: 0;top: 0;width: 100%;height: 100%;z-index: 128;box-sizing: border-box;overflow: auto;}
+.pb-layout-popup .pb-table-cell {display: table-cell;vertical-align: middle;text-align: center;}
+.pb-layout-popup.type-small .pb-table-cell .pb-box-popup {position: relative;top: 0;left: 0;margin: 0;display: inline-block;width: 400px;height: auto;}
+.pb-layout-popup.type-small .pb-box-popup .pb-popup-contents {padding:20px 0 0 0;}
+.pb-layout-popup.type-small .pb-txt-title {text-align:left;}
+.pb-layout-popup.type-small .pb-pop-title {padding: 0 30px 0 30px;font-size: 18px;text-align: left;line-height: 1.3em;font-weight: normal;color: #4b515b;}
+.pb-layout-popup.type-small .pb-pop-detail {margin: 0;padding: 15px 30px 0 30px;max-height: 150px;font-size: 14px;line-height: 24px;overflow: auto;color: #90969f;text-align: left;}
+
+

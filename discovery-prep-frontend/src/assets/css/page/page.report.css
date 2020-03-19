@@ -3,7 +3,7 @@
 /***********************************************************************
      Page : Report (Dataset, Dataresult)
  *************************************************************************/
-.pb-box-contents.dataset-type,.pb-box-contents.dataresult-type {overflow-y: scroll;position: fixed;top: 114px;bottom: 20px; height: auto;}
+.pb-box-contents.dataset-type,.pb-box-contents.dataresult-type {overflow-y: scroll;position: fixed;top: 114px;bottom: 20px;left:60px;right:20px;height: auto;}
 .ddp-wrap-datadetail {padding:40px 45px;}
 
 .pb-form-option .ddp-wrap-datadetail {padding-top:0;}
