@@ -866,7 +866,7 @@ export class PrepDetailComponent extends AbstractComponent {
           layout: 'none',
           coordinateSystem: 'cartesian2d',
           focusNodeAdjacency: false,
-          symbolSize: 44,
+          symbolSize: 50,
           hoverAnimation: true,
           roam: false,
           // edgeSymbol: ['none', 'arrow'],
@@ -874,7 +874,7 @@ export class PrepDetailComponent extends AbstractComponent {
           itemStyle: { normal: { color: '#aaa', borderColor: '#1af' } },
           nodes: null,
           links: null,
-          lineStyle: { normal: { opacity: 0.4, width: 3 } }
+          lineStyle: { normal: { opacity: 0.3, width: 4 } }
         }
       ], animation: false
     };
@@ -935,7 +935,8 @@ export class PrepDetailComponent extends AbstractComponent {
   private dataflowChartAreaResize(resizeCall?:boolean): void {
     if(resizeCall == undefined) resizeCall = false;
     // const itemMinSize: number = 64;
-    const itemMinSize: number = 100;
+    const itemMinSize: number = 120;
+      // const itemMinSize: number = 100;
     const hScrollbarWith: number = 30;
     const topMargin: number = 50;
     let minHeightSize: number = 600;
