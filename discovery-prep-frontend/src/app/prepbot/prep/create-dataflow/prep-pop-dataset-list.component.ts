@@ -40,16 +40,21 @@ export class PrepPopDatasetListComponent extends AbstractComponent {
     public originalDatasetId : string; // 이미 데이터플로우에 추가된 데이터셋
     public datasets: PrDataset[] = []; // 화면에 보여지는 리스트
 
-    public swappingDatasetId : string;
+
     public title : string;
+
     public layoutType: string ='ADD'; // 새로운 데이터셋 추가 ADD, 기존 데이터셋 치환 SWAP
 
 
     @Input()
-    public targetType: string ; //생성화면 CREATE, dataflow 상세화면 SELECT
+    public targetType: string ; // 생성화면 CREATE, dataflow 상세화면 SELECT
 
     @Input()
     public selectedDatasets : PrDataset[]; // 선택된 데이터셋 리스트
+
+    @Input()
+    public swappingDatasetId : string;
+
 
     // 정렬
     public selectedContentSort: Order = new Order();
@@ -93,6 +98,8 @@ export class PrepPopDatasetListComponent extends AbstractComponent {
     public stepChange : EventEmitter<string> = new EventEmitter();
     @Output()
     public addEvent : EventEmitter<string[]>= new EventEmitter();
+    @Output()
+    public doneEvent: EventEmitter<any> = new EventEmitter();
 
 
 
@@ -118,25 +125,11 @@ export class PrepPopDatasetListComponent extends AbstractComponent {
     public ngOnInit() {
         super.ngOnInit();
 
-        // this.popupSubscription = this.popupService.view$.subscribe((data: SubscribeArg) => {
-        //     this.step = data.name;
-        //     if (this.step === 'complete-dataset-create') {
-        //
-        //         if(data.hasOwnProperty('data') && data.data !== null) {
-        //             this.selectedDatasetId = data.data;
-        //             if(this.layoutType == 'SWAP') {
-        //                 this.swappingDatasetId = data.data;
-        //             }
-        //         }
-        //         $('.ddp-ui-gridbody').scrollTop(0);
-        //         this._initViewPage()
-        //     }
-        // });
 
         if(this.isRadio) {
             // 기존 데이터셋 치환 SWAP
             this.layoutType = 'SWAP';
-            this.originalDatasetId = this.selectedDatasetId;
+            this.originalDatasetId = this.swappingDatasetId;
         }else {
             // 새로운 데이터셋 추가 ADD
             this.layoutType = 'ADD';
@@ -156,6 +149,10 @@ export class PrepPopDatasetListComponent extends AbstractComponent {
         if(this.selectedDatasets == null) {
             this.selectedDatasets = [];
         }
+
+        // console.info(this.layoutType, this.layoutType);
+        // console.info(this.title, this.title);
+        // console.info(this.originalDatasetId, this.originalDatasetId);
         this._initViewPage();
     }
 
@@ -217,7 +214,7 @@ export class PrepPopDatasetListComponent extends AbstractComponent {
             let param = {oldDsId:this.originalDatasetId, newDsId : this.swappingDatasetId};
             param['type'] = this.popType;
             //
-            // this.doneEvent.emit(param);
+            this.doneEvent.emit(param);
         }
 
     } // function - next

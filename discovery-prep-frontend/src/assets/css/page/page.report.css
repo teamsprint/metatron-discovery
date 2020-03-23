@@ -52,7 +52,7 @@ ul.ddp-list-detail li:last-of-type {border-bottom:none;}
 ul.ddp-list-detail li .ddp-wrap-detailinfo {float:right; padding-left:10px; background-color:#fff;}
 ul.ddp-list-detail li .ddp-wrap-detailinfo .ddp-wrap-detaildata {float:left;}
 ul.ddp-list-detail li .ddp-wrap-detailinfo .ddp-wrap-detaildata .ddp-data-num {margin-left:15px;}
-ul.ddp-list-detail li .ddp-wrap-detailinfo .ddp-data-by2 {float:left; margin-left:40px; padding-right:10px;}
+ul.ddp-list-detail li .ddp-wrap-detailinfo .ddp-data-by2 {float:left; margin-left:40px; padding-right:45px;}
 ul.ddp-list-detail li .ddp-wrap-detailinfo .ddp-data-by2 .ddp-icon-by {color:#b7bac1;}
 ul.ddp-list-detail li .ddp-box-tag2 {display:inline-block; position:relative; float:left; margin-right:7px; padding:1px 3px 0 3px;border:1px solid #656eb2; border-radius:1px; line-height:1.2em; color:#656eb2; font-size:10px;}
 ul.ddp-list-detail li .ddp-wrap-detailname {display:block; max-width:100%; overflow:hidden; white-space:nowrap; word-wrap:normal; text-overflow:ellipsis;}
@@ -114,3 +114,9 @@ table.ddp-table-detail tbody tr td.ddp-link-url a {text-decoration: underline;co
 .ddp-wrap-summary .ddp-box-stick .ddp-data-mismatched {display:block; float:left; height:100%; background-color:#eb5f58;}
 .ddp-wrap-summary .ddp-box-stick .ddp-data-missing{display:block;float:left; height:100%; background-color:#d0d1d8;}
 .ddp-wrap-summary .ddp-ui-error {margin-top:5px;}
+/***********************************************************************
+     Page : Button
+ *************************************************************************/
+ .pb-wrap-button {float: right;padding-left: 10px;background-color: #fff;position: absolute;top: 6px;right: 0;}
+ .pb-wrap-button .pb-component-btn.type-dark{min-width: 5px;padding: 5px;}
+ .pb-wrap-button .pb-component-btn em{margin: 0 3px;}

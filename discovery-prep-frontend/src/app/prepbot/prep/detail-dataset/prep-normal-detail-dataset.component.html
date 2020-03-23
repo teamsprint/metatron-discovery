@@ -412,6 +412,17 @@
                                         <span class="ddp-data-detailname">{{item.dfName}}</span> <span class="ddp-data-summary">- {{item.dfDesc}}</span>
                                     </div>
                                     <!-- //플로우 설명 이름 -->
+
+
+
+
+                                    <!-- WRANGLED -->
+                                    <div class="pb-wrap-button" *ngIf="dataset != null && !dataset.importType">
+                                        <a href="javascript:;" class="pb-component-btn type-dark" (click)="goDetailNavigate(item.dfId)">
+                                        <em class="pb-icon-move"></em></a>
+                                    </div>
+                                    <!-- // WRANGLED -->
+
                                 </li>
 
 

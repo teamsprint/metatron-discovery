@@ -41,13 +41,19 @@
 
                             <thead>
                             <tr>
-                                <th class="pb-txt-center">
+                                <th class="pb-txt-center" *ngIf="layoutType == 'ADD'">
                                     <label class="pb-compomnent-checkbox type-all type-checkbox" (click)="checkAll($event);">
                                         <input type="checkbox" [checked]="isAllCheckedStatus==true" [disabled]="isCheckAllDisabled()">
                                         <i class="ddp-icon-checkbox"></i>
 
                                     </label>
                                 </th>
+
+                                <th class="pb-txt-center" *ngIf="layoutType != 'ADD'">
+
+                                </th>
+
+
                                 <th (click)="changeOrder('dsName')">
                                     {{'msg.comm.menu.manage.prep.set' | translate}}
                                     <em class="pb-icon-array" *ngIf="selectedContentSort.key !== 'dsName' || selectedContentSort.sort === 'default'"></em>
@@ -66,13 +72,34 @@
                             </thead>
                             <tbody>
                             <tr *ngFor="let dsItem of datasets">
-                                <td class="pb-txt-center">
+
+                                <td class="pb-txt-center" *ngIf="layoutType == 'ADD'">
                                     <label class="pb-compomnent-checkbox type-checkbox" (click)="check($event, dsItem);">
                                         <input type="checkbox" type="checkbox" [checked]="dsItem.selected && !dsItem.origin" [disabled]="dsItem.origin">
                                         <i class="ddp-icon-checkbox"></i>
 
                                     </label>
                                 </td>
+
+                                <td class="pb-txt-center" *ngIf="layoutType != 'ADD'">
+                                    <label class="pb-compomnent-radio" (click)="radioCheck($event, dsItem);">
+                                        <input type="radio" [checked]="swappingDatasetId === dsItem.dsId" name="datasetRadio">
+                                        <i class="ddp-icon-radio"></i>
+
+                                    </label>
+                                </td>
+
+
+
+
+                                <!--<td class="pb-txt-center" *ngIf="layoutType != 'ADD'">-->
+                                    <!--<div class="ddp-ui-radio">-->
+                                        <!--<input type="radio" class="ddp-checkbox-form" [checked]="swappingDatasetId === item.dsId" name="datasetRadio">-->
+                                        <!--<i class="ddp-icon-radio"></i>-->
+                                    <!--</div>-->
+                                <!--</td>-->
+
+
 
                                 <!--<div class=" ddp-txt-long" title="{{dsItem.dsName}}" *ngIf="!dsItem.dsDesc; else yesDesc">-->
                                 <!--{{dsItem.dsName}}-->

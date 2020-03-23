@@ -57,7 +57,7 @@ table.pb-component-table tr td .pb-img-file {vertical-align:middle; margin-right
      Compontent : grid Left
  *************************************************************************/
  table.pb-table-grid.type-left {border:1px solid #e0e0e0;}
- table.pb-table-grid.type-left tr {height:60px;}
+ table.pb-table-grid.type-left tr {height:45px;}
  table.pb-table-grid.type-left tr:hover {cursor:pointer;border:1px solid #feb674;background-color: #fffdf5;z-index:10;}
  table.pb-table-grid.type-left tr th {border-top:none;border-left:3px solid #426895;}
 

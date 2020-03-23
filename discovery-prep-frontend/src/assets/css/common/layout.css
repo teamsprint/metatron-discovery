@@ -162,3 +162,15 @@ ul.pb-list-tab-button li a em.pb-icon-listgrid {position: absolute;top: 50%;left
 .pb-layout-popup.type-small .pb-pop-detail {margin: 0;padding: 15px 30px 0 30px;max-height: 150px;font-size: 14px;line-height: 24px;overflow: auto;color: #90969f;text-align: left;}
 
 
+.pb-col-12 {width:100%;}
+.pb-col-11 {width:91.66666667% !important;}
+.pb-col-10 {width:83.33333333% !important;}
+.pb-col-9 {width:75% !important;}
+.pb-col-8  {width:66.66666667% !important;}
+.pb-col-7 {width:58.33333333% !important;}
+.pb-col-6 {width:50% !important;}
+.pb-col-5 {width:41.66666667% !important;}
+.pb-col-4 {width:33.33333333% !important;}
+.pb-col-3 {width:25% !important;}
+.pb-col-2 {width:16.66666667% !important;}
+.pb-col-1 {width:8.33333333% !important;}

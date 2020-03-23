@@ -417,9 +417,13 @@
 
 
 <prep-pop-dataset-list *ngIf="isSelectDatasetPopupOpen"
+                       [isRadio]="isRadio"
+                       [popType]="longUpdatePopupType"
+                       [swappingDatasetId]="swapDatasetId"
                        [targetType]="'SELECT'"
                        [originalDatasetList]="dataSetList"
                        (addEvent)="datasetPopupAddEvent($event)"
+                       (doneEvent)="datasetPopupFinishEvent($event)"
                        (closeEvent)="closeAddDatasets()"></prep-pop-dataset-list>
 
 <prep-pop-detail-dataset *ngIf="isDetailDatasetPopupOpen" [datasetId]="detailDatasetID"

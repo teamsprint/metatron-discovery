@@ -234,7 +234,7 @@ export class DatasetInfoPopupComponent extends AbstractComponent implements OnIn
   }
 
   public openBtnOptions() {
-    this.isBtnOptionOpen = !this.isBtnOptionOpen;
+    this.isBtnOptionOpen = true;
   }
 
   public cloneDataset() {

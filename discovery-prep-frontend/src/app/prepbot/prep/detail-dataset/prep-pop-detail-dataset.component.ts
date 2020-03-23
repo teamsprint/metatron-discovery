@@ -265,6 +265,13 @@ export class PrepPopDetailDatasetComponent extends AbstractComponent {
     }
 
     /**
+     * WRANGLED rule eidt scene
+     */
+    public goDetailNavigate(dfId: string ){
+        this.router.navigate([`/management/prepbot/dataflow/${dfId}/dataset/${this.dataset.dsId}`]);
+    }
+
+    /**
      * 데이터셋 information을 타입별로 정리
      * @param dataset
      */

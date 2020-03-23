@@ -10,7 +10,7 @@
 .pb-component-btn.type-bg.tpye-normal {font-weight:normal;}
 .pb-component-btn.type-bg2 {}
 .pb-component-btn.type-line {border:1px solid #a3a3a3; color:#000;}
-.pb-component-btn.type-dark {background-color:#71706d; color:#fff;}
+.pb-component-btn.type-dark {border:1px solid #71706d; background-color:#71706d; color:#fff;}
 .pb-component-btn.type-dark:hover {background-color:#484847;}
 .pb-component-btn.type-dark2 {background-color:#cfcec7; color:#4e4e4e; font-weight:normal;}
 
@@ -18,7 +18,7 @@
 .pb-component-btn em.pb-icon-analytics {width:27px; height:20px;}
 .pb-component-btn em.pb-icon-add{width:13px; height:13px; background-position:left -20px;}
 .pb-component-btn em.pb-icon-add-r{width:14px; height:13px; position:relative; top:-1px; background-position:left -49px;}
-.pb-component-btn.type-bg em.pb-icon-add-r {background-position:left -89px;}
+.pb-component-btn.type-bg em.pb-icon-add-r, .pb-component-btn.type-dark em.pb-icon-add-r {background-position:left -89px;}
 .pb-component-btn em.pb-icon-refresh {width:11px; height:12px; position:relative; top:-1px; background-position:left -75px;}
 .pb-component-btn em.pb-icon-dictionary {width:14px; height:14px; background-position:left -34px;}
 .pb-component-btn em.pb-icon-move {width:13px; height:11px; background-position:left -63px;}

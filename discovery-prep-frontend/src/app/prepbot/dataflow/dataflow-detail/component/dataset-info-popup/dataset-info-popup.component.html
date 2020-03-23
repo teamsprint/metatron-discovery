@@ -30,6 +30,61 @@
     <!--<a href="javascript:" class="pb-component-btn type-dark" (click)="goToDetail()" *ngIf="selectedDataSet.dsType === DsType.WRANGLED">&lt;!&ndash;em class="pb-icon-move"></em&ndash;&gt;Go to dataset</a>-->
   </div>
 
+
+  <div class="pb-dataflow-bottom">
+    <div class="pb-col-6" *ngIf="selectedDataSet.dsType!=null && selectedDataSet.dsType.toString() == 'IMPORTED'">
+      <a href="javascript:;" class="pb-component-btn type-line" (click)="dataSwap('imported')"><em class="pb-icon-edit"></em>Swap dataset</a>
+    </div>
+
+
+    <div class="pb-col-6" *ngIf="selectedDataSet.dsType!=null && selectedDataSet.dsType.toString() == 'IMPORTED'">
+      <a href="javascript:;" class="pb-component-btn type-dark" (click)="datasetEventHandler.emit()"><em class="pb-icon-edit"></em>Generate new dataset</a>
+    </div>
+
+    <div class="pb-col-11" *ngIf="selectedDataSet.dsType!=null && selectedDataSet.dsType.toString() == 'WRANGLED'">
+      <a href="javascript:;" class="pb-component-btn type-dark" (click)="goToDetail()"><em class="pb-icon-edit"></em>Edit rules</a>
+    </div>
+
+    <!-- 클릭시 ddp-selected 추가 -->
+    <div class="pb-more pb-col-1" (click)="openBtnOptions()" (clickOutside)="isBtnOptionOpen =false" *ngIf="selectedDataSet.dsType!=null && selectedDataSet.dsType.toString() == 'WRANGLED'">
+      <a href="javascript:;" class="pb-btn-more"></a>
+    </div>
+    <!-- popup -->
+    <!-- pb-selected -->
+    <div class="pb-wrap-popup2 pb-types pb-selected" *ngIf="isBtnOptionOpen==true">
+      <ul class="pb-list-popup">
+        <li>
+          <a href="javascript:" (click)="cloneDataset()">
+            <em class="pb-icon-clone"></em>
+           Clone dataset
+          </a>
+        </li>
+        <li>
+          <a href="javascript:;" (click)="createSnapshot()">
+            <em class="pb-icon-snapshot"></em>
+            Create snapshot
+          </a>
+        </li>
+        <li>
+          <a href="javascript:;" (click)="dataSwap('wrangled')">
+            <em class="pb-icon-drop-re"></em>
+            Swap input dataset
+          </a>
+        </li>
+      </ul>
+      <!-- //popup -->
+    </div>
+
+
+
+
+
+    <!-- //more -->
+  </div>
+
+
+
+
   <!-- part -->
   <div class="pb-ui-part">
     <div class="pb-label-part">DATA PREVIEW</div>
@@ -85,9 +140,9 @@
   <!-- //part -->
 
 
-  <div class="pb-dataflow-bottom">
-    <a href="javascript:" class="pb-component-btn type-dark" (click)="goToDetail()" *ngIf="selectedDataSet.dsType === DsType.WRANGLED"><em class="pb-icon-move"></em>GO TO DATASET</a>
-  </div>
+  <!--<div class="pb-dataflow-bottom">-->
+    <!--<a href="javascript:" class="pb-component-btn type-dark" (click)="goToDetail()" *ngIf="selectedDataSet.dsType === DsType.WRANGLED"><em class="pb-icon-move"></em>GO TO DATASET</a>-->
+  <!--</div>-->
 </div>
 
 
