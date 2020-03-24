@@ -1,0 +1,254 @@
+<div class="pb-layout-popup" *ngIf="datasetId !=null">
+    <!-- box popup -->
+    <div class="pb-box-popup">
+        <a href="javascript:;" class="pb-btn-pop-close" (click)="close()"></a>
+
+        <!-- top -->
+        <div class="pb-popup-top pb-clear">
+            <div class="pb-txt-title">CREATE DATA RESULT</div>
+
+        </div>
+        <!-- //top -->
+        <!-- contents -->
+        <div class="pb-popup-contents ">
+            <div class="pb-wrap-connect type-connect">
+
+                <!-- upload -->
+                <div class="pb-wrap-upload type-result">
+                    <div class="pb-form-create type-result">
+                        <div class="pb-create-label">Result Name</div>
+                        <div class="pb-form-edit">
+                            <input type="text" class="pb-component-input" placeholder="{{ 'msg.dp.ui.ss-name' | translate }}" [(ngModel)]="snapshot.ssName" maxlength="50"
+                                   (keyup)="changeSSUri()"
+                                   (keydown)="ssNameKeyDown()">
+                        </div>
+                    </div>
+                    <div class="pb-form-create type-result">
+                        <div class="pb-create-label">Result Type</div>
+                        <div class="pb-form-edit">
+                            <label class="pb-compomnent-radio">
+                                <input type="radio" checked="checked" (change)="changeSsType(SsType.URI)" name="snapshotFormatRadio">
+                                <i></i>
+                                <span class="pb-txt-radio">{{'msg.dp.ui.file-system' | translate }}</span>
+                            </label>
+                            <label class="pb-compomnent-radio">
+                                <input type="radio" name="snapshotFormatRadio" [disabled]="false===isStagingEnabled()" (change)="changeSsType(SsType.STAGING_DB)">
+                                <i></i>
+                                <span class="pb-txt-radio">{{ 'msg.dp.th.stagingdb' | translate }}</span>
+                            </label>
+                        </div>
+                    </div>
+
+
+
+                    <div class="pb-form-create type-result" *ngIf="snapshot.ssType && snapshot.ssType === SsType.URI">
+                        <div class="pb-create-label">{{'msg.dp.ui.location' | translate }}</div>
+                        <div class="pb-form-edit">
+                            <div class="pb-component-selectbox is-value" (clickOutside)="isLocationListShow =false">
+                                <span class="pb-txt-selectbox" *ngIf="fileLocations.length == 0">
+                                    No data
+                                </span>
+
+                                <span class="pb-txt-selectbox" (click)="toggleLocationList()" *ngIf="fileLocations.length > 0">
+                                    {{fileLocations[locationSelectedIndex].label}}
+                                </span>
+
+                                <!-- popup -->
+                                <div class="pb-select-popup" *ngIf="isLocationListShow" [style.display]="'block'">
+                                    <ul class="pb-list-selectbox">
+                                        <li *ngFor="let location of fileLocations">
+                                            <a href="javascript:;" (click)="onSelected(location,'location')">
+                                                {{location.label}}
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <!-- //popup -->
+                            </div>
+                            <!-- //selectbox -->
+                        </div>
+                    </div>
+
+
+
+
+                    <div class="pb-form-create type-result" *ngIf="snapshot.ssType && snapshot.ssType === SsType.URI">
+                        <div class="pb-create-label">{{'msg.dp.th.file-format' | translate}}</div>
+                        <div class="pb-form-edit">
+                            <div class="pb-component-selectbox is-value" (clickOutside)="isFormatListShow =false">
+                                <span class="pb-txt-selectbox" *ngIf="uriFileFormat == null">No data</span>
+                                <span class="pb-txt-selectbox" (click)="toggleFormatList()" *ngIf="uriFileFormat != null">{{uriFileFormat}}</span>
+                                <!-- popup -->
+                                <div class="pb-select-popup" *ngIf="isFormatListShow" [style.display]="'block'">
+                                    <ul class="pb-list-selectbox">
+                                        <li *ngFor="let formatitem  of fileFormat">
+                                            <a href="javascript:;" (click)="onSelected(formatitem,'format')">
+                                                {{formatitem.label}}
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <!-- //popup -->
+                            </div>
+                            <!-- //selectbox -->
+                        </div>
+                    </div>
+
+
+
+
+
+
+
+
+                    <div class="pb-form-create type-result" *ngIf="snapshot.ssType && snapshot.ssType === SsType.STAGING_DB">
+                        <div class="pb-create-label">{{'msg.dp.th.db-name' | translate}}</div>
+                        <div class="pb-form-edit">
+                            <div class="pb-component-selectbox is-value" (clickOutside)="isDbListShow =false">
+                                <span class="pb-txt-selectbox" *ngIf="dbList ==null || dbList.length == 0">
+                                    No data
+                                </span>
+
+                                <span class="pb-txt-selectbox" (click)="toggleDbList()" *ngIf="dbList != null && dbList.length > 0">
+                                    {{snapshot['dbName']}}
+                                </span>
+
+                                <!-- popup -->
+                                <div class="pb-select-popup" *ngIf="isDbListShow" [style.display]="'block'">
+                                    <ul class="pb-list-selectbox">
+                                        <li *ngFor="let db of dbList">
+                                            <a href="javascript:;" (click)="onSelectedDBName(db, dbList)">
+                                                {{db}}
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <!-- //popup -->
+                            </div>
+                            <!-- //selectbox -->
+                        </div>
+                    </div>
+
+
+
+
+                    <div class="pb-form-create type-result" *ngIf="snapshot.ssType && snapshot.ssType === SsType.STAGING_DB">
+                        <div class="pb-create-label">{{'msg.dp.th.tbl-name' | translate}}</div>
+                        <div class="pb-form-edit">
+                            <!--<div class="pb-component-selectbox is-value" (clickOutside)="isDbListShow =false">-->
+                                <!--&lt;!&ndash; //popup &ndash;&gt;-->
+                            <!--</div>-->
+                            <!-- //selectbox -->
+                            <input type="text" class="pb-component-input" placeholder="{{'msg.dp.th.tbl-name.ph' | translate}}"
+                                   (keydown)="tblNameKeyDown()"
+                                   [(ngModel)]="snapshot.tblName" maxlength="30">
+                        </div>
+                    </div>
+
+
+
+
+
+
+
+                    <!--&lt;!&ndash;is-selected&ndash;&gt;-->
+                    <!--<div class="pb-box-setting">-->
+                        <!--<div class="pb-box-fold pb-clear">-->
+                            <!--&lt;!&ndash; setting edit &ndash;&gt;-->
+                            <!--<div class="pb-setting-edit">-->
+                                <!--<div class="pb-edit-label">ETL Engine</div>-->
+                                <!--<div class="pb-form-edit type-radio">-->
+                                    <!--<label class="pb-compomnent-radio">-->
+                                        <!--<input type="radio" checked="checked">-->
+                                        <!--<i></i>-->
+                                        <!--<span class="pb-txt-radio">checked</span>-->
+                                    <!--</label>-->
+                                    <!--<label class="pb-compomnent-radio">-->
+                                        <!--<input type="radio">-->
+                                        <!--<i></i>-->
+                                        <!--<span class="pb-txt-radio">unchecked</span>-->
+                                    <!--</label>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                            <!--&lt;!&ndash; //setting edit &ndash;&gt;-->
+
+                            <!--<a href="javascript:" class="pb-btn-setting">-->
+                                <!--Advanced setting-->
+                            <!--</a>-->
+                        <!--</div>-->
+
+
+
+
+                        <!--&lt;!&ndash; setting sub &ndash;&gt;-->
+                        <!--<div class="pb-setting-sub pb-clear">-->
+                            <!--&lt;!&ndash; setting edit &ndash;&gt;-->
+                            <!--<div class="pb-setting-edit">-->
+                                <!--<div class="pb-edit-label">File Format</div>-->
+                                <!--<div class="pb-form-edit">-->
+                                    <!--<div class="pb-component-selectbox is-value ">-->
+                                        <!--<span class="pb-txt-selectbox">-->
+                                            <!--Select data-->
+                                        <!--</span>-->
+                                        <!--&lt;!&ndash; popup &ndash;&gt;-->
+                                        <!--<div class="pb-select-popup">-->
+                                            <!--<ul class="pb-list-selectbox">-->
+                                                <!--<li>-->
+                                                    <!--<a href="javascript:">-->
+                                                        <!--1-->
+                                                    <!--</a>-->
+                                                <!--</li>-->
+                                                <!--<li>-->
+                                                    <!--<a href="javascript:">1</a>-->
+                                                <!--</li>-->
+                                                <!--<li>-->
+                                                    <!--<a href="javascript:">1</a>-->
+                                                <!--</li>-->
+                                            <!--</ul>-->
+                                        <!--</div>-->
+                                        <!--&lt;!&ndash; //popup &ndash;&gt;-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                            <!--&lt;!&ndash; //setting edit &ndash;&gt;-->
+                        <!--</div>-->
+
+                        <!---->
+                        <!---->
+                        <!---->
+
+
+
+                        <!--<div class="pb-setting-sub pb-clear">-->
+                            <!--&lt;!&ndash; setting edit &ndash;&gt;-->
+                            <!--<div class="pb-setting-edit">-->
+                                <!--<div class="pb-edit-label">File URL</div>-->
+                                <!--<div class="pb-form-edit">-->
+                                    <!--<input type="text" class="pb-component-input" placeholder="Enter column delimiter">-->
+                                <!--</div>-->
+                            <!--</div>-->
+                            <!--&lt;!&ndash; //setting edit &ndash;&gt;-->
+                        <!--</div>-->
+                        <!--&lt;!&ndash; //setting sub &ndash;&gt;-->
+
+
+
+
+
+                    <!--</div>-->
+                    <!-- //box setting -->
+                </div>
+                <!--//upload -->
+
+
+            </div>
+
+        </div>
+        <!-- //contents -->
+        <div class="pb-popup-bottom ">
+            <a href="javascript:" class="pb-component-btn-pop type-line" (click)="close()">CANCEL</a>
+            <a href="javascript:" class="pb-component-btn-pop type-bg" (click)="complete()">DONE</a>
+        </div>
+    </div>
+    <!-- //box popup -->
+</div>

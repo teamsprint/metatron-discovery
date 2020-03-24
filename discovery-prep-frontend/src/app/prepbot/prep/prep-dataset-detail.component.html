@@ -150,7 +150,7 @@
                     <!--<a href="javascript:" class="pb-icon-top-redo" (click)="transformAction('REDO')" [ngClass]="{'ddp-disabled': !redoable}"></a>-->
                 <!--</div>-->
 
-                <a href="javascript:" class="pb-component-btn type-line"><em class="pb-icon-add-r"></em>CREATE DATA RESULT</a>
+                <a href="javascript:;" class="pb-component-btn type-line" (click)="openSnapshotPopup()"><em class="pb-icon-add-r"></em>CREATE DATA RESULT</a>
                 <!-- //icon button -->
             </div>
             <!-- //button -->
@@ -246,3 +246,9 @@
     </div>
     <!-- //rnb -->
 </div>
+
+
+
+<prep-pop-result-create [hidden]="isCreateDataresultPopupOpen == false"
+                        (snapshotCloseEvent)="closeSnapshotPopup()"
+                        (snapshotCreateFinishEvent)="snapshotCreateFinish($event)"></prep-pop-result-create>

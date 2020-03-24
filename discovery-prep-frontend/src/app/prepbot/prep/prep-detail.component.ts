@@ -37,7 +37,8 @@ import * as _ from "lodash";
 import {StringUtil} from "../../common/util/string.util";
 import {DataflowModelService} from "./service/dataflow.model.service";
 import {SnapshotLoadingComponent} from "../component/snapshot-loading.component";
-import {CreateSnapshotPopup} from '../component/create-snapshot-popup.component';
+// import {CreateSnapshotPopup} from '../component/create-snapshot-popup.component';
+import {PrepPopResultCreateComponent} from './create-dataresult/prep-pop-result-create.component';
 import {Location} from "@angular/common";
 import {DatasetInfoPopupComponent} from "../dataflow/dataflow-detail/component/dataset-info-popup/dataset-info-popup.component";
 import {PrepPopCreateComponent} from "./create-dataset/prep-pop-create.component";
@@ -79,8 +80,8 @@ export class PrepDetailComponent extends AbstractComponent {
   @ViewChild(SnapshotLoadingComponent)
   public snapshotLoadingComponent : SnapshotLoadingComponent;
 
-  @ViewChild(CreateSnapshotPopup)
-  private createSnapshotPopup : CreateSnapshotPopup;
+  @ViewChild(PrepPopResultCreateComponent)
+  private createSnapshotPopup : PrepPopResultCreateComponent;
 
   @ViewChild(DatasetInfoPopupComponent)
   public datasetInfoPopupComponent : DatasetInfoPopupComponent;
@@ -173,6 +174,9 @@ export class PrepDetailComponent extends AbstractComponent {
 
   public isDetailDatasetPopupOpen: boolean = false;     // dataset detail popup
   public detailDatasetID: string;
+
+  public isCreateDataresultPopupOpen: boolean = false;     // dataresult create popup
+  //
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
    | Override Method
    |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
@@ -208,12 +212,19 @@ export class PrepDetailComponent extends AbstractComponent {
     }
   }
   public snapshotCreateFinish(data) {
+    this.isCreateDataresultPopupOpen = false;
     this.snapshotLoadingComponent.init(data);
   }
 
   public openSnapshotPopup() {
+    this.isCreateDataresultPopupOpen = true;
     this.createSnapshotPopup.init({id : this.selectedDataSet.dsId , name : this.selectedDataSet.dsName});
   }
+  public closeSnapshotPopup() {
+      this.isCreateDataresultPopupOpen = false;
+  }
+
+
 
   /**
    * 다른 데이터셋으로 변경했을 떄 ..

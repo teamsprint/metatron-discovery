@@ -429,3 +429,8 @@
 <prep-pop-detail-dataset *ngIf="isDetailDatasetPopupOpen" [datasetId]="detailDatasetID"
                          (createNewDataFlowEvent)="createNewDataFlowEvent($event)"
                          (closeEvent)="closeDetailDataset()"></prep-pop-detail-dataset>
+
+
+<prep-pop-result-create [hidden]="isCreateDataresultPopupOpen == false"
+                        (snapshotCloseEvent)="closeSnapshotPopup()"
+(snapshotCreateFinishEvent)="snapshotCreateFinish($event)"></prep-pop-result-create>

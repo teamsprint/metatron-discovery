@@ -29,6 +29,7 @@ import {RuleListComponent} from "../dataflow/dataflow-detail/component/edit-data
 import {PrepRnbRuleComponent} from "./component/prep-rnb-rule.component";
 import {PrepRnbRuleListComponent} from "./component/prep-rnb-rule-list.component";
 import {PrepRnbRecommendComponent} from "./component/prep-rnb-recommend.component";
+import {PrepPopResultCreateComponent} from './create-dataresult/prep-pop-result-create.component';
 
 @Component({
     selector: 'prep-dataset-detail',
@@ -53,6 +54,9 @@ export class PrepDatasetDetailComponent extends AbstractComponent {
 
   @ViewChild(PrepRnbRecommendComponent)
   private _prepRnbRecommendComponent : PrepRnbRecommendComponent;
+
+  @ViewChild(PrepPopResultCreateComponent)
+  private createSnapshotPopup : PrepPopResultCreateComponent;
 
   public dfId: string;
   public dsId: string;
@@ -113,6 +117,8 @@ export class PrepDatasetDetailComponent extends AbstractComponent {
   public isNaivationOpen: boolean = false;
 
   private _isExecAddRule:boolean = false;
+
+  public isCreateDataresultPopupOpen: boolean = false;     // dataresult create popup
 
   // 생성자
   constructor(private _dataflowService: DataflowService,
@@ -483,6 +489,20 @@ export class PrepDatasetDetailComponent extends AbstractComponent {
     }
     this.applyRule(rule, action === 'UNDO')
   }
+
+    public snapshotCreateFinish(data) {
+        this.isCreateDataresultPopupOpen = false;
+        // this.snapshotLoadingComponent.init(data);
+    }
+
+    public openSnapshotPopup() {
+        this.isCreateDataresultPopupOpen = true;
+        this.createSnapshotPopup.init({id : this.selectedDataSet.dsId , name : this.selectedDataSet.dsName});
+    }
+    public closeSnapshotPopup() {
+        this.isCreateDataresultPopupOpen = false;
+    }
+
 
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   | Private Method

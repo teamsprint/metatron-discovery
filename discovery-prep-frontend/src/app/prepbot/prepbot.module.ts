@@ -110,6 +110,7 @@ import {StorageService} from "../data-storage/service/storage.service";
 import {DataconnectionService} from "../dataconnection/service/dataconnection.service";
 import {PrepNormalDetailDatasetComponent} from "./prep/detail-dataset/prep-normal-detail-dataset.component";
 import {PrepPopDetailDatasetComponent} from './prep/detail-dataset/prep-pop-detail-dataset.component';
+import {PrepPopResultCreateComponent} from './prep/create-dataresult/prep-pop-result-create.component';
 
 const dataPreparationRoutes: Routes = [
 { path: '', component: PrepListComponent },
@@ -217,7 +218,8 @@ const dataPreparationRoutes: Routes = [
       PrepRnbRuleListComponent,
       PrepRnbRecommendComponent,
       PrepNormalDetailDatasetComponent,
-      PrepPopDetailDatasetComponent
+      PrepPopDetailDatasetComponent,
+      PrepPopResultCreateComponent
   ],
   providers: [
       PrepPopCreateComponent,
