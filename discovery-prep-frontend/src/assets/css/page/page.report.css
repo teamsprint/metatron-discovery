@@ -117,6 +117,6 @@ table.ddp-table-detail tbody tr td.ddp-link-url a {text-decoration: underline;co
 /***********************************************************************
      Page : Button
  *************************************************************************/
- .pb-wrap-button {float: right;padding-left: 10px;background-color: #fff;position: absolute;top: 6px;right: 0;}
- .pb-wrap-button .pb-component-btn.type-dark{min-width: 5px;padding: 5px;}
- .pb-wrap-button .pb-component-btn em{margin: 0 3px;}
+.pb-wrap-button {float: right;padding-left: 10px;background-color: #fff;position: absolute;top: 6px;right: 0;}
+.pb-wrap-button .pb-component-btn.type-dark{min-width: 5px;padding: 5px;}
+.pb-wrap-button .pb-component-btn em{margin: 0 3px;}

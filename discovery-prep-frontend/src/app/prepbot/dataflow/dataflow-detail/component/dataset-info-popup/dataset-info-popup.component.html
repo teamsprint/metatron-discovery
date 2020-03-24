@@ -42,7 +42,7 @@
     </div>
 
     <div class="pb-col-11" *ngIf="selectedDataSet.dsType!=null && selectedDataSet.dsType.toString() == 'WRANGLED'">
-      <a href="javascript:;" class="pb-component-btn type-dark" (click)="goToDetail()"><em class="pb-icon-edit"></em>Edit rules</a>
+      <a href="javascript:;" class="pb-component-btn type-dark" (click)="goToDetail()" *ngIf="selectedDataSet.dsType === DsType.WRANGLED"><em class="pb-icon-move"></em>Edit rules</a>
     </div>
 
     <!-- 클릭시 ddp-selected 추가 -->
@@ -139,11 +139,10 @@
   <!--</div>-->
   <!-- //part -->
 
-
   <!--<div class="pb-dataflow-bottom">-->
     <!--<a href="javascript:" class="pb-component-btn type-dark" (click)="goToDetail()" *ngIf="selectedDataSet.dsType === DsType.WRANGLED"><em class="pb-icon-move"></em>GO TO DATASET</a>-->
   <!--</div>-->
-</div>
+<!--</div>-->
 
 
 
@@ -366,3 +365,8 @@
 
 <!--</div>-->
 <!--&lt;!&ndash; //링크 &ndash;&gt;-->
+
+  <!--<div class="pb-dataflow-bottom">-->
+    <!--<a href="javascript:" class="pb-component-btn type-dark" (click)="goToDetail()" *ngIf="selectedDataSet.dsType === DsType.WRANGLED"><em class="pb-icon-move"></em>GO TO DATASET</a>-->
+  <!--</div>-->
+</div>
