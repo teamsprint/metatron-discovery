@@ -270,7 +270,11 @@
         <div class="pb-contents-top">
             <!-- right -->
             <div class="pb-ui-buttons">
+                <a href="javascript:;" class="pb-component-btn type-line" (click)="confirmDelete($event, dataset)">DELETE</a>
+
                 <a href="javascript:;" class="pb-component-btn type-line" (click)="downloadDataset()">DOWNLOAD</a>
+
+
                 <div class="pb-ui-part" *ngIf="dataset != null && dataset.importType">
                     <a href="javascript:;" class="pb-component-btn type-bg" (click)="createNewFlow()" *ngIf="dataset != null && dataset.importType"><em class="pb-icon-add-r"></em>CREATE DATAFLOW</a>
                 </div>

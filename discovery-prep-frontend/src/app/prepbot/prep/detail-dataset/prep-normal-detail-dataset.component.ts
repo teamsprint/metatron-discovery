@@ -354,6 +354,41 @@ export class PrepNormalDetailDatasetComponent extends AbstractComponent {
         }
         return {'width':gridWidth+'px', 'height':'350px'};
     }
+
+    /**
+     * 삭제 확인창 표시
+     * @param event
+     * @param dataset
+     */
+    public confirmDelete(event, dataset) {
+        event.stopPropagation();
+        // const modal = new Modal();
+        // modal.name = this.translateService.instant('msg.comm.ui.del.description');
+        // modal.description = this.translateService.instant('msg.dp.alert.ds.del.sub.description');
+        this.selectedDatasetId = dataset.dsId;
+        this.deleteDataset();
+
+    } // function - confirmDelete
+
+
+    /**
+     * 데이터 셋 삭제
+     */
+
+    private deleteDataset() {
+        this.loadingShow();
+        this.datasetService.deleteChainDataset(this.selectedDatasetId).then(() => {
+            // Alert.success(this.translateService.instant('msg.comm.alert.delete.success'));
+            this.loadingHide();
+            // this.close();
+            this.router.navigate([`/management/prepbot/`]);
+        }).catch(() => {
+            // Alert.error(this.translateService.instant('msg.comm.alert.delete.fail'));
+            this.loadingHide();
+        });
+    }
+
+
     public downloadDataset() {
         if ((this.dataset.dsType === DsType.IMPORTED && this.dataset.importType === ImportType.UPLOAD) ||
             (this.dataset.dsType === DsType.IMPORTED && this.dataset.importType === ImportType.URI)

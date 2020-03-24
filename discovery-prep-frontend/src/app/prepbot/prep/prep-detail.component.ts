@@ -229,6 +229,33 @@ export class PrepDetailComponent extends AbstractComponent {
 
   }
 
+    public confirmDelete(event, id) {
+        event.stopPropagation();
+        // const modal = new Modal();
+        // modal.name = this.translateService.instant('msg.dp.alert.del.flow.title');
+        // modal.description = this.translateService.instant('msg.dp.alert.del.flow.sub-title');
+        this.selectedDataflowId = id;
+        // this.deleteModalComponent.init(modal);
+        this.deleteDataflow();
+    }
+
+
+    /**
+     * 이 데이터 플로우 삭제하기
+     */
+    public deleteDataflow() {
+        this.loadingShow();
+        this.dataflowService.deleteDataflow(this.selectedDataflowId).then(() => {
+            Alert.success(this.translateService.instant('msg.comm.alert.delete.success'));
+            this.loadingHide();
+            // 삭제 이후 list page로 이동
+            this.router.navigate([`/management/prepbot/`]);
+            // this.close();
+        }).catch(() => {
+            Alert.error(this.translateService.instant('msg.comm.alert.delete.fail'));
+            this.loadingHide();
+        });
+    }
 
   /**
    * 모드 변경
@@ -972,23 +999,26 @@ export class PrepDetailComponent extends AbstractComponent {
       },
       series: [
         {
-          type: 'graph',
-          legendHoverLink: false,
-          layout: 'none',
-          coordinateSystem: 'cartesian2d',
-          focusNodeAdjacency: false,
-          symbolSize: 50,
-          hoverAnimation: true,
-          roam: false,
-          // edgeSymbol: ['none', 'arrow'],
-          draggable: true,
-          itemStyle: { normal: { color: '#aaa', borderColor: '#1af' } },
-          nodes: null,
-          links: null,
-          lineStyle: { normal: { opacity: 0.3, width: 4 } }
+            type: 'graph',
+            legendHoverLink: false,
+            layout: 'none',
+            coordinateSystem: 'cartesian2d',
+            focusNodeAdjacency: false,
+            symbolSize: 50,
+            hoverAnimation: true,
+            roam: false,
+            // edgeSymbol: ['none', 'arrow'],
+            draggable: true,
+            itemStyle: { normal: { color: '#aaa', borderColor: '#1af' } },
+            nodes: null,
+            links: null,
+            lineStyle: { normal: { opacity: 0.3, width: 4 } }
         }
       ], animation: false
     };
+
+      // lineStyle: { normal: { opacity: 0.3, width: 4 } }
+
 
     this.commandList = [
       { command: 'create', alias: 'Cr' },
