@@ -277,6 +277,14 @@
                                     </tr>
                                     </thead>
                                     <tbody>
+
+                                    <tr *ngIf="dataSetList == null || dataSetList.length ==0">
+                                        <td colspan="8">
+                                            {{'msg.lineage.ui.list.search.nodata' | translate}}
+                                        </td>
+                                    </tr>
+
+
                                     <tr *ngFor="let dataset of dataSetList; let i = index" (click)="detailDatasetPopup(dataset.dsId)" style="cursor: pointer;">
                                         <td>
                                             {{ i + 0}}
@@ -361,6 +369,13 @@
                                     </tr>
                                     </thead>
                                     <tbody>
+
+                                    <tr *ngIf="datasnapshots == null || datasnapshots.length ==0">
+                                        <td colspan="8">
+                                            {{'msg.lineage.ui.list.search.nodata' | translate}}
+                                        </td>
+                                    </tr>
+
                                     <tr *ngFor="let dataSnapshot of datasnapshots; let i = index" (click)="detailDataresultPopup(dataSnapshot.ssId)" style="cursor: pointer;">
                                         <td>
                                             {{ i + 0}}
