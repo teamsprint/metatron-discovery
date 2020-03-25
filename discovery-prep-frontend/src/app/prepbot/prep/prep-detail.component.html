@@ -361,7 +361,7 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr *ngFor="let dataSnapshot of datasnapshots; let i = index">
+                                    <tr *ngFor="let dataSnapshot of datasnapshots; let i = index" (click)="detailDataresultPopup(dataSnapshot.ssId)" style="cursor: pointer;">
                                         <td>
                                             {{ i + 0}}
                                         </td>
@@ -434,3 +434,8 @@
 <prep-pop-result-create [hidden]="isCreateDataresultPopupOpen == false"
                         (snapshotCloseEvent)="closeSnapshotPopup()"
 (snapshotCreateFinishEvent)="snapshotCreateFinish($event)"></prep-pop-result-create>
+
+<prep-pop-detail-dataresult *ngIf="isDetailDataresultPopupOpen"
+                            [pageType]="'POP'"
+                            [pageSsid]="detailDataresultID"
+                            (snapshotDetailCloseEvent)="closeDetailDataresult($event)"></prep-pop-detail-dataresult>

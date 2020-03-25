@@ -175,8 +175,14 @@ export class PrepDetailComponent extends AbstractComponent {
   public isDetailDatasetPopupOpen: boolean = false;     // dataset detail popup
   public detailDatasetID: string;
 
-  public isCreateDataresultPopupOpen: boolean = false;     // dataresult create popup
-  //
+    // dataresult create popup
+  public isCreateDataresultPopupOpen: boolean = false;
+
+  public isDetailDataresultPopupOpen: boolean = false; // dataresult detail popup
+  public detailDataresultID: string;
+
+
+
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
    | Override Method
    |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
@@ -782,6 +788,21 @@ export class PrepDetailComponent extends AbstractComponent {
     public closeDetailDataset(): void {
         this.isDetailDatasetPopupOpen = false;
     }
+
+
+    public detailDataresultPopup(ssId: string): void {
+      this.detailDataresultID = ssId;
+      this.isDetailDataresultPopupOpen = true;
+    }
+
+    public closeDetailDataresult(refresh:boolean): void {
+        this.isDetailDataresultPopupOpen = false;
+        if(refresh) {
+            this.changeViewMode('DATARESULT');
+        }
+    }
+
+
 
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
    | Protected Method

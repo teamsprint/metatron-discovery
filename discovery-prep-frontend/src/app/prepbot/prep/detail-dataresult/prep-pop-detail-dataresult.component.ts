@@ -53,10 +53,10 @@ import {DataflowModelService} from "../service/dataflow.model.service";
 declare let moment: any;
 
 @Component({
-    selector: 'prep-normal-detail-dataresult',
-    templateUrl: './prep-normal-detail-dataresult.component.html'
+    selector: 'prep-pop-detail-dataresult',
+    templateUrl: './prep-pop-detail-dataresult.component.html'
 })
-export class PrepNormalDetailDataresultComponent extends AbstractComponent implements OnInit, OnDestroy {
+export class PrepPopDetailDataresultComponent extends AbstractComponent implements OnInit, OnDestroy {
 
     /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
      | Private Variables

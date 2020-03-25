@@ -112,6 +112,7 @@ import {PrepNormalDetailDatasetComponent} from "./prep/detail-dataset/prep-norma
 import {PrepPopDetailDatasetComponent} from './prep/detail-dataset/prep-pop-detail-dataset.component';
 import {PrepPopResultCreateComponent} from './prep/create-dataresult/prep-pop-result-create.component';
 import {PrepNormalDetailDataresultComponent} from './prep/detail-dataresult/prep-normal-detail-dataresult.component';
+import {PrepPopDetailDataresultComponent} from './prep/detail-dataresult/prep-pop-detail-dataresult.component';
 
 const dataPreparationRoutes: Routes = [
     { path: '', component: PrepListComponent },
@@ -222,7 +223,8 @@ const dataPreparationRoutes: Routes = [
       PrepNormalDetailDatasetComponent,
       PrepPopDetailDatasetComponent,
       PrepPopResultCreateComponent,
-      PrepNormalDetailDataresultComponent
+      PrepNormalDetailDataresultComponent,
+      PrepPopDetailDataresultComponent
   ],
   providers: [
       PrepPopCreateComponent,

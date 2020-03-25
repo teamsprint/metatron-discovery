@@ -1,0 +1,292 @@
+<div class="pb-layout-popup">
+    <!-- box popup -->
+    <div class="pb-box-popup">
+        <a href="javascript:;" class="pb-btn-pop-close" (click)="close(false)"></a>
+        <!-- top -->
+        <div class="pb-popup-top">
+            <div class="pb-txt-title" *ngIf="selectedDataSnapshot != null && selectedDataSnapshot.ssName != null">{{selectedDataSnapshot.ssName}}</div>
+            <div class="pb-txt-title" *ngIf="selectedDataSnapshot == null || selectedDataSnapshot.ssName == null">Dataresult</div>
+
+
+            <div style="margin:-25px 45px 0 0; text-align:right;">
+                <a href="javascript:;" class="pb-component-btn type-line" (click)="confirmDelete($event, selectedDataSnapshot)">DELETE</a>
+                <!--<span style="width:10px;" *ngIf="dataset != null && dataset.importType">&nbsp;</span>-->
+                <!--<a href="javascript:;" class="pb-component-btn type-line" (click)="createNewFlow()" *ngIf="dataset != null && dataset.importType"><em class="pb-icon-add-r"></em>CREATE DATAFLOW</a>-->
+            </div>
+
+        </div>
+        <!-- //top -->
+        <!-- contents -->
+        <div class="pb-popup-contents pb-pop-create">
+            <!-- option -->
+            <div class="pb-ui-data-option ">
+                <!-- form -->
+                <div class="pb-form-option dataresult-type">
+                    <div class="ddp-wrap-datadetail">
+                        <!-- left -->
+                        <div class="ddp-info-left">
+
+
+
+                            <!-- SUCCESS -->
+                            <!-- summary -->
+                            <div class="ddp-wrap-summary" *ngIf="selectedDataSnapshot!=null && selectedDataSnapshot.displayStatus==='SUCCESS'">
+                                <div class="ddp-data-summary">
+                                    <span class="ddp-txt-label">{{'msg.dp.th.ss.valid' | translate}}</span>
+                                    <span class="ddp-data-per">{{ valid }}</span>
+                                </div>
+                                <div class="ddp-data-summary ddp-mismatch">
+                                    <span class="ddp-txt-label">{{'msg.dp.th.ss.mismatched' | translate}}</span>
+                                    <span class="ddp-data-per">{{ mismatched }}</span>
+                                </div>
+                                <div class="ddp-data-summary ddp-missing">
+                                    <span class="ddp-txt-label">{{'msg.dp.th.ss.missing' | translate}}</span>
+                                    <span class="ddp-data-per">{{ missing }}</span>
+                                </div>
+                            </div>
+                            <!-- //summary -->
+                            <!-- // SUCCESS -->
+
+
+                            <!-- SUCCESS -->
+                            <!-- datadetail -->
+                            <div class="ddp-ui-datadetail" [hidden]="selectedDataSnapshot==null || selectedDataSnapshot.displayStatus!='SUCCESS'">
+                                <label class="ddp-label-detail">DATA</label>
+                                <div class="ddp-form-box">
+                                    <div grid-component style="width:100%; height:100%;"></div>
+                                </div>
+                            </div>
+                            <!-- //datadetail -->
+                            <!-- // SUCCESS -->
+
+
+                            <!-- FAIL -->
+                            <!-- datadetail -->
+                            <div class="ddp-ui-datadetail" *ngIf="selectedDataSnapshot.displayStatus==='FAIL'">
+                                <label class="ddp-label-detail">ERROR</label>
+                                <div class="ddp-txt-log">
+                                    <p [innerHTML]="selectedDataSnapshot.custom['fail_msg']"></p>
+                                </div>
+                            </div>
+                            <!-- //datadetail -->
+                            <!-- // FAIL -->
+
+
+
+                            <!-- PREPARING -->
+                            <!-- datadetail -->
+                            <div class="ddp-ui-datadetail" *ngIf="selectedDataSnapshot.displayStatus==='PREPARING'">
+                                <label class="ddp-label-detail">GENERATING</label>
+
+
+                                <div class="pb-component-upload">
+                                    <span class="pb-data-num">{{progressbarWidth}}</span>
+                                    <div class="pb-ui-bar">
+                                        <span [ngStyle]="{'width': progressbarWidth}"></span>
+                                    </div>
+                                    <a href="javascript:" class="pb-component-btn" (click)="cancelClick(true)">Cancel</a>
+                                </div>
+
+
+                                <div class="pb-component-upload" style="display:none;">
+                                    <span class="pb-data-num">{{progressbarWidth}}</span>
+                                    <div class="pb-ui-bar">
+                                        <span [ngStyle]="{'width': progressbarWidth}"></span>
+                                    </div>
+                                    <!--<a href="javascript:" class="pb-component-btn">Cancel</a>-->
+                                    <a href="javascript:" class="pb-component-btn" (click)="cancelClick(false)">{{'msg.dp.ui.no' | translate }}</a>
+                                    <a href="javascript:" class="pb-component-btn" (click)="cancelSnapshot()">{{'msg.dp.ui.yes' | translate }}</a>
+
+                                </div>
+                            </div>
+                            <!-- //datadetail -->
+                            <!-- // PREPARING -->
+
+
+
+
+
+                            <!-- datadetail -->
+                            <div class="ddp-ui-datadetail" style="border-top: none">
+                                <label class="ddp-label-detail">DATAFLOW</label>
+                                <table class="ddp-table-detail ">
+                                    <colgroup>
+                                        <col width="110px">
+                                        <col width="*">
+                                    </colgroup>
+                                    <tbody>
+                                    <tr>
+                                        <th>
+                                            {{'msg.comm.ui.name' | translate}}
+                                        </th>
+                                        <td class="ddp-link-url">
+                                            <!--<a href="javascript:;" (click)="navigateDataflow(dfId)">{{selectedDataSnapshot.dfName}}</a>-->
+                                            {{selectedDataSnapshot.dfName}}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            {{'msg.comm.ui.list.created' | translate}}
+                                        </th>
+                                        <td>
+                                            {{selectedDataSnapshot.dsCreatedTime | mdate:'YYYY-MM-DD HH:mm'}}
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <th>
+                                            {{'msg.comm.ui.list.updated' | translate}}
+                                        </th>
+                                        <td>
+                                            {{selectedDataSnapshot.dsModifiedTime | mdate:'YYYY-MM-DD HH:mm'}}
+                                        </td>
+
+                                    </tr>
+
+                                    </tbody>
+
+                                </table>
+                            </div>
+                            <!-- //datadetail -->
+
+                            <!-- datadetail -->
+                            <div class="ddp-ui-datadetail" style="border-top: none">
+                                <label class="ddp-label-detail">ORIGIN DATASET INFORMATION</label>
+                                <table class="ddp-table-detail ">
+                                    <colgroup>
+                                        <col width="110px">
+                                        <col width="*">
+                                    </colgroup>
+                                    <tbody>
+
+
+                                    <tr>
+                                        <th>
+                                            {{'msg.board.th.datasource' | translate}}
+                                        </th>
+                                        <td>
+                                            <div class="ddp-txt-cut">{{ originDsInfo.dsName }}</div>
+                                        </td>
+
+                                    </tr>
+
+
+                                    <tr *ngIf="originDsInfo.qryStmt">
+                                        <th>
+                                            {{'msg.dp.th.query.stmt' | translate}}
+                                        </th>
+                                        <td>
+                                            <div class="ddp-txt-cut">{{ originDsInfo.qryStmt }}</div>
+                                        </td>
+                                    </tr>
+
+
+                                    <!--<tr *ngIf="originDsInfo">-->
+                                    <!--<th>-->
+                                    <!--{{'msg.board.th.datasource' | translate}}-->
+                                    <!--</th>-->
+                                    <!--<td>-->
+                                    <!--<div class="ddp-txt-cut">{{ originDsInfo.filePath }}</div>-->
+                                    <!--</td>-->
+
+                                    <!--</tr>-->
+
+                                    <tr>
+                                        <th>
+                                            {{'msg.comm.ui.list.created' | translate}}
+                                        </th>
+                                        <td>
+                                            <div class="ddp-txt-cut">{{originDsInfo.createdTime | mdate:'YYYY-MM-DD HH:mm'}}</div>
+                                        </td>
+
+                                    </tr>
+
+                                    <tr>
+                                        <td colspan="2" style="height:10px;">&nbsp;</td>
+                                    </tr>
+
+                                    </tbody>
+
+                                </table>
+                            </div>
+                            <!-- //datadetail -->
+                        </div>
+                        <!-- //left -->
+                        <!-- right -->
+                        <div class="ddp-info-right">
+
+
+                            <!-- datadetail -->
+                            <div class="ddp-ui-datadetail">
+                                <label class="ddp-label-detail">INFORMATION</label>
+                                <table class="ddp-table-detail ">
+                                    <colgroup>
+                                        <col width="120px">
+                                        <col width="*">
+                                    </colgroup>
+                                    <tbody>
+                                    <tr *ngFor="let item of sSInformationList">
+                                        <th>
+                                            {{item.label}}
+                                        </th>
+
+                                        <td *ngIf="item.isFileUri; else notFile" title="{{item.value}}">
+                                            {{item.value}}
+                                        </td>
+                                        <ng-template #notFile>
+                                            <td>
+                                                {{item.value}}
+                                            </td>
+                                        </ng-template>
+
+                                    </tr>
+                                    </tbody>
+
+                                </table>
+
+
+
+
+
+                                <!-- rule -->
+                                <div class="ddp-wrap-rules-flow ddp-snapshot">
+
+                                    <!-- title -->
+                                    <div class="ddp-box-title">
+                                        <em class="ddp-data-num">{{ruleList?.length}}</em>
+                                        {{'msg.dp.ui.rule.list' | translate}}
+                                    </div>
+                                    <!-- //title -->
+
+                                    <div class="ddp-ui-rule-flow">
+                                        <ul class="ddp-list-rule2">
+                                            <li *ngFor="let rule of ruleList; let idx = index">
+                                                <span class="ddp-data-type">
+                                                    <em class="ddp-ui-round">{{rule.alias}}</em>
+                                                    {{rule.name}}
+                                                </span>
+                                                <div class="ddp-ui-code" title="{{idx !== 0 ? rule.ruleString : null}}">
+                                                    {{rule['simplifiedRule']}}
+                                                </div>
+
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <!-- //rule -->
+                            </div>
+                            <!-- //datadetail -->
+                        </div>
+                        <!-- //right -->
+
+                    </div>
+                </div>
+                <!-- //form -->
+            </div>
+            <!-- //option -->
+
+        </div>
+        <!-- //contents -->
+    </div>
+    <!-- //box popup -->
+</div>
