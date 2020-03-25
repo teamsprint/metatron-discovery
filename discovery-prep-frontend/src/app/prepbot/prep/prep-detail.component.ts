@@ -219,7 +219,7 @@ export class PrepDetailComponent extends AbstractComponent {
   }
   public snapshotCreateFinish(data) {
     this.isCreateDataresultPopupOpen = false;
-    this.snapshotLoadingComponent.init(data);
+    // this.snapshotLoadingComponent.init(data);
   }
 
   public openSnapshotPopup() {
