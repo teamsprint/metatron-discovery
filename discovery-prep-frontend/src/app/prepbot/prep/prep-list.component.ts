@@ -258,6 +258,12 @@ export class PrepListComponent extends AbstractComponent {
           this.changeMode('prep-pop-connection-update');
       }
 
+      if(this.isDataresult(item)) {
+          this.router.navigate(
+              ['/management/prepbot/dataresultdetail', item.ssId])
+              .then();
+
+      }
   }
 
   /**

@@ -111,19 +111,21 @@ import {DataconnectionService} from "../dataconnection/service/dataconnection.se
 import {PrepNormalDetailDatasetComponent} from "./prep/detail-dataset/prep-normal-detail-dataset.component";
 import {PrepPopDetailDatasetComponent} from './prep/detail-dataset/prep-pop-detail-dataset.component';
 import {PrepPopResultCreateComponent} from './prep/create-dataresult/prep-pop-result-create.component';
+import {PrepNormalDetailDataresultComponent} from './prep/detail-dataresult/prep-normal-detail-dataresult.component';
 
 const dataPreparationRoutes: Routes = [
-{ path: '', component: PrepListComponent },
-{ path: 'dataflow', component: PrepListComponent },
-{ path: 'dataflow/:id', component: PrepDetailComponent },
-{ path: 'dataflow/:dfId/dataset/:dsId', component: PrepDatasetDetailComponent },
-{ path: 'dataset/:id', component: PrepDatasetDetailComponent },
-//{ path: 'dataflow/:id', component: DataflowDetail2Component },
-{ path: 'dataflow/:dfId/rule/:dsId', component: EditDataflowRule2Component},
-// { path: 'dataset', component: DatasetComponent },
-{ path: 'dataset/new', component: DatasetComponent },
-{ path: 'datasetdetail/:dsId', component: PrepNormalDetailDatasetComponent },
-{ path: 'datasnapshot', component: DataSnapshotComponent }
+    { path: '', component: PrepListComponent },
+    { path: 'dataflow', component: PrepListComponent },
+    { path: 'dataflow/:id', component: PrepDetailComponent },
+    { path: 'dataflow/:dfId/dataset/:dsId', component: PrepDatasetDetailComponent },
+    { path: 'dataset/:id', component: PrepDatasetDetailComponent },
+    //{ path: 'dataflow/:id', component: DataflowDetail2Component },
+    { path: 'dataflow/:dfId/rule/:dsId', component: EditDataflowRule2Component},
+    // { path: 'dataset', component: DatasetComponent },
+    { path: 'dataset/new', component: DatasetComponent },
+    { path: 'datasetdetail/:dsId', component: PrepNormalDetailDatasetComponent },
+    { path: 'datasnapshot', component: DataSnapshotComponent },
+    { path: 'dataresultdetail/:ssId', component: PrepNormalDetailDataresultComponent },
 ];
 
 @NgModule({
@@ -219,7 +221,8 @@ const dataPreparationRoutes: Routes = [
       PrepRnbRecommendComponent,
       PrepNormalDetailDatasetComponent,
       PrepPopDetailDatasetComponent,
-      PrepPopResultCreateComponent
+      PrepPopResultCreateComponent,
+      PrepNormalDetailDataresultComponent
   ],
   providers: [
       PrepPopCreateComponent,
