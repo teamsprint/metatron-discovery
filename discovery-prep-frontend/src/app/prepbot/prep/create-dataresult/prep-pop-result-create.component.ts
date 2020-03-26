@@ -12,7 +12,7 @@ import {
 import {AbstractComponent} from '../../../common/component/abstract.component';
 import {HiveFileCompression, Engine, SsType, UriFileFormat, AppendMode, HiveFileFormat} from '../../../domain/data-preparation/pr-snapshot';
 import {Field} from '../../../domain/data-preparation/pr-dataset';
-import {isUndefined} from 'util';
+import {isUndefined, isNullOrUndefined} from 'util';
 import {DataflowService} from "../service/dataflow.service";
 import {StorageService} from "../../../data-storage/service/storage.service";
 import {DataconnectionService} from '../../../dataconnection/service/dataconnection.service';
@@ -84,22 +84,24 @@ export class PrepPopResultCreateComponent extends AbstractComponent implements O
     @Output()
     public snapshotCloseEvent = new EventEmitter();
 
+
+    @Output()
+    public snapshotLoadEvent = new EventEmitter();
+
     @Input()
     public isFromMainGrid?: boolean = false;
 
 
-
-
-
-
     public isLocationListShow: boolean = false;
     public locationSelectedIndex: number  = 0;
-
     public isFormatListShow: boolean = false;
-
     public isDbListShow: boolean = false;
-    public dbSelectedIndex: number  = 0;
+    public isHiveEmbeddedFormatShow: boolean = false;
+    public isCompressionTypeShow: boolean = false;
+    public isOverwriteMethodShow: boolean = false;
+    public isFieldsShow: boolean = false;
 
+    public firstLoading: boolean = true;
 
     // 생성자
     constructor(protected elementRef: ElementRef,
@@ -111,7 +113,8 @@ export class PrepPopResultCreateComponent extends AbstractComponent implements O
     }
 
     public ngOnInit() {
-        super.ngOnInit()
+        super.ngOnInit();
+        this.snapshotLoadEvent.emit();
     }
 
     public ngOnDestroy() {
@@ -127,7 +130,7 @@ export class PrepPopResultCreateComponent extends AbstractComponent implements O
      * @param {id:string, name : string, fields : Field[]} data
      */
     public init(data : {id: string, name: string, isFromMainGrid?: boolean}) {
-
+        this.firstLoading = true;
         this.datasetId = data.id;
         this.datasetName = data.name;
 
@@ -142,6 +145,9 @@ export class PrepPopResultCreateComponent extends AbstractComponent implements O
         });
 
     }
+
+
+
 
 
     /**
@@ -249,15 +255,20 @@ export class PrepPopResultCreateComponent extends AbstractComponent implements O
     }
 
     public changeStoredUri(fileName: string = null){
-        var slashIndex = this.snapshot.storedUri.lastIndexOf("/");
-        if(this.snapshot.storedUri && slashIndex > 0) {
-            if(fileName===null) {
-                fileName = this.snapshot.storedUri.substring(slashIndex+1);
-            }
-            let replacedFileName = fileName.replace(/[^\w_.ㄱ-힣]/gi, "_");
+        try{
+            var slashIndex = this.snapshot.storedUri.lastIndexOf("/");
+            if(this.snapshot.storedUri && slashIndex > 0) {
+                if(fileName===null) {
+                    fileName = this.snapshot.storedUri.substring(slashIndex+1);
+                }
+                let replacedFileName = fileName.replace(/[^\w_.ㄱ-힣]/gi, "_");
 
-            this.snapshot.storedUri = this.snapshot.storedUri.substring(0,slashIndex+1) + replacedFileName;
+                this.snapshot.storedUri = this.snapshot.storedUri.substring(0,slashIndex+1) + replacedFileName;
+            }
+        }catch (e) {
+            //
         }
+
     }
 
 
@@ -272,6 +283,7 @@ export class PrepPopResultCreateComponent extends AbstractComponent implements O
             case 'engine':
                 this.fileFormatErrorMsg = '';
                 this.isErrorShow = false;
+
                 if ('EMBEDDED' === event.value) {
                     this.snapshot.hiveFileFormat = this.hiveEmbeddedFormat[0].value;
                 }
@@ -285,6 +297,7 @@ export class PrepPopResultCreateComponent extends AbstractComponent implements O
                 if ( this.snapshot.ssType && this.snapshot.ssType === SsType.STAGING_DB)
                     this.snapshot.hiveFileFormat = event.value;
                 this.isFormatListShow = false;
+                this.isHiveEmbeddedFormatShow = false;
                 this.changeSSUri();
                 break;
 
@@ -301,9 +314,11 @@ export class PrepPopResultCreateComponent extends AbstractComponent implements O
                 break;
             case 'mode':
                 this.snapshot.appendMode = event.value;
+                this.isOverwriteMethodShow = false;
                 break;
             case 'compression':
                 this.snapshot.hiveFileCompression = event.value;
+                this.isCompressionTypeShow = false;
                 break;
         }
 
@@ -325,9 +340,50 @@ export class PrepPopResultCreateComponent extends AbstractComponent implements O
      * @param item
      */
     public onPartitionSelected(item) {
-        this.snapshot.partitionColNames = item.map((x) => {
-            return x.name;
-        });
+        if(isNullOrUndefined(this.snapshot.partitionColNames) || this.snapshot.partitionColNames.length == 0){
+            this.snapshot.partitionColNames = [];
+            this.snapshot.partitionColNames.push(item.name);
+            return;
+        }
+
+        let chk: number  = -1;
+        for(let i:number = 0; i< this.snapshot.partitionColNames.length; i++) {
+            if(this.snapshot.partitionColNames[i]== item.name) {
+                chk = i; break;
+            }
+        }
+        if(chk>-1) {
+            this.snapshot.partitionColNames.splice(chk);
+        }else{
+            this.snapshot.partitionColNames.push(item.name);
+        }
+    }
+
+
+    public getPartitionSelectedInfo(): string {
+        let returnLabel: string = '';
+        if(isNullOrUndefined(this.snapshot.partitionColNames) || this.snapshot.partitionColNames.length == 0){
+            returnLabel = 'Choose columns to use as partition keys';
+        }else{
+            returnLabel =  this.snapshot.partitionColNames.join(",");
+        }
+        return returnLabel;
+    }
+
+    public getPartitionSelectedStyle(item): boolean {
+        let returnBoolean: boolean = false;
+        if(isNullOrUndefined(this.snapshot.partitionColNames) == false && this.snapshot.partitionColNames.length != 0){
+            let chk: number  = -1;
+            for(let i:number = 0; i< this.snapshot.partitionColNames.length; i++) {
+                if(this.snapshot.partitionColNames[i]== item.name) {
+                    chk = i; break;
+                }
+            }
+            if(chk>-1) {
+                returnBoolean = true;
+            }
+        }
+        return returnBoolean;
     }
 
 
@@ -336,7 +392,7 @@ export class PrepPopResultCreateComponent extends AbstractComponent implements O
      * @param ssType
      */
     public changeSsType(ssType : SsType) {
-
+        this.firstLoading = false;
         this.snapshot = new SnapShotCreateDomain();
         this.snapshot.ssName = this.ssName;
         this.snapshot.ssType = ssType;
@@ -431,7 +487,7 @@ export class PrepPopResultCreateComponent extends AbstractComponent implements O
     /**
      * Check if it has changed directly
      */
-    public onChangeStoredUri(event, selection) {
+    public onChangeStoredUri(event) {
         if(event) {
             this.storedUriChangedDirectly = true;
             this.changeStoredUri();
@@ -451,16 +507,7 @@ export class PrepPopResultCreateComponent extends AbstractComponent implements O
 
 
 
-    public toggleLocationList(): void {
-        this.isLocationListShow = true;
-    }
-    public toggleFormatList(): void {
-        this.isFormatListShow = true;
-    }
 
-    public toggleDbList(): void {
-        this.isDbListShow = true;
-    }
 
 
     /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
@@ -470,6 +517,12 @@ export class PrepPopResultCreateComponent extends AbstractComponent implements O
     /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
      | Private Method
      |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
+
+    private resetComponent(): void {
+
+    }
+
+
     /**
      * Make snapshot with enter key
      * @param event Event

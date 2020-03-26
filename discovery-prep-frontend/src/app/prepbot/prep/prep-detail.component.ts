@@ -81,7 +81,7 @@ export class PrepDetailComponent extends AbstractComponent {
   public snapshotLoadingComponent : SnapshotLoadingComponent;
 
   @ViewChild(PrepPopResultCreateComponent)
-  private createSnapshotPopup : PrepPopResultCreateComponent;
+  public createSnapshotPopup : PrepPopResultCreateComponent;
 
   @ViewChild(DatasetInfoPopupComponent)
   public datasetInfoPopupComponent : DatasetInfoPopupComponent;
@@ -226,6 +226,8 @@ export class PrepDetailComponent extends AbstractComponent {
     this.isCreateDataresultPopupOpen = true;
     this.createSnapshotPopup.init({id : this.selectedDataSet.dsId , name : this.selectedDataSet.dsName});
   }
+
+
   public closeSnapshotPopup() {
       this.isCreateDataresultPopupOpen = false;
   }
@@ -1111,13 +1113,13 @@ export class PrepDetailComponent extends AbstractComponent {
     const itemMinSize: number = 90;
       // const itemMinSize: number = 100;
     const hScrollbarWith: number = 30;
-    const topMargin: number = 120;
+    const topMargin: number = 250;
     let minHeightSize: number = 600;
     if($('.pb-layout-contents')!=null && $('.pb-layout-contents')!=undefined){
       minHeightSize = $('.pb-layout-contents').height()- topMargin;
-    }
 
-     if($('.pb-ui-graph').height() < minHeightSize) {
+    }
+     if($('.pb-ui-graph').height() > minHeightSize) {
          $('.pb-ui-graph').css('overflow-x', 'auto');
      }else{
          $('.pb-ui-graph').css('overflow-x', 'hidden');
