@@ -29,24 +29,23 @@
                             You can create data.
                         </div>
 
-                        <!--<div class="pb-wrap-option">-->
-                            <!--<span class="pb-label-option">Upload Location</span>-->
-                            <!--&lt;!&ndash; selectbox &ndash;&gt;-->
-                            <!--<div class="pb-component-selectbox ">-->
-                                <!--<span class="pb-txt-selectbox">Select data</span>-->
-                                <!--&lt;!&ndash; popup &ndash;&gt;-->
-                                <!--<div class="pb-select-popup">-->
-                                    <!--<ul class="pb-list-selectbox">-->
-                                        <!--<li *ngFor="let fileLocation of fileLocations">-->
-                                            <!--<a href="javascript:">{{fileLocation.label}}</a>-->
-                                        <!--</li>-->
-                                    <!--</ul>-->
-                                <!--</div>-->
-                                <!--&lt;!&ndash; //popup &ndash;&gt;-->
-                            <!--</div>-->
-                            <!--&lt;!&ndash; //selectbox &ndash;&gt;-->
-                        <!--</div>-->
 
+                        <div class="pb-wrap-option" style="margin: 10px 0; width: 200px;">
+                            <!--<span class="pb-label-option">Upload Location</span>-->
+                            <div class="pb-component-selectbox " (clickOutside)="isLocationListShow1 =false">
+                                <span class="pb-txt-selectbox" (click)="isLocationListShow1=true">{{fileLocation}}</span>
+                                <!-- popup -->
+                                <div class="pb-select-popup" *ngIf="isLocationListShow1" [style.display]="'block'">
+                                    <ul class="pb-list-selectbox">
+                                        <li *ngFor="let fileLocation of fileLocations">
+                                            <a href="javascript:;" (click)="onSelected(fileLocation)">{{fileLocation.label}}</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <!-- //popup -->
+
+                            </div>
+                        </div>
 
                     </div>
                 </div>
@@ -118,6 +117,7 @@
 
                 <!-- drop file -->
                 <div class="pb-box-drop-file" #drop_container2>
+
                     <div class="pb-txt-description">
                         <span class="pb-txt-title">Drop your file</span>
                         <span class="pb-txt-sub">xls, .xlsx and .csv formats are allowed</span>
@@ -125,32 +125,21 @@
 
                     <div class="pb-wrap-option">
                         <span class="pb-label-option">Upload Location</span>
-                        <!-- selectbox -->
-                        <!--
-                            클릭시 : is-selected 추가
-                            값 입력시 : is-value 추가
-
-                        -->
-                        <div class="pb-component-selectbox ">
-                            <span class="pb-txt-selectbox">Select data</span>
+                        <div class="pb-component-selectbox " (clickOutside)="isLocationListShow2 =false">
+                            <span class="pb-txt-selectbox" (click)="isLocationListShow2 = true">{{fileLocation}}</span>
                             <!-- popup -->
-                            <div class="pb-select-popup">
+                            <div class="pb-select-popup" *ngIf="isLocationListShow2" [style.display]="'block'">
                                 <ul class="pb-list-selectbox">
                                     <li *ngFor="let fileLocation of fileLocations">
-                                        <a href="javascript:">{{fileLocation.label}}</a>
+                                        <a href="javascript:;" (click)="onSelected(fileLocation)">{{fileLocation.label}}</a>
                                     </li>
-                                    <!--<li>-->
-                                        <!--<a href="javascript:">1</a>-->
-                                    <!--</li>-->
-                                    <!--<li>-->
-                                        <!--<a href="javascript:">1</a>-->
-                                    <!--</li>-->
                                 </ul>
                             </div>
                             <!-- //popup -->
                         </div>
-                        <!-- //selectbox -->
                     </div>
+
+
 
                 </div>
                 <!-- //drop file -->

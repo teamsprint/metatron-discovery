@@ -93,6 +93,8 @@ export class PrepPopFileUploadCreateComponent extends AbstractPopupComponent imp
   public fileLocations: any[];
   public fileLocation: string;
   public fileLocationDefaultIdx : number = 0;
+  public isLocationListShow1: boolean = false;
+  public isLocationListShow2: boolean = false;
 
   public limitSize : number;
 
@@ -412,6 +414,8 @@ export class PrepPopFileUploadCreateComponent extends AbstractPopupComponent imp
     });
     if (idx == -1) idx = 0;
     this.fileLocationDefaultIdx = idx;
+    this.isLocationListShow1 = false;
+    this.isLocationListShow2 = false;
   }
 
   /**
