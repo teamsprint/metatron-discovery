@@ -24,8 +24,9 @@
                 <div class="pb-form-option pb-clear">
 
 
-                    <label class="pb-label-title" style="padding:0 3px 0 39px;">Database Source</label>
-                    <div class="pb-component-select-button" style="width:260px;">
+                    <!--Database Source-->
+                    <label class="pb-label-title" style="padding:0 10px 0 39px;">Data Connection</label>
+                    <div class="pb-component-select-button" style="width:280px;">
                         <div class="pb-component-selectbox type-icons is-value " (clickOutside)="listShow =false">
                             <span class="pb-txt-selectbox" (click)="toggleList()">
                                 <em class="pb-icon-datasource"></em>
@@ -39,8 +40,8 @@
                                     <li *ngFor="let connection of connectionList">
                                         <a href="javascript:;" (click)="onConnectionSelected(connection)">
                                             <em class="pb-icon-datasource">{{connection.connectionType}}</em>
-                                            <span>{{connection.name}}</span>
-                                            <span>{{connection.desc}}</span>
+                                            <span style="text-overflow: ellipsis; white-space: nowrap; overflow: hidden">{{connection.name}} {{connection.desc}}</span>
+                                            <!--<span>{{connection.desc}}</span>-->
                                         </a>
                                     </li>
                                 </ul>
@@ -51,9 +52,9 @@
 
 
 
-
-                    <label class="pb-label-title" style="padding:0 3px 0 39px;">Database Name</label>
-                    <div class="pb-component-select-button" style="width:270px;">
+                    <!--Database Name-->
+                    <label class="pb-label-title" style="padding:0 10px 0 39px;">Database</label>
+                    <div class="pb-component-select-button" style="width:280px;">
                         <div class="pb-component-selectbox type-icons is-value " (clickOutside)="isDatabaseListShow =false">
                             <span class="pb-txt-selectbox" (click)="toggleDatabaseList()">
                                 <em class="pb-icon-datasource"></em>
@@ -74,9 +75,9 @@
                     </div>
 
 
-
-                    <label class="pb-label-title" style="padding:0 3px 0 39px;">Table Name</label>
-                    <div class="pb-component-select-button" style="width:270px;">
+                    <!--Table Name-->
+                    <label class="pb-label-title" style="padding:0 10px 0 39px;">Table</label>
+                    <div class="pb-component-select-button" style="width:280px;">
                         <div class="pb-component-selectbox type-icons is-value " (clickOutside)="isSchemaListShow =false">
                             <span class="pb-txt-selectbox" (click)="toggleTableList()">
                                 <em class="pb-icon-datasource"></em>
