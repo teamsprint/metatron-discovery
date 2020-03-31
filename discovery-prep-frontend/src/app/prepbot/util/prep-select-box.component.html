@@ -12,26 +12,27 @@
   ~ limitations under the License.
   -->
 
-<div class="ddp-type-selectbox"
+<div class="pb-form-selectbox type-value {{inputClass}}"
      [ngClass]="{'ddp-selected' : isShowSelectList, 'ddp-full' : isFull }"
      (click)="toggleSelectList()"
      (keydown)="comboKeyEvent($event)">
   <input #inputSearchText
          [(ngModel)]="searchText"
          placeholder="Search"
-         class="ddp-input-selectbox" *ngIf="isSearchAllowed">
-  <span class="ddp-txt-selectbox">{{selectedItem == null ? unselectedMessage :  isStringArray ? selectedItem : selectedItem[viewKey] }}</span>
-  <ul [ngClass]="{'ddp-selectdown': isUpSelect == false, 'ddp-pass' : isOptionToLeft, 'ddp-pass2' : !isOptionToLeft }"
-      class="ddp-list-selectbox"
-      #sourceFieldCombo>
-    <li *ngFor="let item of filteredList"
-        (mouseover)="hoverSourceItem($event)"
-        (click)="$event.stopImmediatePropagation(); onSelect(item);">
-      <a href="javascript:">{{isStringArray ? item : item[viewKey]}}</a>
-    </li>
-    <li *ngIf="filteredList.length === 0">
-      <span class="ddp-noresult">{{'msg.comm.ui.no.rslt' | translate}}</span>
-    </li>
-  </ul>
+         class="pb-input-selectbox" *ngIf="isSearchAllowed">
+  <span class="pb-txt-selectbox">{{selectedItem == null ? unselectedMessage :  isStringArray ? selectedItem : selectedItem[viewKey] }}</span>
+  <div class="pb-select-popup" [ngStyle]="{'display': isShowSelectList ? 'block' : 'none'}">
+    <ul class="pb-list-selectbox" #sourceFieldCombo>
+      <li *ngFor="let item of filteredList"
+          (mouseover)="hoverSourceItem($event)"
+          (click)="$event.stopImmediatePropagation(); onSelect(item);">
+        <a href="javascript:">{{isStringArray ? item : item[viewKey]}}</a>
+      </li>
+      <span class="pb-txt-label2" *ngIf="filteredList.length === 0">
+        {{'msg.comm.ui.no.rslt' | translate}}
+      </span>
+    </ul>
+  </div>
+
 </div>
 <!-- //Drop down -->

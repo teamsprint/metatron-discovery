@@ -12,28 +12,28 @@
   ~ limitations under the License.
   -->
 
-<div class="ddp-type-selectbox"
+<div class="pb-form-selectbox type-value"
      [ngClass]="{'ddp-selected' : isShowSelectList, 'ddp-full' : isFull }"
      (click)="toggleSelectList()"
      (keydown)="comboKeyEvent($event)">
   <input #inputSearchText
          [(ngModel)]="searchText"
          placeholder="Search"
-         class="ddp-input-selectbox" *ngIf="isSearchAllowed" (keyup)="changeSearchText($event)">
-  <span class="ddp-txt-selectbox" *ngIf="searchText == null || searchText == ''">{{unselectedMessage}}</span>
-  <span class="ddp-txt-selectbox" *ngIf="searchText !== null && searchText !== ''">{{searchText}}</span>
-  <ul id="selecterUl"
-      class="ddp-list-selectbox" style="display: none"
-      #sourceFieldCombo>
-    <li *ngFor="let item of filteredList"
-        (mouseover)="hoverSourceItem($event)"
-        (mouseout)="houtSourceItem($event)"
-        (click)="$event.stopImmediatePropagation(); onSelect(item);">
-      <a href="javascript:">{{isStringArray ? item : item[viewKey]}}</a>
-    </li>
-    <li *ngIf="filteredList === undefined || filteredList === null || filteredList.length === 0">
-      <span class="ddp-noresult">{{'msg.comm.ui.no.rslt' | translate}}</span>
-    </li>
-  </ul>
+         class="pb-input-selectbox" *ngIf="isSearchAllowed" (keyup)="changeSearchText($event)">
+  <span class="pb-txt-selectbox" *ngIf="searchText == null || searchText == ''">{{unselectedMessage}}</span>
+  <span class="pb-txt-selectbox" *ngIf="searchText !== null && searchText !== ''">{{searchText}}</span>
+  <div class="pb-select-popup" id="selecterUl" style="display: none">
+    <ul class="pb-list-selectbox" #sourceFieldCombo>
+      <li *ngFor="let item of filteredList"
+          (mouseover)="hoverSourceItem($event)"
+          (mouseout)="houtSourceItem($event)"
+          (click)="$event.stopImmediatePropagation(); onSelect(item);">
+        <a href="javascript:">{{isStringArray ? item : item[viewKey]}}</a>
+      </li>
+      <li *ngIf="filteredList === undefined || filteredList === null || filteredList.length === 0">
+        <span class="pb-txt-label2">{{'msg.comm.ui.no.rslt' | translate}}</span>
+      </li>
+    </ul>
+  </div>
 </div>
 <!-- //Drop down -->

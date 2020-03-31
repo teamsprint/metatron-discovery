@@ -12,56 +12,47 @@
   ~ limitations under the License.
   -->
 
-<!--part-->
-<div class="ddp-box-part" *ngIf="isShow">
-  <div class="ddp-box-title">
-    <span class="ddp-box-title-in">
-        {{'msg.dp.th.expression' | translate}}<em class="ddp-icon-essential"></em>
-        <a href="javascript:" class="ddp-btn-plus" (click)="addFormula();"></a>
-    </span>
-  </div>
-  <div class="ddp-wrap-box-info">
-    <!--box scroll -->
-    <div class="ddp-wrap-boxwrap" (scroll)="scrollHandler($event)">
-      <div class="ddp-wrap-boxadd" *ngFor="let item of formulas; trackBy:trackByFn; let idx = index;">
-        <div class="ddp-wrap-datainput">
-            <rule-suggest-input
-            [index]="idx"
-            [formula]="item.value" [isEmptyViewAll]="true" 
-            [command]="'window'" [cmdArg]="'value'" [funcType]="'window'"
-            [tabIndex]="2" [placeholder]="'msg.dp.th.expression.ph' | translate"
-            [fields]="fields"
-            (onChange)="item.value = $event" ></rule-suggest-input>
+<div class="pb-part-content" *ngIf="isShow">
+  <table class="pb-table-data">
+    <colgroup><col width="30%">
+      <col width="*">
+    </colgroup>
+    <tbody>
+    <tr class="pb-form-delete">
+      <th> {{'msg.dp.th.expression' | translate}} *
+        <a href="javascript:"><em class="pb-icon-add-r" (click)="addFormula();"></em></a>
+      </th>
+      <td>
+        <div class="pb-form-edit" *ngFor="let item of formulas;trackBy:trackByFn;let idx = index;">
+          <rule-suggest-input
+              [index]="idx"
+              [formula]="item.value" [isEmptyViewAll]="true"
+              [command]="'window'" [cmdArg]="'value'" [funcType]="'window'"
+              [tabIndex]="2" [placeholder]="'msg.dp.th.expression.ph' | translate"
+              [fields]="fields"
+              (onChange)="item.value = $event" ></rule-suggest-input>
+          <a href="javascript:" class="pb-btn-delete" [ngClass]="(formulas.length==1)?'ddp-disabled':''" (click)="deleteFormula(item.id)"></a>
         </div>
-        <div class="ddp-ui-buttons">
-          <a href="javascript:" [ngClass]="(formulas.length==1)?'ddp-btn-minus ddp-disabled':'ddp-btn-minus'" (click)="deleteFormula(item.id)"></a>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-<!--//part-->
-
-<!--part-->
-<div class="ddp-box-part" *ngIf="isShow">
-  <div class="ddp-box-title">
-    {{'msg.dp.th.group.by' | translate}}
-  </div>
-
-  <!-- select box -->
-  <edit-rule-field-combo [isMulti]="true" [fields]="fields" [selected]="selectedFields" [tabIndex]="3"
-                         (onChange)="changeGroupFields($event)" [effectGrid]="true"></edit-rule-field-combo>
-  <!-- //select box -->
-</div>
-
-
-<div class="ddp-box-part" *ngIf="isShow">
-  <div class="ddp-box-title">
-    {{'msg.comm.ui.soring.by' | translate}}
-  </div>
-
-  <!-- select box -->
-  <edit-rule-field-combo [isMulti]="true" [fields]="fields" [selected]="selectedSortFields" [tabIndex]="4"
-                         (onChange)="changeSortFields($event)" [effectGrid]="false"></edit-rule-field-combo>
-  <!-- //select box -->
+      </td>
+    </tr>
+    <tr>
+      <th>{{'msg.dp.th.group.by' | translate}} *</th>
+      <td>
+        <!-- select box -->
+        <edit-rule-field-combo [isMulti]="true" [fields]="fields" [selected]="selectedFields" [tabIndex]="3"
+                               (onChange)="changeGroupFields($event)" [effectGrid]="true"></edit-rule-field-combo>
+        <!-- //select box -->
+      </td>
+    </tr>
+    <tr>
+      <th>{{'msg.comm.ui.soring.by' | translate}}</th>
+      <td>
+        <!-- select box -->
+        <edit-rule-field-combo [isMulti]="true" [fields]="fields" [selected]="selectedSortFields" [tabIndex]="4"
+                               (onChange)="changeSortFields($event)" [effectGrid]="false"></edit-rule-field-combo>
+        <!-- //select box -->
+      </td>
+    </tr>
+    </tbody>
+  </table>
 </div>

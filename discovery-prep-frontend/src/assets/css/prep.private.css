@@ -379,10 +379,55 @@ ul.ddp-list-popup li.ddp-sub:hover .ddp-wrap-popup2 {display:block;}
 .pb-layout-gnb .pb-gnb-left {left: 20px;}
 app-lnb {display:none;}
 
-
-
-
-
+/**************************************************************
+    룰편집
+**************************************************************/
+.pb-rnb-sub .pb-box-rule-list {
+    border-bottom: 0;
+}
+.pb-rnb-sub.type-rule-list .pb-wrap-line-add.is-focus {
+    padding: 0;
+    position: relative;
+}
+.pb-rnb-sub.type-rule-list .pb-wrap-line-add.is-focus .pb-line-add {
+    display: none;
+}
+.pb-rnb-sub.type-rule-list .pb-wrap-line-add.is-focus .pb-input-info {
+    display: block;
+}
+.pb-rnb-sub.type-rule-list .pb-wrap-line-add {
+    position:absolute;
+    cursor: pointer;
+    padding: 10px 0 0;
+    height: 10px;
+    box-sizing: border-box;
+    overflow: hidden;
+    z-index: 10;
+    border-bottom: 0;
+    left: 0;
+    right: 0;
+}
+.pb-rnb-sub.type-rule-list .pb-wrap-line-add:hover {
+    position: relative;
+    cursor: pointer;
+    padding: 0;
+    height: 28px;
+}
+.pb-form-selectbox .pb-input-selectbox {display:none;}
+.pb-form-selectbox.ddp-selected .pb-input-selectbox {display:block;}
+.pb-form-selectbox .pb-select-popup {
+    max-height: 250px;
+    height: auto;
+    width: 365px;
+    position: fixed;
+    top: auto;
+    left: auto;
+    right: auto;
+}
+.pb-form-selectbox .pb-wrap-warning:hover .pb-txt-warning {display: block;}
+.pb-form-edit .pb-form-selectbox .pb-select-popup {
+    width: 248px;
+}
 
 .ddp-wrap-file-create {display:flex; margin:0 auto; flex-direction:column; width:880px; height:100%;}
 /**************************************************************

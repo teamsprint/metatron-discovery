@@ -12,17 +12,26 @@
   ~ limitations under the License.
   -->
 
-<div class="ddp-box-part ddp-editor" *ngIf="isShow">
-  <div class="ddp-box-title">
-    {{'msg.dp.th.condition' | translate}}<em class="ddp-icon-essential"></em>
-  </div>
-  <div class="ddp-wrap-datainput">
-    <rule-suggest-input #delete_row_input
-      [formula]="rowNum"
-      [command]="'delete'" [cmdArg]="'row'" 
-      [tabIndex]="2" 
-      [fields]="fields"
-      (onChange)="rowNum = $event" ></rule-suggest-input> 
-  </div>
-  <a href="javascript:" class="ddp-btn-bg" (click)="openPopupFormulaInput()"><em class="ddp-icon-editor"></em>{{'msg.dp.btn.advanced.editor' | translate }}</a>
+<div class="pb-part-content" *ngIf="isShow">
+  <table class="pb-table-data">
+    <colgroup><col width="30%">
+      <col width="*">
+    </colgroup>
+    <tbody>
+    <tr>
+      <th> {{'msg.dp.th.condition' | translate}} *</th>
+      <td>
+        <div class="pb-form-edit">
+          <rule-suggest-input #delete_row_input
+                              [formula]="rowNum"
+                              [command]="'delete'" [cmdArg]="'row'"
+                              [tabIndex]="2"
+                              [fields]="fields"
+                              (onChange)="rowNum = $event" ></rule-suggest-input>
+        </div>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <!--<a class="pb-btn-bg" href="javascript:">Rename Multiple Columns</a>-->
 </div>

@@ -13,48 +13,57 @@
   -->
 
 <!-- Multi Combo Box -->
-<div *ngIf="isMulti" class="ddp-type-selectbox ddp-selected" tabindex="tabIndex" [ngClass]="{'ddp-selected':isShowOptions}" (click)="showOptions($event)">
-  <span class="ddp-txt-selectbox ddp-space-pre">{{isEmptyCheckedItems() ? ('msg.comm.ui.please.select' | translate) : selectedItemsNameString() }}</span>
-  <ul class="ddp-list-selectbox ddp-list-command" *ngIf="isShowOptions" (clickOutside)="hideOptions($event)">
-    <li *ngFor="let col of fields;trackBy:trackByFn">
-      <a href="javascript:">
-        <label class="ddp-label-checkbox">
-          <input type="checkbox" [checked]="isItemChecked( col.uuid )"  (click)="checkItem(col.uuid)">
-          <i class="ddp-icon-checkbox"></i>
-          <span class="ddp-txt-checkbox ddp-space-pre">{{col.name}}</span>
-        </label>
-      </a>
-    </li>
-    <li *ngIf="fields.length === 0">
-        <span class="ddp-noresult">
-          {{'msg.dp.ui.search.no.rslt' | translate}}
-        </span>
-    </li>
-  </ul>
+<div *ngIf="isMulti" class="pb-form-selectbox" tabindex="{{tabIndex}}"
+     [ngClass]="{'ddp-selected':isShowOptions, 'type-info':warningHtml, 'type-value':!warningHtml}"
+     (click)="toggleOptions($event)">
+  <span class="pb-txt-selectbox ">{{isEmptyCheckedItems() ? ('msg.comm.ui.please.select' | translate) : selectedItemsNameString() }}</span>
+  <div class="pb-select-popup" *ngIf="isShowOptions" (clickOutside)="hideOptions($event)">
+    <ul class="pb-list-popup" *ngIf="fields.length > 0">
+      <li *ngFor="let col of fields;trackBy:trackByFn">
+        <a href="javascript:">
+          <label class="pb-label-checkbox">
+            <input type="checkbox" [checked]="isItemChecked( col.uuid )" (click)="$event.stopPropagation();checkItem(col.uuid);">
+            <i class="pb-icon-checkbox"></i>
+            <span class="pb-txt-checkbox">{{col.name}}</span>
+          </label>
+        </a>
+      </li>
+    </ul>
+    <span class="pb-txt-label2" *ngIf="fields.length === 0">
+      {{'msg.dp.ui.search.no.rslt' | translate}}
+    </span>
+  </div>
+  <div class="pb-wrap-warning pb-size" *ngIf="warningHtml">
+    <div class="pb-box-warning">
+      <em class="pb-icon-warning"></em>
+      <div class="pb-txt-warning" [innerHTML]="warningHtml"></div>
+    </div>
+  </div>
 </div>
 <!-- // Multi Combo Box -->
 
 <!-- Single Combo Box -->
 <!-- (keydown)="navigateWithKeyboardShortList($event, filteredColumnList, 'column1')" -->
-<div *ngIf="!isMulti" class="ddp-type-selectbox ddp-type-search-select" tabindex="2"
+<div *ngIf="!isMulti" class="pb-form-selectbox type-value" tabindex="{{tabIndex}}"
      [ngClass]="{'ddp-selected':isShowOptions, 'ddp-result' : 0 < selectedItemKeys.length}"
-     (click)="showOptions($event)" >
+     (click)="toggleOptions($event)" >
   <input #inputSearch
          [(ngModel)]="columnSearchText"
          placeholder="{{'msg.dp.ui.column.search.description' | translate}}"
-         class="ddp-input-selectbox" >
-  <span *ngIf="isEmptyCheckedItems()" class="ddp-txt-selectbox"> {{ 'msg.comm.ui.please.select' | translate }} </span>
-  <span *ngIf="!isEmptyCheckedItems()" class="ddp-txt-selectbox ddp-space-pre"> {{  selectedItemsNameString() }} </span>
-  <ul class="ddp-list-selectbox ddp-list-command" *ngIf="isShowOptions" (clickOutside)="hideOptions($event)">
-    <li *ngFor="let col of filteredColumnList;trackBy:trackByFn;" (click)="$event.stopPropagation();checkItem(col.uuid);" >
-      <a href="javascript:" class="ddp-space-pre"> {{col.name}} </a>
-    </li>
-    <li *ngIf="filteredColumnList.length === 0">
-        <span class="ddp-noresult">
-          {{'msg.dp.ui.search.no.rslt' | translate}}
-        </span>
-    </li>
-  </ul>
+         class="ddp-input-selectbox" *ngIf="isSearchAllowed">
+  <span class="pb-txt-selectbox ">{{isEmptyCheckedItems() ? ('msg.comm.ui.please.select' | translate) : selectedItemsNameString() }}</span>
+  <div class="pb-select-popup" *ngIf="isShowOptions" (clickOutside)="hideOptions($event)">
+    <ul class="pb-list-selectbox" *ngIf="filteredColumnList.length > 0">
+      <li *ngFor="let col of filteredColumnList;trackBy:trackByFn;" (click)="$event.stopPropagation();checkItem(col.uuid);"
+          [ngClass]="{'is-selected':isItemChecked( col.uuid )}">
+        <a href="javascript:"> {{col.name}} </a>
+      </li>
+    </ul>
+    <span class="pb-txt-label2" *ngIf="filteredColumnList.length === 0">
+      {{'msg.dp.ui.search.no.rslt' | translate}}
+    </span>
+  </div>
+
 </div>
 <!-- // Single Combo Box -->
 

@@ -31,8 +31,8 @@ import { EventBroadcaster } from "../../../../../../common/event/event.broadcast
 import { RuleSuggest } from '../rule/suggest/rule.suggest';
 import { TokenInfo } from '../rule/suggest/rule.checker';
 import {CommonUtil} from "../../../../../../common/util/common.util";
-import {DataflowModelService} from "../../../../service/dataflow.model.service";
 import {Subscription} from "rxjs";
+import {DataflowModelService} from "../../../../../prep/service/dataflow.model.service";
 
 @Component({
   selector: 'rule-suggest-input',
@@ -108,7 +108,7 @@ export class RuleSuggestInputComponent extends AbstractComponent implements OnIn
   public isArrowDown = false;
 
   /** 아이템 높이 (화살표시 이동할 스크롤 바 ) */
-  public itemHeight = 25;
+  public itemHeight = 30;
 
   /* 제안 화면에 표시할 아이템 */
   public suggestItems: any = [];
@@ -397,7 +397,7 @@ export class RuleSuggestInputComponent extends AbstractComponent implements OnIn
     this.broadCaster.broadcast('EDIT_RULE_SHOW_HIDE_LAYER', { id : this._FIELD_COMBO_ID, isShow: true } );
 
     // select box 위치 잡기
-    if (this.funcType === 'window' || this.funcType === 'aggr') {
+    /*if (this.funcType === 'window' || this.funcType === 'aggr') {
       const selectbox: ClientRect | DOMRect = $('.ddp-wrap-boxwrap .ddp-wrap-boxadd .ddp-input-selectbox')[this.index].getBoundingClientRect();
       const $inputSelectTop = selectbox.top;
       const $inputSelectLeft = selectbox.left;
@@ -414,7 +414,7 @@ export class RuleSuggestInputComponent extends AbstractComponent implements OnIn
           'min-width' : $inputSelectWidth
         })
       })
-    }
+    }*/
 
   }
 
@@ -708,7 +708,7 @@ export class RuleSuggestInputComponent extends AbstractComponent implements OnIn
 
       // 화살표 움직임시 스크롤바 조정 
       let sHeight = this.selectedIndex * this.itemHeight;
-      this.$element.find('.ddp-wrap-popup2').scrollTop(sHeight);
+      this.$element.find('.pb-select-popup').scrollTop(sHeight);
 
       if( $event &&  $event.preventDefault ) {
         $event.stopPropagation();

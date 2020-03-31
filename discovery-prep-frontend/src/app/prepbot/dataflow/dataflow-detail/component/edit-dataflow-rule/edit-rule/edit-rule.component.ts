@@ -87,7 +87,7 @@ export abstract class EditRuleComponent extends AbstractComponent implements OnI
   public init(fields : Field[], selectedFields:Field[], data? : {ruleString?:string, jsonRuleString : any}) {
     this.fields = fields;
     this.selectedFields = selectedFields;
-    if( !isNullOrUndefined( data ) ) {
+    if (!isNullOrUndefined(data)) {
       this.parsingRuleString(data);
     }
 

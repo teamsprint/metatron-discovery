@@ -12,64 +12,68 @@
   ~ limitations under the License.
   -->
 
-<!-- part -->
-<div *ngIf="isShow" class="ddp-box-part" >
-  <div class="ddp-box-title">
-    {{'msg.lineage.ui.list.search.column' | translate}}<em class="ddp-icon-essential"></em>
-  </div>
-  <!-- Select box -->
-  <edit-rule-field-combo [isMulti]="true" [fields]="fields" [selected]="selectedFields" [tabIndex]="2"
-                         (onChange)="changeFields($event)" ></edit-rule-field-combo>
-  <!-- // Select box -->
-</div>
-<!-- //part -->
-
-<!-- part : on -->
-<div *ngIf="isShow" class="ddp-box-part" >
-  <div class="ddp-box-title">
-    {{'msg.dp.th.pattern' | translate}}<em class="ddp-icon-essential"></em>
-  </div>
-  <div class="ddp-type-multy2 ddp-clear">
-    <!-- box scroll -->
-    <div class="ddp-wrap-box-info" [ngClass]="{'ddp-selected':isFocus}" >
-      <div class="ddp-box-info">
-        <div class="ddp-box-info-in">
-          <span class="ddp-input-title">{{'Patterns' | translate}}</span>
-          {{'msg.dp.ui.pattern.description' | translate}}<br>
-
-          <strong class="ddp-ex">{{'msg.dp.ui.examples' | translate}}</strong>
-          {{'msg.dp.ui.string' | translate}}<br>
-          <i style="color:darkgrey">'Seoul'</i><br><br>
-
-          {{'msg.dp.ui.reg.ex' | translate}}<br>
-          <i style="color:darkgrey">/(\d)+/</i><br><br>
+<div class="pb-part-content" *ngIf="isShow">
+  <table class="pb-table-data">
+    <colgroup><col width="30%">
+      <col width="*">
+    </colgroup>
+    <tbody>
+    <tr>
+      <th>{{'msg.lineage.ui.list.search.column' | translate}} *</th>
+      <td>
+        <div class="pb-form-edit">
+          <edit-rule-field-combo [isMulti]="true" [fields]="fields" [selected]="selectedFields" [tabIndex]="2"
+                                 (onChange)="changeFields($event)" ></edit-rule-field-combo>
         </div>
-      </div>
-      <div class="ddp-wrap-boxwrap">
-        <input [(ngModel)]="pattern" (focus)="showHidePatternLayer(true)" (blur)="showHidePatternLayer(false)"
-               type="text" tabindex="3" class="ddp-input-typebasic" placeholder="{{ 'msg.dp.th.pattern.ph' | translate }}" >
-      </div>
-    </div>
-  </div>
-</div>
-<!--//part-->
+      </td>
+    </tr>
+    <tr>
+      <th>{{'msg.dp.th.pattern' | translate}} *</th>
+      <td>
+        <div class="pb-form-edit">
+          <input [(ngModel)]="pattern" (focus)="showHidePatternLayer(true)" (blur)="showHidePatternLayer(false)"
+                 type="text" tabindex="3" class="pb-component-input" placeholder="{{ 'msg.dp.th.pattern.ph' | translate }}" >
+          <div class="pb-box-info" *ngIf="isFocus">
+            <div class="pb-box-info-in">
+              <span class="pb-input-title">{{'Patterns' | translate}}</span>
+              {{'msg.dp.ui.pattern.description' | translate}}<br><br>
 
-<!-- part : quote -->
-<div *ngIf="isShow" class="ddp-box-part ddp-box-s" >
-  <div class="ddp-box-title"> {{'msg.dp.th.quote' | translate}} </div>
-  <div class="ddp-wrap-datainput">
-    <input [(ngModel)]="ignore" type="text" class="ddp-input-typebasic" tabindex="6" placeholder="{{'msg.dp.ui.enter.value' | translate}}" >
-  </div>
-</div>
-<!--//part-->
+              <strong class="pb-ex">{{'msg.dp.ui.examples' | translate}}</strong><br><br>
+              {{'msg.dp.ui.string' | translate}}<br>
+              <i style="color:darkgrey">'Seoul'</i><br><br>
 
-<!-- part -->
-<div *ngIf="isShow" class="ddp-box-part ddp-box-s" >
-  <div class="ddp-box-title"> {{'msg.dp.th.ignore.case' | translate}} </div>
-
-  <ul class="ddp-list-buttons">
-    <li [ngClass]="{'ddp-selected':!isIgnoreCase}" (click)="isIgnoreCase = false;"> {{'msg.dp.ui.no' | translate}} </li>
-    <li [ngClass]="{'ddp-selected':isIgnoreCase}" (click)="isIgnoreCase = true;"> {{'msg.dp.ui.yes' | translate}} </li>
-  </ul>
+              {{'msg.dp.ui.reg.ex' | translate}}<br>
+              <i style="color:darkgrey">/(\d)+/</i>
+            </div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <th> {{'msg.dp.th.quote' | translate}} </th>
+      <td>
+        <div class="pb-form-edit">
+          <input [(ngModel)]="ignore" type="text" class="pb-component-input" tabindex="6" placeholder="{{'msg.dp.ui.enter.value' | translate}}" >
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <th> {{'msg.dp.th.ignore.case' | translate}} </th>
+      <td>
+        <div class="pb-form-edit">
+          <label class="pb-compomnent-radio">
+            <input name="ignoreCase" type="radio" [checked]="!isIgnoreCase" (change)="isIgnoreCase = false;">
+            <i></i>
+            <span class="pb-txt-radio">{{'msg.dp.ui.no' | translate}}</span>
+          </label>
+          <label class="pb-compomnent-radio">
+            <input name="ignoreCase" type="radio" [checked]="isIgnoreCase" (change)="isIgnoreCase = true;">
+            <i></i>
+            <span class="pb-txt-radio">{{'msg.dp.ui.yes' | translate}}</span>
+          </label>
+        </div>
+      </td>
+    </tr>
+    </tbody>
+  </table>
 </div>
-<!-- //part -->

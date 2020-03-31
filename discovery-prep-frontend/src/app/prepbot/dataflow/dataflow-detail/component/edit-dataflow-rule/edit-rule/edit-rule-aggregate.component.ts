@@ -162,6 +162,11 @@ export class EditRuleAggregateComponent extends EditRuleComponent implements OnI
   public scrollHandler() {
     this.dataflowModelService.scrollClose.next();
   }
+
+  get warningHtml() {
+    return this.translateService.instant('msg.dp.ui.aggregate.warning1') + '<br/>'
+        + this.translateService.instant('msg.dp.ui.aggregate.warning2');
+  }
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   | Protected Method
   |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/

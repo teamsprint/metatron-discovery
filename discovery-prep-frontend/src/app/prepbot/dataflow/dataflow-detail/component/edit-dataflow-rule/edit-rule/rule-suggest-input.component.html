@@ -11,25 +11,22 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-
-<div class="ddp-input-selectbox"
-     [ngClass]="{'ddp-selected':isSuggestOpen}"
-     (clickOutside)="closeSuggest()">
+<ng-container (clickOutside)="closeSuggest()">
   <input #inputElem
          tabindex="{{tabIndex}}"
-         class="ddp-input-typebasic"
+         class="pb-component-input"
          placeholder="{{ placeholder }}"
          [(ngModel)]="formula"
          (click)="onClick($event)"
          (keydown)="onKeyDown($event)"
          (keyup)="onKeyUp($event)">
-  <div class="ddp-wrap-popup2 ddp-multy">
-    <ul class="ddp-list-popup" *ngIf="isSuggestOpen" >
+  <div class="pb-select-popup" *ngIf="isSuggestOpen">
+    <ul class="pb-list-selectbox type-guide">
       <li *ngFor="let item of suggestItems;let idx=index" (click)="onSelectAutoComplete(item)">
-        <a [ngStyle]="getSuggestStyle(idx, item)" href="javascript:">
-          <span class="ddp-data-name">{{item.value}}</span>
-        </a>
+        <a href="javascript:"
+           [ngStyle]="getSuggestStyle(idx, item)">
+          {{item.value}}</a>
       </li>
     </ul>
   </div>
-</div>
+</ng-container>

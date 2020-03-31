@@ -1,55 +1,41 @@
 <!-- sub -->
 <div class="pb-rnb-sub type-rule-list">
 
-    <!-- box rule -->
-    <!--
-        focus 일때 is-focus 추가
-    -->
-    <div class="pb-box-rule-list" *ngFor="let item of ruleList; let i = index" (click)="jumpRule(i)">
-        <div class="pb-txt-rule-list">
-            <span class="pb-txt-type">{{item.command}}</span> {{item.simplifiedRule}}
-        </div>
-        <div class="pb-area-buttons type-hover" *ngIf="i !== 0">
-            <a href="javascript:" class="pb-btn-icons-type type-edit" (click)="$event.stopImmediatePropagation(); editRule(item)"></a>
-            <a href="javascript:" class="pb-btn-icons-type type-del" (click)="$event.stopImmediatePropagation(); deleteRule(i)"></a>
-        </div>
-        <div class="pb-area-buttons type-focus">
-            <a href="javascript:" class="pb-component-btn-s">
-                Edit
-            </a>
-        </div>
+  <!-- box rule -->
+  <!--
+      focus 일때 is-focus 추가
+  -->
+  <ng-container *ngFor="let rule of ruleList; let idx = index">
+    <div class="pb-box-rule-list" (click)="jumpRule(idx)">
+      <div class="pb-txt-rule-list">
+        <span class="pb-txt-type">{{rule.command}}</span> {{rule.simplifiedRule}}
+      </div>
+      <div class="pb-area-buttons type-hover" *ngIf="idx !== 0">
+        <a href="javascript:" class="pb-btn-icons-type type-edit"
+           (click)="$event.stopImmediatePropagation(); editRule(rule)"></a>
+        <a href="javascript:" class="pb-btn-icons-type type-del"
+           (click)="$event.stopImmediatePropagation(); deleteRule(idx)"></a>
+      </div>
+      <div class="pb-area-buttons type-focus">
+        <a href="javascript:" class="pb-component-btn-s">
+          Edit
+        </a>
+      </div>
     </div>
     <!-- //box rule -->
+    <!--  is-focus를 없애면 일반 상태가 됨 -->
+    <div class="pb-wrap-line-add" [ngClass]="{'is-focus' : rule.isInsertStep}">
+      <div class="pb-line-add" (click)="$event.stopImmediatePropagation();insertStep(rule)">
+        <span class="pb-txt"> {{ 'msg.dp.btn.insert.rule' | translate }} </span>
+      </div>
+      <div class="pb-input-info"> Please enter a rule
+        <a class="pb-link-cancel" href="javascript:"
+           (click)="$event.stopImmediatePropagation();
+           cancelInsertMode(rule, idx)"> {{'msg.comm.btn.cancl' | translate }} </a>
+      </div>
+    </div>
+  </ng-container>
 
-
-    <!-- box rule -->
-    <!--
-       focus 일때 is-focus 추가
-   -->
-    <div class="jqtree-dragging">
-        <span class="pb-txt-type">Header</span> drag 일때
-    </div>
-    <div class="pb-box-rule-list is-focus">
-        <!-- guide line -->
-        <div class="jqtree-ghost"></div>
-        <!-- //guide line -->
-        <div class="pb-txt-rule-list">
-            <span class="pb-txt-type">Header</span> abcd efgh ijkl mlop qwer
-        </div>
-        <div class="pb-area-buttons type-hover">
-            <a href="javascript:" class="pb-btn-icons-type type-edit"></a>
-            <a href="javascript:" class="pb-btn-icons-type type-del"></a>
-        </div>
-        <div class="pb-area-buttons type-focus">
-            <a href="javascript:" class="pb-component-btn-s">
-                Edit
-            </a>
-        </div>
-    </div>
-    <!-- //box rule -->
-    <div class="pb-ui-buttons">
-        <a href="javascript:" class="pb-component-btn type-dark2"><em class="pb-icon-add-r"></em>Insert step</a>
-    </div>
 
 </div>
 <!-- //sub -->

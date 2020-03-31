@@ -14,38 +14,38 @@
   ~  */
   -->
 
-<div class="ddp-box-part" *ngIf="isShow">
-  <div class="ddp-box-title">
-    {{'msg.lineage.ui.list.search.column' | translate}}<em class="ddp-icon-essential"></em>
-  </div>
-  <!-- select box -->
-  <edit-rule-field-combo [isMulti]="true" [fields]="fields" [selected]="selectedFields" [tabIndex]="2"
-                         (onChange)="changeFields($event)" ></edit-rule-field-combo>
-  <!-- //select box -->
-</div>
-<!--//part-->
-
-<!-- part -->
-<div class="ddp-box-part" *ngIf="isShow">
-  <div class="ddp-box-title">
-    {{'msg.dp.th.merge.delim' | translate}}<em class="ddp-icon-essential"></em>
-  </div>
-  <div class="ddp-wrap-datainput">
-    <input type="text"
-           class="ddp-input-typebasic"
-           tabindex="3"
-           placeholder="{{'msg.dp.ui.merge.delim.ph' | translate}}"
-           [(ngModel)]="delimiter">
-  </div>
-</div>
-<!-- //part -->
-
-<!-- part -->
-<div class="ddp-box-part" *ngIf="isShow">
-  <div class="ddp-box-title">
-    {{'msg.dp.th.new-column-name' | translate}}<em class="ddp-icon-essential"></em>
-  </div>
-  <div class="ddp-wrap-datainput">
-    <input type="text" class="ddp-input-typebasic" tabindex="4" placeholder="{{'msg.dp.th.new-column-name.ph' | translate}}" [(ngModel)]="newValue" #neColName>
-  </div>
+<div class="pb-part-content" *ngIf="isShow">
+  <table class="pb-table-data">
+    <colgroup><col width="30%">
+      <col width="*">
+    </colgroup>
+    <tbody>
+    <tr>
+      <th>{{'msg.lineage.ui.list.search.column' | translate}} *</th>
+      <td>
+        <div class="pb-form-edit">
+          <edit-rule-field-combo [isMulti]="true" [fields]="fields" [selected]="selectedFields" [tabIndex]="2"
+                                 (onChange)="changeFields($event)" ></edit-rule-field-combo>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <th> {{'msg.dp.th.merge.delim' | translate}} *</th>
+      <td>
+        <div class="pb-form-edit">
+          <input [(ngModel)]="delimiter" type="text" class="pb-component-input" tabindex="3"
+                 placeholder="{{'msg.dp.ui.merge.delim.ph' | translate}}" >
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <th> {{'msg.dp.th.new-column-name' | translate}} *</th>
+      <td>
+        <div class="pb-form-edit">
+          <input [(ngModel)]="newValue" type="text" class="pb-component-input" tabindex="4"
+                 placeholder="{{'msg.dp.th.new-column-name.ph' | translate}}" >
+        </div>
+      </td>
+    </tr>
+  </table>
 </div>

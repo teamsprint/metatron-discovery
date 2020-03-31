@@ -84,6 +84,11 @@ export class PrepRnbRuleListComponent extends AbstractComponent implements OnIni
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   | Public Method
   |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
+  public initEditMode() {
+    this.ruleList.forEach((rule) =>{
+      rule.isInsertStep = false;
+    });
+  }
   /**
    * Jump action
    * @param {Number} idx
@@ -111,6 +116,22 @@ export class PrepRnbRuleListComponent extends AbstractComponent implements OnIni
    */
   public deleteRule(idx: number) {
     this.deleteEvent.emit(idx);
+  }
+
+  public insertStep(rule : Rule) {
+    this.selectedRuleIdx = undefined;
+    this.addRuleEvent.emit(rule['ruleNo']);
+  }
+
+  /**
+   * 중간 룰 추가 상태 취소
+   * @param {Rule} rule
+   * @param {Number} idx
+   */
+  public cancelInsertMode( rule : Rule, idx : number ) {
+    rule.isInsertStep = false;
+    this.selectedRuleIdx = idx;
+    this.jumpRule(idx);
   }
 
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=

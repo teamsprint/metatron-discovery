@@ -19,11 +19,11 @@ import {
 import { Field } from '../../../../../../domain/data-preparation/pr-dataset';
 import { Alert } from '../../../../../../common/util/alert.util';
 import { EventBroadcaster } from '../../../../../../common/event/event.broadcaster';
-import { DataflowService } from '../../../../service/dataflow.service';
 import { StringUtil } from '../../../../../../common/util/string.util';
 import { isNullOrUndefined } from "util";
 import { PrepSelectBoxCustomComponent } from '../../../../../util/prep-select-box-custom.component';
 import {SetFormatRule} from "../../../../../../domain/data-preparation/prep-rules";
+import {DataflowService} from "../../../../../prep/service/dataflow.service";
 
 @Component({
   selector : 'edit-rule-setformat',

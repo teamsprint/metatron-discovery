@@ -13,46 +13,40 @@
   ~  * limitations under the License.
   ~  */
   -->
-<div class="ddp-box-part" *ngIf="isShow">
-  <div class="ddp-box-title">
-    {{'msg.lineage.ui.list.search.column' | translate}}
-    <em class="ddp-icon-essential"></em>
-  </div>
-  <!-- select box -->
-  <edit-rule-field-combo [isMulti]="true"
-                         [fields]="fields"
-                         [selected]="selectedFields"
-                         [tabIndex]="2"
-                         (onChange)="changeFields($event)">
-  </edit-rule-field-combo>
-  <!-- //select box -->
-</div>
-<!--//part-->
 
-<!--part-->
-<div class="ddp-box-part" *ngIf="isShow">
-  <div class="ddp-box-title">
-    {{'msg.comm.th.type' | translate}}<em class="ddp-icon-essential"></em>
-  </div>
-  <!-- select box -->
-  <prep-select-box
-    [array]="nestList"
-    (onSelected)="selectItem($event)"
-    [defaultIndex]="defaultIndex">
-  </prep-select-box>
-  <!-- //select box -->
-</div>
-<!--//part-->
-
-<!-- part -->
-<div class="ddp-box-part" *ngIf="isShow">
-  <div class="ddp-box-title">
-    {{'msg.dp.th.new-column-name' | translate}}<em class="ddp-icon-essential"></em>
-  </div>
-  <div class="ddp-wrap-datainput">
-    <input #newColName tabindex="4"
-           class="ddp-input-typebasic"
-           [(ngModel)]="inputValue"
-           placeholder="{{'msg.dp.th.new-column-name.ph' | translate}}">
-  </div>
+<div class="pb-part-content" *ngIf="isShow">
+  <table class="pb-table-data">
+    <colgroup><col width="30%">
+      <col width="*">
+    </colgroup>
+    <tbody>
+    <tr>
+      <th>{{'msg.lineage.ui.list.search.column' | translate}} *</th>
+      <td>
+        <div class="pb-form-edit">
+          <edit-rule-field-combo [isMulti]="true" [fields]="fields" [selected]="selectedFields" [tabIndex]="2"
+                                 (onChange)="changeFields($event)" ></edit-rule-field-combo>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <th> {{'msg.comm.th.type' | translate}} *</th>
+      <td>
+        <prep-select-box
+            [array]="nestList"
+            (onSelected)="selectItem($event)"
+            [defaultIndex]="defaultIndex">
+        </prep-select-box>
+      </td>
+    </tr>
+    <tr>
+      <th> {{'msg.dp.th.new-column-name' | translate}} *</th>
+      <td>
+        <div class="pb-form-edit">
+          <input [(ngModel)]="inputValue" type="text" class="pb-component-input" tabindex="4"
+                 placeholder="{{'msg.dp.th.new-column-name.ph' | translate}}" >
+        </div>
+      </td>
+    </tr>
+  </table>
 </div>

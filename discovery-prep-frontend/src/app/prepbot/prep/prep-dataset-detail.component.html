@@ -195,15 +195,15 @@
                     <span class="pb-txt-rnb">RULE</span>
                 </a>
                 <ul class="pb-list-tab-button">
-                    <li (click)="transformAction('UNDO')" [ngClass]="{'is-selected': !undoable}">
-                        <a href="javascript:"><em class="pb-icon-grid"></em></a>
+                    <li (click)="transformAction('UNDO')">
+                        <a href="javascript:"><em class="pb-icon-grid" [ngClass]="{'ddp-disabled': !undoable}"></em></a>
                         <div class="pb-ui-tooltip-info">
                             <em class="pb-icon-view-top"></em>
                         </div>
 
                     </li>
-                    <li (click)="transformAction('REDO')" [ngClass]="{'ddp-disabled': !redoable}">
-                        <a href="javascript:"><em class="pb-icon-listgrid"></em></a>
+                    <li (click)="transformAction('REDO')">
+                        <a href="javascript:"><em class="pb-icon-listgrid" [ngClass]="{'ddp-disabled': !redoable}"></em></a>
                         <div class="pb-ui-tooltip-info">
                             <em class="pb-icon-view-top"></em>
                         </div>
@@ -226,7 +226,8 @@
                         [ruleList]="ruleList"
                         (jumpEvent)="jump($event)"
                         (deleteEvent)="deleteRule($event)"
-                        (editEvent)="setEditData($event)">
+                        (editEvent)="setEditData($event)"
+                        (addRuleEvent)="insertStep($event)">
                 </prep-rnb-rule-list>
             </li>
             <li>
@@ -245,6 +246,190 @@
         <!-- //bottom -->
     </div>
     <!-- //rnb -->
+
+    <!-- rule edit popup -->
+    <div class="pb-box-ruleedit" [ngStyle]="!showRuleEdit && {'display': 'none'}" (clickOutside)="hideRuleEdit()">
+        <div class="pb-ruleedit-top">
+            <div class="pb-label-title">
+                {{ opString === 'UPDATE' ? ('msg.dp.ui.btn.edit.rule' | translate) : ('msg.dp.ui.btn.add.rule' | translate ) }}
+            </div>
+            <div class="pb-ui-buttons">
+                <a href="javascript:" class="pb-btn-icons-type type-close" (click)="hideRuleEdit()"></a>
+            </div>
+            <a href="javascript:" class="pb-component-btn" (click)="this.editorUseFlag = !this.editorUseFlag;"><em class="pb-icon-refresh"></em>
+                {{ editorUseFlag ? ('msg.dp.btn.switch.builder' | translate) : ('msg.dp.btn.switch.editor' | translate ) }}
+            </a>
+            <!-- <div class="pb-btn-bottom">
+                <a href="javascript:" class="pb-component-btn type-dark">
+                    <em class="pb-icon-dictionary"></em>SAVE
+                </a>
+            </div> -->
+        </div>
+
+        <!-- part -->
+        <div class="pb-ui-part" [ngStyle]="{'display':editorUseFlag ? 'none' : null }">
+            <div class="pb-label-part">{{'msg.dp.th.command' | translate}}</div>
+            <!-- box select -->
+            <div class="pb-box-command">
+                <!-- select box -->
+                <!-- 클릭시 ddp-selected 추가 -->
+                <div class="pb-form-selectbox type-value"
+                     tabindex="1"
+                     [ngClass]="{'ddp-selected' : isCommandListShow }"
+                     (click)="$event.stopImmediatePropagation(); showCommandList()"
+                     (keydown)="navigateWithKeyboardShortList($event, filteredCommandList, 'command')">
+                    <input type="text" class="pb-input-selectbox" placeholder="Command" [(ngModel)]="commandSearchText" id="commandSearch">
+                    <span class="pb-txt-selectbox ">{{ruleVO.command !== '' ?  ruleVO.command : 'msg.dp.ui.command.input.ph' | translate }}</span>
+                    <!-- popup -->
+                    <div class="pb-select-popup"
+                         *ngIf="isCommandListShow"
+                         (clickOutside)="isCommandListShow = false;">
+                        <ul class="pb-list-selectbox pb-list-command" *ngIf="filteredCommandList.length > 0">
+                            <li *ngFor="let command of filteredCommandList; let index = index;"
+                                (click)="selectCommand($event, command)"
+                                (mousemove)="flag === true ? flag = false : flag = true">
+                                <a href="javascript:">
+                              <span class="pb-ui-type">
+                                <em class="pb-ui-round">{{command.alias}}</em>{{command.command}}
+                              </span>
+                                    <span class="pb-ui-code">
+                                {{command.desc}}
+                              </span>
+                                </a>
+                            </li>
+                        </ul>
+                        <span class="pb-txt-label2" *ngIf="filteredCommandList.length === 0">
+                          {{'msg.dp.ui.search.no.rslt' | translate}}
+                        </span>
+                    </div>
+                    <!-- //popup -->
+                </div>
+                <!-- //box select -->
+            </div>
+        </div>
+        <div class="pb-block-part" [ngStyle]="{'display':editorUseFlag || ruleVO.command === '' ? 'none' : null }"
+             [ngClass]="{'type-button': false}">
+
+            <!--startHeader-->
+            <edit-rule-header #editRule *ngIf="'header' === ruleVO.command" ></edit-rule-header>
+            <!-- //endHeader-->
+
+            <!--startKeep-->
+            <edit-rule-keep #editRule *ngIf="'keep' === ruleVO.command">
+            </edit-rule-keep>
+            <!-- //endKeep-->
+
+            <!-- startReplace -->
+            <edit-rule-replace #editRule *ngIf="'replace' === ruleVO.command">
+            </edit-rule-replace>
+            <!-- // endReplace -->
+
+            <!-- startRename -->
+            <edit-rule-rename #editRule *ngIf="'rename' === ruleVO.command"></edit-rule-rename>
+            <!-- // endRename -->
+
+            <!--startSet-->
+            <edit-rule-set #editRule *ngIf="'set' === ruleVO.command">
+            </edit-rule-set>
+            <!--//endSet-->
+
+            <!--startSettype-->
+            <edit-rule-settype #editRule *ngIf="'settype' === ruleVO.command"></edit-rule-settype>
+            <!--//endSettype-->
+
+            <!--startCountpattern-->
+            <edit-rule-countpattern #editRule *ngIf="'countpattern' === ruleVO.command"></edit-rule-countpattern>
+            <!--//endCountpattern-->
+
+            <!--startSplit-->
+            <edit-rule-split #editRule *ngIf="'split'===ruleVO.command"></edit-rule-split>
+            <!--//endSplit-->
+
+            <!--startDerive-->
+            <edit-rule-derive #editRule *ngIf="'derive' === ruleVO.command">
+            </edit-rule-derive>
+            <!--//endDerive-->
+
+            <!--startDelete-->
+            <edit-rule-delete #editRule *ngIf="'delete' === ruleVO.command">
+            </edit-rule-delete>
+            <!--//endDelete-->
+
+            <!--startDrop-->
+            <edit-rule-drop #editRule *ngIf="'drop' === ruleVO.command" ></edit-rule-drop>
+            <!--//endDrop-->
+
+            <!--startExtract-->
+            <edit-rule-extract #editRule *ngIf="'extract'===ruleVO.command"></edit-rule-extract>
+            <!--//endExtract-->
+
+            <!--startFlatten-->
+            <edit-rule-flatten #editRule *ngIf="'flatten' === ruleVO.command"></edit-rule-flatten>
+            <!--//endFlatten-->
+
+            <!--startMerge-->
+            <edit-rule-merge #editRule *ngIf="'merge' === ruleVO.command"></edit-rule-merge>
+            <!--//endMerge-->
+
+            <!--startAggregate-->
+            <edit-rule-aggregate #editRule *ngIf="'aggregate' === ruleVO.command"></edit-rule-aggregate>
+            <!--//endAggregate-->
+
+            <!--startSort-->
+            <edit-rule-sort #editRule *ngIf="'sort' === ruleVO.command"></edit-rule-sort>
+            <!--//endSort-->
+
+            <!--startMove-->
+            <edit-rule-move #editRule *ngIf="'move' === ruleVO.command"></edit-rule-move>
+            <!--//endMove-->
+
+            <!--start pivot -->
+            <edit-rule-pivot #editRule *ngIf="'pivot' === ruleVO.command"></edit-rule-pivot>
+            <!-- end pivot -->
+
+            <!--start unpivot -->
+            <edit-rule-unpivot #editRule *ngIf="'unpivot' === ruleVO.command"></edit-rule-unpivot>
+            <!--//endUnpivot-->
+
+            <!--startNest-->
+            <edit-rule-nest #editRule *ngIf="'nest' === ruleVO.command"></edit-rule-nest>
+            <!--//endNest-->
+
+            <!--startUnnest-->
+            <edit-rule-unnest #editRule *ngIf="'unnest' === ruleVO.command" [firstRow]="selectedDataSet.gridData.data?selectedDataSet.gridData.data[0]:null"></edit-rule-unnest>
+            <!--//endUnnest-->
+
+            <!--startSetformat-->
+            <edit-rule-setformat #editRule *ngIf="'setformat' === ruleVO.command"></edit-rule-setformat>
+            <!--endSetformat-->
+
+            <!--startSetformat-->
+            <edit-rule-window #editRule *ngIf="'window' === ruleVO.command"></edit-rule-window>
+            <!--endSetformat-->
+        </div>
+
+        <div class="pb-block-part" *ngIf="editorUseFlag">
+            <!-- editor 모드 -->
+            <div class="pb-part-content">
+                <div class="pb-form-create">
+                    <div class="pb-create-label">Command</div>
+                    <div class="pb-form-edit">
+                        <textarea class="pb-component-textarea-auto" style="height: 300px;"
+                                  placeholder="{{'msg.dp.alert.command.input.ph' | translate}}"
+                                  [(ngModel)]="inputRuleCmd"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- //part -->
+        <div class="pb-ruleedit-bottom">
+            <a href="javascript:" class="pb-component-btn type-dark" (click)="addRule()">
+                {{ opString !== 'UPDATE' ? ('msg.dp.btn.add' | translate) : ('msg.comm.btn.done2' | translate ) }}
+            </a>
+        </div>
+    </div>
+    <!-- //rule edit popup -->
+
 </div>
 
 

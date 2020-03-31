@@ -12,14 +12,22 @@
   ~ limitations under the License.
   -->
 
-<div *ngIf="isShow" class="ddp-box-part" >
-  <div class="ddp-box-title">
-    {{'msg.dp.th.row' | translate}}
-    <em class="ddp-icon-essential"></em>
-  </div>
-  <div class="ddp-wrap-datainput">
-    <input [(ngModel)]="rowNum" [input-mask]="'number'"
-           placeholder="{{'msg.dp.th.row.ph' | translate}}"
-           tabindex="2" class="ddp-input-typebasic" type="text" >
-  </div>
+<div class="pb-part-content" *ngIf="isShow">
+  <table class="pb-table-data">
+    <colgroup><col width="30%">
+      <col width="*">
+    </colgroup>
+    <tbody>
+    <tr>
+      <th>{{'msg.dp.th.row' | translate}} *</th>
+      <td>
+        <div class="pb-form-edit">
+          <input type="text" class="pb-component-input" tabindex="2"
+                 placeholder="{{'msg.dp.th.row.ph' | translate}}"
+                 [(ngModel)]="rowNum" [input-mask]="'number'">
+        </div>
+      </td>
+    </tr>
+    </tbody>
+  </table>
 </div>

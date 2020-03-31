@@ -118,6 +118,9 @@ export class PrepSelectBoxComponent extends AbstractComponent implements OnInit 
   @Input()
   public isWritable: boolean = false;
 
+  @Input()
+  public inputClass: string = ''
+
   // Selected item
   public selectedItem: any;
 

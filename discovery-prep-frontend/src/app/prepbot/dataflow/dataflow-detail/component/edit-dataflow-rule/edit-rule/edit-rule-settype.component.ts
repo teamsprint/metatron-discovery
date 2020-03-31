@@ -282,11 +282,13 @@ export class EditRuleSettypeComponent extends EditRuleComponent implements OnIni
     });
 
     if (hasTimestampType) { // 타임스탬프 타입이 하나라도 있다면 splice
-      var pos = this.typeList.indexOf('timestamp');
+      let pos = this.typeList.indexOf('timestamp');
       if (-1 !== pos ) {
         this.typeList.splice(pos, 1);
         this.selectedType = '';
-        this.prepSelectBoxComponent.selectedItem = null;
+        if (this.prepSelectBoxComponent) {
+          this.prepSelectBoxComponent.selectedItem = null;
+        }
         this.isTimestamp = false;
       }
     } else { // 타임스탬프 타입이 없다면
@@ -316,17 +318,21 @@ export class EditRuleSettypeComponent extends EditRuleComponent implements OnIni
 
     // 선택된 컬럼이 STRING인 경우에만 MAP, ARRAY로 settype 가능하다
     if (!isAllString) {
-      var pos = this.typeList.indexOf('map');
+      let pos = this.typeList.indexOf('map');
       if (-1 !== pos) {
         this.typeList.splice(this.typeList.length-1, 1);
         this.selectedType = '';
-        this.prepSelectBoxComponent.selectedItem = null;
+        if (this.prepSelectBoxComponent) {
+          this.prepSelectBoxComponent.selectedItem = null;
+        }
       }
       pos = this.typeList.indexOf('array');
       if (-1 !== pos) {
         this.typeList.splice(this.typeList.length-1, 1);
         this.selectedType = '';
-        this.prepSelectBoxComponent.selectedItem = null;
+        if (this.prepSelectBoxComponent) {
+          this.prepSelectBoxComponent.selectedItem = null;
+        }
       }
     } else {
       if (-1 === this.typeList.indexOf('map')) {

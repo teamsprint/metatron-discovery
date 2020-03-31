@@ -12,29 +12,36 @@
   ~ limitations under the License.
   -->
 
-<div class="ddp-box-part ddp-editor" *ngIf="isShow" style="margin-right: 125px;">
-  <div class="ddp-box-title">
-    {{'msg.dp.th.expression' | translate}}<em class="ddp-icon-essential"></em>
-  </div>
-  <div class="ddp-wrap-datainput">
-    <rule-suggest-input #derive_value_input
-      [formula]="deriveVal"
-      [command]="'derive'" [cmdArg]="'value'" 
-      [tabIndex]="2" [placeholder]="'msg.dp.th.expression.ph' | translate"
-      [fields]="fields"
-      (onChange)="deriveVal = $event" ></rule-suggest-input>
-  </div>
-  <a href="javascript:" class="ddp-btn-bg" (click)="openPopupFormulaInput()"><em class="ddp-icon-editor"></em>{{'msg.dp.btn.advanced.editor' | translate }}</a>
+<div class="pb-part-content" *ngIf="isShow">
+  <table class="pb-table-data">
+    <colgroup><col width="30%">
+      <col width="*">
+    </colgroup>
+    <tbody>
+    <tr>
+      <th> {{'msg.dp.th.expression' | translate}} *</th>
+      <td>
+        <div class="pb-form-edit">
+          <rule-suggest-input #derive_value_input
+                              [formula]="deriveVal"
+                              [command]="'derive'" [cmdArg]="'value'"
+                              [tabIndex]="2" [placeholder]="'msg.dp.th.expression.ph' | translate"
+                              [fields]="fields"
+                              (onChange)="deriveVal = $event" ></rule-suggest-input>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <th> {{'msg.dp.th.new-column-name' | translate}} *</th>
+      <td>
+        <div class="pb-form-edit">
+          <input type="text" class="pb-component-input" tabindex="3"
+                 placeholder="{{'msg.dp.th.new-column-name.ph' | translate}}"
+                 [(ngModel)]="deriveAs">
+        </div>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <!--<a class="pb-btn-bg" href="javascript:">Rename Multiple Columns</a>-->
 </div>
-<!-- //part -->
-
-<!-- part -->
-<div class="ddp-box-part" style="padding : 0 35px;" *ngIf="isShow">
-  <div class="ddp-box-title">
-    {{'msg.dp.th.new-column-name' | translate}}<em class="ddp-icon-essential"></em>
-  </div>
-  <div class="ddp-wrap-datainput">
-    <input type="text" class="ddp-input-typebasic" tabindex="3" placeholder="{{'msg.dp.th.new-column-name.ph' | translate}}" [(ngModel)]="deriveAs">
-  </div>
-</div>
-<!-- //part -->

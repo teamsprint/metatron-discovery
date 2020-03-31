@@ -13,8 +13,7 @@
  */
 
 import {
-  AfterViewInit, Component, ElementRef, EventEmitter, Injector, OnDestroy, OnInit, Output,
-  ViewChild
+  AfterViewInit, Component, ElementRef, EventEmitter, Injector, OnDestroy, OnInit, Output
 } from '@angular/core';
 import { Field } from '../../../../../../domain/data-preparation/pr-dataset';
 import { EditRuleComponent } from './edit-rule.component';
@@ -31,8 +30,6 @@ export class EditRuleNestComponent extends EditRuleComponent implements OnInit, 
   | Private Variables
   |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
-  @ViewChild('newColName')
-  private _newColName: ElementRef;
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   | Protected Variables
   |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/

@@ -28,7 +28,7 @@ import { Alert } from '../../../../../../common/util/alert.util';
 import {isNullOrUndefined,isUndefined} from "util";
 import { RuleSuggestInputComponent } from './rule-suggest-input.component';
 import {WindowRule} from "../../../../../../domain/data-preparation/prep-rules";
-import {DataflowModelService} from "../../../../service/dataflow.model.service";
+import {DataflowModelService} from "../../../../../prep/service/dataflow.model.service";
 
 interface formula {
   id: number;
@@ -66,7 +66,7 @@ export class EditRuleWindowComponent extends EditRuleComponent implements OnInit
   | Constructor
   |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
   constructor(
-    private dataflowModelService:DataflowModelService,
+    private dataflowModelService: DataflowModelService,
     protected elementRef: ElementRef,
     protected injector: Injector) {
     super(elementRef, injector);

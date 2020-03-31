@@ -31,6 +31,7 @@ import { EventBroadcaster } from '../../../../../../common/event/event.broadcast
 import { StringUtil } from '../../../../../../common/util/string.util';
 import * as $ from "jquery";
 import { CommonUtil } from '../../../../../../common/util/common.util';
+import htmlString = JQuery.htmlString;
 
 @Component({
   selector : 'edit-rule-field-combo',
@@ -75,6 +76,12 @@ export class EditRuleFieldComboComponent extends AbstractComponent implements On
 
   @Input()
   public tabIndex:number = 0;
+
+  @Input()
+  public isSearchAllowed:boolean = false;
+
+  @Input()
+  public warningHtml: htmlString;
 
   @Output()
   public onChange:EventEmitter<{target?:Field, isSelect?:boolean, selectedList:Field[]}> = new EventEmitter();
@@ -208,6 +215,17 @@ export class EditRuleFieldComboComponent extends AbstractComponent implements On
     this.safelyDetectChanges();
   } // function - checkItem
 
+  public toggleOptions(event:MouseEvent) {
+    if ($(event.target).hasClass('pb-txt-selectbox')
+        || $(event.target).hasClass('pb-form-selectbox')) {
+      if (this.isShowOptions) {
+        this.hideOptions(event);
+      } else {
+        this.showOptions(event);
+      }
+    }
+  }
+
   /**
    * 옵션 표시
    * @param {MouseEvent} event
@@ -215,7 +233,7 @@ export class EditRuleFieldComboComponent extends AbstractComponent implements On
   public showOptions(event:MouseEvent) {
     event.stopPropagation();
     this.isShowOptions = true;
-    if( !this.isMulti) {
+    if (this.isSearchAllowed) {
       this.columnSearchText = ''; // 검색어 초기화
       setTimeout(() => $(this._inputSearch.nativeElement).trigger('focus')); // 포커스
     }
