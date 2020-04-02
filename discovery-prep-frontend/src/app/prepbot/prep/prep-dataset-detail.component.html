@@ -195,15 +195,15 @@
                     <span class="pb-txt-rnb">RULE</span>
                 </a>
                 <ul class="pb-list-tab-button">
-                    <li (click)="transformAction('UNDO')">
-                        <a href="javascript:"><em class="pb-icon-grid" [ngClass]="{'ddp-disabled': !undoable}"></em></a>
+                    <li (click)="transformAction('UNDO')" [ngClass]="{'ddp-disabled': !undoable}">
+                        <a href="javascript:"><em class="pb-icon-top-undo"></em></a>
                         <div class="pb-ui-tooltip-info">
                             <em class="pb-icon-view-top"></em>
                         </div>
 
                     </li>
-                    <li (click)="transformAction('REDO')">
-                        <a href="javascript:"><em class="pb-icon-listgrid" [ngClass]="{'ddp-disabled': !redoable}"></em></a>
+                    <li (click)="transformAction('REDO')" [ngClass]="{'ddp-disabled': !redoable}">
+                        <a href="javascript:"><em class="pb-icon-top-redo"></em></a>
                         <div class="pb-ui-tooltip-info">
                             <em class="pb-icon-view-top"></em>
                         </div>

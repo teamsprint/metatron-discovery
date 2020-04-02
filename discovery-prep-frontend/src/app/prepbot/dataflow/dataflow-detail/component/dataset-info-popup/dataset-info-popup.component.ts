@@ -210,8 +210,8 @@ export class DatasetInfoPopupComponent extends AbstractComponent implements OnIn
   public ngAfterViewInit() {
     setTimeout( () => {
       //this._split = Split(['.sys-dataflow-left-panel', '.sys-dataflow-right-panel'], { sizes: [80, 20], minSize: [300,300], onDragEnd : (() => {
-          this.gridComponent.resize();
-          this.datasetEventHandler.emit('resize');
+          //this.gridComponent.resize();
+          //this.datasetEventHandler.emit('resize');
         //}) });
     }, 500 );
   } // function -  ngAfterViewInit

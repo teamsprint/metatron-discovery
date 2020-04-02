@@ -503,33 +503,44 @@ export class PrepDatasetDetailComponent extends AbstractComponent {
     // clear all selected columns and rows
     this._editRuleGridComp.unSelectionAll();
     let tempOpString = this.opString;
-    this.loadingShow();
 
-    // Get grid of selected index
-    this._setEditRuleInfo({op: tempOpString, ruleIdx: idx, count: 100, offset: 0 }).then((data) => {
+    if (this.ruleList.length > idx +1) {
+      this.loadingShow();
 
-      if (data['error']) {
-        let prep_error = this.dataprepExceptionHandler(data['error']);
-        PreparationAlert.output(prep_error, this.translateService.instant(prep_error.message));
-        return;
-      }
+      // Get grid of selected index
+      this._setEditRuleInfo({op: tempOpString, ruleIdx: idx, count: 100, offset: 0 }).then((data) => {
 
-      // set affected columns
-      data.apiData.gridResponse.interestedColNames.forEach(col => {
-        if ('' !== this._editRuleGridComp.getColumnUUIDByColumnName(col)) {
-          this._editRuleGridComp.selectColumn(this._editRuleGridComp.getColumnUUIDByColumnName(col), true);
+        if (data['error']) {
+          let prep_error = this.dataprepExceptionHandler(data['error']);
+          PreparationAlert.output(prep_error, this.translateService.instant(prep_error.message));
+          return;
         }
-      });
-      this.loadingHide();
-      this.serverSyncIndex = data.apiData.ruleCurIdx;
 
-      // set rule list color (-1 as 1 was added to match server list index before sending API)
+        // set affected columns
+        data.apiData.gridResponse.interestedColNames.forEach(col => {
+          if ('' !== this._editRuleGridComp.getColumnUUIDByColumnName(col)) {
+            this._editRuleGridComp.selectColumn(this._editRuleGridComp.getColumnUUIDByColumnName(col), true);
+          }
+        });
+        this.loadingHide();
+        this.serverSyncIndex = data.apiData.ruleCurIdx;
+
+        // set rule list color (-1 as 1 was added to match server list index before sending API)
+        this.setRuleListColorWhenJumped(this.serverSyncIndex);
+        this.opString = 'APPEND';
+        this.setInsertStep(this.serverSyncIndex);
+
+        this.showRuleEdit = true;
+      });
+    } else {
+      this.serverSyncIndex = idx;
       this.setRuleListColorWhenJumped(this.serverSyncIndex);
       this.opString = 'APPEND';
       this.setInsertStep(this.serverSyncIndex);
 
       this.showRuleEdit = true;
-    });
+    }
+
   }
 
   /**

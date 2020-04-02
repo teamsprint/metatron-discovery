@@ -5,7 +5,7 @@
   <!--
       focus 일때 is-focus 추가
   -->
-  <ng-container *ngFor="let rule of ruleList; let idx = index">
+  <ng-container *ngFor="let rule of ruleList; let idx = index; let last = last;">
     <div class="pb-box-rule-list" (click)="jumpRule(idx)">
       <div class="pb-txt-rule-list">
         <span class="pb-txt-type">{{rule.command}}</span> {{rule.simplifiedRule}}
@@ -24,7 +24,7 @@
     </div>
     <!-- //box rule -->
     <!--  is-focus를 없애면 일반 상태가 됨 -->
-    <div class="pb-wrap-line-add" [ngClass]="{'is-focus' : rule.isInsertStep}">
+    <div class="pb-wrap-line-add" [ngClass]="{'is-focus': rule.isInsertStep, 'last': last}">
       <div class="pb-line-add" (click)="$event.stopImmediatePropagation();insertStep(rule)">
         <span class="pb-txt"> {{ 'msg.dp.btn.insert.rule' | translate }} </span>
       </div>

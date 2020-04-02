@@ -241,9 +241,9 @@ export class EditRuleGridComponent extends AbstractComponent implements OnInit, 
 
         // 컬럼 정보
         this.columnWidths = null;       // 컴럼별 너비 정보
-        this.totalColumnCnt = 0;      // 그리드 column 구성
-        this.totalRowCnt = 0;         // 전체 조회 행수
-        this.columnTypeCnt = 0;       // 전체 컬럼 type 갯수
+        //this.totalColumnCnt = 0;      // 그리드 column 구성
+        //this.totalRowCnt = 0;         // 전체 조회 행수
+        //this.columnTypeCnt = 0;       // 전체 컬럼 type 갯수
         this.columnTypeList = [];   // 전체 컬럼 type list
 
         // T/F
