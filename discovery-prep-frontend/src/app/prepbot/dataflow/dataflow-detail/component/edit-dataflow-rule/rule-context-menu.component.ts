@@ -168,7 +168,7 @@ export class RuleContextMenuComponent extends AbstractComponent implements OnIni
           {label : 'Merge', value : 'merge' , disabled : (data.selectedColumnIds.length === 1 && data.selectedColumnIds[0] === data.contextInfo.columnName) || data.selectedColumnIds.length === 0, command: 'generate'},
           {label : 'Nest', value : 'nest', disabled : (data.selectedColumnIds.length === 1 && data.selectedColumnIds[0] === data.contextInfo.columnName) || data.selectedColumnIds.length === 0, command: 'generate'},
           {label : 'Unnest', value : 'unnest', disabled : this.contextInfo.columnType !== 'ARRAY' && this.contextInfo.columnType !== 'MAP', command: 'generate'},
-          {label : 'Flatten', value : 'flatten' , disabled : this.contextInfo.columnType !== 'ARRAY', command: 'generate'},
+          {label : 'Flatten', value : 'flatten' , disabled : (data.selectedColumnIds.length > 1 || this.contextInfo.columnType !== 'ARRAY'), command: 'generate'},
 
         ]
       }

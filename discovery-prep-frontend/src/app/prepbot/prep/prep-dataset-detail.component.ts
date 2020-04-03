@@ -511,12 +511,10 @@ export class PrepDatasetDetailComponent extends AbstractComponent {
    * @param idx - from rule list
    */
   public jumpToInsertStep(idx: number) {
-
-    // clear all selected columns and rows
-    this._editRuleGridComp.unSelectionAll();
-    let tempOpString = this.opString;
-
     if (this.ruleList.length > idx +1) {
+      // clear all selected columns and rows
+      this._editRuleGridComp.unSelectionAll();
+      let tempOpString = this.opString;
       this.loadingShow();
 
       // Get grid of selected index
