@@ -32,6 +32,10 @@ import {PrepRnbRecommendComponent} from "./component/prep-rnb-recommend.componen
 import {StringUtil} from "../../common/util/string.util";
 import {PrepPopResultCreateComponent} from './create-dataresult/prep-pop-result-create.component';
 import {EventBroadcaster} from "../../common/event/event.broadcaster";
+import {MultipleRenamePopupComponent} from "../dataflow/dataflow-detail/component/edit-dataflow-rule/multiple-rename-popup.component";
+
+import * as $ from 'jquery';
+import * as _ from 'lodash';
 
 @Component({
     selector: 'prep-dataset-detail',
@@ -44,6 +48,9 @@ export class PrepDatasetDetailComponent extends AbstractComponent {
 
   @ViewChild('editRule')
   private _editRuleComp: EditRuleComponent;
+
+  @ViewChild(MultipleRenamePopupComponent)
+  private multipleRenamePopupComponent: MultipleRenamePopupComponent;
 
   @ViewChild(RuleListComponent)
   private _ruleListComponent : RuleListComponent;
@@ -76,6 +83,8 @@ export class PrepDatasetDetailComponent extends AbstractComponent {
 
   // Layer hide and show
   public isCommandListShow: boolean = false;
+  public isRuleJoinModalShow: boolean = false;
+  public isRuleUnionModalShow: boolean = false;
 
   // Rules
   public ruleVO: Rule = new Rule();
@@ -90,6 +99,9 @@ export class PrepDatasetDetailComponent extends AbstractComponent {
 
   // 검색어
   public commandSearchText: string = '';
+
+  // 조인 편집시 필요한 데이터
+  public rightDataset: PrDataset;
 
   // Add rule / editor or builder
   public showRuleEdit: boolean = false;
@@ -434,21 +446,21 @@ export class PrepDatasetDetailComponent extends AbstractComponent {
 
       if (jsonRuleString.name === 'rename') {
         if (jsonRuleString.col.length !== 1) {
-          /*this.multipleRenamePopupComponent.init({
+          this.multipleRenamePopupComponent.init({
             gridData: _.cloneDeep(gridData),
             dsName: this.dsName,
             typeDesc: this.selectedDataSet.gridResponse.colDescs,
             editInfo: {ruleCurIdx: this.ruleVO['ruleNo'],
               cols: jsonRuleString.col,
               to: jsonRuleString.to}
-          });*/
+          });
         }
       }
 
       if (jsonRuleString.name === 'join') {
         if (this.selectedDataSet.gridData.data.length > 0) {
           this.editJoinOrUnionRuleStr = rule['jsonRuleString'];
-          //this.setJoinEditInfo(rule);
+          this.setJoinEditInfo(rule);
         } else {
           Alert.warning('No rows to join');
         }
@@ -458,7 +470,7 @@ export class PrepDatasetDetailComponent extends AbstractComponent {
         if (this.selectedDataSet.gridData.data.length > 0) {
           this.editJoinOrUnionRuleStr = rule['jsonRuleString'];
           //this.isUpdate = true;
-          //this.isRuleUnionModalShow = true;
+          this.isRuleUnionModalShow = true;
         } else {
           Alert.warning('No rows to union');
         }
@@ -593,6 +605,8 @@ export class PrepDatasetDetailComponent extends AbstractComponent {
 
   public hideRuleEdit() {
     this._prepRnbRuleListComponent.initEditMode();
+    this.refreshEditMode();
+    this.ruleVO.command = '';
     this.showRuleEdit = false;
   }
 
@@ -709,7 +723,7 @@ export class PrepDatasetDetailComponent extends AbstractComponent {
         this._editRuleComp.setValue('dsId', this.dsId);
         this._editRuleComp.setValue('colTypes', this.selectedDataSet.gridResponse.colDescs);
         break;
-      /*case 'join':
+      case 'join':
         this.rightDataset = new PrDataset();
         this.rightDataset.dsId = '';
         this.isRuleJoinModalShow = true;
@@ -717,7 +731,7 @@ export class PrepDatasetDetailComponent extends AbstractComponent {
       case 'union':
         this.editJoinOrUnionRuleStr = '';
         this.isRuleUnionModalShow = true;
-        break;*/
+        break;
     }
 
     if (command.command !== 'join' && command.command !== 'union') {
@@ -741,6 +755,34 @@ export class PrepDatasetDetailComponent extends AbstractComponent {
     this.safelyDetectChanges();
 
   }
+
+  /**
+   * Join 설정 완료 이벤트
+   * @param $event Join 설정 정보
+   */
+  public ruleJoinComplete($event) {
+    if ($event.ruleInfo) { // Join complete
+      this.applyRule($event.ruleInfo);
+    } else { // cancel join
+      this.jump(this.serverSyncIndex);
+    }
+    this.isRuleJoinModalShow = false;
+  }
+
+
+  /**
+   * union 설정 완료 이벤트
+   * @param $event Union 설정 정보
+   */
+  public ruleUnionComplete($event) {
+    if ($event.ruleInfo) { // Union complete
+      this.applyRule($event.ruleInfo);
+    } else { // Cancel union
+      this.jump(this.serverSyncIndex);
+    }
+    this.isRuleUnionModalShow = false;
+    //this.isUpdate = false;
+  } // function - ruleUnionComplete
 
   /**
    * Select box for commands - navigate with keyboard
@@ -782,6 +824,8 @@ export class PrepDatasetDetailComponent extends AbstractComponent {
         return command;
       }
     });
+
+    const commandListEle = $('.pb-list-command');
     // when Arrow up is pressed
     if (event.keyCode === 38) {
 
@@ -792,7 +836,7 @@ export class PrepDatasetDetailComponent extends AbstractComponent {
         currentList[lastIndex].isHover = true;
 
         // 스크롤을 마지막으로 보낸다
-        $('.ddp-list-command').scrollTop(lastIndex * height);
+        commandListEle.scrollTop(lastIndex * height);
 
         // 리스트에서 가장 첫번쨰가 선택되어 있는데 arrow up 을 누르면 리스트에 마지막으로 보낸다
       } else if (idx === 0) {
@@ -802,12 +846,12 @@ export class PrepDatasetDetailComponent extends AbstractComponent {
 
 
         // 스크롤을 마지막으로 보낸다
-        $('.ddp-list-command').scrollTop(lastIndex * height);
+        commandListEle.scrollTop(lastIndex * height);
 
       } else {
         currentList[idx].isHover = false;
         currentList[idx - 1].isHover = true;
-        $('.ddp-list-command').scrollTop((idx - 1) * height);
+        commandListEle.scrollTop((idx - 1) * height);
       }
 
       // when Arrow down is pressed
@@ -822,12 +866,12 @@ export class PrepDatasetDetailComponent extends AbstractComponent {
 
         currentList[0].isHover = true;
         currentList[lastIndex].isHover = false;
-        $('.ddp-list-command').scrollTop(0);
+        commandListEle.scrollTop(0);
 
       } else {
         currentList[idx].isHover = false;
         currentList[idx + 1].isHover = true;
-        $('.ddp-list-command').scrollTop((idx + 1) * height);
+        commandListEle.scrollTop((idx + 1) * height);
 
       }
 
@@ -845,6 +889,42 @@ export class PrepDatasetDetailComponent extends AbstractComponent {
       this.selectCommand(event, currentList[idx]);
       $('[tabindex=1]').trigger('focus');
     }
+  }
+
+  /**
+   * Multicolumn rename popup open
+   */
+  public onMultiColumnRenameClick() {
+
+    if ('UPDATE' === this.opString) {
+      this.multipleRenamePopupComponent.init({gridData: _.cloneDeep(this.selectedDataSet.gridData),
+        dsName: this.dsName,
+        typeDesc: this.selectedDataSet.gridResponse.colDescs,
+        editInfo: {ruleCurIdx: this.ruleVO['ruleNo'],
+          cols: this.ruleVO.cols,
+          to: [this.ruleVO.to]}
+      });
+    } else {
+      this.multipleRenamePopupComponent.init({gridData: _.cloneDeep(this.selectedDataSet.gridData),
+        dsName: this.dsName, typeDesc: this.selectedDataSet.gridResponse.colDescs});
+    }
+  }
+
+  /**
+   * Apply multi column rename
+   * @param data
+   */
+  public onRenameMultiColumns(data) {
+    if (isNullOrUndefined(data) ) { // Cancel rename if nothing is changed
+      this.jumpToCurrentIndex()
+    } else {
+      this.applyRule(data);
+    }
+  }
+
+  get existButtonCommand() {
+    const command = ['rename'];
+    return command.indexOf(this.ruleVO.command) > -1
   }
 
   // command List (search)
@@ -1030,7 +1110,7 @@ export class PrepDatasetDetailComponent extends AbstractComponent {
           this.selectedDataSet = apiData;
           this.selectedDataSet.gridData = data.gridData;
           this.selectedDataSet.dsId = this.dsId;
-          //this.selectedDataSet.dsName = this.dsName;
+          this.selectedDataSet.dsName = this.dsName;
 
           // Set rule list
           this.setRuleList(apiData['transformRules']);
@@ -1323,5 +1403,44 @@ export class PrepDatasetDetailComponent extends AbstractComponent {
     return !(idx === -1);
   }
 
+  /**
+   * Set join info when editing
+   * @param rule
+   */
+  private setJoinEditInfo(rule) {
 
+    const jsonRuleString = JSON.parse(rule['jsonRuleString']);
+
+    //this.rightDataset = new Dataset();
+    this.rightDataset = new PrDataset();
+
+    // is it append or update ?
+    this.rightDataset.joinButtonText = 'Edit Join';
+
+    // 수정시 필요한 룰넘버
+    this.rightDataset.ruleNo = rule['ruleNo'];
+
+    // dataset id
+    this.rightDataset.dsId = jsonRuleString.dataset2;
+    this.rightDataset.selectedJoinType = jsonRuleString.joinType;
+    this.rightDataset.rightSelectCol = jsonRuleString.rightCol;
+    this.rightDataset.leftSelectCol = jsonRuleString.leftCol;
+
+    this.rightDataset.joinRuleList = [];
+
+    jsonRuleString.leftJoinKey.forEach((item,index) => {
+      const info = new JoinInfo();
+      info.leftJoinKey = item;
+      info.rightJoinKey = jsonRuleString.rightJoinKey[index];
+      this.rightDataset.joinRuleList.push(info);
+    });
+    this.isRuleJoinModalShow = true;
+    this.changeDetect.detectChanges();
+  }
+
+}
+
+class JoinInfo {
+  public leftJoinKey: string;
+  public rightJoinKey: string;
 }

@@ -16,9 +16,9 @@ import { Component, ElementRef, EventEmitter, Injector, Input, OnDestroy, OnInit
 import { AbstractPopupComponent } from '../../../../../../../common/component/abstract-popup.component';
 import { PrDataset } from '../../../../../../../domain/data-preparation/pr-dataset';
 import { PopupService } from '../../../../../../../common/service/popup.service';
-import { DataflowService } from '../../../../../service/dataflow.service';
 import { PreparationAlert } from '../../../../../../util/preparation-alert.util';
 import * as _ from 'lodash';
+import {DataflowService} from "../../../../../../prep/service/dataflow.service";
 
 @Component({
   selector: 'app-union-add-datasets',

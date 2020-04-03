@@ -60,6 +60,11 @@ export class PrepListComponent extends AbstractComponent {
 
   public ViewMode = ViewMode;
 
+  public selectTypes = [{label: 'DATA FLOW', value: SelectType.DATAFLOW},
+                        {label: 'DATA SETS', value: SelectType.DATASETS},
+                        {label: 'DATA RESULTS', value: SelectType.DATARESULTS},
+                        {label: 'DATA CONNECTION', value: SelectType.DATACONNECTION}]
+
   // 프로필 기본 이미지 경로
   public defaultProfileImageSrc = '/assets/images/img_photo.png';
 

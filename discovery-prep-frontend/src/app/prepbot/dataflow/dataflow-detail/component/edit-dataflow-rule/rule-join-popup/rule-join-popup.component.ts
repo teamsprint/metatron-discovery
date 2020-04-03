@@ -21,14 +21,14 @@ import {
 import { GridComponent } from '../../../../../../common/component/grid/grid.component';
 import { PrDataset, DsType, Field } from '../../../../../../domain/data-preparation/pr-dataset';
 import { PopupService } from '../../../../../../common/service/popup.service';
-import { DataflowService } from '../../../../service/dataflow.service';
-import { DatasetService } from '../../../../../dataset/service/dataset.service';
 import { Alert } from '../../../../../../common/util/alert.util';
 import { PreparationAlert } from '../../../../../util/preparation-alert.util';
 import { StringUtil } from '../../../../../../common/util/string.util';
 import { header, SlickGridHeader } from '../../../../../../common/component/grid/grid.header';
 import { GridOption } from '../../../../../../common/component/grid/grid.option';
 import { isNull, isNullOrUndefined } from 'util';
+import {DataflowService} from "../../../../../prep/service/dataflow.service";
+import {DatasetService} from "../../../../../prep/service/dataset.service";
 
 class JoinInfo {
   public leftJoinKey: string;
@@ -38,6 +38,7 @@ class JoinInfo {
 @Component({
   selector: 'app-rule-join-popup',
   templateUrl: './rule-join-popup.component.html',
+  styles: ['.pb-ui-grid-form {font-size:13px}']
 })
 export class RuleJoinPopupComponent extends AbstractPopupComponent implements OnInit, OnDestroy, AfterViewInit {
 
@@ -1105,6 +1106,8 @@ export class RuleJoinPopupComponent extends AbstractPopupComponent implements On
         return command;
       }
     });
+
+    const selectboxEle = $('.pb-list-selectbox2');
     // when Arrow up is pressed
     if (event.keyCode === 38) {
 
@@ -1115,7 +1118,7 @@ export class RuleJoinPopupComponent extends AbstractPopupComponent implements On
         currentList[lastIndex].selected = true;
 
         // 스크롤을 마지막으로 보낸다
-        $('.ddp-list-selectbox2').scrollTop(lastIndex*height);
+        selectboxEle.scrollTop(lastIndex*height);
 
         // 리스트에서 가장 첫번쨰가 선택되어 있는데 arrow up 을 누르면 리스트에 마지막으로 보낸다
       } else if (idx === 0) {
@@ -1125,12 +1128,12 @@ export class RuleJoinPopupComponent extends AbstractPopupComponent implements On
 
 
         // 스크롤을 마지막으로 보낸다
-        $('.ddp-list-selectbox2').scrollTop(lastIndex*height);
+        selectboxEle.scrollTop(lastIndex*height);
 
       } else {
         currentList[idx].selected = false;
         currentList[idx-1].selected = true;
-        $('.ddp-list-selectbox2').scrollTop((idx-1)*height);
+        selectboxEle.scrollTop((idx-1)*height);
       }
 
       // when Arrow down is pressed
@@ -1145,12 +1148,12 @@ export class RuleJoinPopupComponent extends AbstractPopupComponent implements On
 
         currentList[0].selected = true;
         currentList[lastIndex].selected = false;
-        $('.ddp-list-selectbox2').scrollTop(0);
+        selectboxEle.scrollTop(0);
 
       } else {
         currentList[idx].selected = false;
         currentList[idx+1].selected = true;
-        $('.ddp-list-selectbox2').scrollTop((idx+1)*height);
+        selectboxEle.scrollTop((idx+1)*height);
 
       }
 

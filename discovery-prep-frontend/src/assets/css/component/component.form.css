@@ -22,7 +22,7 @@
 .pb-form-selectbox .pb-select-popup ul.pb-list-command li a em.pb-ui-round{display: inline-block;padding: 2px 2px 1px 2px;margin-left: 2px;margin-right: 5px;border-radius: 50%;border: 1px solid #F37135;color: #F37135;font-size: 14px;font-weight:600;}
 .pb-form-selectbox .pb-select-popup ul.pb-list-command li a span.pb-ui-code{display: block;padding: 5px 0 0 29px;color: #737373;font-size: 14px;}
 
-.pb-form-edit {position:relative;}
+.pb-form-edit {position:relative;width:100%;}
 .pb-form-edit.is-selected .pb-select-popup {display:block;}
 .pb-form-edit .pb-select-popup {position:absolute; top:100%; left:0; right:0; margin:5px 0 0 0; padding:5px 0; border-radius:0 0 4px 4px; box-shadow:  0 0 5px 2px #d7d7d7, 0 1px 0 0 #d7d7d7; background-color:#fff; z-index:15;}
 .pb-form-edit .pb-select-popup .pb-list-selectbox li a{display:block ; position:relative;  padding:6px 10px; color:#222; font-size:16px;}
@@ -56,7 +56,6 @@
 .pb-compomnent-checkbox input:disabled {cursor:no-drop;}
 .pb-compomnent-checkbox.type-checkbox i {margin-right:0; top:-2px;}
 .pb-compomnent-checkbox i {display:inline-block; position:relative; top:-4px; width:16px; margin-right:6px; height:16px; background:url(../../images/icon_checkbox.png) no-repeat; background-position:left -17px; vertical-align:middle;}
-.pb-compomnent-checkbox input {display:none;}
 .pb-compomnent-checkbox:hover i {background-position:left -34px;}
 .pb-compomnent-checkbox.type-all input:checked + i {background-position:left -85px;}
 .pb-compomnent-checkbox input:disabled + i {background-position:left top;}

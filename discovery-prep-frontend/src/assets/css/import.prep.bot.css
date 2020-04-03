@@ -35,12 +35,14 @@
 @import url('page/page.noti.css');
 @import url('page/page.dataflow.css');
 @import url('page/page.report.css');
+@import url('page/page.userfield.css');
 /***********************************************************************
      Popup
  *************************************************************************/
 @import url('popup/popup.create.css');
 @import url('popup/popup.create.dataconnect.css');
 @import url('popup/popup.create.dataset.css');
+@import url('popup/popup.information.css');
 
 
 @import url('prep.private.css');

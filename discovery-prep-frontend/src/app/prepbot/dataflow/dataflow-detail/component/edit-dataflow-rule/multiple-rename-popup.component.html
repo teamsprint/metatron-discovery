@@ -12,83 +12,101 @@
   ~ limitations under the License.
   -->
 
-<div class="ddp-layout-popuptype" *ngIf="isPopupOpen">
-  <em class="ddp-bg-popup"></em>
-  <div class="ddp-ui-popup">
-    <!-- title -->
-    <div class="ddp-ui-popup-title">
-      <span class="ddp-txt-title-name">Rename</span> {{subTitle}}
-      <div class="ddp-ui-pop-buttons">
-        <a href="javascript:" class="ddp-btn-pop" (click)="close()">{{'msg.comm.btn.cancl' | translate}}</a>
-        <a href="javascript:" class="ddp-btn-pop ddp-bg-black" [ngClass]="{'ddp-disabled': errorEsg }" (click)="applyRename()">
-          {{ getButtonLabel() }}
-        </a>
+<div class="pb-layout-popup" *ngIf="isPopupOpen">
+  <!-- box popup -->
+  <div class="pb-box-popup">
+    <!-- top -->
+    <div class="pb-popup-top">
+      <div class="pb-txt-title">Rename</div>
+      <div class="pb-ui-buttons">
+        <div class="pb-ui-part">
+          <a href="javascript:" class="pb-component-btn type-line"
+             [ngClass]="{'ddp-disabled': errorEsg }" (click)="applyRename()">
+            <em class="pb-icon-add-r"></em>{{ getButtonLabel() }}</a>
+        </div>
       </div>
+      <a href="javascript:" class="pb-btn-pop-close" (click)="close()"></a>
     </div>
-    <!-- //title -->
-    <div class="ddp-page-rename">
-      <div class="ddp-wrap-rename">
-        <!-- result -->
-        <div class="ddp-result">
-          <span class="ddp-col">{{gridData?.fields.length}} column(s)</span>
-          <span class="ddp-name" title="{{datasetName}}">{{datasetName}}</span>
-        </div>
-        <!-- //result -->
-        <!-- column -->
-        <div class="ddp-wrap-list">
+    <!-- //top -->
+    <!-- contents -->
+    <div class="pb-popup-contents pb-pop-information">
+      <!-- option -->
+      <div class="pb-ui-data-option ">
 
-          <table class="ddp-table-column">
-            <colgroup>
-              <col width="50%">
-              <col width="50%">
-            </colgroup>
-            <thead>
-            <tr>
-              <th>{{'msg.dp.ui.before' | translate}}</th>
-              <th>{{'msg.dp.ui.after' | translate}}</th>
-            </tr>
-            </thead>
-            <tbody>
-            <!-- 수정될때 ddp-selected 추가 -->
-              <tr *ngFor="let column of columns; let index = index"
-                  [ngClass]="{'ddp-selected': isChanged(column) || isEditing(column),
-                  'ddp-edit':isChanged(column)}">
-                <td>
-                  <span class="ddp-txt-column ddp-space-pre">{{gridData.fields[index].name}}</span>
-                  <em class="ddp-view"></em>
-                </td>
-                <td>
-                  <!-- edit -->
-                  <!-- 클릭시 ddp-selected 추가 -->
-                  <div class="ddp-box-edit"
-                       [ngClass]="{'ddp-selected': isEditing(column)}"
-                       (click)="editItem(column, index, renamedAsColumns)">
-                    <input type="text" [(ngModel)]="column.renamedAs"
-                           (keydown)="onKeydownHandler($event, column)"
-                           (keyup.enter)="applyRename()"
-                           (focus)="focus(column)"
-                           #renamedAsColumns
-                           (focusout)="focusOut(column,index, $event, renamedAsColumns)">
-                    <em class="ddp-icon-edit"></em>
-                  </div>
-                  <!-- //edit -->
-                  <span class="ddp-txt-error" *ngIf="column.isError"><em class="ddp-icon-error"></em>{{errorEsg}}</span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <!-- //column -->
-        <!-- grid -->
-        <div class="ddp-wrap-grid">
-          <div class="ddp-ui-grid">
-            <div scroll-grid-component style="width:100%; height: 100%;">
+        <div class="pb-page-rename">
+          <div class="pb-wrap-rename">
+            <!-- result -->
+            <div class="pb-result">
+              <span class="pb-col">{{gridData?.fields.length}} column(s)</span>
+              <span class="pb-name" title="{{datasetName}}">{{datasetName}}</span>
             </div>
+            <!-- //result -->
+            <!-- column -->
+            <div class="pb-wrap-list">
+
+              <table class="pb-table-column">
+                <colgroup>
+                  <col width="50%">
+                  <col width="50%">
+                </colgroup>
+                <thead>
+                <tr>
+                  <th>{{'msg.dp.ui.before' | translate}}</th>
+                  <th>{{'msg.dp.ui.after' | translate}}</th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- 수정될때 pb-selected 추가 -->
+                <tr *ngFor="let column of columns; let index = index"
+                    [ngClass]="{'pb-selected': isChanged(column) || isEditing(column),
+                  'pb-edit':isChanged(column)}">
+                  <td>
+                    <span class="pb-txt-column">{{gridData.fields[index].name}}</span>
+                    <em class="pb-view"></em>
+                  </td>
+                  <td>
+                    <!-- edit -->
+                    <!-- 클릭시 pb-selected 추가 -->
+                    <div class="pb-box-edit"
+                         [ngClass]="{'pb-selected': isEditing(column)}"
+                         (click)="editItem(column, index, renamedAsColumns)">
+                      <input type="text" [(ngModel)]="column.renamedAs"
+                             (keydown)="onKeydownHandler($event, column)"
+                             (keyup.enter)="applyRename()"
+                             (focus)="focus(column)"
+                             #renamedAsColumns
+                             (focusout)="focusOut(column,index, $event, renamedAsColumns)">
+                      <em class="pb-icon-edit"></em>
+                    </div>
+                    <!-- //edit -->
+                    <span class="pb-txt-error" *ngIf="column.isError"><em class="pb-icon-error"></em>{{errorEsg}}</span>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+            <!-- //column -->
+            <!-- grid -->
+            <div class="pb-wrap-grid">
+              <div class="pb-ui-grid">
+                <div scroll-grid-component style="width:100%; height: 100%;"></div>
+              </div>
+            </div>
+            <!-- //grid -->
           </div>
         </div>
-        <!-- //grid -->
-      </div>
-    </div>
 
+      </div>
+      <!-- //option -->
+    </div>
+    <!-- //contents -->
+    <!-- bottom -->
+    <div class="pb-popup-bottom">
+      <a href="javascript:" class="pb-component-btn-pop type-line" (click)="close()">{{'msg.comm.btn.cancl' | translate}}</a>
+      <a href="javascript:" class="pb-component-btn-pop type-bg"
+         [ngClass]="{'ddp-disabled': errorEsg }" (click)="applyRename()">{{ getButtonLabel() }}</a>
+    </div>
+    <!-- //bottom -->
   </div>
+  <!-- //box popup -->
 </div>

@@ -307,8 +307,8 @@
                 <!-- //box select -->
             </div>
         </div>
-        <div class="pb-block-part" [ngStyle]="{'display':editorUseFlag || ruleVO.command === '' ? 'none' : null }"
-             [ngClass]="{'type-button': false}">
+        <div class="pb-block-part" [ngStyle]="{'display':editorUseFlag ? 'none' : null }"
+             [ngClass]="{'type-button': existButtonCommand}">
 
             <!--startHeader-->
             <edit-rule-header #editRule *ngIf="'header' === ruleVO.command" ></edit-rule-header>
@@ -325,7 +325,8 @@
             <!-- // endReplace -->
 
             <!-- startRename -->
-            <edit-rule-rename #editRule *ngIf="'rename' === ruleVO.command"></edit-rule-rename>
+            <edit-rule-rename #editRule *ngIf="'rename' === ruleVO.command"
+                              (onEvent)="onMultiColumnRenameClick()"></edit-rule-rename>
             <!-- // endRename -->
 
             <!--startSet-->
@@ -432,7 +433,28 @@
 
 </div>
 
+<!-- Join rule popup -->
+<app-rule-join-popup *ngIf="isRuleJoinModalShow"
+                     [existingDataSet]="selectedDataSet"
+                     [serverSyncIndex]="serverSyncIndex"
+                     [dfId]="dfId"
+                     [rightDataset]="rightDataset"
+                     [editRuleStr]="editJoinOrUnionRuleStr"
+                     (joinComplete)="ruleJoinComplete($event);">
+</app-rule-join-popup>
+<!-- // Join rule popup -->
 
+<!-- Union rule popup -->
+<app-rule-union-popup [masterDataset]="selectedDataSet"
+                      [serverSyncIndex]="serverSyncIndex"
+                      [dfId]="dfId"
+                      [editRuleStr]="editJoinOrUnionRuleStr"
+                      (unionComplete)="ruleUnionComplete($event);"
+                      *ngIf="isRuleUnionModalShow">
+</app-rule-union-popup>
+<!-- // Union rule popup -->
+
+<multiple-rename-popup (renameMultiColumns)="onRenameMultiColumns($event);"></multiple-rename-popup>
 
 <prep-pop-result-create [hidden]="isCreateDataresultPopupOpen == false"
                         (snapshotCloseEvent)="closeSnapshotPopup()"

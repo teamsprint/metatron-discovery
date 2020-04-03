@@ -12,129 +12,60 @@
   ~ limitations under the License.
   -->
 
-<div class="ddp-layout-popuptype" [ngClass]="{'popup-prep-join' : !isShowPreview }">
-  <em class="ddp-bg-popup"></em>
-  <div class="ddp-ui-popup ddp-ui-popup-join">
-
-    <!-- title -->
-    <div class="ddp-ui-popup-title">
-      <span class="ddp-txt-title-name">{{'msg.board.ui.data.join' | translate}}</span>
-
-      <div class="ddp-ui-pop-buttons">
-        <a href="javascript:" class="ddp-btn-pop" (click)="closeJoin()">{{'msg.comm.btn.cancl' | translate}}</a>
-        <a href="javascript:" class="ddp-btn-pop ddp-bg-black"
-           [ngClass]="{'ddp-disabled':leftSelCols.length === 0 || rightSelCols.length === 0 || selectedJoinType === '' || joinList.length === 0}"
-           (click)="applyJoinRule()">{{joinButtonText}}</a>
-      </div>
-    </div>
-    <!-- //title -->
-    <!-- contents -->
-    <!-- Preview Content -->
-    <div class="ddp-ui-popup-contents" [style.display]="isShowPreview ? 'block':'none'">
-      <div class="ddp-ui-dataset-new">
-
-        <div class="ddp-ui-sublabel">
-          {{'msg.dp.th.rslt.data' | translate}}
-        </div>
-        <div class="ddp-box-resultpreview ddp-box-type">
-          <!-- top -->
-          <div class="ddp-ui-pop-top">
-            <div class="ddp-wrap-grid-option">
-
-              <div class="ddp-part-right">
-                <div class="ddp-data-form">
-                  <strong>{{getColumns()}}</strong>
-                  {{'msg.comm.detail.columns' | translate}}
-                </div>
-                <div class="ddp-data-form">
-                  <strong>{{getRows()}}</strong>
-                  {{'msg.comm.detail.rows' | translate}}
-                </div>
-                <div class="ddp-data-form ddp-cursor" (click)="showTypeList($event)" (clickOutside)="isDatatypesShow=false">
-                  <strong>{{dataTypesList.length}}</strong>
-                  {{'msg.comm.detail.types' | translate}}
-                  <!-- 팝업 -->
-                  <div class="ddp-wrap-popup2 ddp-types" *ngIf="isDatatypesShow">
-                    <ul class="ddp-list-popup">
-                      <li *ngFor="let data of dataTypesList">
-                        <a href="javascript:">
-                          <em class="{{getFieldTypeIconClass(data.label)}}"></em>
-                          {{data.value}}
-                        </a>
-                      </li>
-                    </ul>
-                  </div>
-                  <!-- //팝업 -->
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- //top -->
-          <!-- 그리드 영역 -->
-          <div grid-component #previewGrid class="ddp-ui-grid-form"></div>
-          <!-- //그리드 영역 -->
-        </div>
-      </div>
+<div class="pb-layout-popup">
+  <div class="pb-box-popup">
+    <a href="javascript:" class="pb-btn-pop-close" (click)="closeJoin()"></a>
+    <!-- top -->
+    <div class="pb-popup-top">
+      <div class="pb-txt-title">{{'msg.board.ui.data.join' | translate}}</div>
 
     </div>
 
-    <div class="ddp-btn-bottom" *ngIf="isShowPreview">
-      <a href="javascript:" class="ddp-btn-solid2"  (click)="isShowPreview = false;"
-         [style.display]="isShowPreview ? 'inline-block':'none'">
-        {{'msg.dp.btn.close.rslt' | translate}}
-      </a>
-    </div>
-    <!-- // Preview Content -->
-    <!-- default : ddp-default 추가 -->
-    <div class="ddp-wrap-prep-join">
-      <!-- default : ddp-default 추가 -->
-      <div class="ddp-ui-prep-join ">
-        <div class="ddp-prep-box-contents ">
-
-          <div class="ddp-box-pop-contents ddp-type" [style.display]="isShowPreview ? 'none':'block'"
-               [ngClass]="{'ddp-default':!rightDataset.gridData}">
-
-            <div class="ddp-ui-part">
+    <div class="pb-popup-contents pb-pop-information">
+      <!-- option -->
+      <div class="pb-ui-data-option" [style.display]="isShowPreview ? 'none':'block'">
+        <!-- form -->
+        <div class="pb-prep-box-contents ">
+          <!-- contents -->
+          <div class="pb-box-pop-contents pb-type pb-join">
+            <div class="pb-ui-part">
               <!-- top -->
-              <div class="ddp-ui-pop-top">
-                <span class="ddp-txt-title">{{'msg.dp.ui.master.ds' | translate}}</span>
+              <div class="pb-ui-pop-top">
+                <span class="pb-txt-title">{{'msg.dp.ui.master.ds' | translate}}</span>
               </div>
               <!-- //top -->
               <!-- set -->
-              <div class="ddp-ui-set">
-                <span class="ddp-data-name"><em class="ddp-icon-wrangled-m"></em>{{leftDataset.dsName}}</span>
-                <ul class="ddp-list-tab-button">
-                  <li [class.ddp-selected]="viewModeforLeft === 'grid'" (click)="toggleViewModeforLeft('grid')">
-                    <a href="javascript:"><em class="ddp-icon-grid"></em></a>
-
-                    <div class="ddp-ui-tooltip-info">
-                      <em class="ddp-icon-view-top"></em>
+              <div class="pb-ui-set">
+                <span class="pb-data-name"><em class="pb-icon-wrangled-m"></em>{{leftDataset.dsName}}</span>
+                <ul class="pb-list-tab-button">
+                  <li [class.pb-selected]="viewModeforLeft === 'grid'">
+                    <a href="javascript:" (click)="toggleViewModeforLeft('grid')"><em class="pb-icon-grid"></em></a>
+                    <div class="pb-ui-tooltip-info">
+                      <em class="pb-icon-view-top"></em>
                       {{'msg.dp.ui.grid.view' | translate}}
                     </div>
-
                   </li>
-                  <li [class.ddp-selected]="viewModeforLeft === 'table'" (click)="toggleViewModeforLeft('table')">
-                    <a href="javascript:"><em class="ddp-icon-listgrid"></em></a>
-                    <div class="ddp-ui-tooltip-info">
-                      <em class="ddp-icon-view-top"></em>
+                  <li [class.pb-selected]="viewModeforLeft === 'table'">
+                    <a href="javascript:" (click)="toggleViewModeforLeft('table')"><em class="pb-icon-listgrid"></em></a>
+                    <div class="pb-ui-tooltip-info">
+                      <em class="pb-icon-view-top"></em>
                       {{'msg.dp.ui.list.view' | translate}}
                     </div>
-
                   </li>
                 </ul>
               </div>
               <!-- //set -->
-              <div class="ddp-checkall">
+              <div class="pb-checkall">
                 <!-- checkbox -->
-                <label class="ddp-label-checkbox ddp-type2">
+                <label class="pb-label-checkbox pb-type2">
                   <input type="checkbox" [checked]="leftCheckAll" (click)="setLeftCheckAll()">
-                  <i class="ddp-icon-checkbox"></i>
-                  <span class="ddp-txt-checkbox">{{'msg.comm.ui.list.sel.all' | translate}}</span>
+                  <i class="pb-icon-checkbox"></i>
+                  <span class="pb-txt-checkbox">{{'msg.comm.ui.list.sel.all' | translate}}</span>
                 </label>
                 <!-- //checkbox -->
               </div>
               <!-- 코멘트 -->
-              <div class="ddp-comment" *ngIf="leftSelCols.length === 0">
+              <div class="pb-comment" *ngIf="leftSelCols.length === 0">
                 <em>*</em> {{'msg.dp.ui.one.col.required' | translate }}
               </div>
               <!-- //코멘트 -->
@@ -142,19 +73,20 @@
               <div grid-component #leftGrid
                    [hidden]="viewModeforLeft === 'table'"
                    (selectedHeaderEvent)="leftGridHeaderClickHandler($event)"
-                   class="ddp-ui-grid-form"></div>
-              <div class="ddp-ui-grid-form" *ngIf="viewModeforLeft === 'table'">
-                <div class="ddp-wrap-scroll">
-                  <!-- 선택시 tr class="ddp-selected" 추가 -->
-                  <table class="ddp-table-grid-list">
+                   class="pb-ui-grid-form"></div>
+              <div class="pb-ui-grid-form" *ngIf="viewModeforLeft === 'table'">
+
+                <div class="pb-wrap-scroll">
+                  <!-- 선택시 tr class="pb-selected" 추가 -->
+                  <table class="pb-table-grid-list">
                     <colgroup>
                       <col width="60px">
                       <col width="*">
                     </colgroup>
                     <tbody>
                     <tr *ngFor="let data of leftDataset.gridData.fields"
-                        [ngClass]="{'ddp-selected':leftSelCols.indexOf(data.name) > -1}">
-                      <td class="ddp-txt-center">
+                        [ngClass]="{'pb-selected':leftSelCols.indexOf(data.name) > -1}">
+                      <td class="pb-txt-center">
                   <span>
                     <em class="{{getFieldTypeIconClass(data.type)}}"></em>
                   </span>
@@ -164,67 +96,67 @@
                     </tbody>
                   </table>
                 </div>
+
+
               </div>
               <!-- // 그리드 -->
             </div>
-            <div class="ddp-ui-part">
+            <div class="pb-ui-part">
               <!-- top -->
-              <div class="ddp-ui-pop-top">
-                <span class="ddp-txt-title">{{'msg.dp.ui.ds.join' | translate}}</span>
+              <div class="pb-ui-pop-top">
+                <span class="pb-txt-title">{{'msg.dp.ui.ds.join' | translate}}</span>
               </div>
               <!-- //top -->
               <!-- set -->
-              <div class="ddp-ui-set">
+              <div class="pb-ui-set">
                 <!-- selectbox -->
-                <!-- 클릭시 ddp-selected 추가 -->
-                <div class="ddp-wrap-drop-search"
-                     [ngClass]="{'ddp-selected' : isDatasetListShow}"
+                <!-- 클릭시 pb-selected 추가 -->
+                <div class="pb-wrap-drop-search"
+                     [ngClass]="{'pb-selected' : isDatasetListShow}"
                      tabindex="1" style="outline:none" (click)="showDatasetList($event)"
                      [class.ddp-result]="rightDataset.dsName"
                      (keydown)="navigateWithKeyboardShortList($event,filteredDatasetsForJoin,'right')">
-                  <div class="ddp-type-selectbox2" >
-                    <span class="ddp-txt-selectbox ddp-result">{{ !rightDataset.dsName ? ('msg.dp.ui.search-by.dataset'  | translate ): rightDataset.dsName}}</span>
+                  <div class="pb-type-selectbox2">
+                    <span class="pb-txt-selectbox pb-result">{{ !rightDataset.dsName ? ('msg.dp.ui.search-by.dataset'  | translate ): rightDataset.dsName}}</span>
                   </div>
+
                   <!-- drop search -->
-                  <div class="ddp-ui-drop-search" (clickOutside)="isDatasetListShow = false; initSelectedCommand(filteredDatasetsForJoin)">
-                    <input type="text" class="ddp-input-search" [(ngModel)]="searchText">
-                    <ul class="ddp-list-selectbox2" *ngIf="isDatasetListShow">
+                  <div class="pb-ui-drop-search" (clickOutside)="isDatasetListShow = false; initSelectedCommand(filteredDatasetsForJoin)">
+                    <input type="text" class="pb-input-search" placeholder="Search" [(ngModel)]="searchText">
+                    <ul class="pb-list-selectbox2" *ngIf="isDatasetListShow">
                       <li *ngFor="let dataset of filteredDatasetsForJoin; let index=index"
                           (click)="selectDataset($event, dataset)"
                           [ngStyle]="dataset.selected ? {'background-color': '#f6f6f7' }:{}"
                           (mouseout)="listMouseOverAndOut($event,filteredDatasetsForJoin,index)"
                           (mouseover)="listMouseOverAndOut($event,filteredDatasetsForJoin,index)"
-                          (mousemove)="flag === true ? flag = false : flag = true">
-                        <span *ngIf="dataset">{{dataset.dsType}} <span class="ddp-txt-search">{{dataset.dsName}}</span> {{dataset.nameCnt}}</span>
-                        <span *ngIf="dataset.isCurrentDataflow === true"> ({{'msg.dp.ui.this.flow' | translate}})</span>
+                          (mousemove)="flag =!flag">
+                        <ng-container *ngIf="dataset">{{dataset.dsType}} <span class="pb-txt-search">{{dataset.dsName}}</span> {{dataset.nameCnt}}</ng-container>
+                        <ng-container *ngIf="dataset.isCurrentDataflow"> ({{'msg.dp.ui.this.flow' | translate}})</ng-container>
                       </li>
-                      <li *ngIf="filteredDatasetsForJoin.length === 0">
-                        <span class="ddp-txt-search">{{'msg.dp.ui.ds.none' | translate}}</span>
-                        <span *ngIf="rightDataset.isCurrentDataflow === true"> ({{'msg.dp.ui.this.flow' | translate}})</span>
+                      <li>
+                        <span *ngIf="rightDataset.isCurrentDataflow"> ({{'msg.dp.ui.this.flow' | translate}})</span>
                       </li>
                     </ul>
-                    <!--<div class="ddp-data-message">-->
-                    <!--<label class="ddp-label-checkbox">-->
-                    <!--<input type="checkbox" [(ngModel)]="isChecked" [attr.disabled]="true">-->
-                    <!--<i class="ddp-icon-checkbox"></i>{{'msg.dp.ui.only.show.ds' | translate}}-->
-                    <!--</label>-->
-                    <!--</div>-->
+                    <!--<div class="pb-data-message">
+                      <label class="pb-label-checkbox"><input type="checkbox"><i class="pb-icon-checkbox"></i>현재 플로우 데이터 셋만 보기</label>
+                    </div>-->
+
                   </div>
                   <!-- drop search -->
                 </div>
                 <!-- //selectbox -->
-                <ul class="ddp-list-tab-button" [ngClass]="{'ddp-disabled': !rightDataset.gridData}">
-                  <li [class.ddp-selected]="viewModeforRight === 'grid'" (click)="toggleViewModeforRight('grid')">
-                    <a href="javascript:"><em class="ddp-icon-grid"></em></a>
-                    <div class="ddp-ui-tooltip-info">
-                      <em class="ddp-icon-view-top"></em>
+                <ul class="pb-list-tab-button" [ngClass]="{'pb-disabled': !rightDataset.gridData}">
+                  <li [class.pb-selected]="viewModeforRight === 'grid'">
+                    <a href="javascript:" (click)="toggleViewModeforRight('grid')"><em class="pb-icon-grid"></em></a>
+                    <div class="pb-ui-tooltip-info">
+                      <em class="pb-icon-view-top"></em>
                       {{'msg.dp.ui.grid.view' | translate}}
                     </div>
                   </li>
-                  <li [class.ddp-selected]="viewModeforRight === 'table'" (click)="toggleViewModeforRight('table')">
-                    <a href="javascript:"><em class="ddp-icon-listgrid"></em></a>
-                    <div class="ddp-ui-tooltip-info">
-                      <em class="ddp-icon-view-top"></em>
+                  <li [class.pb-selected]="viewModeforRight === 'table'">
+                    <a href="javascript:" (click)="toggleViewModeforRight('table')"><em class="pb-icon-listgrid"></em></a>
+                    <div class="pb-ui-tooltip-info">
+                      <em class="pb-icon-view-top"></em>
                       {{'msg.dp.ui.list.view' | translate}}
                     </div>
                   </li>
@@ -233,202 +165,266 @@
               <!-- //set -->
 
               <!-- data none -->
-              <div class="ddp-data-none" *ngIf="!rightDataset.gridData">
-                <span class="ddp-data-contents">{{'msg.dp.ui.create-df.sub.title' | translate}}</span>
+              <div class="pb-data-none" *ngIf="!rightDataset.gridData">
+                <span class="pb-data-contents">{{'msg.dp.ui.create-df.sub.title' | translate}}</span>
               </div>
               <!-- //data none -->
-              <div class="ddp-checkall" *ngIf="rightDataset.gridData">
+              <div class="pb-checkall" *ngIf="rightDataset.gridData">
                 <!-- checkbox -->
-                <label class="ddp-label-checkbox ddp-type2">
+                <label class="pb-label-checkbox pb-type2">
                   <input type="checkbox" [checked]="rightCheckAll" (click)="setRightCheckAll()">
-                  <i class="ddp-icon-checkbox"></i>
-                  <span class="ddp-txt-checkbox">{{'msg.comm.ui.list.sel.all' | translate}}</span>
+                  <i class="pb-icon-checkbox"></i>
+                  <span class="pb-txt-checkbox">{{'msg.comm.ui.list.sel.all' | translate}}</span>
                 </label>
                 <!-- //checkbox -->
               </div>
               <!-- 코멘트 -->
-              <div class="ddp-comment" *ngIf="rightSelCols.length === 0">
+              <div class="pb-comment" *ngIf="rightSelCols.length === 0">
                 <em>*</em> {{'msg.dp.ui.one.col.required' | translate }}
               </div>
               <!-- //코멘트 -->
+              <div class="pb-data-none" style="display:none;">
+                <span class="pb-data-contents">Please choose a dataset</span>
+              </div>
+              <!-- 그리드 -->
               <div grid-component #rightGrid
                    [hidden]="viewModeforRight === 'table'"
                    (selectedHeaderEvent)="rightGridHeaderClickHandler($event)"
-                   class="ddp-ui-grid-form"></div>
-              <div class="ddp-ui-grid-form" *ngIf="viewModeforRight === 'table'">
-                <div class="ddp-wrap-scroll">
-                  <table class="ddp-table-grid-list" *ngIf="rightDataset.gridData">
-                  <colgroup>
-                    <col width="60px"/>
-                    <col width="*"/>
-                  </colgroup>
-                  <tbody>
-                  <tr *ngFor="let data of rightDataset.gridData.fields"
-                      [ngClass]="{'ddp-selected':rightSelCols.indexOf(data.name) > -1}">
-                    <td class="ddp-txt-center">
+                   class="pb-ui-grid-form"></div>
+              <div class="pb-ui-grid-form" *ngIf="viewModeforRight === 'table'">
+                <div class="pb-wrap-scroll">
+                  <table class="pb-table-grid-list" *ngIf="rightDataset.gridData">
+                    <colgroup>
+                      <col width="60px"/>
+                      <col width="*"/>
+                    </colgroup>
+                    <tbody>
+                    <tr *ngFor="let data of rightDataset.gridData.fields"
+                        [ngClass]="{'pb-selected':rightSelCols.indexOf(data.name) > -1}">
+                      <td class="pb-txt-center">
                   <span>
                     <em class="{{getFieldTypeIconClass(data.type)}}"></em>
                   </span>
-                    </td>
-                    <td (click)="rightTableClickHandler(data.name)">{{data.name}}</td>
-                  </tr>
-                  </tbody>
-                </table>
+                      </td>
+                      <td (click)="rightTableClickHandler(data.name)">{{data.name}}</td>
+                    </tr>
+                    </tbody>
+                  </table>
                 </div>
               </div>
               <!-- // 그리드 -->
             </div>
-
           </div>
+          <div class="pb-prep-join-type">
+            <div class="pb-ui-join-type">
+              <div class="pb-ui-data-join">
+                <div class="pb-data-join pb-jointype">
+                  <span class="pb-ui-label">{{'msg.dp.th.join.type' | translate}}</span>
 
-        </div>
-        <!-- //contents -->
-        <div class="ddp-ui-join-type ddp-type" [style.display]="isShowPreview ? 'none':'block'">
-          <div class="ddp-ui-data-join">
+                  <ul class="pb-list-join">
+                    <li [ngClass]="{ 'pb-selected' : selectedJoinType == 'INNER'  }">
+                      <a (click)="selectJoinType( 'INNER' )" href="javascript:">
+                        <em class="pb-icon-joininner"></em>
+                        {{'msg.dp.ui.join.type.inner' | translate}}
+                      </a>
 
-
-            <!-- data join -->
-            <div class="ddp-data-join ddp-jointype">
-              <span class="ddp-ui-label">{{'msg.dp.th.join.type' | translate}}</span>
-              <ul class="ddp-list-join">
-                <li
-                  [ngClass]="{ 'ddp-selected' : selectedJoinType == 'INNER'  }">
-                  <a (click)="selectJoinType( 'INNER' )" href="javascript:">
-                    <em class="ddp-icon-joininner"></em> {{'msg.dp.ui.join.type.inner' | translate}}
-                  </a>
-
-                </li>
-                <li
-                  [ngClass]="{ 'ddp-selected' : selectedJoinType == 'LEFT'  }">
-                  <a (click)="selectJoinType( 'LEFT' )" href="javascript:">
-                    <em class="ddp-icon-joinleft"></em> {{'msg.dp.ui.join.type.left' | translate}}
-                  </a>
-
-                </li>
-                <li
-                  [ngClass]="{ 'ddp-selected' : selectedJoinType == 'RIGHT'  }">
-                  <a (click)="selectJoinType( 'RIGHT' )" href="javascript:">
-                    <em class="ddp-icon-joinright"></em> {{'msg.dp.ui.join.type.right' | translate}}
-                  </a>
-
-                </li>
-                <li
-                  [ngClass]="{ 'ddp-selected' : selectedJoinType == 'OUTER'  }">
-                  <a (click)="selectJoinType( 'OUTER' )" href="javascript:">
-                    <em class="ddp-icon-joinouter"></em> {{'msg.dp.ui.join.type.fullouter' | translate}}
-                  </a>
-
-                </li>
-              </ul>
-            </div>
-            <!-- //data join -->
-            <!-- data join -->
-            <div class="ddp-data-join">
-          <span class="ddp-ui-label">
-              <span class="ddp-title">{{'msg.dp.th.join.keys' | translate}}</span>
-          </span>
-              <!-- 코멘트 -->
-              <div class="ddp-comment" *ngIf="0 == joinList.length">
-                <em>*</em> {{'msg.dp.ui.join.key.required' | translate }}
-              </div>
-              <!-- //코멘트 -->
-              <div class="ddp-view-joinkeys">
-                <!-- join form -->
-                <div class="ddp-form-join">
-                  <!-- selectbox -->
-                  <!-- 클릭시 ddp-selected 추가 -->
-                  <div class="ddp-wrap-drop-search"
-                       [ngClass]="{'ddp-selected' : isLeftDatasetShow}"
-                       [class.ddp-result]="leftJoinKey"
-                       (click)="showLeftDataset($event)">
-                    <div class="ddp-type-selectbox2" >
-                      <span class="ddp-txt-selectbox ddp-result">{{ leftJoinKey === '' ? ('msg.dp.ui.empty' | translate) : leftJoinKey}}</span>
-                    </div>
-                    <!-- drop search -->
-                    <div class="ddp-ui-drop-search"
-                         (clickOutside)="isLeftDatasetShow=false;">
-                      <input type="text" class="ddp-input-search" placeholder="{{'msg.dp.ui.ds.search.description' | translate}}" [(ngModel)]="leftJoinKeySearchText">
-                      <ul class="ddp-list-selectbox2" *ngIf="isLeftDatasetShow">
-                        <li *ngFor="let keyName of filteredLeftKeyList; let index=index;"
-                            (click)="onLeftJoinKeySelected($event,keyName)">
-                          <a href="javascript:"> {{keyName}} </a>
-                        </li>
-                        <li *ngIf="filteredLeftKeyList.length === 0">
-                          <span class="ddp-txt-search">{{'msg.dp.ui.join.key.description' | translate}}</span>
-                        </li>
-                      </ul>
-                    </div>
-                    <!-- drop search -->
-                  </div>
-                  <!-- //selectbox -->
-                  <span class="ddp-data-default">=</span>
-                  <!-- selectbox -->
-                  <!-- 클릭시 ddp-selected 추가 -->
-                  <div class="ddp-wrap-drop-search" *ngIf="rightDataset.gridData" [ngClass]="{'ddp-selected' : isRightDatasetShow}" [class.ddp-result]="rightJoinKey">
-                    <div class="ddp-type-selectbox2" (click)="showRightDataset($event)" >
-                      <span class="ddp-txt-selectbox ddp-result">{{ rightJoinKey === '' ? ('msg.dp.ui.empty' | translate) : rightJoinKey }}</span>
-                    </div>
-
-                    <!-- drop search -->
-                    <div class="ddp-ui-drop-search" *ngIf="isRightDatasetShow" (clickOutside)="isRightDatasetShow=false;" >
-                      <input type="text" class="ddp-input-search" placeholder="{{'msg.dp.ui.ds.search.description' | translate}}" [(ngModel)]="rightJoinKeySearchText">
-
-                      <ul class="ddp-list-selectbox2" >
-                        <li *ngFor="let keyName of filteredRightKeyList" (click)="onRightJoinKeySelected($event,keyName)">
-                          <a href="javascript:" > {{keyName}} </a>
-                        </li>
-                        <li *ngIf="filteredRightKeyList.length === 0">
-                          <span class="ddp-txt-search">{{'msg.dp.ui.join.key.description' | translate}}</span>
-                        </li>
-                      </ul>
-                    </div>
-                    <!-- drop search -->
-                  </div>
-                  <!-- //selectbox -->
-
-                  <!--     <span class="ddp-data-column">Column</span>-->
+                    </li>
+                    <li [ngClass]="{ 'pb-selected' : selectedJoinType == 'LEFT'  }">
+                      <a (click)="selectJoinType( 'LEFT' )" href="javascript:">
+                        <em class="pb-icon-joinleft"></em>
+                        {{'msg.dp.ui.join.type.left' | translate}}
+                      </a>
+                    </li>
+                    <li [ngClass]="{ 'pb-selected' : selectedJoinType == 'RIGHT'  }">
+                      <a (click)="selectJoinType( 'RIGHT' )" href="javascript:">
+                        <em class="pb-icon-joinright"></em>
+                        {{'msg.dp.ui.join.type.right' | translate}}
+                      </a>
+                    </li>
+                    <li [ngClass]="{ 'pb-selected' : selectedJoinType == 'OUTER'  }">
+                      <a (click)="selectJoinType( 'OUTER' )" href="javascript:">
+                        <em class="pb-icon-joinouter"></em>
+                        {{'msg.dp.ui.join.type.fullouter' | translate}}
+                      </a>
+                    </li>
+                  </ul>
                 </div>
-                <!-- //join form -->
-                <a href="javascript:" class="ddp-btn-solid" (click)="addJoinKeys()"
-                   [ngClass]="{'ddp-disabled':selectedJoinType === '' || leftJoinKey === '' || rightJoinKey === ''}">
-                  + {{'msg.dp.btn.add' | translate}}
-                </a>
-              </div>
-              <div class="ddp-data-key">
-                <span class="ddp-data-num" *ngIf="0 < joinList.length">{{'msg.dp.ui.join.keys' | translate : {value : joinList.length} }}</span>
-                <span class="ddp-data-num" *ngIf="0 == joinList.length">{{'msg.dp.ui.join.key.none' | translate}}</span>
-              </div>
 
-              <ul class="ddp-list-form-join" *ngIf="0 < joinList.length">
-                <li *ngFor="let joinInfo of joinList; let idx = index">
-                  <div class="ddp-form-join">
-                    <span class="ddp-data-column">{{joinInfo.leftJoinKey}}</span>
-                    <span class="ddp-data-default">=</span>
-                    <span class="ddp-data-column">{{joinInfo.rightJoinKey}}</span>
+                <div class="pb-data-join">
+                  <span class="pb-ui-label">
+                      <span class="pb-title">{{'msg.dp.th.join.keys' | translate}}</span>
+                  </span>
+                  <!-- 코멘트 -->
+                  <div class="pb-comment" *ngIf="0 == joinList.length">
+                    <em>*</em> {{'msg.dp.ui.join.key.required' | translate }}
                   </div>
-                  <em class="ddp-icon-control-cut" (click)="removeJoinInfo(idx)"></em>
-                </li>
-              </ul>
+                  <!-- //코멘트 -->
+                  <!-- nodata -->
+                  <div class="pb-ui-nodata" style="display:none;">
+                    No join key
+                  </div>
+                  <!-- //nodata -->
+                  <div class="pb-view-joinkeys">
+                    <!-- join form -->
+                    <div class="pb-form-join">
+                      <!-- selectbox -->
+                      <!-- 클릭시 pb-selected 추가 -->
+                      <div class="pb-wrap-drop-search"
+                           [ngClass]="{'pb-selected' : isLeftDatasetShow}"
+                           (click)="showLeftDataset($event)">
+                        <div class="pb-type-selectbox2">
+                          <span class="pb-txt-selectbox" [class.pb-result]="leftJoinKey">
+                            {{ leftJoinKey === '' ? ('msg.dp.ui.empty' | translate) : leftJoinKey}}
+                          </span>
+                        </div>
 
+                        <!-- drop search -->
+                        <div class="pb-ui-drop-search" (clickOutside)="isLeftDatasetShow=false;">
+                          <input type="text" class="pb-input-search" placeholder="{{'msg.dp.ui.ds.search.description' | translate}}" [(ngModel)]="leftJoinKeySearchText">
+
+                          <ul class="pb-list-selectbox2" *ngIf="isLeftDatasetShow">
+                            <li *ngFor="let keyName of filteredLeftKeyList; let index=index;"
+                                (click)="onLeftJoinKeySelected($event,keyName)">
+                              <a href="javascript:"> {{keyName}} </a>
+                            </li>
+                            <li *ngIf="filteredLeftKeyList.length === 0">
+                              <span class="ddp-txt-search">{{'msg.dp.ui.join.key.description' | translate}}</span>
+                            </li>
+                          </ul>
+                          <!--<div class="pb-data-message">
+                            <label class="pb-label-checkbox"><input type="checkbox"><i class="pb-icon-checkbox"></i>현재 플로우 데이터 셋만 보기</label>
+                          </div>-->
+
+                        </div>
+                        <!-- drop search -->
+                      </div>
+                      <!-- //selectbox -->
+                      <span class="pb-data-default">=</span>
+                      <!-- selectbox -->
+                      <!-- 클릭시 pb-selected 추가 -->
+                      <div class="pb-wrap-drop-search" *ngIf="rightDataset.gridData"
+                           [ngClass]="{'pb-selected' : isRightDatasetShow}"
+                           >
+                        <div class="pb-type-selectbox2" (click)="showRightDataset($event)" >
+                          <span class="pb-txt-selectbox" [class.pb-result]="rightJoinKey">
+                            {{ rightJoinKey === '' ? ('msg.dp.ui.empty' | translate) : rightJoinKey }}
+                          </span>
+                        </div>
+
+                        <!-- drop search -->
+                        <div class="pb-ui-drop-search" *ngIf="isRightDatasetShow" (clickOutside)="isRightDatasetShow=false;" >
+                          <input type="text" class="pb-input-search" placeholder="{{'msg.dp.ui.ds.search.description' | translate}}" [(ngModel)]="rightJoinKeySearchText">
+
+                          <ul class="pb-list-selectbox2" >
+                            <li *ngFor="let keyName of filteredRightKeyList" (click)="onRightJoinKeySelected($event,keyName)">
+                              <a href="javascript:" > {{keyName}} </a>
+                            </li>
+                            <li *ngIf="filteredRightKeyList.length === 0">
+                              <span class="ddp-txt-search">{{'msg.dp.ui.join.key.description' | translate}}</span>
+                            </li>
+                          </ul>
+
+                          <!--<div class="pb-data-message">
+                            <label class="pb-label-checkbox"><input type="checkbox"><i class="pb-icon-checkbox"></i>현재 플로우 데이터 셋만 보기</label>
+                          </div>-->
+
+                        </div>
+                        <!-- drop search -->
+                      </div>
+                      <!-- //selectbox -->
+
+                      <!--     <span class="pb-data-column">Column</span>-->
+                    </div>
+
+                    <!-- //join form -->
+                    <a href="javascript:" class="pb-component-btn type-dark2" (click)="addJoinKeys()">
+                      <em class="pb-icon-add-r"></em> {{'msg.dp.btn.add' | translate}}
+                    </a>
+                  </div>
+                  <div class="pb-data-key">
+                    <span class="pb-data-num" *ngIf="0 < joinList.length">{{'msg.dp.ui.join.keys' | translate : {value : joinList.length} }}</span>
+                    <span class="pb-data-num" *ngIf="0 == joinList.length">{{'msg.dp.ui.join.key.none' | translate}}</span>
+                  </div>
+
+                  <ul class="pb-list-form-join" *ngIf="0 < joinList.length">
+                    <li *ngFor="let joinInfo of joinList; let idx = index">
+                      <div class="pb-form-join">
+                        <span class="pb-data-column">{{joinInfo.leftJoinKey}}</span>
+                        <span class="pb-data-default">=</span>
+                        <span class="pb-data-column">{{joinInfo.rightJoinKey}}</span>
+                      </div>
+                      <em class="pb-icon-control-cut" (click)="removeJoinInfo(idx)"></em>
+                    </li>
+                  </ul>
+
+                </div>
+              </div>
             </div>
-            <!-- //data join -->
+
+          </div>
+          <div class="pb-btn-bottom">
+            <div class="pb-txt-error" *ngIf="false">
+              Please choose a column of dataset to join
+            </div>
+            <div class="pb-form-valid">
+              <a href="javascript:" class="pb-component-btn-valid" (click)="previewJoinResult()"
+                 [ngClass]="{'ddp-disabled':leftSelCols.length === 0 || rightSelCols.length === 0 || selectedJoinType === '' || joinList.length === 0}">
+                {{'msg.dp.btn.show.rslt' | translate}}</a>
+              <span class="pb-txt-valid type-invalid">{{'msg.dp.ui.join.prev.msg' | translate }}</span>
+            </div>
           </div>
 
+          <!-- //contents -->
         </div>
 
-
-        <div class="ddp-btn-bottom" *ngIf="!isShowPreview">
-          <a href="javascript:" class="ddp-btn-solid2" (click)="previewJoinResult()"
-             [style.display]="isShowPreview ? 'none':'inline-block'"
-             [ngClass]="{'ddp-disabled':leftSelCols.length === 0 || rightSelCols.length === 0 || selectedJoinType === '' || joinList.length === 0}">
-            {{'msg.dp.btn.show.rslt' | translate}}
-            <div class="ddp-ui-tooltip-info">
-              <em class="ddp-icon-view-right"></em>
-              {{'msg.dp.ui.join.prev.msg' | translate }}
-            </div>
-          </a>
-        </div>
+        <!-- //form -->
       </div>
+      <!-- //option -->
+
+      <div class="pb-ui-data-option pb-join-result" *ngIf="isShowPreview">
+        <!-- form -->
+        <div class="pb-form-option">
+          <div class="ddp-wrap-datadetail">
+
+            <!-- datadetail -->
+            <div class="ddp-ui-datadetail">
+              <label class="ddp-label-detail">DATA</label>
+              <div class="pb-ui-setting pb-clear">
+                <!-- right -->
+                <div class="pb-fright">
+
+                  <div class="pb-data-set-num">
+                    <span class="pb-data-txt"><strong>{{getColumns()}}</strong> {{'msg.comm.detail.columns' | translate}}</span>
+                    <span class="pb-data-txt"><strong>{{getRows()}}</strong> {{'msg.comm.detail.rows' | translate}}</span>
+                    <span class="pb-data-txt"><strong>{{dataTypesList.length}}</strong> {{'msg.comm.detail.types' | translate}}</span>
+                  </div>
+                </div>
+                <!-- //right -->
+              </div>
+              <div class="ddp-form-box" grid-component #previewGrid>
+              </div>
+            </div>
+
+            <div class="pb-btn-bottom">
+              <div class="pb-form-valid">
+                <a href="javascirpt:" class="pb-component-btn-valid" (click)="isShowPreview = false;">{{'msg.dp.btn.close.rslt' | translate}}</a>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <!-- //form -->
+      </div>
+
     </div>
+    <!-- //contents -->
+    <!-- bottom -->
+    <div class="pb-popup-bottom">
+      <a href="javascript:" class="pb-component-btn-pop type-line" (click)="closeJoin()">{{'msg.comm.btn.cancl' | translate}}</a>
+      <a href="javascript:" class="pb-component-btn-pop type-bg"
+         [ngClass]="{'ddp-disabled':leftSelCols.length === 0 || rightSelCols.length === 0 || selectedJoinType === '' || joinList.length === 0}"
+         (click)="applyJoinRule()">{{joinButtonText}}</a>
+    </div>
+    <!-- //bottom -->
   </div>
 </div>
