@@ -588,7 +588,7 @@ ul.pb-list-snapshot li > .pb-txt-snapshot .pb-data-name .pb-tag-type {float:left
 ul.pb-list-snapshot li > .pb-txt-snapshot .pb-data-date {padding-top:5px; color:#b7b9c2; font-size:12px;}
 ul.pb-list-snapshot li > .pb-txt-snapshot .pb-data-det .pb-data-title {padding-bottom:3px; font-size:14px;}
 ul.pb-list-snapshot li .pb-wrap-progress {position:relative; padding-right:20px; margin-top:5px;}
-ul.pb-list-snapshot li .pb-wrap-progress .pb-btn-cancel {display:inline-block; position:absolute; top:50%; right:0; margin-top:-8px; width:15px; height:15px; background:url(../../../images/icon_delete.png) no-repeat;  background-position:left -14px;}
+ul.pb-list-snapshot li .pb-wrap-progress .pb-btn-cancel {display:inline-block; position:absolute; top:50%; right:0; margin-top:-8px; width:15px; height:15px; background:url(../../images/icon_delete.png) no-repeat;  background-position:left -14px;}
 ul.pb-list-snapshot li .pb-ui-progress {position:relative; width:100%;}
 ul.pb-list-snapshot li .pb-txt-cancel {padding:12px 0;margin:5px 12px 14px 12px; background-color:#f7f7f8;}
 ul.pb-list-snapshot li > .pb-txt-snapshot {border-bottom:none;}
@@ -600,11 +600,11 @@ ul.pb-list-snapshot li {border-bottom:1px solid #eaeaec}
 .pb-type-selectbox ul.pb-list-selectbox.pb-fix {position:fixed; bottom:inherit;}
 
 .pb-box-contents .pb-box-part .pb-box-title span.pb-box-title-in {padding-right:19px;}
-.pb-box-contents .pb-box-part .pb-box-title a.pb-btn-plus {display:inline-block; width:13px; height:13px; top:0; background:url(../../../images/icon_add.png) no-repeat; background-position:-84px -22px; border:none;}
+.pb-box-contents .pb-box-part .pb-box-title a.pb-btn-plus {display:inline-block; width:13px; height:13px; top:0; background:url(../../images/icon_add.png) no-repeat; background-position:-84px -22px; border:none;}
 .pb-box-contents .pb-box-part .pb-box-title a.pb-btn-plus:before {display:none;}
 .pb-box-contents .pb-box-part .pb-box-title a.pb-btn-plus:hover {background-position-x:-98px; border:none;}
 .pb-wrap-boxadd .pb-ui-buttons a.pb-btn-minus {border:none; background:none;}
-.pb-wrap-boxadd .pb-ui-buttons a.pb-btn-minus:before {display:inline-block; position:absolute; top:50%; left:50%; margin:-8px 0 0 -8px; width:15px; height:15px; background:url(../../../images/icon_delete.png) no-repeat; background-position:left -14px;}
+.pb-wrap-boxadd .pb-ui-buttons a.pb-btn-minus:before {display:inline-block; position:absolute; top:50%; left:50%; margin:-8px 0 0 -8px; width:15px; height:15px; background:url(../../images/icon_delete.png) no-repeat; background-position:left -14px;}
 .pb-wrap-boxadd .pb-ui-buttons a.pb-btn-minus.pb-disabled {opacity:0.5; cursor:no-drop;}
 
 ul.pb-list-snapshot li > .pb-txt-snapshot .pb-data-name svg{float:left; margin-right:5px;vertical-align:middle;}
