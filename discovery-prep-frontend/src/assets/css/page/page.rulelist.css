@@ -24,11 +24,11 @@
      Page : ADD RULE
  *************************************************************************/
 .pb-rnb-sub.type-rule-list .pb-wrap-line-add {position: relative;cursor: pointer;height:2px;box-sizing: border-box;overflow: hidden;z-index: 10;}
-.pb-rnb-sub.type-rule-list .pb-line-add, 
+.pb-rnb-sub.type-rule-list .pb-line-add,
 .pb-rnb-sub.type-rule-list .pb-wrap-line-add.pb-selected .pb-line-add {display: none;}
-.pb-rnb-sub.type-rule-list .pb-wrap-line-add .pb-line-add {display: block;background-color: #FFB777;}
-.pb-rnb-sub.type-rule-list .pb-wrap-line-add.is-focus {height: auto;}
-.pb-rnb-sub.type-rule-list .pb-wrap-line-add.is-focus .pb-line-add{background-color:#f37135;}
+.pb-rnb-sub.type-rule-list .pb-wrap-line-add .pb-line-add {display: block;background-color: #f37135;}
+/*.pb-rnb-sub.type-rule-list .pb-wrap-line-add.is-focus {height: auto;}
+.pb-rnb-sub.type-rule-list .pb-wrap-line-add.is-focus .pb-line-add{background-color:#f37135;}*/
 .pb-rnb-sub.type-rule-list .pb-line-add span.pb-txt {position: relative;display: block;padding: 4px 7px 8px 70px;color: #fff;}
 .pb-rnb-sub.type-rule-list .pb-line-add span.pb-txt:before {display: inline-block;position: relative;top:3px;width: 15px;height: 15px;background:url(../../images/icon_buttons.png) left -87px no-repeat;z-index: 1;content: '';}
 .pb-rnb-sub.type-rule-list .pb-wrap-line-add .pb-input-info {display: none;padding: 6px 20px 7px;font-size: 13px;background-color: #FFB777;color: #222;}
