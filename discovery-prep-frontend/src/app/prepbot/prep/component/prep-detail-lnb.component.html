@@ -39,7 +39,7 @@
         </div>
         <!-- search -->
         <div class="pb-top-search">
-            <input type="text">
+            <input type="text" placeholder="Search by title or keyword" [(ngModel)]="searchText" (keydown)="searchDataflows($event);">
         </div>
         <!-- //search -->
         <!-- navi tab -->
@@ -55,64 +55,89 @@
 <!--            </ul>-->
 <!--            &lt;!&ndash; //tab &ndash;&gt;-->
             <!-- contents -->
-            <div class="pb-ui-navi-contents">
+
+
+
+<!--            top: 194px &ndash;&gt; top: 144px-->
+            <div class="pb-ui-navi-contents" style="top: 144px;">
                 <ul class="pb-list-menu">
-                    <li class="is-selected">
-                        <a href="javascript:">
-                            <em class="pb-icon-lnb-menu1"></em>DATAFLOW
+
+
+                    <li [ngClass]="{'is-selected' : zoomViewMode === 'FLOW' }">
+                        <a href="javascript:;" (click)="zoomViewMode = 'FLOW'">
+                            <em class="pb-icon-lnb-menu1" *ngIf="zoomViewMode=='FLOW'"></em>
+                            <em class="pb-icon-lnb-menu2" *ngIf="zoomViewMode!='FLOW'"></em>
+                            DATAFLOW
                         </a>
+
+
                         <!-- sub -->
-                        <ul class="pb-list-menu-sub">
-                            <li class="is-selected">
-                                <a href="javascript:">
-                                    DATAFLOW 01
+                        <ul class="pb-list-menu-sub" *ngIf="dataflows != null && dataflows.length > 0">
+
+                            <li class="is-selected" *ngFor="let dataflow of dataflows">
+                                <a href="javascript:;" (click)="dataflowClick(dataflow.dfId)">
+                                   {{dataflow.dfName}}
                                 </a>
-                                <div class="pb-box-image">
-                                    <img src="">
-                                </div>
                             </li>
-                            <li class="is-selected">
-                                <a href="javascript:">
-                                    DATAFLOW 02
-                                </a>
-                                <div class="pb-box-image">
-                                    <img src="">
-                                </div>
-                            </li>
-                            <li class="">
-                                <a href="javascript:">
-                                    DATAFLOW 03
-                                </a>
-                                <div class="pb-box-image">
-                                    <img src="">
-                                </div>
-                            </li>
-                            <li class="">
-                                <a href="javascript:">
-                                    DATAFLOW 04
-                                </a>
-                                <div class="pb-box-image">
-                                    <img src="">
-                                </div>
-                            </li>
+
                         </ul>
                         <!-- //sub -->
                     </li>
-                    <li>
-                        <a href="javascript:">
-                            <em class="pb-icon-lnb-menu2"></em>DATASET
+
+
+
+                    <li [ngClass]="{'is-selected' : zoomViewMode === 'DATASET' }">
+                        <a href="javascript:;" (click)="zoomViewMode = 'DATASET'">
+                            <em class="pb-icon-lnb-menu1" *ngIf="zoomViewMode=='DATASET'"></em>
+                            <em class="pb-icon-lnb-menu2" *ngIf="zoomViewMode!='DATASET'"></em>
+                            DATASET
                         </a>
+
+                        <!-- sub -->
+                        <ul class="pb-list-menu-sub" *ngIf="datasets != null && datasets.length > 0">
+
+                            <li class="is-selected" *ngFor="let dataset of datasets">
+                                <a href="javascript:;" (click)="datasetClick(dataset.dsId)">
+                                    {{dataset.dsName}}
+                                </a>
+                            </li>
+
+                        </ul>
+                        <!-- //sub -->
                     </li>
-                    <li>
-                        <a href="javascript:">
-                            <em class="pb-icon-lnb-menu3"></em>DATA RESULT
+
+
+
+
+                    <li [ngClass]="{'is-selected' : zoomViewMode === 'DATARESULT' }">
+                        <a href="javascript:;" (click)="zoomViewMode = 'DATARESULT'">
+                            <em class="pb-icon-lnb-menu1" *ngIf="zoomViewMode=='DATARESULT'"></em>
+                            <em class="pb-icon-lnb-menu2" *ngIf="zoomViewMode!='DATARESULT'"></em>
+                            DATA RESULT
                         </a>
+
+                        <!-- sub -->
+                        <ul class="pb-list-menu-sub" *ngIf="datasnapshots != null && datasnapshots.length > 0">
+
+                            <li class="is-selected" *ngFor="let datasnapshot of datasnapshots">
+                                <a href="javascript:;" (click)="datasnapshotsClick(datasnapshot.ssId)">
+                                    {{datasnapshot.ssName}}
+                                </a>
+                            </li>
+
+                        </ul>
+                        <!-- //sub -->
+
+
                     </li>
-                    <li>
-                        <a href="javascript:">
-                            <em class="pb-icon-lnb-menu4"></em>DATA CONNECTION
-                        </a>
-                    </li>
+
+
+
+<!--                    <li>-->
+<!--                        <a href="javascript:">-->
+<!--                            <em class="pb-icon-lnb-menu4"></em>DATA CONNECTION-->
+<!--                        </a>-->
+<!--                    </li>-->
                 </ul>
             </div>
             <!-- //contents -->
