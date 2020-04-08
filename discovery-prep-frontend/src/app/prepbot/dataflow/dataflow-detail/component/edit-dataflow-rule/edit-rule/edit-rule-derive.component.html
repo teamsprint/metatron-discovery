@@ -29,12 +29,14 @@
                               [fields]="fields"
                               (onChange)="deriveVal = $event" ></rule-suggest-input>
         </div>
+        <a class="pb-btn-bg type-space" href="javascript:" (click)="openPopupFormulaInput()">
+          <em class="ddp-icon-editor"></em>{{'msg.dp.btn.advanced.editor' | translate }}</a>
       </td>
     </tr>
     <tr>
-      <th> {{'msg.dp.th.new-column-name' | translate}} *</th>
+      <th class="type-space"> {{'msg.dp.th.new-column-name' | translate}} *</th>
       <td>
-        <div class="pb-form-edit">
+        <div class="pb-form-edit type-space">
           <input type="text" class="pb-component-input" tabindex="3"
                  placeholder="{{'msg.dp.th.new-column-name.ph' | translate}}"
                  [(ngModel)]="deriveAs">
@@ -43,5 +45,4 @@
     </tr>
     </tbody>
   </table>
-  <!--<a class="pb-btn-bg" href="javascript:">Rename Multiple Columns</a>-->
 </div>

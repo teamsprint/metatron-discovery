@@ -1299,6 +1299,7 @@ function getIconClass(itemType){
       case 'USER_DEFINED':
         result = 'ddp-icon-type-ab';
         break;
+      case 'LONG':
       case 'INTEGER':
       case 'DOUBLE':
       case 'CALCULATED':

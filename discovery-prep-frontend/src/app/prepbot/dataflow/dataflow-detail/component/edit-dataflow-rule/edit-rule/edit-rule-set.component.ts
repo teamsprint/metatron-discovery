@@ -25,7 +25,8 @@ import {SetRule} from "../../../../../../domain/data-preparation/prep-rules";
 
 @Component({
   selector: 'edit-rule-set',
-  templateUrl: './edit-rule-set.component.html'
+  templateUrl: './edit-rule-set.component.html',
+  styles: ['.pb-part-content th.type-space {position:relative; top:20px;}']
 })
 export class EditRuleSetComponent extends EditRuleComponent implements OnInit, AfterViewInit, OnDestroy {
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=

@@ -33,6 +33,7 @@ import {StringUtil} from "../../common/util/string.util";
 import {PrepPopResultCreateComponent} from './create-dataresult/prep-pop-result-create.component';
 import {EventBroadcaster} from "../../common/event/event.broadcaster";
 import {MultipleRenamePopupComponent} from "../dataflow/dataflow-detail/component/edit-dataflow-rule/multiple-rename-popup.component";
+import {ExtendInputFormulaComponent} from "../dataflow/dataflow-detail/component/edit-dataflow-rule/extend-input-formula.component";
 
 import * as $ from 'jquery';
 import * as _ from 'lodash';
@@ -51,6 +52,9 @@ export class PrepDatasetDetailComponent extends AbstractComponent {
 
   @ViewChild(MultipleRenamePopupComponent)
   private multipleRenamePopupComponent: MultipleRenamePopupComponent;
+
+  @ViewChild(ExtendInputFormulaComponent)
+  private extendInputFormulaComponent: ExtendInputFormulaComponent;
 
   @ViewChild(RuleListComponent)
   private _ruleListComponent : RuleListComponent;
@@ -810,7 +814,7 @@ export class PrepDatasetDetailComponent extends AbstractComponent {
     // set scroll height
     let height = 25;
     if (clickHandler == 'command') {
-      height = 50;
+      height = 58;
     }
 
     // this.commandList 에 마지막 인덱스
@@ -823,7 +827,7 @@ export class PrepDatasetDetailComponent extends AbstractComponent {
       }
     });
 
-    const commandListEle = $('.pb-list-command');
+    const commandListEle = $('.pb-select-popup');
     // when Arrow up is pressed
     if (event.keyCode === 38) {
 
@@ -920,8 +924,26 @@ export class PrepDatasetDetailComponent extends AbstractComponent {
     }
   }
 
+  /**
+   * Open advanced formula input popup (set, keep, derive, delete)
+   * @param data
+   */
+  public openPopupFormulaInput(data: {command : string, val : string, needCol?:boolean}) {
+    const fields: Field[] = this.selectedDataSet.gridData.fields;
+    data.val = this._editRuleComp.getValue( data.val );
+    this.extendInputFormulaComponent.open(fields, data);
+  }
+
+  /**
+   * Apply formula using Advanced formula popup
+   * @param {{command: string, formula: string}} data
+   */
+  public doneInputFormula(data: { command: string, formula: string }) {
+    this._editRuleComp.doneInputFormula(data);
+  }
+
   get existButtonCommand() {
-    const command = ['rename'];
+    const command = ['keep', 'replace', 'rename', 'set', 'derive', 'delete'];
     return command.indexOf(this.ruleVO.command) > -1
   }
 

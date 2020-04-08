@@ -21,18 +21,18 @@ import {
   OnInit, Output, ViewChild
 } from '@angular/core';
 import { AbstractComponent } from '../../../../../common/component/abstract.component';
-//import { Field } from '../../../../../domain/data-preparation/dataset';
 import { Field } from '../../../../../domain/data-preparation/pr-dataset';
 import { StringUtil } from '../../../../../common/util/string.util';
-import { DataflowService } from '../../../service/dataflow.service';
 import { Alert } from '../../../../../common/util/alert.util';
 import * as _ from 'lodash';
 import {isNullOrUndefined} from "util";
+import {DataflowService} from "../../../../prep/service/dataflow.service";
 declare let $;
 
 @Component({
   selector: 'app-extend-input-formula',
-  templateUrl: './extend-input-formula.component.html'
+  templateUrl: './extend-input-formula.component.html',
+  styles: [':host /deep/ .ddp-type-selectbox {width:155px;}']
 })
 export class ExtendInputFormulaComponent extends AbstractComponent implements OnInit, AfterViewInit, OnDestroy {
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
@@ -40,6 +40,7 @@ export class ExtendInputFormulaComponent extends AbstractComponent implements On
   |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
   private _functionList: FormulaFunction[] = [];
   private _fields: Field[] = [];
+  private _displayFields: Field[] = [];
   private _command: string = '';
 
   private _$calculationInput: any;
@@ -92,8 +93,6 @@ export class ExtendInputFormulaComponent extends AbstractComponent implements On
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   | Override Method
   |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
-
-
   public ngOnInit() {
     super.ngOnInit();
   }
@@ -126,6 +125,7 @@ export class ExtendInputFormulaComponent extends AbstractComponent implements On
     if ( needCol ) {
       this._fields.unshift({name :'$col', type : 'STRING'});
     }
+    this._displayFields = _.cloneDeep(this._fields);
 
     this._setFieldPage(1);
 
@@ -154,7 +154,9 @@ export class ExtendInputFormulaComponent extends AbstractComponent implements On
   /**
    * apply expression and close popup
    */
-  public done() {
+  public done(event: MouseEvent) {
+    this.formulaClick(event);
+
     // verifyStateFormula 가 Success 아닐때
     // if ('S' !== this.verifyStateFormula) {
     //  return;
@@ -273,6 +275,17 @@ export class ExtendInputFormulaComponent extends AbstractComponent implements On
     }
   } // function - setCalculationDescription
 
+  public formulaClick(event: MouseEvent) {
+    event.stopPropagation();
+    event.preventDefault();
+  }
+
+  public sortFields(key: string) {
+    if (key == 'data') {
+
+    }
+  }
+
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   | Protected Method
   |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
@@ -373,7 +386,7 @@ export class ExtendInputFormulaComponent extends AbstractComponent implements On
   private _setFieldPage(page: number) {
 
     // 전체 페이지 설정
-    this.lastPage = Math.ceil(this._fields.length / this.pageSize);
+    this.lastPage = Math.ceil(this._displayFields.length / this.pageSize);
 
     // 페이지 번호 범위 설정
     (page < 1) && (page = 1);
@@ -383,7 +396,7 @@ export class ExtendInputFormulaComponent extends AbstractComponent implements On
     this.currentPage = page;
     const startIdx: number = (this.currentPage - 1) * this.pageSize;
     const endIdx: number = (this.currentPage * this.pageSize);
-    this.pageFields = this._fields.slice(startIdx, endIdx);
+    this.pageFields = this._displayFields.slice(startIdx, endIdx);
 
   } // function - _setFieldPage
 
