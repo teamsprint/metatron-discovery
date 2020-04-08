@@ -51,6 +51,8 @@ export class GnbComponent extends AbstractComponent implements OnInit, OnDestroy
 
   public constTheme = Theme;
 
+  public greetings: string = 'Good morning';
+
   @ViewChild(ProfileComponent)
   public profileComponent: ProfileComponent;
 
@@ -82,6 +84,8 @@ export class GnbComponent extends AbstractComponent implements OnInit, OnDestroy
     this.userService.getUser(userId).then((user) => {
       this.user = user;
     }).catch((err) => this.commonExceptionHandler(err));
+
+    this.checkGreetings();
   }
 
   // Destroy
@@ -190,6 +194,18 @@ export class GnbComponent extends AbstractComponent implements OnInit, OnDestroy
     }
 
     CommonUtil.setLocalStorage(LocalStorageConstant.KEY.USER_SETTING, JSON.stringify(userData));
+  }
+
+  private checkGreetings(): void {
+    const date: Date = new Date();
+    const hour: number = date.getHours();
+    if(hour >= 12 && hour < 18) {
+      this.greetings = 'Good afternoon';
+    } else if(hour >= 18 && hour < 24) {
+      this.greetings = 'Good evening';
+    } else{
+        this.greetings = 'Good morning';
+    }
   }
 
 }

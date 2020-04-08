@@ -9,11 +9,12 @@
   <!-- //left -->
   <!-- user -->
   <div class="pb-data-user">
-    Good morning
+    {{greetings}}
     <span class="pb-data-photo">
         <img src="{{defaultProfileImageSrc}}" #profileImage>
       </span>
-    Metatron
+    <span *ngIf="user == null || user.fullName == null || user.fullName ==''">Metatron</span>
+    <span *ngIf="user != null && user.fullName !== null && user.fullName !==''">{{user.fullName}}</span>
   </div>
   <!-- //user -->
   <!-- menu -->
