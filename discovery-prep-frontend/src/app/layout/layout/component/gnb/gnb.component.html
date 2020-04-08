@@ -7,16 +7,35 @@
     <a (click)="goToMain()" href="javascript:" ><span class="pb-img-logo">METATRON <em>PREP-BOT</em></span></a>
   </div>
   <!-- //left -->
+
+
+
+<!--  &lt;!&ndash; user &ndash;&gt;-->
+<!--  <div class="pb-data-user">-->
+<!--    {{greetings}}-->
+<!--    <span class="pb-data-photo">-->
+<!--        <img src="{{defaultProfileImageSrc}}" #profileImage>-->
+<!--      </span>-->
+<!--    <span *ngIf="user == null || user.fullName == null || user.fullName ==''">Metatron</span>-->
+<!--    <span *ngIf="user != null && user.fullName !== null && user.fullName !==''">{{user.fullName}}</span>-->
+<!--  </div>-->
+<!--  &lt;!&ndash; //user &ndash;&gt;-->
+
+
   <!-- user -->
-  <div class="pb-data-user">
-    {{greetings}}
-    <span class="pb-data-photo">
-        <img src="{{defaultProfileImageSrc}}" #profileImage>
-      </span>
-    <span *ngIf="user == null || user.fullName == null || user.fullName ==''">Metatron</span>
-    <span *ngIf="user != null && user.fullName !== null && user.fullName !==''">{{user.fullName}}</span>
+  <div class="pb-data-user" style="position:absolute; top:50%; left:50%; margin:-17px 0 0 -17px; width:34px; height:34px;">
+    <span style="position:absolute; right:100%; top:4px; margin-right:10px; white-space:nowrap">{{greetings}}</span>
+    <span class="pb-data-photo" style="margin:0">
+         <img src="{{defaultProfileImageSrc}}" #profileImage>
+    </span>
+    <span style="position:absolute; left:100%; top:4px; margin-left:10px; white-space:nowrap" *ngIf="user == null || user.fullName == null || user.fullName ==''">Metatron</span>
+    <span style="position:absolute; left:100%; top:4px; margin-left:10px; white-space:nowrap" *ngIf="user != null && user.fullName !== null && user.fullName !==''">{{user.fullName}}</span>
   </div>
   <!-- //user -->
+
+
+
+
   <!-- menu -->
   <div class="pb-ui-gnb-menu">
     <!--<a href="javascript:" class="pb-icon-live"></a>-->
