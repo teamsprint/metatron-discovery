@@ -203,9 +203,9 @@ export class PrepDetailComponent extends AbstractComponent {
   }
 
   //navigation open
-  public openNavigation(){
-    this.isNaivationOpen = !this.isNaivationOpen;
-  }
+  // public openNavigation(){
+  //   this.isNaivationOpen = !this.isNaivationOpen;
+  // }
 
   /**
    * Dataflow 이름 셋 (this.dataflowName은 container이고 this.dataflow.dfName이 실제 이름임
