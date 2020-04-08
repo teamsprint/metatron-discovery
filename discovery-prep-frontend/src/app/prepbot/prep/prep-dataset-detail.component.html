@@ -156,7 +156,7 @@
                             <li *ngFor="let command of filteredCommandList; let index = index;"
                                 (click)="selectCommand($event, command)"
                                 (mousemove)="flag === true ? flag = false : flag = true">
-                                <a href="javascript:">
+                                <a href="javascript:" [ngStyle]="command.isHover ? {'background-color': '#fffdf5' }:{}">
                               <span class="pb-ui-type">
                                 <em class="pb-ui-round">{{command.alias}}</em>{{command.command}}
                               </span>
@@ -183,12 +183,14 @@
             <!-- //endHeader-->
 
             <!--startKeep-->
-            <edit-rule-keep #editRule *ngIf="'keep' === ruleVO.command">
+            <edit-rule-keep #editRule *ngIf="'keep' === ruleVO.command"
+                            (advancedEditorClickEvent)="openPopupFormulaInput($event)">
             </edit-rule-keep>
             <!-- //endKeep-->
 
             <!-- startReplace -->
-            <edit-rule-replace #editRule *ngIf="'replace' === ruleVO.command">
+            <edit-rule-replace #editRule *ngIf="'replace' === ruleVO.command"
+                               (advancedEditorClickEvent)="openPopupFormulaInput($event)">
             </edit-rule-replace>
             <!-- // endReplace -->
 
@@ -198,7 +200,8 @@
             <!-- // endRename -->
 
             <!--startSet-->
-            <edit-rule-set #editRule *ngIf="'set' === ruleVO.command">
+            <edit-rule-set #editRule *ngIf="'set' === ruleVO.command"
+                           (advancedEditorClickEvent)="openPopupFormulaInput($event)">
             </edit-rule-set>
             <!--//endSet-->
 
@@ -215,12 +218,14 @@
             <!--//endSplit-->
 
             <!--startDerive-->
-            <edit-rule-derive #editRule *ngIf="'derive' === ruleVO.command">
+            <edit-rule-derive #editRule *ngIf="'derive' === ruleVO.command"
+                              (advancedEditorClickEvent)="openPopupFormulaInput($event)">
             </edit-rule-derive>
             <!--//endDerive-->
 
             <!--startDelete-->
-            <edit-rule-delete #editRule *ngIf="'delete' === ruleVO.command">
+            <edit-rule-delete #editRule *ngIf="'delete' === ruleVO.command"
+                              (advancedEditorClickEvent)="openPopupFormulaInput($event)">
             </edit-rule-delete>
             <!--//endDelete-->
 
@@ -265,7 +270,9 @@
             <!--//endNest-->
 
             <!--startUnnest-->
-            <edit-rule-unnest #editRule *ngIf="'unnest' === ruleVO.command" [firstRow]="selectedDataSet.gridData.data?selectedDataSet.gridData.data[0]:null"></edit-rule-unnest>
+            <edit-rule-unnest #editRule *ngIf="'unnest' === ruleVO.command"
+                              [firstRow]="selectedDataSet.gridData.data?selectedDataSet.gridData.data[0]:null">
+            </edit-rule-unnest>
             <!--//endUnnest-->
 
             <!--startSetformat-->
@@ -281,7 +288,7 @@
             <!-- editor 모드 -->
             <div class="pb-part-content">
                 <div class="pb-form-create">
-                    <div class="pb-create-label">Command</div>
+                    <div class="pb-create-label">{{'msg.dp.th.command' | translate}}</div>
                     <div class="pb-form-edit">
                         <textarea class="pb-component-textarea-auto" style="height: 300px;"
                                   placeholder="{{'msg.dp.alert.command.input.ph' | translate}}"
@@ -323,6 +330,10 @@
 <!-- // Union rule popup -->
 
 <multiple-rename-popup (renameMultiColumns)="onRenameMultiColumns($event);"></multiple-rename-popup>
+
+<!-- Advanced editor popup -->
+<app-extend-input-formula (done)="doneInputFormula($event)"></app-extend-input-formula>
+<!-- // Advanced editor popup -->
 
 <prep-pop-result-create [hidden]="isCreateDataresultPopupOpen == false"
                         (snapshotCloseEvent)="closeSnapshotPopup()"

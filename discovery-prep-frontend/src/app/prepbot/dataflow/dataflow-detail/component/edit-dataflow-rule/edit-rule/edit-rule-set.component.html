@@ -40,12 +40,14 @@
                               [fields]="fields"
                               (onChange)="inputValue = $event" ></rule-suggest-input>
         </div>
+        <a class="pb-btn-bg type-space" href="javascript:" (click)="openPopupFormulaInput('inputValue')">
+          <em class="ddp-icon-editor"></em>{{'msg.dp.btn.advanced.editor' | translate }}</a>
       </td>
     </tr>
     <tr>
-      <th> {{'msg.dp.ui.cond' | translate}} *</th>
+      <th class="type-space"> {{'msg.dp.ui.cond' | translate}} *</th>
       <td>
-        <div class="pb-form-edit">
+        <div class="pb-form-edit type-space">
           <rule-suggest-input #set_row_input
                               [formula]="condition"
                               [command]="'set'" [cmdArg]="'row'"
@@ -53,6 +55,8 @@
                               [fields]="fields"
                               (onChange)="condition = $event" ></rule-suggest-input>
         </div>
+        <a class="pb-btn-bg type-space" href="javascript:" (click)="openPopupFormulaInput('condition')">
+          <em class="ddp-icon-editor"></em>{{'msg.dp.btn.advanced.editor' | translate }}</a>
       </td>
     </tr>
     </tbody>

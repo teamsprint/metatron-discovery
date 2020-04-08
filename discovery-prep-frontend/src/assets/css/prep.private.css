@@ -388,9 +388,11 @@ app-lnb {display:none;}
 .pb-rnb-sub.type-rule-list .pb-wrap-line-add.is-focus {
     padding: 0;
     position: relative;
+    height: auto;
 }
 .pb-rnb-sub.type-rule-list .pb-wrap-line-add.is-focus .pb-line-add {
     display: none;
+    background-color:#f37135;
 }
 .pb-rnb-sub.type-rule-list .pb-wrap-line-add.is-focus .pb-input-info {
     display: block;
@@ -413,11 +415,26 @@ app-lnb {display:none;}
     padding: 0;
     height: 28px;
 }
+
 .pb-form-selectbox .pb-input-selectbox {display:none;}
 .pb-form-selectbox.ddp-selected .pb-input-selectbox {display:block;}
 .pb-form-selectbox .pb-wrap-warning:hover .pb-txt-warning {display: block;}
 .pb-form-edit .pb-form-selectbox .pb-select-popup {
     width: 248px;
+}
+
+/**************************************************************
+    계산식 자동완성
+**************************************************************/
+.ddp-wrap-popup2.ddp-accout-popup {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 248px;
+    max-height: 230px;
+    z-index: 127;
+    overflow-y: auto;
+    word-break: break-all;
 }
 
 .pb-wrap-drop-search.pb-selected .pb-ui-drop-search {display:block}

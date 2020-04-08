@@ -24,7 +24,8 @@ import {DeriveRule} from "../../../../../../domain/data-preparation/prep-rules";
 
 @Component({
   selector : 'edit-rule-derive',
-  templateUrl : './edit-rule-derive.component.html'
+  templateUrl : './edit-rule-derive.component.html',
+  styles: ['.pb-part-content th.type-space {position:relative; top:20px;}']
 })
 export class EditRuleDeriveComponent extends EditRuleComponent implements OnInit, AfterViewInit, OnDestroy {
 
