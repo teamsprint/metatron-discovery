@@ -263,7 +263,7 @@ em.pb-icon-sinfo2 {display: inline-block;background: url(../../images/icon_info.
 *************************************************************************/
 
 
-.pb-box-popup .pb-popup-contents{height: 100%;box-sizing: border-box;}
+.pb-box-popup .pb-popup-contents{height: 100%;box-sizing: border-box;overflow-y:hidden;}
 .pb-ui-data-option{position: relative;height: 100%;min-height: 600px;padding-bottom: 60px;box-sizing: border-box;}
 
 .pb-ui-prep-join {position:relative;height:100%; min-height:600px;  padding-bottom:60px; box-sizing:border-box;}

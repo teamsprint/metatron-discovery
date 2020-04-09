@@ -47,7 +47,7 @@
 .pb-box-main.type-dataset .pb-box-bottom {border-top:1px solid #d8d8d8;}
 .pb-box-main .pb-ui-main-summary .pb-data-num {margin: -15px 0 4px 0;}
 .pb-box-main .pb-ui-main-summary .pb-data-num .pb-txt-num {margin-right:10px; color:#737373; font-size:14px; font-weight:600;}
-.pb-box-main .pb-data-summary {padding:15px 25px; background-color:#f5f5ef;}
+.pb-box-main .pb-data-summary {padding:14px 25px; background-color:#f5f5ef;}
 .pb-box-main .pb-data-summary .pb-txt-data {font-size:14px; color:#222;}
 .pb-box-main .pb-data-summary .pb-data-label {margin-right:6px; font-size:14px; color:#737373;}
 .pb-box-main .pb-box-bottom {display:flex; padding:0 12px;height:36px; align-items:center; background-color:#fff;}
