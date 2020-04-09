@@ -41,7 +41,7 @@
 .pb-box-main .pb-ui-main-summary .pb-ui-result .pb-txt-state.type-error {color:#ff4d23;}
 .pb-box-main .pb-ui-main-summary .pb-ui-result .pb-txt-state.type-success {color:#14933d;}
 .pb-box-main .pb-ui-main-summary .pb-ui-result .pb-txt-state.type-success2 {color:#a3a3a3;}
-.pb-box-main .pb-ui-graph {height:63px; margin:4px 0 5px;background: url(../../images/img_diagram.png) no-repeat 35px 3px;}
+.pb-box-main .pb-ui-graph {height:63px; margin:4px 0 5px;background: url(../../images/img_diagram.png) no-repeat 21px 3px;}
 .pb-box-main.type-dataset {padding:10px 0 0 0;}
 .pb-box-main.type-dataset .pb-ui-tags {padding:5px 0 0 0;}
 .pb-box-main.type-dataset .pb-box-bottom {border-top:1px solid #d8d8d8;}
