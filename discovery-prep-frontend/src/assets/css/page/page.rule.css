@@ -60,7 +60,7 @@ ul.pb-list-sub-menu > li > a .pb-icon-sub-clean {width:10px; height:10px;  margi
 .pb-box-rule .swiper-button-prev {left:48px;}
 .pb-box-rule .swiper-button-next {right:48px; transform:rotate(180deg);}
 .pb-box-rule .swiper-container {height:422px;}
-.pb-box-rule .pb-box-top {height:56px; min-height:56px; border-bottom:1px solid #d5d4cd;}
+.pb-box-rule .pb-box-top {display:none;height:56px; min-height:56px; border-bottom:1px solid #d5d4cd;}
 .pb-box-rule .pb-box-top .pb-fleft {padding:16px 0 0 23px;}
 .pb-box-rule .pb-box-top .pb-fleft .pb-top-label {margin-right:10px; font-size:14px; color:#737373;}
 .pb-box-rule .pb-box-top .pb-icon-top-analysis1,
