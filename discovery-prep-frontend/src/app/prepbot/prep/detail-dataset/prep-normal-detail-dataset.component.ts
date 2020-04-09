@@ -420,7 +420,7 @@ export class PrepNormalDetailDatasetComponent extends AbstractComponent {
                 if (rowdatastring === null) {
                     rowdata.push('');
                 }else {
-                    const type: string = this.dataset.gridResponse.colDescs[i].type;
+                    const type: string = this.dataset.gridResponse.colDescs[j].type;
                     if(type=='STRING' || type=='TIMESTAMP') {
                         rowdata.push('"' + rowdatastring + '"');
                     }else{
