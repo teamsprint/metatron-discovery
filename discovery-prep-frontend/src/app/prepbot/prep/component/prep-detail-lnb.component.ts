@@ -41,9 +41,8 @@ export class PrepDetailLnbComponent extends AbstractComponent {
     @Input()
     public workflowType: boolean;
 
-
-
-    public zoomViewMode: string = 'FLOW';
+    @Input()
+    public zoomViewMode: string;
 
     public isNaivationOpen: boolean;
     public dataflows : PrDataflow[];
@@ -72,12 +71,20 @@ export class PrepDetailLnbComponent extends AbstractComponent {
 
     public ngOnInit() {
         super.ngOnInit();
-        this._getPrepList();
+        if(isNullOrUndefined(this.zoomViewMode)){
+            this.zoomViewMode = 'FLOW';
+        }
+        // this._getPrepList();
     }
 
 
     public openNavigation() : void {
         this.isNaivationOpen = !this.isNaivationOpen;
+        if(this.isNaivationOpen) {
+            this._getPrepList();
+        }else{
+            this.searchText = '';
+        }
     }
 
 
@@ -88,12 +95,16 @@ export class PrepDetailLnbComponent extends AbstractComponent {
     }
 
     public dataflowClick(dfId: string ): void {
-
+        this.isNaivationOpen = false;
+        this.router.navigate(['/management/prepbot/dataflow', dfId]);
     }
     public datasetClick(dsId: string) : void {
-
+        this.isNaivationOpen = false;
+        this.router.navigate(['/management/prepbot/datasetdetail', dsId]).then();
     }
     public datasnapshotsClick(ssId: string): void {
+        this.isNaivationOpen = false;
+        this.router.navigate(['/management/prepbot/dataresultdetail', ssId]).then();
 
     }
     /**

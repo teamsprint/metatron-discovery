@@ -75,7 +75,7 @@
                         <ul class="pb-list-menu-sub" *ngIf="dataflows != null && dataflows.length > 0">
 
                             <li class="is-selected" *ngFor="let dataflow of dataflows">
-                                <a href="javascript:;" (click)="dataflowClick(dataflow.dfId)">
+                                <a href="javascript:;" title="{{dataflow.dfName}}" (click)="dataflowClick(dataflow.dfId)" style="text-overflow: ellipsis; white-space: nowrap; overflow: hidden">
                                    {{dataflow.dfName}}
                                 </a>
                             </li>
@@ -97,7 +97,7 @@
                         <ul class="pb-list-menu-sub" *ngIf="datasets != null && datasets.length > 0">
 
                             <li class="is-selected" *ngFor="let dataset of datasets">
-                                <a href="javascript:;" (click)="datasetClick(dataset.dsId)">
+                                <a href="javascript:;" title="{{dataset.dsName}}" (click)="datasetClick(dataset.dsId)" style="text-overflow: ellipsis; white-space: nowrap; overflow: hidden">
                                     {{dataset.dsName}}
                                 </a>
                             </li>
@@ -120,7 +120,7 @@
                         <ul class="pb-list-menu-sub" *ngIf="datasnapshots != null && datasnapshots.length > 0">
 
                             <li class="is-selected" *ngFor="let datasnapshot of datasnapshots">
-                                <a href="javascript:;" (click)="datasnapshotsClick(datasnapshot.ssId)">
+                                <a href="javascript:;" title="{{datasnapshot.ssName}}" (click)="datasnapshotsClick(datasnapshot.ssId)" style="text-overflow: ellipsis; white-space: nowrap; overflow: hidden">
                                     {{datasnapshot.ssName}}
                                 </a>
                             </li>
