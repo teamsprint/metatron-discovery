@@ -48,7 +48,9 @@ ul.pb-list-sub-menu > li > a .pb-icon-sub-generate {width:14px; height:14px;  ma
 ul.pb-list-sub-menu > li > a .pb-icon-sub-sort {width:12px; height:13px;  margin-top:-7px;background-position:left -383px;}
 ul.pb-list-sub-menu > li > a .pb-icon-sub-move {width:13px; height:11px;  margin-top:-6px;background-position:left -398px;}
 ul.pb-list-sub-menu > li > a .pb-icon-sub-clean {width:10px; height:10px;  margin-top:-5px;background-position:left -410px;}
+
 .pb-wrap-box-rule {position:relative; flex:auto; margin-left:-27px; padding:0 18px 18px 0;z-index:2; overflow:auto;}
+.pb-wrap-contents.is-disabled .pb-wrap-box-rule{margin-left:17px;}
 .pb-wrap-box-rule .pb-box-rule {display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; border-radius:5px; background-color:#fff; border:1px solid #d5d4cd;box-shadow: 4px 4px 6px 0 rgba(64,64,61,0.15);}
 .pb-wrap-box-rule .pb-box-rule.type-rule {align-items:initial; justify-content: initial}
 .pb-wrap-box-rule .pb-box-rule.type-rule .pb-ui-graph {flex:auto; height:100%;}
