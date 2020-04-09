@@ -187,10 +187,7 @@ export class PrepPopDataflowNameComponent extends AbstractPopupComponent impleme
           // this.close();
         }
 
-      }).catch(() => {
-        this.loadingHide();
-        // this.close();
-      });
+      }).catch(error => this.commonExceptionHandler(error));
 
 
 
@@ -237,10 +234,7 @@ export class PrepPopDataflowNameComponent extends AbstractPopupComponent impleme
               // console.info('result', result)
               this.createCompleteEvent();
           }
-      }).catch(() => {
-          this.loadingHide();
-          // this.close();
-      });
+      }).catch(error => this.commonExceptionHandler(error));
 
 
 

@@ -338,7 +338,8 @@ export class PrepPopCreateDatasetNameComponent extends AbstractPopupComponent im
    */
   public errorAction(error) {
     this.flag = false;
-    Alert.error(this.translateService.instant('msg.dp.alert.num.fail.dataset', {value : 1}));
+    this.prepAlertShow('', this.translateService.instant('msg.dp.alert.num.fail.dataset',{value : 1}));
+    // Alert.error(this.translateService.instant('msg.dp.alert.num.fail.dataset', {value : 1}));
     this.close();
   }
 

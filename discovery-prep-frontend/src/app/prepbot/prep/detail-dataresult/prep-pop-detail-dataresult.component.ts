@@ -368,7 +368,8 @@ export class PrepPopDetailDataresultComponent extends AbstractComponent implemen
             Alert.success(this.translateService.instant('msg.dp.alert.del.success'));
             this.close(true);
         }).catch(() => {
-            Alert.error(this.translateService.instant('msg.dp.alert.del.fail'));
+            // Alert.error(this.translateService.instant('msg.dp.alert.del.fail'));
+            this.prepAlertShow('',this.translateService.instant('msg.dp.alert.del.fail'));
         });
 
     }
@@ -430,7 +431,8 @@ export class PrepPopDetailDataresultComponent extends AbstractComponent implemen
                 }
             }).catch(() => {
                 this.loadingHide();
-                Alert.error(this.translateService.instant('msg.dp.alert.fail.change.ssName'));
+                // Alert.error(this.translateService.instant('msg.dp.alert.fail.change.ssName'));
+                this.prepAlertShow('',this.translateService.instant('msg.dp.alert.fail.change.ssName'));
             });
         }
         this.isSsNameEditing = false;
@@ -499,7 +501,8 @@ export class PrepPopDetailDataresultComponent extends AbstractComponent implemen
                     Alert.info(this.translateService.instant('msg.dp.alert.snapshot.cancel.success'));
                     this.close(true);
                 } else {
-                    Alert.warning(this.translateService.instant('msg.dp.alert.snapshot.cancel.fail'));
+                    this.prepAlertShow('',this.translateService.instant('msg.dp.alert.snapshot.cancel.fail'));
+                    // Alert.warning(this.translateService.instant('msg.dp.alert.snapshot.cancel.fail'));
                 }
             })
             .catch((error) => {

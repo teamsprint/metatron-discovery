@@ -27,6 +27,7 @@ import * as _ from 'lodash';
 import {EventBroadcaster} from './common/event/event.broadcaster';
 import {UserSetting} from "./common/value/user.setting.value";
 import {CommonUtil} from "./common/util/common.util";
+import {PrepAlertUtil} from "./common/util/prep-alert.util";
 
 @Component({
   selector: 'app-root',
@@ -115,5 +116,9 @@ export class AppComponent implements AfterContentChecked {
     if (event instanceof NavigationError) {
       this.routerLoading = false;
     }
+  }
+
+  public prepAlertMinPopClose(): void {
+      PrepAlertUtil.hide();
   }
 }

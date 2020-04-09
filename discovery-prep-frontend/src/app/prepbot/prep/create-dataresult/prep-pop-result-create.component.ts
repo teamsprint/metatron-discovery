@@ -708,6 +708,7 @@ export class PrepPopResultCreateComponent extends AbstractComponent implements O
             this.loadingHide();
             if (result.errorMsg) {
                 // Alert.error(result.errorMsg);
+                this.prepAlertShow('',result.errorMsg);
             } else {
                 this.isAdvancedPrefOpen = false;
                 this.snapshotCreateFinishEvent.emit(result.ssId);
@@ -715,12 +716,7 @@ export class PrepPopResultCreateComponent extends AbstractComponent implements O
 
             }
 
-        }).catch((error) => {
-            this.loadingHide();
-            let prep_error = this.dataprepExceptionHandler(error);
-            // PreparationAlert.output(prep_error, this.translateService.instant(prep_error.message));
-
-        });
+        }).catch(error => this.commonExceptionHandler(error));
     }
 
 

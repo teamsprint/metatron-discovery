@@ -31,6 +31,7 @@ import {Location} from '@angular/common';
 import {CommonConstant} from '../constant/common.constant';
 import {CookieConstant} from '../constant/cookie.constant';
 import {Alert} from '../util/alert.util';
+import {PrepAlertUtil} from "../../common/util/prep-alert.util";
 import {UnloadConfirmService} from '../service/unload.confirm.service';
 import {CanComponentDeactivate} from '../gaurd/can.deactivate.guard';
 import {CookieService} from 'ng2-cookies';
@@ -242,6 +243,17 @@ export class AbstractComponent implements OnInit, AfterViewInit, OnDestroy, CanC
   public loadingHide() {
     Loading.hide();
   }
+
+
+  public prepAlertShow(title: string, detail: string) {
+      PrepAlertUtil.alertShow('ALERT', title,detail);
+  }
+    public prepWarningShow(title: string, detail: string) {
+        PrepAlertUtil.alertShow('WARNING', title,detail);
+    }
+
+
+
 
   /**
    * attempt to use a destroyed view detectchanges 오류를 발생하지 않기 위해
@@ -967,11 +979,14 @@ export class AbstractComponent implements OnInit, AfterViewInit, OnDestroy, CanC
    */
   protected commonExceptionHandler(err: any, errMessage?: string) {
     if (err && err.details) {
-      Alert.errorDetail(err.message, err.details);
+      // Alert.errorDetail(err.message, err.details);
+        this.prepAlertShow(err.message, err.details);
     } else if (errMessage) {
-      Alert.error(errMessage);
+      // Alert.error(errMessage);
+        this.prepAlertShow('',errMessage);
     } else {
-      Alert.error(this.translateService.instant('msg.alert.retrieve.fail'));
+      // Alert.error(this.translateService.instant('msg.alert.retrieve.fail'));
+        this.prepAlertShow('',this.translateService.instant('msg.alert.retrieve.fail'));
     }
     this.loadingHide();
   } // function - commonExceptionHandler

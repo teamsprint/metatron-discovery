@@ -86,6 +86,35 @@
 <!--</div>-->
 <!--&lt;!&ndash; // 공통 확인 팝업 &ndash;&gt;-->
 
+
+<div class="pb-layout-popup type-small" id="prepAlertMinPop" style="display: none; z-index: 1010;">
+    <div class="pb-table-cell">
+        <!-- box popup -->
+        <div class="pb-box-popup">
+            <a href="javascript:;" class="pb-btn-pop-close" (click)="prepAlertMinPopClose()"></a>
+            <!-- top -->
+            <div class="pb-popup-top"> <div class="pb-txt-title" id="prepAlertMinType"></div>
+            </div>
+            <!-- //top -->
+
+            <!-- contents -->
+            <div class="pb-popup-contents">
+                <div class="pb-popup-text">
+                    <!-- title -->
+                    <div class="pb-pop-title" id="prepAlertMinPopTitle"></div>  <!-- //title -->
+                    <div class="pb-pop-detail" id="prepAlertMinPopDetail"></div>  </div>  </div>  <!-- //contents -->
+
+            <!-- bottom -->
+            <div class="pb-popup-bottom">
+                <a href="javascript:;" class="pb-component-btn-pop type-bg" (click)="prepAlertMinPopClose()">OK</a>
+            </div>
+        </div>  <!-- //box popup -->
+    </div>
+</div>
+
+
+
+
 <!-- 로그인 후 로딩 레이어 -->
 <div class="ddp-loading" *ngIf="isLoggedIn" [style.display]="routerLoading ? 'block' : 'none'" style="z-index:10010;">
     <div style="width:100%;height:100%;" class="lds-wedges">
