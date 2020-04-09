@@ -23,9 +23,9 @@
 
 .pb-intro-setting {height:56px; background-color:#7591ab;}
 .pb-intro-setting-in {max-width:1440px; margin:0 auto; padding:0 60px;}
-.pb-intro-setting .pb-set-left {float:left; padding:11px 0;}
+.pb-intro-setting .pb-set-left {float:left; padding:9px 0;}
 .pb-intro-setting .pb-set-right {float:right;}
-.pb-intro-setting .pb-label-set {float:left; padding:10px 15px 0 0; color:#fff; font-size:18px;}
+.pb-intro-setting .pb-label-set {float:left; padding:7px 15px 0 0; color:#fff; font-size:18px;}
 .pb-intro-setting .pb-component-selectbox {float:left; min-width:127px;}
 .pb-intro-setting .pb-component-selectbox.type-icon-selectbox {min-width:170px; margin-left:8px;}
 .pb-intro-setting .pb-component-selectbox .pb-txt-selectbox{background-color:#7591ab;}
