@@ -5,10 +5,10 @@
         navi 확대시 type-open 추가
     -->
 
-    <prep-detail-lnb [workflowType]="false"></prep-detail-lnb>
+    <prep-detail-lnb [workflowType]="false" (isNaivationChangeEvent)="openNavigation($event)"></prep-detail-lnb>
 
     <!-- wrap contents -->
-    <div class="pb-wrap-contents">
+    <div class="pb-wrap-contents" [ngClass]="{'is-disabled': isNaivationOpen}">
         <div class="pb-contents-top">
             <!-- button -->
             <div class="pb-ui-buttons">

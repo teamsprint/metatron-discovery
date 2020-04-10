@@ -183,8 +183,8 @@ export class PrepDatasetDetailComponent extends AbstractComponent {
   }
 
   //navigation open
-  public openNavigation(){
-      this.isNaivationOpen = !this.isNaivationOpen;
+  public openNavigation(open: boolean){
+      this.isNaivationOpen = open;
   }
 
   /**

@@ -35,6 +35,11 @@ export class PrepDetailLnbComponent extends AbstractComponent {
     @Output()
     public viewModeChangeEvent: EventEmitter<string> = new EventEmitter();
 
+    @Output()
+    public isNaivationChangeEvent: EventEmitter<boolean> = new EventEmitter();
+
+
+
     @Input()
     public viewMode: string;
 
@@ -85,6 +90,7 @@ export class PrepDetailLnbComponent extends AbstractComponent {
         }else{
             this.searchText = '';
         }
+        this.isNaivationChangeEvent.emit(this.isNaivationOpen);
     }
 
 
