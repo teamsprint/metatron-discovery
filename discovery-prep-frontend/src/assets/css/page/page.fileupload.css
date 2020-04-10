@@ -16,17 +16,6 @@
 .pb-box-fileupload .pb-btn-box-file {display:block; margin-top:31px;padding:10px 0; text-align:center; border-radius:4px; background-color:#e5e4e3; border: 1px solid #e5e4e3;color:#464f56;/*background-color:#f77a15; border:1px solid #f77a15; color:#fff;*/ font-weight:600;}
 /*.pb-box-fileupload .pb-btn-box-file:hover {color:#ff6701; border:1px solid #ffac5b; background-color:#fff2b7;}*/
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+.pb-box-fileupload.is-disabled {opacity:0.7;background:#eee;cursor:not-allowed;}
+.pb-box-fileupload.is-disabled:hover {border:1px solid #ffac5b;color:#000;}
 
