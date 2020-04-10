@@ -12,7 +12,7 @@
 .pb-rnb-menu.is-selected .pb-btn-menu-close {position:absolute; bottom:62px; left:0;width:48px; height:41px; background:url(../../images/btn_rnb_close.png) no-repeat; z-index:5;}
 .pb-rnb-menu.is-selected .pb-btn-menu-close:hover {background-position-x:-49px;}
 .pb-rnb-menu.is-selected ul.pb-list-rnb > li > a .pb-txt-rnb {display:block;}
-ul.pb-list-rnb {display:flex; flex-direction:column;flex:auto; height:100%;}
+ul.pb-list-rnb {display:flex; flex-direction:column;flex:auto; height:100%;z-index:1;}
 ul.pb-list-rnb li .pb-ui-rnb-tab {display:none;}
 ul.pb-list-rnb li.is-selected .pb-ui-rnb-tab {display:block;}
 ul.pb-list-rnb li {}
@@ -190,18 +190,19 @@ ul.pb-list-type-data li a .pb-icon-type-sharp {width:16px; height:11px; backgrou
 /***********************************************************************
      Page : Rule
  *************************************************************************/
-.pb-box-ruleedit {position:absolute; top:120px; right:270px; width:400px;box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2); border: solid 1px #e9e9e9; background-color: #fff; border-radius:3px; overflow:auto;z-index:6;}
+.pb-box-ruleedit {position:absolute; width:280px;top:55px;right:0;bottom:0;box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);background-color:#f8f8f8; border:1px solid #edf4f8;border-radius:3px;z-index:10;}
 .pb-box-ruleedit .pb-label-title {padding:15px 0 17px 0; color:#222; font-weight:600; font-size:16px;}
 .pb-box-ruleedit .pb-txt-detail {padding:0 15px 14px 0;font-size:12px; color:#a3a3a3;}
 .pb-box-ruleedit .pb-ui-buttons {position:absolute; top:17px; right:15px;}
-.pb-box-ruleedit .pb-ruleedit-top .pb-component-btn {position: absolute;top: 10px;right: 35px;min-width: 102px;}
-.pb-box-ruleedit .pb-ui-part {padding:15px;}
+.pb-box-ruleedit .pb-ui-part {padding:15px;height:auto;}
 .pb-box-ruleedit .pb-ui-part:last-of-type {padding-bottom:15px;}
 .pb-box-ruleedit .pb-label-part {padding:0 0 8px 0; color:#737373; font-size:14px; font-weight:600;}
 
-.pb-box-ruleedit .pb-ruleedit-top {padding:0 15px;}
-.pb-box-ruleedit .pb-ruleedit-bottom {text-align: right;margin: 0px 20px 10px;}
-.pb-box-ruleedit .pb-block-part {padding:15px;margin-bottom:15px;border-top: 1px solid #DEDEDE;border-bottom: 1px solid #DEDEDE;background-color: #F8F8F8;min-height:160px;}
+.pb-box-ruleedit .pb-ruleedit-top {padding:0 15px;border-bottom:1px solid #dedede;background:#fff;}
+.pb-box-ruleedit .pb-ruleedit-bottom {position:absolute;bottom:0;right:0;width:100%;border-top:1px solid #dedede;text-align:right;background:#fff;}
+.pb-box-ruleedit .pb-ruleedit-bottom .pb-component-btn {margin:10px;}
+.pb-box-ruleedit .pb-ruleedit-top .pb-component-btn {position: absolute;top: 10px;right: 35px;min-width: 102px;}
+.pb-box-ruleedit .pb-block-part {padding:15px;margin-bottom:15px;}
 .pb-box-ruleedit .pb-block-part .pb-component-btn{position: absolute;right: 10px;top: 146px;}
 
 .pb-box-ruleedit .pb-box-table {height:112px;  margin-bottom:5px;border:1px solid #dedede; overflow:auto;}
@@ -233,7 +234,7 @@ ul.pb-list-type-data li a .pb-icon-type-sharp {width:16px; height:11px; backgrou
 .pb-box-ruleedit .pb-btn-bg.type-space {margin-top:5px;}
 .pb-box-ruleedit .pb-btn-bg:hover {background-color:#cfcec8; }
 .pb-box-ruleedit .pb-btn-bg em{display: inline-block;width: 14px;height: 11px;margin-right:10px;margin-bottom:4px;vertical-align: middle;background: url(../../images/icon_editor.png) no-repeat;}
-.pb-box-ruleedit .pb-block-part.type-button {padding-bottom:40px;}
+.pb-box-ruleedit .pb-block-part.type-button {margin:0;}
 .pb-box-ruleedit .pb-form-edit.type-space {margin-top:35px;}
 
 .pb-form-delete .pb-icon-add-r{display: inline-block;margin-right: 9px;background: url(../../images/icon_buttons.png) no-repeat;vertical-align: middle;width: 14px;height: 13px;position: relative;top: -1px;background-position: left -49px;}
@@ -266,7 +267,7 @@ em.pb-icon-sinfo2 {display: inline-block;background: url(../../images/icon_info.
 
 
 .pb-box-popup .pb-popup-contents{height: 100%;box-sizing: border-box;overflow-y:hidden;}
-.pb-ui-data-option{position: relative;height: 100%;min-height: 600px;padding-bottom: 60px;box-sizing: border-box;}
+.pb-ui-data-option{position: relative;height: 100%;min-height: 600px;padding-bottom: 60px;box-sizing: border-box;overflow:scroll;}
 
 .pb-ui-prep-join {position:relative;height:100%; min-height:600px;  padding-bottom:60px; box-sizing:border-box;}
 .pb-prep-box-contents {height:60%; padding:0 24px;}
@@ -512,7 +513,7 @@ table.pb-table-union tr td .pb-data-dropped strong {color:#666eb2; font-weight:n
 /************************************************************************
     page : Join, Union 에 포함된 토글버튼
 **********************************************************************/
-ul.pb-list-tab-button {float: left;border-radius: 2px;border: 1px solid #b7b9c3;position: absolute;top: 28px;right: 10px;margin: 0;margin-top: -13px;}
+ul.pb-list-tab-button {float: left;border-radius: 2px;border: 1px solid #b7b9c3;position: absolute;top: 28px;right: 10px;margin: 0;margin-top: -13px;z-index:10;}
 ul.pb-list-tab-button li a {display: block;width: 23px;height: 23px;position: relative;box-sizing: border-box;border-left: 1px solid #b7b9c3;}
 ul.pb-list-tab-button li:first-of-type a {border-left: none;}
 
