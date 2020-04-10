@@ -15,13 +15,6 @@
 import * as $ from 'jquery';
 
 export class PrepAlertUtil {
-
-    // Alert Popup element
-    public static $alertPopup: any = $('#prepAlertMinPop');
-    // public static $alertTitle: any = $('#prepAlertMinPopTitle');
-    // public static $alertDetail: any = $('#prepAlertMinPopDetail');
-
-
     /*
     * Alert Popup 표시
     * title: string, detail: string
@@ -49,8 +42,6 @@ export class PrepAlertUtil {
         $('#prepAlertMinPopTitle').html('');
         $('#prepAlertMinPopDetail').html('');
         $('#prepAlertMinPop').hide();
-
-        // this.$alertPopup.hide();
     }
 
 }

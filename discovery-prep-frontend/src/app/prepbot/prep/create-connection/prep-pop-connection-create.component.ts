@@ -156,7 +156,8 @@ export class PrepPopConnectionCreateComponent extends AbstractComponent implemen
         this.connectionService.createConnection(this.connectionParam)
             .then((result) => {
                 // alert
-                Alert.success(this.connectionParam['name'] + this.translateService.instant('msg.storage.alert.dconn.create.success'));
+                this.prepNotiShow('Dataconnection saving complete', this.connectionParam['name']+'<br/>저장되었습니다.');
+                // Alert.success(this.connectionParam['name'] + this.translateService.instant('msg.storage.alert.dconn.create.success'));
                 // loading hide
                 this.loadingHide();
                 // close

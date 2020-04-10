@@ -177,6 +177,7 @@ export class PrepPopDataflowNameComponent extends AbstractPopupComponent impleme
 
           // this.createCompleteEvent();
             if(this.selectedDatasets==null || this.selectedDatasets.length==0) {
+                this.prepNotiShow('Dataflow saving complete', this.dataflowInfo.dfName+'<br/>저장되었습니다.');
                 this.createCompleteEvent();
             }else{
                 this.updateDatasets(result.dfId);
@@ -220,6 +221,7 @@ export class PrepPopDataflowNameComponent extends AbstractPopupComponent impleme
   }
 
   private updateDatasets(dfId: string) {
+      this.loadingShow();
       const dsIds: any = {};
       dsIds.dsIds = [];
 
@@ -232,6 +234,7 @@ export class PrepPopDataflowNameComponent extends AbstractPopupComponent impleme
           this.loadingHide();
           if (result) {
               // console.info('result', result)
+              this.prepNotiShow('Dataflow saving complete', this.dataflowInfo.dfName+'<br/>저장되었습니다.');
               this.createCompleteEvent();
           }
       }).catch(error => this.commonExceptionHandler(error));

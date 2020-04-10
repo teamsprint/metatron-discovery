@@ -817,6 +817,7 @@ export class PrepPopCreateDatasetNameComponent extends AbstractPopupComponent im
           }else{
               this.createComplete.emit();
           }
+          this.prepNotiShow('Dataset saving complete', result.dsName+'<br/>저장되었습니다.');
 
       }
     }).catch((error) => {

@@ -32,6 +32,7 @@ import {CommonConstant} from '../constant/common.constant';
 import {CookieConstant} from '../constant/cookie.constant';
 import {Alert} from '../util/alert.util';
 import {PrepAlertUtil} from "../../common/util/prep-alert.util";
+import {PrepNotiUtil} from "../../common/util/prep-noti.util";
 import {UnloadConfirmService} from '../service/unload.confirm.service';
 import {CanComponentDeactivate} from '../gaurd/can.deactivate.guard';
 import {CookieService} from 'ng2-cookies';
@@ -244,13 +245,24 @@ export class AbstractComponent implements OnInit, AfterViewInit, OnDestroy, CanC
     Loading.hide();
   }
 
-
-  public prepAlertShow(title: string, detail: string) {
+  /**
+   * 미니 팝업(경고) 표시
+   */
+  public prepAlertShow(title: string, detail: string): void {
       PrepAlertUtil.alertShow('ALERT', title,detail);
   }
-    public prepWarningShow(title: string, detail: string) {
-        PrepAlertUtil.alertShow('WARNING', title,detail);
-    }
+  /**
+   *미니 팝업(주의) 표시
+   */
+  public prepWarningShow(title: string, detail: string): void {
+      PrepAlertUtil.alertShow('WARNING', title,detail);
+  }
+
+
+
+  public prepNotiShow(title: string, detail: string): void {
+      PrepNotiUtil.NotiShow(title, detail);
+  }
 
 
 

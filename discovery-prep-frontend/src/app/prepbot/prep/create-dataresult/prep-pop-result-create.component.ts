@@ -706,13 +706,14 @@ export class PrepPopResultCreateComponent extends AbstractComponent implements O
 
         this.dataflowService.createDataSnapshot(dsId, snapshot).then((result) => {
             this.loadingHide();
+
             if (result.errorMsg) {
                 // Alert.error(result.errorMsg);
                 this.prepAlertShow('',result.errorMsg);
             } else {
                 this.isAdvancedPrefOpen = false;
                 this.snapshotCreateFinishEvent.emit(result.ssId);
-                // this.isShow = false;
+                this.prepNotiShow('Dataresult saving complete', result.ssName+'<br/>저장되었습니다.');
 
             }
 

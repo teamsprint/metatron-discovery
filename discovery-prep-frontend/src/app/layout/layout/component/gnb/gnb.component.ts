@@ -19,9 +19,13 @@ import {UserService} from '../../../../user/service/user.service';
 import {User} from '../../../../domain/user/user';
 import {ProfileComponent} from '../../../../user/profile/profile.component';
 import {CommonUtil} from '../../../../common/util/common.util';
+
+import {PrepNotiUtil} from '../../../../common/util/prep-noti.util';
+
 import {LocalStorageConstant} from "../../../../common/constant/local-storage.constant";
 import {Language, Theme, UserSetting} from "../../../../common/value/user.setting.value";
 import {EventBroadcaster} from "../../../../common/event/event.broadcaster";
+import * as $ from 'jquery';
 
 @Component({
   selector: 'app-gnb',
@@ -207,5 +211,17 @@ export class GnbComponent extends AbstractComponent implements OnInit, OnDestroy
         this.greetings = 'Good morning';
     }
   }
+
+  public viewNotiList(): void {
+
+  }
+
+  public notiMouseOver(): void {
+      PrepNotiUtil.stop();
+  }
+  public notiMouseLeave(): void {
+      PrepNotiUtil.fadeOut();
+  }
+
 
 }

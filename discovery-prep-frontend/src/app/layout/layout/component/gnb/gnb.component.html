@@ -1,3 +1,10 @@
+<div class="pb-wrap-noti" [hidden]="true" (mouseover)="notiMouseOver()" (mouseleave)="notiMouseLeave()">
+  <em class="pb-img-noti"></em>
+  <div class="pb-noti-title">  <span id="nodiTitle"></span>
+    <span class="pb-data-day" id="nodiTime"></span>
+  </div>  <div class="pb-noti-det" id="nodiDetail"></div>
+</div>
+
 <div class="pb-layout-gnb">
   <!-- left -->
   <div class="pb-gnb-left">
@@ -39,7 +46,7 @@
   <!-- menu -->
   <div class="pb-ui-gnb-menu">
     <!--<a href="javascript:" class="pb-icon-live"></a>-->
-    <a href="javascript:" class="pb-icon-noti"></a>
+    <a href="javascript:" class="pb-icon-noti" (click)="viewNotiList()"></a>
     <!--<a href="javascript:" class="pb-icon-message"></a>-->
 
   </div>
