@@ -1002,11 +1002,11 @@ export class RuleJoinPopupComponent extends AbstractPopupComponent implements On
             .Formatter((function (scope) {
               return function (row, cell, value, columnDef, dataContext) {
                 if (isNull(value) && columnDef.select) {
-                  return '<div style=\'background-color:#d6d9f1; position:absolute; top:0; left:0; right:0; bottom:0px; line-height:30px; padding:0 10px; font-style: italic ; color:#b8bac2;\'>' + '(null)' + '</div>';
+                  return '<div style=\'background-color:#c2d7e5; position:absolute; top:0; left:0; right:0; bottom:0px; line-height:30px; padding:0 10px; font-style: italic ; color:#b8bac2;\'>' + '(null)' + '</div>';
                 } else if (isNull(value) && !columnDef.select) {
                   return '<div  style=\'color:#b8bac2; font-style: italic ;line-height:30px;\'>' + '(null)' + '</div>';
                 } else if (!isNull(value) && columnDef.select) {
-                  return '<div style=\'background-color:#d6d9f1; position:absolute; top:0; left:0; right:0; bottom:0px; line-height:30px; padding:0 10px;\'>' + value + '</div>';
+                  return '<div style=\'background-color:#c2d7e5; position:absolute; top:0; left:0; right:0; bottom:0px; line-height:30px; padding:0 10px;\'>' + value + '</div>';
                 } else if (columnDef.id === '_idProperty_') {
                   return '<div style=\'line-height:30px;\'>' + '&middot;' + '</div>';
                 } else {

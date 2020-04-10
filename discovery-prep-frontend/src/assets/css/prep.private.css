@@ -40,7 +40,7 @@ prep-detail, prep-dataset-detail, prep-normal-detail-dataset, prep-normal-detail
 .ddp-icon-file-svg {display:none;}
 .ddp-btn-go-detail {float: right;background: black;color: white;padding: 10px;cursor:pointer;margin-right:10px;border-radius: 3px;}
 
-.pb-ui-graph2 .ddp-box-gridarea {position:absolute; padding: 0 20px; top:44px; left:0; right:0; bottom:0; width:calc(100% - 19px); height:calc(100% - 98px); border:none; box-sizing:border-box; }
+.pb-ui-graph2 .ddp-box-gridarea {position:absolute; padding: 0 20px; top:44px; left:0; right:0; bottom:0; width:calc(100% - 19px); height:calc(100% - 65px); border:none; box-sizing:border-box; }
 .pb-ui-graph2 .ddp-box-gridarea .ddp-ui-gridbody {top:35px;}
 
 /**************************************************************

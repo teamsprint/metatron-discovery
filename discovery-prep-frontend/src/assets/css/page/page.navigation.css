@@ -38,7 +38,7 @@
 .pb-layout-navi a.pb-link-schedule:hover {background-position-x:-43px;}
 
 .pb-lnb-navigation .pb-btn-resize {display:inline-block; position:absolute; top:32px; right:28px;width:19px; height:19px; background:url(../../images/icon_navigation.png) no-repeat; background-position:left -32px;}
-.pb-lnb-navigation .pb-top-title {padding:30px 0 0 17px; margin-bottom:21px; text-shadow: 0 0 3px rgba(29,86,140,0.6); color:#fff; font-size:19px; font-weight:600;}
+.pb-lnb-navigation .pb-top-title {padding:17px 0 0 17px; margin-bottom:9px; text-shadow: 0 0 3px rgba(29,86,140,0.6); color:#fff; font-size:19px; font-weight:600;}
 .pb-lnb-navigation .pb-top-title .pb-icon-navi {display:inline-block; position:relative; cursor:pointer; top:2px;width:27px; height:31px; margin-right:14px; background:url(../../images/icon_navigation.png) no-repeat; vertical-align:middle;}
 .pb-top-search {position:relative; padding:0 35px 0 0;margin:0 15px 45px 15px; border-radius:3px; border:1px solid #d8e1ea;}
 .pb-top-search input {display:block; width:100%;padding:8px 10px; background:none; border:none; color:#fff; font-size:13px;}
@@ -52,7 +52,7 @@
 .pb-list-navi-tab > li.is-selected > a:after {display:inline-block; width:11px; height:6px; position:absolute; bottom:0; left:50%; margin-left:-6px; background:url(../../images/icon_navigation.png) no-repeat; background-position:left -154px; content:'';}
 .pb-list-navi-tab > li:before {display:inline-block; position:absolute; top:0; left:0;height:24px;border-left:1px solid rgba(184,212,238,0.75); content:'';}
 .pb-list-navi-tab > li:first-of-type:before {display:none;}
-.pb-ui-navi-contents {position:absolute; top:194px; left:0; right:0; /*bottom:56px;*/ bottom:0; overflow:auto;}
+.pb-ui-navi-contents {position:absolute; top:105px!important; left:0; right:0; /*bottom:56px;*/ bottom:0; overflow:auto;}
 .pb-ui-navi-contents .pb-list-menu {}
 .pb-ui-navi-contents .pb-list-menu > li > a {position:relative; display:block;padding:22px 0 19px 63px; color:#fff; font-size:16px; border-bottom:1px solid rgba(184,212, 238, 0.18);}
 .pb-ui-navi-contents .pb-list-menu > li > a [class*="pb-icon-lnb-"] {display:inline-block; position:absolute; top:50%; left:29px; background:url(../../images/icon_navigation.png) no-repeat;}
