@@ -11,7 +11,7 @@
 .pb-box-main .pb-ui-main-summary{padding:0 25px;}
 .pb-box-main .pb-ui-main-summary .pb-ui-tags {padding:15px 0 15px 0;}
 .pb-box-main .pb-ui-main-summary .pb-ui-tags .pb-component-tag {margin-right:6px;}
-.pb-box-main .pb-ui-main-summary .pb-ui-type {position:relative; padding-left:91px;}
+.pb-box-main .pb-ui-main-summary .pb-ui-type {position:relative; padding-left:91px;min-height: 70px!important;}
 .pb-box-main .pb-ui-main-summary .pb-ui-type .pb-wrap-type {display:inline-block; position:absolute; top:0; left:0; width:70px; height:70px; border-radius:50%; overflow:hidden; background-color:#f5f5ef;}
 
 .pb-box-main .pb-ui-main-summary .pb-ui-type .pb-wrap-type .pb-img-dataset2 {position:absolute; top:50%; left:50%;}
@@ -45,7 +45,7 @@
 .pb-box-main.type-dataset {padding:10px 0 0 0;}
 .pb-box-main.type-dataset .pb-ui-tags {padding:5px 0 0 0;}
 .pb-box-main.type-dataset .pb-box-bottom {border-top:1px solid #d8d8d8;}
-.pb-box-main .pb-ui-main-summary .pb-data-num {margin: -15px 0 14px 0;}
+.pb-box-main .pb-ui-main-summary .pb-data-num {margin: -15px 0 7px 0;}
 .pb-box-main .pb-ui-main-summary .pb-data-num .pb-txt-num {margin-right:10px; color:#737373; font-size:14px; font-weight:600;}
 .pb-box-main .pb-data-summary {padding:14px 25px; background-color:#f5f5ef;}
 .pb-box-main .pb-data-summary .pb-txt-data {font-size:14px; color:#222;}

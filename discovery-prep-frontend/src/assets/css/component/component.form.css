@@ -96,7 +96,7 @@
  *************************************************************************/
 
 .pb-form-create {margin-bottom:40px;}
-.pb-form-create.type-result {margin-bottom:10px;}
+.pb-form-create.type-result {margin-bottom:25px;}
 .pb-form-create:first-of-type {margin-top:0;}
 .pb-form-create .pb-create-label {padding-bottom:9px; color:#4b515b; font-weight:600; font-size:16px;}
 .pb-form-create ul.pb-list-create-check {margin:-5px 0;}
