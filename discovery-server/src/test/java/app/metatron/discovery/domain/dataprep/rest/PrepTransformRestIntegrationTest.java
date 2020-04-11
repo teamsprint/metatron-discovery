@@ -170,9 +170,24 @@ public class PrepTransformRestIntegrationTest extends AbstractRestIntegrationTes
     response = generateFileSnapshot(wrangledDsId, "CSV", 5);
     String ssId = response.path(KEY_SS_ID);
     assert ssId != null;
+  }
 
-    response = getSnapshotDetail(ssId);
-    assert response.path(KEY_DS_NAME).equals("simple dataset") : response.path(KEY_DS_NAME);
+  @Test
+  @OAuthRequest(username = "polaris", value = {"SYSTEM_USER", "PERM_SYSTEM_WRITE_WORKSPACE"})
+  public void test_snapshot_database() throws JsonProcessingException {
+    String dcId = createMySqlConnection();
+    Response response = createDatabaseImportedDataset("db dataset", "test", "sales", dcId);
+
+    String importedDsId = response.path(KEY_DS_ID);
+    String dataset_href = response.path(KEY__LINKS_SELF_HREF);
+
+    response = createDataFlow("db dataflow", dataset_href);
+    String dfId = response.path(KEY_DF_ID);
+
+    response = createWrangledDataset(dfId, importedDsId, 1000);
+    String wrangledDsId = response.path(KEY_WRANGLED_DS_ID);
+
+    generateDatabaseSnapshot(wrangledDsId, dcId, 5);
   }
 
   @Test
@@ -1064,6 +1079,113 @@ public class PrepTransformRestIntegrationTest extends AbstractRestIntegrationTes
     assert dataset_post_response.path("errorMsg") == null : dataset_post_response;
     return dataset_post_response;
   }
+
+  private String createMySqlConnection() {
+    Map<String, Object> body = Maps.newHashMap();
+
+    body.put("implementor", "MYSQL");
+    body.put("hostname", "localhost");
+    body.put("port", "3306");
+    body.put("authenticationType", "MANUAL");
+    body.put("username", "polaris");
+    body.put("password", "polaris");
+    body.put("type", "JDBC");
+    body.put("name", "MySQL-test");
+
+    Response response = given()
+            .auth()
+            .oauth2(oauth_token)
+            .contentType(ContentType.JSON)
+            .accept(ContentType.JSON)
+            .when()
+            .content(body)
+            .post("/api/connections")
+            .then()
+            .statusCode(HttpStatus.SC_CREATED)
+            .log().all()
+            .extract()
+            .response();
+
+    return response.path("id");
+  }
+
+  private Response createDatabaseImportedDataset(String dsName, String dbName, String tblName, String dcId) {
+    Map<String, Object> body = Maps.newHashMap();
+    body.put("dsType", "IMPORTED");
+    body.put("importType", "DATABASE");
+    body.put("dcId", dcId);
+    body.put("rsType", "TABLE");
+    body.put("dsName", dsName);
+    body.put("tblName", tblName);
+    body.put("dbName", dbName);
+    body.put("queryStmt", String.format("select * from %s.%s", dbName, tblName));
+
+    Response response = given()
+            .auth()
+            .oauth2(oauth_token)
+            .contentType(ContentType.JSON)
+            .accept(ContentType.JSON)
+            .when()
+            .content(body)
+            .post("/api/preparationdatasets")
+            .then()
+            .statusCode(HttpStatus.SC_OK)
+            .log().all()
+            .extract()
+            .response();
+
+    return response;
+  }
+
+  private String generateDatabaseSnapshot(String wrangledDsId, String dcId, int limitSec) {
+    Map<String, Object> request = Maps.newHashMap();
+    request.put("ssName", "ssName");
+    request.put("ssType", "DATABASE");
+    request.put("engine", "EMBEDDED");
+    request.put("dcId", dcId);
+    request.put("dbName", "test");
+    request.put("tblName", "db_snapshot");
+
+    Response response = given()
+            .auth()
+            .oauth2(oauth_token)
+            .contentType(ContentType.JSON)
+            .accept(ContentType.JSON)
+            .when()
+            .content(request)
+            .post("/api/preparationdatasets/" + wrangledDsId + "/transform/snapshot")
+            .then()
+            .statusCode(HttpStatus.SC_OK)
+            .log().all()
+            .extract()
+            .response();
+
+    String ssId = response.path("ssId");
+
+    // Wait for limit seconds.
+    try {
+      Thread.sleep(limitSec * 1000);
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
+
+    response = given()
+            .auth()
+            .oauth2(oauth_token)
+            .contentType(ContentType.JSON)
+            .accept(ContentType.JSON)
+            .when()
+            .get("/api/preparationsnapshots/" + ssId)
+            .then()
+            .statusCode(HttpStatus.SC_OK)
+            .log().all()
+            .extract()
+            .response();
+
+    assert response.path("status").equals("SUCCEEDED") : response;
+    return ssId;
+  }
+
 
   private Response createDataFlow(String dfName, String dataset_href) {
     Map<String, Object> dataflow_post_body = Maps.newHashMap();

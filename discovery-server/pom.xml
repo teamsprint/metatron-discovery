@@ -1304,6 +1304,11 @@
             <version>${liquibase.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>app.metatron</groupId>
+            <artifactId>metatron-dataprep</artifactId>
+            <version>1.0.0</version>
+        </dependency>
     </dependencies>
 
 </project>

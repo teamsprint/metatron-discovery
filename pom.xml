@@ -23,9 +23,10 @@
     <version>3.4.0-rc4</version>
 
     <modules>
-        <module>discovery-prep-frontend</module>
+        <module>metatron-dataprep</module>
         <module>discovery-server</module>
         <module>discovery-prep-parser</module>
+        <module>discovery-prep-frontend</module>
         <module>discovery-common</module>
         <module>discovery-extensions</module>
         <module>discovery-distribution</module>

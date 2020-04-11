@@ -22,6 +22,10 @@ import static app.metatron.discovery.domain.dataprep.PrepProperties.STAGEDB_USER
 import static app.metatron.discovery.domain.dataprep.entity.PrDataset.DS_TYPE.IMPORTED;
 import static app.metatron.discovery.domain.dataprep.entity.PrDataset.DS_TYPE.WRANGLED;
 
+import app.metatron.dataprep.PrepContext;
+import app.metatron.dataprep.SourceDesc;
+import app.metatron.dataprep.TargetDesc;
+import app.metatron.dataprep.db.JdbcUtil;
 import app.metatron.discovery.common.GlobalObjectMapper;
 import app.metatron.discovery.domain.dataconnection.DataConnection;
 import app.metatron.discovery.domain.dataconnection.DataConnectionHelper;
@@ -36,6 +40,7 @@ import app.metatron.discovery.domain.dataprep.entity.PrDataset;
 import app.metatron.discovery.domain.dataprep.entity.PrSnapshot;
 import app.metatron.discovery.domain.dataprep.entity.PrSnapshot.ENGINE;
 import app.metatron.discovery.domain.dataprep.entity.PrTransformRule;
+import app.metatron.discovery.domain.dataprep.etl.PrepContextExecutor;
 import app.metatron.discovery.domain.dataprep.etl.SparkExecutor;
 import app.metatron.discovery.domain.dataprep.etl.TeddyExecutor;
 import app.metatron.discovery.domain.dataprep.exceptions.PrepErrorCodes;
@@ -59,6 +64,7 @@ import com.facebook.presto.jdbc.internal.guava.collect.Lists;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.collect.Maps;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -97,6 +103,9 @@ public class PrepTransformService {
 
   @Autowired(required = false)
   SparkExecutor sparkExecutor;
+
+  @Autowired(required = false)
+  PrepContextExecutor prepContextExecutor;
 
   @Autowired
   PrepHistogramService prepHistogramService;
@@ -967,6 +976,15 @@ public class PrepTransformService {
     LOGGER.debug("runSpark(): (Future) result from sparkExecutor: " + future.toString());
   }
 
+  private void runPrepContext(PrepContext pc, app.metatron.dataprep.teddy.DataFrame df, TargetDesc target)
+          throws IOException {
+    LOGGER.debug("runPrepContext(): start");
+
+    prepContextExecutor.run(pc, df, target);
+
+    LOGGER.debug("runPrepContext(): done");
+  }
+
 
   private void checkHiveNamingRule(String dsId)
           throws IOException, CannotSerializeIntoJsonException {
@@ -1124,11 +1142,25 @@ public class PrepTransformService {
 
     snapshotRepository.saveAndFlush(snapshot);
 
-    if (requestPost.getSsType() == PrSnapshot.SS_TYPE.URI || requestPost.getSsType() == PrSnapshot.SS_TYPE.STAGING_DB) {
-      runTransformer(wrangledDsId, snapshot, authorization);
-      LOGGER.info("transform_snapshot(): snapshot generation successfully start");
-    } else {
-      throw new IllegalArgumentException(requestPost.toString());
+    switch (ssType) {
+      case URI:
+      case STAGING_DB:
+        runTransformer(wrangledDsId, snapshot, authorization);
+        LOGGER.info("transform_snapshot(): snapshot generation successfully start");
+        break;
+      case DATABASE:
+        // For now, target database has to be the same to the imported dataset.
+        // No upstream dataset is permitted, either.
+        SourceDesc src = buildSourceDesc(wrangledDsId);
+        TargetDesc target = buildTargetDesc(requestPost);
+        String ip = InetAddress.getLocalHost().getHostAddress();
+        String port = getServerPort();
+        target.setCallbackUrl(String.format("http://%s:%s/api/preparationsnapshots/%s", ip, port, snapshot.getSsId()));
+        target.setOauthToken(authorization);
+        createDatabaseSnapshot(src, target, ssName, getRuleStrs(wrangledDsId));
+        break;
+      case DRUID:
+        throw new IllegalArgumentException(requestPost.toString());
     }
 
     snapshotRepository.saveAndFlush(snapshot);
@@ -1138,6 +1170,122 @@ public class PrepTransformService {
     LOGGER.debug("transform_snapshot(): end");
     return response;
   }
+
+  private List<String> getRuleStrs(String dsId) {
+    List<PrTransformRule> rules = getRulesInOrder(dsId);
+    List<String> ruleStrs = new ArrayList<>();
+    for (PrTransformRule rule : rules) {
+      ruleStrs.add(rule.getRuleString());
+    }
+    return ruleStrs;
+  }
+
+  private void createDatabaseSnapshot(SourceDesc src, TargetDesc target, String ssName, List<String> ruleStrs)
+          throws IOException {
+    PrepContext pc = new PrepContext();
+    String dsId = pc.load(src, ssName);
+    app.metatron.dataprep.teddy.DataFrame df = pc.fetch(dsId);
+
+    try {
+      for (String ruleStr : ruleStrs) {
+        if (ruleStr.startsWith("create")) {
+          continue;
+        }
+        df = pc.apply(df, ruleStr);
+      }
+    } catch (app.metatron.dataprep.teddy.exceptions.TeddyException e) {
+      e.printStackTrace();
+    }
+
+    runPrepContext(pc, df, target);
+  }
+
+  private String getConnStr(String implementor, String hostname, Integer port) {
+    switch (implementor) {
+      case "MYSQL":
+        return "jdbc:mysql://" + hostname + ":" + port;
+      case "POSTGRESQL":
+        return "jdbc:postgresql://" + hostname + ":" + port;
+      case "HIVE":
+        return "jdbc:hive2://" + hostname + ":" + port;
+      case "ORACLE":
+        return "jdbc:oracle:thin:@" + hostname + ":" + port;
+    }
+    throw new IllegalArgumentException(implementor);
+  }
+
+  private SourceDesc.Type getSrcTypeFromImportedDs(PrDataset importedDs) {
+    switch (importedDs.getImportType()) {
+      case UPLOAD:
+      case URI:
+        return SourceDesc.Type.URI;
+      case DATABASE:
+        return SourceDesc.Type.DATABASE;
+      case STAGING_DB:
+      case DRUID:
+      case KAFKA:
+        throw new IllegalArgumentException(importedDs.getImportType().name());
+    }
+    assert false;
+    return null;
+  }
+
+  private SourceDesc buildSourceDesc(String wrangledDsId) {
+    String importedDsId = getFirstUpstreamDsId(wrangledDsId);
+    PrDataset importedDs = datasetRepository.findRealOne(datasetRepository.findOne(importedDsId));
+    SourceDesc src = new SourceDesc(getSrcTypeFromImportedDs(importedDs));
+
+    src.setLimit(prepProperties.getEtlLimitRows());
+
+    switch (importedDs.getImportType()) {
+      case UPLOAD:
+      case URI:
+        src.setStrUri(importedDs.getStoredUri());
+        src.setDelim(importedDs.getDelimiter());
+        src.setQuoteChar(importedDs.getQuoteChar());
+        break;
+      case DATABASE:
+        String connStr = getConnStr(importedDs.getDcImplementor(), importedDs.getDcHostname(), importedDs.getDcPort());
+        src.setDriver(JdbcUtil.getDriverByConnStr(connStr));
+        src.setConnStr(connStr);
+        src.setUser(importedDs.getDcUsername());
+        src.setPw(importedDs.getDcPassword());
+        src.setDbName(importedDs.getDbName());
+        src.setTblName(importedDs.getTblName());
+        src.setQueryStmt(importedDs.getQueryStmt());
+        break;
+      case STAGING_DB:
+      case DRUID:
+      case KAFKA:
+        throw new IllegalArgumentException(importedDs.getImportType().name());
+    }
+    return src;
+  }
+
+  private TargetDesc buildTargetDesc(PrepSnapshotRequestPost requestPost) {
+    TargetDesc target = new TargetDesc(TargetDesc.Type.valueOf(requestPost.getSsType().name()));
+    DataConnection connection = connectionRepository.findOne(requestPost.getDcId());
+
+    target.setLimit(prepProperties.getEtlLimitRows());
+
+    switch (requestPost.getSsType()) {
+      case DATABASE:
+        String connStr = getConnStr(connection.getImplementor(), connection.getHostname(), connection.getPort());
+        target.setDriver(JdbcUtil.getDriverByConnStr(connStr));
+        target.setConnStr(connStr);
+        target.setUser(connection.getUsername());
+        target.setPw(connection.getPassword());
+        target.setDbName(requestPost.getDbName());
+        target.setTblName(requestPost.getTblName());
+        break;
+      case URI:
+      case STAGING_DB:
+      case DRUID:
+        throw new IllegalArgumentException(requestPost.getSsType().name());
+    }
+    return target;
+  }
+
 
   @Transactional(rollbackFor = Exception.class)
   public PrepTransformResponse fetch(String dsId, Integer stageIdx) throws IOException {

@@ -21,7 +21,6 @@ import app.metatron.discovery.domain.dataprep.teddy.exceptions.WrongTargetColumn
 import app.metatron.discovery.prep.parser.preparation.rule.Extract;
 import app.metatron.discovery.prep.parser.preparation.rule.Rule;
 import app.metatron.discovery.prep.parser.preparation.rule.expr.Expression;
-import app.metatron.discovery.prep.parser.preparation.rule.expr.Identifier;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

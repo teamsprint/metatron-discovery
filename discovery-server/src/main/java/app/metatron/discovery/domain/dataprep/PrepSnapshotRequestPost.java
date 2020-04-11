@@ -26,6 +26,7 @@ public class PrepSnapshotRequestPost {
 
   String ssName;
   String storedUri;
+  String dcId;
   String dbName;
   String tblName;
   PrSnapshot.HIVE_FILE_FORMAT hiveFileFormat;
@@ -89,6 +90,14 @@ public class PrepSnapshotRequestPost {
 
   public void setStoredUri(String storedUri) {
     this.storedUri = storedUri;
+  }
+
+  public String getDcId() {
+    return dcId;
+  }
+
+  public void setDcId(String dcId) {
+    this.dcId = dcId;
   }
 
   public String getDbName() {
