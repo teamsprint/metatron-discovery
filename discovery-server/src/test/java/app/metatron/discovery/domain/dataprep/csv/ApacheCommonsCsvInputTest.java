@@ -38,7 +38,7 @@ public class ApacheCommonsCsvInputTest {
   @Test
   public void test_bom_and_header() {
     String strUri = buildStrUrlFromResourceDir("csv/sale_bom16.csv");
-    PrepParseResult result = PrepCsvUtil.DEFAULT.withHeader(true).parse(strUri);
+    PrepParseResult result = PrepCsvUtil.DEFAULT.withHeader(false).parse(strUri);
     DataFrame df = new DataFrame();
     df.setByGrid(result);
     df.show();

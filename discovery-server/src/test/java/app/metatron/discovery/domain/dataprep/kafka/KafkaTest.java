@@ -33,13 +33,13 @@ public class KafkaTest {
     kafka = new KafkaContext();
   }
 
-  @Test
+//  @Test
   public void test_add_csv() throws JsonProcessingException {
     kafka.addMessages(100000);
     return;
   }
 
-  @Test
+//  @Test
   public void test_read_csv() throws JsonProcessingException {
     kafka.addMessages(500);
     kafka.printMessages(100);

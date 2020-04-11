@@ -124,10 +124,12 @@ public class DfSplit extends DataFrame {
       for (colno = 0; colno < prevDf.colCnt; colno++) {
         if (targetColNames.contains(prevDf.getColName(colno))) {
           String coldata = (String) row.get(colno);
+          String[] tokens;
           if (coldata == null) {
-            continue;
+            tokens = new String[0];
+          } else {
+            tokens = TeddyUtil.split(coldata, patternStr, quoteStr, splitLimit);
           }
-          String[] tokens = TeddyUtil.split(coldata, patternStr, quoteStr, splitLimit);
 
           // Add new columns. The original columns is deleted.
           int i = 0;

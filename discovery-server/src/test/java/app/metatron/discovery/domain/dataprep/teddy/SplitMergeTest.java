@@ -45,7 +45,7 @@ public class SplitMergeTest extends TeddyTest {
     String[][] strGrid = new String[][]{{"2017-01-12"}};
     DataFrame df = createByGrid(strGrid, new String[]{"dt"});
 
-    df = apply_rule(df, "split col: dt on: '-' limit: 3 ignoreCase: false");
+    df = apply_rule(df, "split col: dt on: '-' limit: 4 ignoreCase: false");
     assertRow(df.rows.get(0), new Object[]{"2017", "01", "12", null});
   }
 
@@ -54,7 +54,7 @@ public class SplitMergeTest extends TeddyTest {
     String[][] strGrid = new String[][]{{"2017\"-01\"-12"}};
     DataFrame df = createByGrid(strGrid, new String[]{"dt"});
 
-    df = apply_rule(df, "split col: dt on: '-' limit: 3 quote: '\"' ignoreCase: false");
+    df = apply_rule(df, "split col: dt on: '-' limit: 4 quote: '\"' ignoreCase: false");
     assertRow(df.rows.get(0), new Object[]{"2017\"-01\"", "12", null, null});
   }
 
@@ -79,7 +79,7 @@ public class SplitMergeTest extends TeddyTest {
             {}
     };
     DataFrame df = createByGrid(strGrid, new String[]{"text"});
-    df = apply_rule(df, "split col: text on: 'i' limit: 4 ignoreCase: false");
+    df = apply_rule(df, "split col: text on: 'i' limit: 5 ignoreCase: false");
     assertRow(df.rows.get(0), new Object[]{"Th", "s ", "s a sample l", "ne. IgnoreCase case.", null});
     assertRow(df.rows.get(1), new Object[]{"", null, null, null, null});
     assertRow(df.rows.get(2), new Object[]{null, null, null, null, null});
@@ -93,7 +93,7 @@ public class SplitMergeTest extends TeddyTest {
             {}
     };
     DataFrame df = createByGrid(strGrid, new String[]{"text"});
-    df = apply_rule(df, "split col: text on: 'is' limit: 4 ignoreCase: false");
+    df = apply_rule(df, "split col: text on: 'is' limit: 5 ignoreCase: false");
     assertRow(df.rows.get(0), new Object[]{"Th", " ", " a sample line. IgnoreCase case.", null, null});
     assertRow(df.rows.get(1), new Object[]{"", null, null, null, null});
     assertRow(df.rows.get(2), new Object[]{null, null, null, null, null});
@@ -127,7 +127,7 @@ public class SplitMergeTest extends TeddyTest {
     // "SM TSP800 TSP847IIU Receipt Printer" -> [SM ], [ ], [ Receipt Printer], null, null
     // "SM \"TSP100 TSP143LAN Receipt\" Printer" -> [SM "], [ ], [ Receipt" Printer], null, null
 
-    df = apply_rule(df, "split col: desc on: /[^\\s\\W]\\w+\\d+\\w*/ limit: 4");
+    df = apply_rule(df, "split col: desc on: /[^\\s\\W]\\w+\\d+\\w*/ limit: 5");
     assertRow(df.rows.get(0), new Object[]{"Nortel Networks ", " \"E ", " ", "\"", null});
     assertRow(df.rows.get(1), new Object[]{"SM ", " ", " Receipt Printer", null, null});
     assertRow(df.rows.get(2), new Object[]{"SM \"", " ", " Receipt\" Printer", null, null});
@@ -138,7 +138,7 @@ public class SplitMergeTest extends TeddyTest {
     // "SM \"TSP100 TSP143LAN Receipt\" Printer" -> [SM "TSP100 TSP143LAN Receipt Printer"], null, null, null, null
 
     df = createByGrid(strGrid, new String[]{"desc"});
-    df = apply_rule(df, "split col: desc on: /[^\\s\\W]\\w+\\d+\\w*/ limit: 4 quote: '\"'");
+    df = apply_rule(df, "split col: desc on: /[^\\s\\W]\\w+\\d+\\w*/ limit: 5 quote: '\"'");
 
     assertRow(df.rows.get(0), new Object[]{"Nortel Networks ", " \"E Nt8 B27\"", null, null, null});
     assertRow(df.rows.get(1), new Object[]{"SM ", " ", " Receipt Printer", null, null});
@@ -170,7 +170,7 @@ public class SplitMergeTest extends TeddyTest {
     DataFrame newDf = apply_rule(contract, ruleString);
     newDf.show();
 
-    ruleString = "split col: pcode on: '_' limit: 4";
+    ruleString = "split col: pcode on: '_' limit: 5";
 
     newDf = apply_rule(newDf, ruleString);
     newDf.show();
@@ -183,7 +183,7 @@ public class SplitMergeTest extends TeddyTest {
     df = prepare_sample(df);
     df.show();
 
-    String ruleString = "split col: name on: 'e' limit: 3";
+    String ruleString = "split col: name on: 'e' limit: 4";
 
     DataFrame newDf = apply_rule(df, ruleString);
     newDf.show();
@@ -191,7 +191,7 @@ public class SplitMergeTest extends TeddyTest {
     assertEquals("rrari", newDf.rows.get(0).get("split_name2"));
     assertEquals("rc", newDf.rows.get(2).get("split_name2"));
 
-    ruleString = "split col: name on: 'm' limit: 2 ignoreCase: true";
+    ruleString = "split col: name on: 'm' limit: 3 ignoreCase: true";
 
     DataFrame newDf2 = apply_rule(df, ruleString);
     newDf2.show();

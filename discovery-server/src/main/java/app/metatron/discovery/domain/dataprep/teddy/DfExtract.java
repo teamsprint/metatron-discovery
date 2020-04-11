@@ -125,11 +125,12 @@ public class DfExtract extends DataFrame {
       for (colno = 0; colno < prevDf.colCnt; colno++) {
         if (targetColNames.contains(prevDf.getColName(colno))) {
           String coldata = (String) row.get(colno);
+          List<String> tokens;
           if (coldata == null) {
-            continue;
+            tokens = new ArrayList<>();
+          } else {
+            tokens = TeddyUtil.match(coldata, pattern, originalQuoteStr, extractLimit);
           }
-
-          List<String> tokens = TeddyUtil.match(coldata, pattern, originalQuoteStr, extractLimit);
 
           // The original columns is saved.
           newRow.add(prevDf.getColName(colno), row.get(colno));
