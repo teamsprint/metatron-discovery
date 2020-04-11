@@ -48,7 +48,7 @@ public class SparkExecutor {
 
     String ssName = (String) snapshotInfo.get("ssName");
     String ssType = (String) snapshotInfo.get("ssType");
-    LOGGER.debug("runSpark(): ssName={} ssType={}" + ssName, ssType);
+    LOGGER.debug("runSpark(): ssName={} ssType={}", ssName, ssType);
 
     // Send spark request
     Map<String, Object> args = new HashMap();
