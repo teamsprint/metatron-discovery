@@ -9,6 +9,16 @@
 
 
             <div style="margin:-25px 45px 0 0; text-align:right;">
+
+                <a href="javascript:;" class="pb-component-btn type-line" (click)="downloadSnapshot('csv')" style="margin: 0 4px 0 0;"
+                   *ngIf="snapshotUriFileFormat === 'csv' || selectedDataSnapshot.ssType === ssType.STAGING_DB">{{'msg.dp.btn.csv.download' | translate}}</a>
+
+                <a href="javascript:;" class="pb-component-btn type-line" (click)="downloadSnapshot('json')" style="margin: 0 4px 0 0;"
+                   *ngIf="snapshotUriFileFormat === 'json' || selectedDataSnapshot.ssType === ssType.STAGING_DB">{{'msg.dp.btn.json.download' | translate}}</a>
+
+                <a href="javascript:;" class="pb-component-btn type-line" (click)="downloadSnapshot('sql')" style="margin: 0 4px 0 0;"
+                   *ngIf="snapshotUriFileFormat === 'sql' || selectedDataSnapshot.ssType === ssType.STAGING_DB">{{'msg.dp.btn.sql.download' | translate}}</a>
+
                 <a href="javascript:;" class="pb-component-btn type-line" (click)="confirmDelete($event, selectedDataSnapshot)">DELETE</a>
                 <!--<span style="width:10px;" *ngIf="dataset != null && dataset.importType">&nbsp;</span>-->
                 <!--<a href="javascript:;" class="pb-component-btn type-line" (click)="createNewFlow()" *ngIf="dataset != null && dataset.importType"><em class="pb-icon-add-r"></em>CREATE DATAFLOW</a>-->

@@ -13,9 +13,27 @@
         <div class="pb-contents-top">
             <!-- right -->
             <div class="pb-ui-buttons">
-                <a href="javascript:;" class="pb-component-btn type-line" (click)="confirmDelete($event, selectedDataSnapshot)">DELETE</a>
+                <a href="javascript:;" class="pb-component-btn type-line" (click)="downloadSnapshot('csv')"
+                   *ngIf="snapshotUriFileFormat === 'csv' || selectedDataSnapshot.ssType === ssType.STAGING_DB">{{'msg.dp.btn.csv.download' | translate}}</a>
 
-                <a href="javascript:" class="pb-component-btn type-line" (click)="navigateDataflow(dfId)">GO TO DATAFLOW</a>
+                <a href="javascript:;" class="pb-component-btn type-line" (click)="downloadSnapshot('json')"
+                   *ngIf="snapshotUriFileFormat === 'json' || selectedDataSnapshot.ssType === ssType.STAGING_DB">{{'msg.dp.btn.json.download' | translate}}</a>
+
+                <a href="javascript:;" class="pb-component-btn type-line" (click)="downloadSnapshot('sql')"
+                   *ngIf="snapshotUriFileFormat === 'sql' || selectedDataSnapshot.ssType === ssType.STAGING_DB">{{'msg.dp.btn.sql.download' | translate}}</a>
+
+
+                <a href="javascript:;" class="pb-component-btn type-line" (click)="confirmDelete($event, selectedDataSnapshot)">DELETE</a>
+                <div class="pb-ui-part">
+                    <a href="javascript:" class="pb-component-btn type-bg" (click)="navigateDataflow(dfId)"><em class="pb-icon-add-r"></em>GO TO DATAFLOW</a>
+                </div>
+
+
+
+
+                <!--<a href="javascript:;" class="pb-component-btn type-line" (click)="confirmDelete($event, selectedDataSnapshot)">DELETE</a>-->
+
+                <!--<a href="javascript:" class="pb-component-btn type-line" (click)="navigateDataflow(dfId)">GO TO DATAFLOW</a>-->
                 <!--<div class="pb-ui-part">-->
                     <!--<a href="javascript:" class="pb-component-btn type-bg"><em class="pb-icon-add-r"></em>CREATE DATA RESULT</a>-->
                 <!--</div>-->
