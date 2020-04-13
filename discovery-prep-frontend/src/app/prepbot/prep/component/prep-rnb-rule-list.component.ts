@@ -17,6 +17,7 @@ import {
 } from '@angular/core';
 import {AbstractComponent} from "../../../common/component/abstract.component";
 import {Rule} from '../../../domain/data-preparation/pr-dataset';
+import {isNullOrUndefined} from "util";
 
 @Component({
   selector: 'prep-rnb-rule-list',
@@ -56,6 +57,8 @@ export class PrepRnbRuleListComponent extends AbstractComponent implements OnIni
 
   public selectedRuleIdx: number;
 
+  public lastShow: boolean = true;
+
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   | Constructor
   |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
@@ -88,6 +91,7 @@ export class PrepRnbRuleListComponent extends AbstractComponent implements OnIni
     this.ruleList.forEach((rule) =>{
       rule.isInsertStep = false;
     });
+    this.lastShow = true;
   }
   /**
    * Jump action
@@ -106,7 +110,7 @@ export class PrepRnbRuleListComponent extends AbstractComponent implements OnIni
    * @param {Rule} rule
    */
   public editRule(rule : Rule) {
-    this.selectedRuleIdx = undefined;
+    //this.selectedRuleIdx = undefined;
     this.editEvent.emit(rule);
   }
 
@@ -119,7 +123,10 @@ export class PrepRnbRuleListComponent extends AbstractComponent implements OnIni
   }
 
   public insertStep(rule : Rule) {
-    this.selectedRuleIdx = undefined;
+    rule.isInsertStep = true;
+    this.lastShow = false;
+
+    //this.selectedRuleIdx = undefined;
     this.addRuleEvent.emit(rule['ruleNo']);
   }
 
@@ -130,8 +137,14 @@ export class PrepRnbRuleListComponent extends AbstractComponent implements OnIni
    */
   public cancelInsertMode( rule : Rule, idx : number ) {
     rule.isInsertStep = false;
+    this.lastShow = true;
+
     this.selectedRuleIdx = idx;
     this.jumpRule(idx);
+  }
+
+  public isInsertStep(): boolean {
+    return !isNullOrUndefined(this.ruleList.find(rule => rule.isInsertStep == true))
   }
 
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=

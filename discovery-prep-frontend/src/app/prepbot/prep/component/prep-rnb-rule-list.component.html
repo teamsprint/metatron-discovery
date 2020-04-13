@@ -24,7 +24,8 @@
     </div>
     <!-- //box rule -->
     <!--  is-focus를 없애면 일반 상태가 됨 -->
-    <div class="pb-wrap-line-add" [ngClass]="{'is-focus': rule.isInsertStep, 'last': last}">
+    <div class="pb-wrap-line-add" [ngClass]="{'is-focus': rule.isInsertStep, 'last': last && lastShow && !isInsertStep()}"
+         (mouseover)="last ? lastShow = true : lastShow = false" (mouseleave)="lastShow = true">
       <div class="pb-line-add" (click)="$event.stopImmediatePropagation();insertStep(rule)">
         <span class="pb-txt"> {{ 'msg.dp.btn.insert.rule' | translate }} </span>
       </div>
