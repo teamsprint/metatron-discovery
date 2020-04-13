@@ -146,6 +146,8 @@ export class AbstractComponent implements OnInit, AfterViewInit, OnDestroy, CanC
     // 웹소켓 연결
     // this.checkAndConnectWebSocket().then();
     this.compUUID = CommonUtil.getUUID();
+
+    PrepNotiUtil.notificationListHide();
   }
 
   ngAfterViewInit() {

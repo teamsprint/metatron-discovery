@@ -46,9 +46,102 @@
   <!-- menu -->
   <div class="pb-ui-gnb-menu">
     <!--<a href="javascript:" class="pb-icon-live"></a>-->
-    <a href="javascript:" class="pb-icon-noti" (click)="viewNotiList()"></a>
+    <a href="javascript:" class="pb-icon-noti" (click)="openNotiList()">
+      <span class="pb-badge pb-badge-icon" *ngIf="checkNotReadNoti()" (click)="openNotiList()" style="cursor: pointer">N</span>
+    </a>
     <!--<a href="javascript:" class="pb-icon-message"></a>-->
-
   </div>
   <!-- //menu -->
+
+
+
+  <!-- notification list -->
+  <div class="pb-layer-notification" [hidden]="true">
+    <a href="javascript:;" class="pb-btn-pop-close" (click)="closeNotiList()"></a>
+    <div class="title-block">
+      <strong class="txt-title">NOTIFICATION</strong>
+    </div>
+
+    <div class="list-block type-default">
+      <!-- Item : Notification -->
+      <dl class="list-notification" *ngIf="notificationTodayList != null && notificationTodayList.length > 0">
+        <dt>
+          <span class="txt-title">Today</span>
+          <a href="javascript:;" class="link-delete" (click)="removeNotiList(0)">Delete All</a>
+        </dt>
+
+        <dd>
+          <!-- Box : Notification -->
+          <div class="box-notification" *ngFor="let todayitem of notificationTodayList">
+            <div class="noti-title">
+              <span class="txt-notice">NOTICE</span>
+              <span class="txt-date">{{todayitem.displayDate}}</span>
+              <a href="javascript:;" class="btn-item-delete"></a>
+            </div>
+            <div class="noti-content">
+                                <span class="txt-alert">
+                                    {{todayitem.title}}
+                                </span>
+              <span class="txt-name">{{todayitem.detail}}</span>
+            </div>
+          </div>
+          <!-- //Box : Notification -->
+        </dd>
+      </dl>
+      <!-- //Item : Notification -->
+
+
+
+      <!-- Item : Notification -->
+      <dl class="list-notification" *ngIf="notificationYesterdayList != null && notificationYesterdayList.length > 0">
+        <dt>
+          <span class="txt-title">Yesterday</span>
+          <a href="javascript:;" class="link-delete" (click)="removeNotiList(1)">Delete All</a>
+        </dt>
+        <dd>
+          <!-- Box : Notification -->
+          <div class="box-notification" *ngFor="let yesterdayitem of notificationYesterdayList">
+            <div class="noti-title">
+              <span class="txt-notice">NOTICE</span>
+              <span class="txt-date">{{yesterdayitem.displayDate}}</span>
+              <a href="javascript:;" class="btn-item-delete"></a>
+            </div>
+            <div class="noti-content">
+                                <span class="txt-alert">
+                                    {{yesterdayitem.title}}
+                                </span>
+              <span class="txt-name">{{yesterdayitem.detail}}</span>
+            </div>
+          </div>
+          <!-- //Box : Notification -->
+
+
+          <!--&lt;!&ndash; Box : Notification &ndash;&gt;-->
+          <!--<div class="box-notification">-->
+            <!--<div class="noti-title">-->
+              <!--<span class="txt-notice">NOTICE</span>-->
+              <!--<span class="txt-date">Now</span>-->
+              <!--<a href="javascript:;" class="btn-item-delete"></a>-->
+            <!--</div>-->
+            <!--<div class="noti-content">-->
+                                <!--<span class="txt-alert">-->
+                                    <!--Changed status of <strong>Result Name</strong> to <strong class="txt-status">OPEN</strong>-->
+                                <!--</span>-->
+              <!--<span class="txt-name">by User name (id)</span>-->
+            <!--</div>-->
+          <!--</div>-->
+          <!--&lt;!&ndash; //Box : Notification &ndash;&gt;-->
+
+        </dd>
+      </dl>
+      <!-- //Item : Notification -->
+
+      <!-- No Data -->
+      <div class="nodata-notification" *ngIf="notificationTodayList.length == 0 && notificationYesterdayList.length == 0">
+        No new notification.
+      </div>
+      <!-- //No Data -->
+    </div>
+  </div>
+  <!-- //notification list -->
 </div>

@@ -20,7 +20,7 @@ import {User} from '../../../../domain/user/user';
 import {ProfileComponent} from '../../../../user/profile/profile.component';
 import {CommonUtil} from '../../../../common/util/common.util';
 
-import {PrepNotiUtil} from '../../../../common/util/prep-noti.util';
+import {PrepNotiUtil, NotificationValue} from '../../../../common/util/prep-noti.util';
 
 import {LocalStorageConstant} from "../../../../common/constant/local-storage.constant";
 import {Language, Theme, UserSetting} from "../../../../common/value/user.setting.value";
@@ -59,6 +59,13 @@ export class GnbComponent extends AbstractComponent implements OnInit, OnDestroy
 
   @ViewChild(ProfileComponent)
   public profileComponent: ProfileComponent;
+
+
+  public notificationTodayList: NotificationValue[] = [];
+  public notificationYesterdayList: NotificationValue[] = [];
+
+
+
 
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
    | Constructor
@@ -212,8 +219,51 @@ export class GnbComponent extends AbstractComponent implements OnInit, OnDestroy
     }
   }
 
-  public viewNotiList(): void {
+  public checkNotReadNoti(): boolean {
+    let notRead: boolean = false;
+    if(PrepNotiUtil.notiRecord == null || PrepNotiUtil.notiRecord.length == 0) {
+        notRead = false;
+    }else{
+      for(let i: number =0; i < PrepNotiUtil.notiRecord.length; i ++) {
+          const value: NotificationValue = PrepNotiUtil.notiRecord[i];
+          if(value.readBoolean == false) {
+              notRead = true;
+            break;
+          }
+      }
+    }
+    return notRead;
+  }
 
+
+
+  public openNotiList(): void {
+      this.makeNotiList();
+      PrepNotiUtil.notificationListShow();
+  }
+
+
+  private makeNotiList(): void {
+      this.notificationTodayList = [];
+      this.notificationYesterdayList = [];
+
+      if(PrepNotiUtil.notiRecord != null &&  PrepNotiUtil.notiRecord.length > 0) {
+          const cutlinenumber: number  = PrepNotiUtil.todayCutline();
+          for(let i: number =0; i < PrepNotiUtil.notiRecord.length; i ++) {
+              const value: NotificationValue = PrepNotiUtil.notiRecord[i];
+              if(value.timestamp >= cutlinenumber) {
+                  this.notificationTodayList.push(value);
+
+              }else{
+                  this.notificationYesterdayList.push(value);
+              }
+          }
+      }
+  }
+
+
+  public closeNotiList(): void {
+      PrepNotiUtil.notificationListHide();
   }
 
   public notiMouseOver(): void {
@@ -223,5 +273,21 @@ export class GnbComponent extends AbstractComponent implements OnInit, OnDestroy
       PrepNotiUtil.fadeOut();
   }
 
+  public removeNotiList(targetnum: number): void {
+      const removeTarget: number[] = [];
+      if(targetnum == 0) {
+          for(let i: number = 0; i < this.notificationTodayList.length; i ++) {
+              removeTarget.push(this.notificationTodayList[i].timestamp);
+          }
+
+      }else if(targetnum == 1) {
+          for(let i: number = 0; i < this.notificationYesterdayList.length; i ++) {
+              removeTarget.push(this.notificationYesterdayList[i].timestamp);
+          }
+      }
+
+      PrepNotiUtil.removeNotificationList(removeTarget);
+      this.makeNotiList();
+  }
 
 }

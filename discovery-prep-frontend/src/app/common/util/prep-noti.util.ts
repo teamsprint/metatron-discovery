@@ -22,7 +22,9 @@ export class PrepNotiUtil {
     private static fadeTime: number = 500;
     private static fadeOutTime: number = 500;
     private static removeTime: number = 4500;
-    private static notiRecord: any = [];
+    public static notiRecord: NotificationValue[] = [];
+
+    // pb-layer-notification
 
     /*
     * Noti Div 표시
@@ -30,8 +32,12 @@ export class PrepNotiUtil {
     */
     public static NotiShow(title: string, detail: string) {
 
-        const date: Date = new Date();
+        $('#nodiTitle').html('');
+        $('#nodiDetail').html('');
+        $('#nodiTime').html('');
 
+
+        const date: Date = new Date();
         let ampm: string = 'AM';
         let displayhour: string ='';
         let displaymin: string ='';
@@ -54,6 +60,19 @@ export class PrepNotiUtil {
         $('#nodiTitle').html(title);
         $('#nodiDetail').html(detail);
         $('#nodiTime').html(ampm+' ' + displayhour+':'+displaymin);
+
+        // notification list hide
+       this.notificationListHide();
+
+        const value: NotificationValue =  new NotificationValue();
+        value.timestamp = date.getTime();
+        value.title = title;
+        value.detail = detail.replace(/<\/?("[^"]*"|'[^']*'|[^>])*(>|$)/g, ' ');
+        value.displayDate = ampm+' ' + displayhour+':'+displaymin;
+        value.readBoolean = false;
+
+        this.notiRecord.unshift(value);
+
 
 
         if(this.removeInterval != null) {
@@ -116,4 +135,71 @@ export class PrepNotiUtil {
         }
     }
 
+
+    public static notificationListShow(): void {
+        for(let i: number =0; i < PrepNotiUtil.notiRecord.length; i ++) {
+            const value: NotificationValue = PrepNotiUtil.notiRecord[i];
+            value.readBoolean = true;
+        };
+
+        $('.pb-layer-notification').show();
+    }
+    public static notificationListHide(): void {
+        $('.pb-layer-notification').hide();
+    }
+
+
+    public static removeNotificationList(removeTarget: number[]): void {
+        if(removeTarget !=null && removeTarget.length > 0) {
+            const temp: NotificationValue[] = [];
+            for(let i: number = 0; i < this.notiRecord.length; i ++) {
+                let chk: number = -1;
+
+                for(let j: number = 0; j < removeTarget.length; j ++) {
+                    if(removeTarget[j] == this.notiRecord[i].timestamp) {
+                        chk = i;
+                        break;
+                    }
+                }
+                if(chk == -1) {
+                    temp.push(this.notiRecord[i]);
+                }
+            }
+            this.notiRecord = [];
+            this.notiRecord = temp;
+        }
+    }
+
+    public static todayCutline(): number {
+        const date: Date = new Date();
+        const displayyear: string = String(date.getFullYear());
+        let displayMonth: string ='';
+        let displayDate: string ='';
+        const month: number = date.getMonth() + 1;
+        const days: number = date.getDate();
+
+        if(month<10) {
+            displayMonth = '0' + month;
+        }else{
+            displayMonth = String(month);
+        }
+
+        if(days<10) {
+            displayDate = '0' + days;
+        }else{
+            displayDate = String(days);
+        }
+
+        const cutlineDate: Date = new Date(displayyear+'-' + displayMonth+ '-' + displayDate+' 00:00:00');
+        return cutlineDate.getTime();
+    }
+
+}
+
+export class NotificationValue {
+    timestamp : number;
+    title : string;
+    detail : string;
+    displayDate: string;
+    readBoolean: boolean;
 }
