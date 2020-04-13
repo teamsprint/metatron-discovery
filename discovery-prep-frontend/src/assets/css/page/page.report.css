@@ -4,7 +4,7 @@
      Page : Report (Dataset, Dataresult)
  *************************************************************************/
 .pb-box-contents.dataset-type,.pb-box-contents.dataresult-type {overflow-y: scroll;position: fixed;top: 114px;bottom: 20px;left:60px;right:20px;height: auto;}
-.ddp-wrap-datadetail {padding:40px 45px;}
+.ddp-wrap-datadetail {padding:20px 35px;}
 
 .pb-form-option .ddp-wrap-datadetail {padding-top:0;}
 
@@ -66,10 +66,11 @@ ul.ddp-list-detail.ddp-list-notebook li {padding-right:450px;}
 ul.ddp-list-detail.ddp-list-model {margin-top:10px;}
 ul.ddp-list-detail.ddp-list-model li .ddp-wrap-detailname {text-overflow:ellipsis;}
 
-.ddp-wrap-datadetail label.ddp-label-detail {color:#4c515a; font-size:16px; font-weight:bold;}
-.ddp-wrap-datadetail .ddp-txt-log{padding: 20px 10px 0 0;}
+.ddp-wrap-datadetail label.ddp-label-detail {display:block;margin-top:10px;margin-bottom:15px;color:#4c515a; font-size:16px; font-weight:bold;}
 .ddp-wrap-datadetail label.ddp-label-detail .ddp-data-num {font-weight:normal;}
 .ddp-wrap-datadetail label.ddp-label-detail.ddp-font-weight {font-weight:300;}
+.ddp-wrap-datadetail label.ddp-label-detail [class*="ddp-btn"]{margin-left:4px; font-weight:normal;}
+.ddp-wrap-datadetail .ddp-txt-log{padding: 20px 10px 0 0;}
 .ddp-wrap-datadetail label.ddp-label-detail [class*="ddp-btn"]{margin-left:4px; font-weight:normal;}
 .ddp-wrap-datadetail .ddp-ui-information {padding:0 0 0 27px;}
 .ddp-wrap-datadetail .ddp-ui-information .ddp-data-name {padding-bottom:20px; font-size:22px;}
@@ -87,8 +88,9 @@ table.ddp-table-detail td .ddp-data-permission {display:block; width:100%; margi
 table.ddp-table-detail td .ddp-data-permission:first-of-type {margin-top:0;}
 table.ddp-table-detail td .ddp-data-permission span.ddp-data-workspace {display:inline-block; margin:0 19px 0 9px; color:#4b515b; font-size:13px;}
 table.ddp-table-detail td .ddp-data-permission span.ddp-data-name {color:#b7bac1; font-size:12px;}
+
 .ddp-ui-datadetail {position:relative; padding:40px 20px 0 20px; border-top:1px dotted #ccc;}
-.ddp-ui-datadetail + .ddp-ui-datadetail {margin:40px 0 0 0;}
+.ddp-ui-datadetail + .ddp-ui-datadetail {margin:40px 0 0 0; border-top:1px dotted #ccc;}
 .ddp-wrap-rules-flow.ddp-snapshot .ddp-box-title {padding:20px 0 15px 0; border-bottom:1px solid  #eaeaec; color:#36393f; font-size:14px; font-weight:bold; line-height:18px;}
 .ddp-wrap-rules-flow.ddp-snapshot .ddp-box-title em.ddp-data-num {display:inline-block; padding:2px 2px 1px 2px; min-width:18px; min-height:18px; margin-right:6px; color:#3d4147; font-size:9px; text-align:center; border-radius:50%; border:1px solid #3d4147; vertical-align:middle; box-sizing:border-box;}
 
