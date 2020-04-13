@@ -207,7 +207,7 @@ ul.pb-list-type-data li a .pb-icon-type-sharp {width:16px; height:11px; backgrou
 
 .pb-box-ruleedit .pb-box-table {height:112px;  margin-bottom:5px;border:1px solid #dedede; overflow:auto;}
 .pb-box-ruleedit .pb-box-table .pb-table-grid {min-width:100%; white-space:nowrap;}
-.pb-box-ruleedit table.pb-table-data tr th {padding:5px 0;font-weight:normal;color:#4e4e4e;font-size:14px;text-align:left;}
+.pb-box-ruleedit table.pb-table-data tr th {padding:5px 0;font-weight:normal;color:#4e4e4e;font-size:13px;text-align:left;}
 .pb-box-ruleedit table.pb-table-data tr td {padding:5px 5px;color:#4e4e4e;font-size:14px;}
 .pb-box-ruleedit .pb-ui-rule-list {position:relative;}
 .pb-box-ruleedit .pb-ui-rule-list .pb-data-num {position:absolute; bottom:100%; right:0; margin-bottom:8px; color:#a3a3a3; font-size:12px;}
@@ -240,15 +240,15 @@ ul.pb-list-type-data li a .pb-icon-type-sharp {width:16px; height:11px; backgrou
 .pb-form-delete .pb-icon-add-r{display: inline-block;margin-right: 9px;background: url(../../images/icon_buttons.png) no-repeat;vertical-align: middle;width: 14px;height: 13px;position: relative;top: -1px;background-position: left -49px;}
 .pb-form-delete .pb-form-edit + .pb-form-edit {margin-top:10px;}
 .pb-form-delete .pb-form-edit input.pb-component-input {display: inline-block;width: 90%;margin-right: 30px;}
-.pb-form-delete .pb-form-edit a.pb-btn-delete {display: inline-block;position: absolute;top: 11px;right: 0;width: 14px;height: 14px;background: url(../../images/btn_close.png) no-repeat;background-position: left -30px;}
+.pb-form-delete .pb-form-edit a.pb-btn-delete {display: inline-block;position: absolute;top: 11px;right: 0;width: 12px;height: 12px;background: url(../../images/btn_close.png) no-repeat;background-position: left -57px;}
 .pb-form-delete  .pb-form-edit .pb-select-popup{width:90%;}
 
 /***********************************************************************
      Page : Guide, Infomation
  *************************************************************************/
 .pb-form-edit .pb-box-info {display: block;position: absolute;top: inherit;bottom: 103%;background-color: #fff;border-radius: 2px;border: 1px solid #aeb0bb;white-space: initial;box-sizing: border-box;-moz-box-shadow: 0 1px 3px rgba(84,97,104,.3);-webkit-box-shadow: 0 1px 3px rgba(84,97,104,.3);box-shadow: 0 1px 3px rgba(84,97,104,.3);z-index:15;}
-.pb-form-edit .pb-box-info-in {padding: 10px;max-height: 350px;overflow: auto;}
-.pb-form-edit .pb-input-title {display: block;padding: 0 0 10px 0;margin-bottom: 10px;text-align: center;border-bottom: 1px solid #ddd;font-size: 15px;}
+.pb-form-edit .pb-box-info-in {padding: 10px;max-height: 350px;overflow: auto;font-size:13px;}
+.pb-form-edit .pb-input-title {display: block;padding: 0 0 10px 0;margin-bottom: 10px;text-align: center;border-bottom: 1px solid #ddd;}
 .pb-form-edit .pb-box-info:after {display: inline-block;content: '';position: absolute;bottom: -6px;right: 10px;width: 10px;height: 6px;background: url(../../images/icon_infobox.png) no-repeat;}
 
 .pb-form-edit .pb-ui-info {position: absolute;top:7px;right: 0;}

@@ -44,7 +44,7 @@
 /***********************************************************************
      Compontent : input
  *************************************************************************/
-.pb-component-input {display:block; width:100%;padding:0 10px;border-radius:4px; border:1px solid #dedede; background-color:#fff; line-height:34px; color:#4b515b; font-size:16px;}
+.pb-component-input {display:block; width:100%;padding:0 10px;border-radius:4px; border:1px solid #dedede; background-color:#fff; line-height:34px; color:#4b515b; font-size:13px;}
 .pb-component-input:focus,
 .pb-component-input:hover {border-color:#f37135;}
 .pb-component-input::placeholder {color:#a3a3a3;}
@@ -55,7 +55,9 @@
 .pb-compomnent-checkbox {font-size:0;}
 .pb-compomnent-checkbox input:disabled {cursor:no-drop;}
 .pb-compomnent-checkbox.type-checkbox i {margin-right:0; top:-2px;}
-.pb-compomnent-checkbox i {display:inline-block; position:relative; top:-4px; width:16px; margin-right:6px; height:16px; background:url(../../images/icon_checkbox.png) no-repeat; background-position:left -17px; vertical-align:middle;}
+.pb-compomnent-checkbox i {display:inline-block; position:relative; top:-1px; right:13px;width:16px; margin-right:6px; height:16px; background:url(../../images/icon_checkbox.png) no-repeat 0 5px; background-color:red;vertical-align:middle;}
+
+
 .pb-compomnent-checkbox:hover i {background-position:left -34px;}
 .pb-compomnent-checkbox.type-all input:checked + i {background-position:left -85px;}
 .pb-compomnent-checkbox input:disabled + i {background-position:left top;}
@@ -72,13 +74,13 @@
  *************************************************************************/
 .pb-compomnent-radio {margin-right: 10px;}
 .pb-compomnent-radio input:disabled {cursor:no-drop;}
-.pb-compomnent-radio i {display:inline-block; position:relative; top:-2px; width:16px; margin-right:6px;height:16px; background:url(../../images/icon_radio.png) no-repeat; background-position:left -17px; vertical-align:middle;}
+.pb-compomnent-radio i {display:inline-block; position:relative; top:-2px; width:16px; height:16px; background:url(../../images/icon_radio.png) no-repeat; background-position:left -17px; vertical-align:middle;}
 .pb-compomnent-radio input {display:none;}
 .pb-compomnent-radio:hover i {background-position:left -34px;}
 .pb-compomnent-radio input:disabled + i {background-position:left top;}
 .pb-compomnent-radio input:disabled:checked + i {background-position:left -51px;}
 .pb-compomnent-radio input:checked + i {background-position:left -68px;}
-.pb-compomnent-radio .pb-txt-radio {color:#222; font-size:16px;}
+.pb-compomnent-radio .pb-txt-radio {color:#222; font-size:13px;}
 .pb-compomnent-radio input:disabled + i + .pb-txt-radio{color:#dedede;}
 
 
