@@ -23,6 +23,7 @@
                                    (keydown)="ssNameKeyDown()">
                         </div>
                     </div>
+
                     <div class="pb-form-create type-result">
                         <div class="pb-create-label">Result Type</div>
                         <div class="pb-form-edit">
@@ -32,6 +33,11 @@
                                 <span class="pb-txt-radio">{{'msg.dp.ui.file-system' | translate }}</span>
                             </label>
                             <label class="pb-compomnent-radio">
+                                <input type="radio" (change)="changeSsType(SsType.DATABASE)" name="snapshotFormatRadio">
+                                <i></i>
+                                <span class="pb-txt-radio">DB</span>
+                            </label>
+                            <label class="pb-compomnent-radio">
                                 <input type="radio" name="snapshotFormatRadio" [disabled]="false===isStagingEnabled()" (change)="changeSsType(SsType.STAGING_DB)">
                                 <i></i>
                                 <span class="pb-txt-radio">{{ 'msg.dp.th.stagingdb' | translate }}</span>
@@ -39,39 +45,92 @@
                         </div>
                     </div>
 
+                    <!--<div class="pb-form-create type-result" *ngIf="snapshot.ssType && snapshot.ssType === SsType.URI">-->
+                        <!--<div class="pb-create-label">{{'msg.dp.ui.location' | translate }}</div>-->
+                        <!--<div class="pb-form-edit">-->
+                            <!--<div class="pb-component-selectbox is-value" (clickOutside)="isLocationListShow =false">-->
+                                <!--<span class="pb-txt-selectbox" *ngIf="fileLocations.length == 0">-->
+                                    <!--No data-->
+                                <!--</span>-->
 
+                                <!--<span class="pb-txt-selectbox" (click)="isLocationListShow = true" *ngIf="fileLocations.length > 0">-->
+                                    <!--{{fileLocations[locationSelectedIndex].label}}-->
+                                <!--</span>-->
+
+                                <!--&lt;!&ndash; popup &ndash;&gt;-->
+                                <!--<div class="pb-select-popup" *ngIf="isLocationListShow" [style.display]="'block'">-->
+                                    <!--<ul class="pb-list-selectbox">-->
+                                        <!--<li *ngFor="let location of fileLocations">-->
+                                            <!--<a href="javascript:;" (click)="onSelected(location,'location')">-->
+                                                <!--{{location.label}}-->
+                                            <!--</a>-->
+                                        <!--</li>-->
+                                    <!--</ul>-->
+                                <!--</div>-->
+                                <!--&lt;!&ndash; //popup &ndash;&gt;-->
+                            <!--</div>-->
+                            <!--&lt;!&ndash; //selectbox &ndash;&gt;-->
+                        <!--</div>-->
+                    <!--</div>-->
 
                     <div class="pb-form-create type-result" *ngIf="snapshot.ssType && snapshot.ssType === SsType.URI">
                         <div class="pb-create-label">{{'msg.dp.ui.location' | translate }}</div>
-                        <div class="pb-form-edit">
-                            <div class="pb-component-selectbox is-value" (clickOutside)="isLocationListShow =false">
-                                <span class="pb-txt-selectbox" *ngIf="fileLocations.length == 0">
-                                    No data
-                                </span>
+                        <div class="pb-form-edit" (clickOutside)="isLocationListShow =false">
+                            <label class="pb-compomnent-radio" *ngFor="let location of fileLocations">
+                                <input type="radio" name="fileLocationRadio" checked="{{firstLoading}}" (click)="onSelected(location,'location')" >
+                                <i></i>
+                                <span class="pb-txt-radio">{{location.label}}</span>
+                            </label>
+                        </div>
+                    </div>
 
-                                <span class="pb-txt-selectbox" (click)="isLocationListShow = true" *ngIf="fileLocations.length > 0">
-                                    {{fileLocations[locationSelectedIndex].label}}
-                                </span>
-
-                                <!-- popup -->
-                                <div class="pb-select-popup" *ngIf="isLocationListShow" [style.display]="'block'">
-                                    <ul class="pb-list-selectbox">
-                                        <li *ngFor="let location of fileLocations">
-                                            <a href="javascript:;" (click)="onSelected(location,'location')">
-                                                {{location.label}}
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <!-- //popup -->
-                            </div>
-                            <!-- //selectbox -->
+                    <div class="pb-form-create type-result" *ngIf="snapshot.ssType && snapshot.ssType === SsType.URI">
+                        <div class="pb-create-label">File format</div>
+                        <div class="pb-form-edit" (clickOutside)="isLocationListShow =false">
+                            <label class="pb-compomnent-radio" *ngFor="let formatitem  of fileFormat">
+                                <input type="radio" name="fileLocationRadio" checked="{{firstLoading}}" (click)="onSelected(formatitem,'format')" >
+                                <i></i>
+                                <span class="pb-txt-radio">{{formatitem.label}}</span>
+                            </label>
                         </div>
                     </div>
 
 
+                    <div class="pb-form-create type-result" *ngIf="snapshot.ssType && snapshot.ssType === SsType.URI">
+                        <div class="pb-create-label">{{ 'msg.dp.ui.file-url' | translate }}</div>
+                        <div class="pb-form-edit">
+                            <input type="text" class="pb-component-input"
+                            [(ngModel)]="snapshot.storedUri"
+                            (ngModelChange)="onChangeStoredUri($event)"
+                            (keydown)="fileUriKeyDown()">
+                        </div>
+                    </div>
 
+                    <div class="pb-setting-sub pb-clear">
+                        <!-- setting edit -->
+                        <div class="pb-setting-edit" *ngIf="isAdvancedPrefOpen">
+                            <div class="pb-edit-label">{{'msg.dp.th.file-format' | translate}}</div>
+                            <div class="pb-form-edit" style="width:600px;">
 
+                                <div class="pb-component-selectbox is-value" (clickOutside)="isFormatListShow =false">
+                                    <span class="pb-txt-selectbox" *ngIf="uriFileFormat == null">No data</span>
+                                    <span class="pb-txt-selectbox" (click)="isFormatListShow = true" *ngIf="uriFileFormat != null">{{uriFileFormat}}</span>
+                                    <!-- popup -->
+                                    <div class="pb-select-popup" *ngIf="isFormatListShow" [style.display]="'block'">
+                                        <ul class="pb-list-selectbox">
+                                            <li *ngFor="let formatitem  of fileFormat">
+                                                <a href="javascript:;" (click)="onSelected(formatitem,'format')">
+                                                {{formatitem.label}}
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- //setting edit -->
+                    </div>
+                    
                     <!--is-selected-->
                     <div class="pb-box-setting" [ngClass]="{ 'is-selected' : isAdvancedPrefOpen }" *ngIf="snapshot.ssType && snapshot.ssType === SsType.URI">
                         <div class="pb-box-fold pb-clear">
@@ -96,45 +155,46 @@
                         </div>
                         <!-- //box setting -->
 
-                        <div class="pb-setting-sub pb-clear">
-                            <!-- setting edit -->
-                            <div class="pb-setting-edit" *ngIf="isAdvancedPrefOpen">
-                                <div class="pb-edit-label">{{'msg.dp.th.file-format' | translate}}</div>
-                                <div class="pb-form-edit" style="width:600px;">
+                        <!--<div class="pb-setting-sub pb-clear">-->
+                            <!--&lt;!&ndash; setting edit &ndash;&gt;-->
+                            <!--<div class="pb-setting-edit" *ngIf="isAdvancedPrefOpen">-->
+                                <!--<div class="pb-edit-label">{{'msg.dp.th.file-format' | translate}}</div>-->
+                                <!--<div class="pb-form-edit" style="width:600px;">-->
 
-                                    <div class="pb-component-selectbox is-value" (clickOutside)="isFormatListShow =false">
-                                        <span class="pb-txt-selectbox" *ngIf="uriFileFormat == null">No data</span>
-                                        <span class="pb-txt-selectbox" (click)="isFormatListShow = true" *ngIf="uriFileFormat != null">{{uriFileFormat}}</span>
-                                        <!-- popup -->
-                                        <div class="pb-select-popup" *ngIf="isFormatListShow" [style.display]="'block'">
-                                            <ul class="pb-list-selectbox">
-                                                <li *ngFor="let formatitem  of fileFormat">
-                                                    <a href="javascript:;" (click)="onSelected(formatitem,'format')">
-                                                        {{formatitem.label}}
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- //setting edit -->
-                            </div>
-                        </div>
+                                    <!--<div class="pb-component-selectbox is-value" (clickOutside)="isFormatListShow =false">-->
+                                        <!--<span class="pb-txt-selectbox" *ngIf="uriFileFormat == null">No data</span>-->
+                                        <!--<span class="pb-txt-selectbox" (click)="isFormatListShow = true" *ngIf="uriFileFormat != null">{{uriFileFormat}}</span>-->
+                                        <!--&lt;!&ndash; popup &ndash;&gt;-->
+                                        <!--<div class="pb-select-popup" *ngIf="isFormatListShow" [style.display]="'block'">-->
+                                            <!--<ul class="pb-list-selectbox">-->
+                                                <!--<li *ngFor="let formatitem  of fileFormat">-->
+                                                    <!--<a href="javascript:;" (click)="onSelected(formatitem,'format')">-->
+                                                        <!--{{formatitem.label}}-->
+                                                    <!--</a>-->
+                                                <!--</li>-->
+                                            <!--</ul>-->
+                                        <!--</div>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                                <!--&lt;!&ndash; //setting edit &ndash;&gt;-->
+                            <!--</div>-->
+                        <!--</div>-->
+
+                        <!--<div class="pb-setting-sub pb-clear">-->
+                            <!--&lt;!&ndash; setting edit &ndash;&gt;-->
+                            <!--<div class="pb-setting-edit" *ngIf="isAdvancedPrefOpen">-->
+                                <!--<div class="pb-edit-label">{{ 'msg.dp.ui.file-url' | translate }}</div>-->
+                                <!--<div class="pb-form-edit" style="width:600px;">-->
+                                    <!--<input type="text" class="pb-component-input"-->
+                                           <!--[(ngModel)]="snapshot.storedUri"-->
+                                           <!--(ngModelChange)="onChangeStoredUri($event)"-->
+                                           <!--(keydown)="fileUriKeyDown()">-->
+                                <!--</div>-->
+                                <!--&lt;!&ndash; //setting edit &ndash;&gt;-->
+                            <!--</div>-->
+                        <!--</div>-->
 
 
-                        <div class="pb-setting-sub pb-clear">
-                            <!-- setting edit -->
-                            <div class="pb-setting-edit" *ngIf="isAdvancedPrefOpen">
-                                <div class="pb-edit-label">{{ 'msg.dp.ui.file-url' | translate }}</div>
-                                <div class="pb-form-edit" style="width:600px;">
-                                    <input type="text" class="pb-component-input"
-                                           [(ngModel)]="snapshot.storedUri"
-                                           (ngModelChange)="onChangeStoredUri($event)"
-                                           (keydown)="fileUriKeyDown()">
-                                </div>
-                                <!-- //setting edit -->
-                            </div>
-                        </div>
                     </div>
 
 

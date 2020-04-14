@@ -72,7 +72,7 @@
  *************************************************************************/
 .pb-compomnent-radio {margin-right: 10px;}
 .pb-compomnent-radio input:disabled {cursor:no-drop;}
-.pb-compomnent-radio i {display:inline-block; position:relative; top:-2px; width:16px; height:16px; background:url(../../images/icon_radio.png) no-repeat; background-position:left -17px; vertical-align:middle;}
+.pb-compomnent-radio i {display:inline-block; position:relative; top:0; width:16px; height:16px; background:url(../../images/icon_radio.png) no-repeat; background-position:left -17px; vertical-align:middle;}
 .pb-compomnent-radio input {display:none;}
 .pb-compomnent-radio:hover i {background-position:left -34px;}
 .pb-compomnent-radio input:disabled + i {background-position:left top;}
