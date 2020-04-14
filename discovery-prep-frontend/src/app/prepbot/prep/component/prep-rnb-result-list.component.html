@@ -3,20 +3,20 @@
 
     <div class="pb-ui-rule-flow" style="display:;">
 
-        <div class="pb-ui-empty">
+        <div class="pb-ui-empty" *ngIf="snapshotList == null || snapshotList.length == 0">
             스냅 샷 생성 기록 없음
         </div>
-        <ul class="pb-list-snapshot" style="display:;">
+        <ul class="pb-list-snapshot" style="display:;" *ngIf="snapshotList !== null && snapshotList.length !==0">
 
 
 
-            <li>
-                <div class="pb-txt-snapshot">
+            <li *ngFor="let snapshot of snapshotList">
+                <div class="pb-txt-snapshot" *ngIf="snapshot.status.toString() == 'SUCCEEDED'" (click)="snapshotDetail(snapshot)">
                     <em class="pb-icon-snap-success"></em>
                     <div class="pb-data-det">
                         <div class="pb-data-status type-success">Success</div>
-                        <div class="pb-data-name">
 
+                        <div class="pb-data-name">
                             <svg class="icon-db-hive-b">
                                 <g id="Layer_2">
                                 </g>
@@ -119,17 +119,20 @@
                                 </g>
                             </svg>
 
-                            <span class="pb-txt-name">데이데이터스냅샷데이터스냅샷데이터스냅샷데이터스냅샷데이터스냅샷데이터스냅샷데이터스냅샷데이터스냅샷터스냅샷</span>
+                            <span class="pb-txt-name">{{snapshot.ssName}}</span>
                         </div>
                         <div class="pb-data-date">
-                            2018-07-01 10:02:12
+                            {{snapshot.createdTime | mdate : 'YYYY-MM-DD HH:mm:ss'}}
                         </div>
                     </div>
 
                 </div>
-            </li>
-            <li>
-                <div class="pb-txt-snapshot">
+
+
+
+
+
+                <div class="pb-txt-snapshot" *ngIf="snapshot.status.toString() == 'FAIL'" (click)="snapshotDetail(snapshot)">
                     <em class="pb-icon-snap-failed"></em>
                     <div class="pb-data-det">
                         <div class="pb-data-status type-failed">Failed</div>
@@ -265,19 +268,18 @@
                                                                 C19.5,7.9,19.4,7.8,19.3,7.7z"></path>
                                 </g>
                             </svg>
-                            <span class="pb-txt-name">데이터스냅샷
-                                                    </span>
+                            <span class="pb-txt-name">{{snapshot.ssName}}</span>
                         </div>
                         <div class="pb-data-date">
-                            2018-07-01 10:02:12
+                            {{snapshot.createdTime | mdate : 'YYYY-MM-DD HH:mm:ss'}}
                         </div>
                     </div>
 
                 </div>
-            </li>
 
-            <li>
-                <div class="pb-txt-snapshot">
+
+
+                <div class="pb-txt-snapshot" *ngIf="snapshot.status.toString() !== 'SUCCEEDED' && snapshot.status.toString() !== 'FAIL'" (click)="snapshotDetail(snapshot)">
                     <em class="pb-icon-snap-play">
 
                     </em>
@@ -301,9 +303,9 @@
                                 </g>
                             </svg>
 
-                            <span class="pb-txt-name">데이터스냅샷</span>
+                            <span class="pb-txt-name">{{snapshot.ssName}}</span>
                         </div>
-                        <div class="pb-data-date">2018-07-01 10:02:12</div>
+                        <div class="pb-data-date">{{snapshot.createdTime | mdate : 'YYYY-MM-DD HH:mm:ss'}}</div>
                     </div>
                     <!-- progress -->
                     <div class="pb-wrap-progress">
@@ -315,33 +317,6 @@
                     <!-- //progress -->
 
                 </div>
-
-            </li>
-            <li class="">
-                <div class="pb-txt-snapshot pb-disabled">
-                    <em class="pb-icon-snap-cancel"></em>
-                    <div class="pb-data-det">
-                        <div class="pb-data-title">스냅샷테이블을생성하고있습니다 (1/n)</div>
-                        <div class="pb-data-name"> <em class="icon-db-local"></em>데이터스냅샷</div>
-                        <div class="pb-data-date"> 2018-07-01 10:02:12</div>
-                    </div>
-                    <!-- progress -->
-                    <div class="pb-wrap-progress">
-                        <div class="pb-ui-progress pb-play">
-                            <span class="pb-bar" style="width:30%;"></span>
-                        </div>
-                        <a href="javascript:" class="pb-btn-cancel"></a>
-                    </div>
-                    <!-- //progress -->
-
-                </div>
-                <div class="pb-txt-cancel">
-                    <span class="pb-txt-det">Sure to cancel snapshot creation?</span>
-                    <a href="#" class="pb-btn-line">No</a>
-
-                    <a href="#" class="pb-btn-solid pb-bg-black ">Yes</a>
-                </div>
-
             </li>
         </ul>
         <div class="pb-ui-link">

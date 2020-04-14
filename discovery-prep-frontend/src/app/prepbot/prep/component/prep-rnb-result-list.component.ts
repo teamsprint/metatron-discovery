@@ -13,9 +13,10 @@
  */
 
 import {
-    Component, ElementRef, Injector, OnInit, OnDestroy, Input } from '@angular/core';
+    Component, ElementRef, Injector, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
 import {AbstractComponent} from "../../../common/component/abstract.component";
-
+import {PrDataSnapshot, Status} from '../../../domain/data-preparation/pr-snapshot';
+import {DataflowService} from "../service/dataflow.service";
 @Component({
     selector: 'prep-rnb-result-list',
     templateUrl: './prep-rnb-result-list.component.html',
@@ -26,8 +27,16 @@ export class PrepRnbResultListComponent extends AbstractComponent {
     @Input()
     public dsId: string;
 
+    @Output()
+    private snapshotDetailEvent:EventEmitter<string> = new EventEmitter<string>();
+
+
+    public snapshotList : PrDataSnapshot[]= [];
+
+
     // 생성자
     constructor(protected elementRef: ElementRef,
+                private dataflowService:DataflowService,
                 protected injector: Injector) {
 
         super(elementRef, injector);
@@ -39,11 +48,38 @@ export class PrepRnbResultListComponent extends AbstractComponent {
 
     public ngOnInit() {
         super.ngOnInit();
+
+        this.getSnapshotList();
+
     }
 
     // Destory
     public ngOnDestroy() {
         super.ngOnDestroy();
+    }
+
+
+
+    public snapshotDetail(snapshot : PrDataSnapshot): void {
+        if (snapshot.status === Status.CANCELED || snapshot.isCancel) {
+            return;
+        }
+        this.snapshotList.forEach((item) => {
+            item.isCancel = false;
+        });
+        this.snapshotDetailEvent.emit(snapshot.ssId);
+    }
+
+
+    public getSnapshotList(): void {
+        this.dataflowService.getWorkList({dsId : this.dsId}).then((result) => {
+            this.snapshotList = [];
+            if(result['snapshots'] && 0 < result['snapshots'].length) {
+                this.snapshotList = result['snapshots'];
+            }
+        }).catch(() => {
+            //
+        })
     }
 
 }

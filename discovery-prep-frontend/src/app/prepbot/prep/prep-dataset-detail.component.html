@@ -104,7 +104,7 @@
                 <a href="javascript:;" (click)="rightTabChange(1)">
                     <span class="pb-txt-rnb">RESULT</span>
                 </a>
-                <prep-rnb-result-list *ngIf="rightResultListOpen" [dsId]="dsId"></prep-rnb-result-list>
+                <prep-rnb-result-list *ngIf="rightResultListOpen" [dsId]="dsId" (snapshotDetailEvent)="snapshotDetailEvent($event)"></prep-rnb-result-list>
             </li>
 
 
@@ -352,3 +352,9 @@
 <prep-pop-result-create [hidden]="isCreateDataresultPopupOpen == false"
                         (snapshotCloseEvent)="closeSnapshotPopup()"
                         (snapshotCreateFinishEvent)="snapshotCreateFinish($event)"></prep-pop-result-create>
+
+
+<prep-pop-detail-dataresult *ngIf="isDetailDataresultPopupOpen"
+                            [pageType]="'POP'"
+                            [pageSsid]="detailDataresultID"
+                            (snapshotDetailCloseEvent)="closeDetailDataresult($event)"></prep-pop-detail-dataresult>

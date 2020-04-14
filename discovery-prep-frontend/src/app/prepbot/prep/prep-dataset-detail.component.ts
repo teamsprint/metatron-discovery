@@ -34,6 +34,7 @@ import {PrepPopResultCreateComponent} from './create-dataresult/prep-pop-result-
 import {EventBroadcaster} from "../../common/event/event.broadcaster";
 import {MultipleRenamePopupComponent} from "../dataflow/dataflow-detail/component/edit-dataflow-rule/multiple-rename-popup.component";
 import {ExtendInputFormulaComponent} from "../dataflow/dataflow-detail/component/edit-dataflow-rule/extend-input-formula.component";
+import {PrepRnbResultListComponent} from './component/prep-rnb-result-list.component';
 
 import * as $ from 'jquery';
 import * as _ from 'lodash';
@@ -70,6 +71,11 @@ export class PrepDatasetDetailComponent extends AbstractComponent {
 
   @ViewChild(PrepPopResultCreateComponent)
   private createSnapshotPopup : PrepPopResultCreateComponent;
+
+  @ViewChild(PrepRnbResultListComponent)
+  private _resultListComp: PrepRnbResultListComponent;
+
+
 
   public dfId: string;
   public dsId: string;
@@ -145,8 +151,9 @@ export class PrepDatasetDetailComponent extends AbstractComponent {
   public isCreateDataresultPopupOpen: boolean = false;     // dataresult create popup
 
   public rightTabNumber: number = 0;
-
   public rightResultListOpen: boolean = false;
+  public isDetailDataresultPopupOpen: boolean = false;
+  public detailDataresultID: string;
 
 
   // 생성자
@@ -978,6 +985,9 @@ export class PrepDatasetDetailComponent extends AbstractComponent {
 
     public snapshotCreateFinish(data) {
         this.isCreateDataresultPopupOpen = false;
+        if(this.rightResultListOpen) {
+            this._resultListComp.getSnapshotList();
+        }
         // this.snapshotLoadingComponent.init(data);
     }
 
@@ -999,6 +1009,16 @@ export class PrepDatasetDetailComponent extends AbstractComponent {
       }
     }
 
+    public snapshotDetailEvent(ssId: string): void {
+      this.detailDataresultID = ssId;
+      this.isDetailDataresultPopupOpen = true;
+
+    }
+
+    public closeDetailDataresult(refresh: boolean): void {
+        this.isDetailDataresultPopupOpen = false;
+        this._resultListComp.getSnapshotList();
+    }
 
   /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   | Private Method
