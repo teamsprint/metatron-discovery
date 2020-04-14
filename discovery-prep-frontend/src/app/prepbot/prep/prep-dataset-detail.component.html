@@ -58,8 +58,10 @@
     <div class="pb-rnb-menu is-selected">
         <a href="javascript:" class="pb-btn-menu-close" style="display:none;"></a>
         <ul class="pb-list-rnb type-list">
-            <li class="is-selected">
-                <a href="javascript:">
+
+
+            <li [ngClass]="{'is-selected' : rightTabNumber === 0}">
+                <a href="javascript:;" (click)="rightTabChange(0)">
                     <span class="pb-txt-rnb">RULE</span>
                 </a>
                 <ul class="pb-list-tab-button">
@@ -98,12 +100,24 @@
                         (addRuleEvent)="insertStep($event)">
                 </prep-rnb-rule-list>
             </li>
-            <li>
-                <a href="javascript:">
-                    <span class="pb-txt-rnb">RECOMMENDATION</span>
+            <li [ngClass]="{'is-selected' : rightTabNumber === 1}">
+                <a href="javascript:;" (click)="rightTabChange(1)">
+                    <span class="pb-txt-rnb">RESULT</span>
                 </a>
-                <prep-rnb-recommend></prep-rnb-recommend>
+                <prep-rnb-result-list *ngIf="rightResultListOpen" [dsId]="dsId"></prep-rnb-result-list>
             </li>
+
+
+            <!--<li>-->
+                <!--<a href="javascript:">-->
+                    <!--<span class="pb-txt-rnb">RECOMMENDATION</span>-->
+                <!--</a>-->
+                <!--<prep-rnb-recommend></prep-rnb-recommend>-->
+            <!--</li>-->
+
+
+
+
         </ul>
         <!-- bottom -->
         <div class="pb-btn-bottom" style="display:none;">

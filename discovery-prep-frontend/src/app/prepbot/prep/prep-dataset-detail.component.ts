@@ -144,6 +144,11 @@ export class PrepDatasetDetailComponent extends AbstractComponent {
 
   public isCreateDataresultPopupOpen: boolean = false;     // dataresult create popup
 
+  public rightTabNumber: number = 0;
+
+  public rightResultListOpen: boolean = false;
+
+
   // 생성자
   constructor(private _dataflowService: DataflowService,
               private broadCaster: EventBroadcaster,
@@ -982,6 +987,16 @@ export class PrepDatasetDetailComponent extends AbstractComponent {
     }
     public closeSnapshotPopup() {
         this.isCreateDataresultPopupOpen = false;
+    }
+
+    public rightTabChange(num: number): void {
+      if(this.rightTabNumber == num) return;
+      this.rightTabNumber  = num;
+      if(this.rightTabNumber == 1) {
+        this.rightResultListOpen = true;
+      }else{
+        this.rightResultListOpen = false;
+      }
     }
 
 

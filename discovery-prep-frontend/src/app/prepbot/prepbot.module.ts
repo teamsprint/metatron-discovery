@@ -114,6 +114,7 @@ import {PrepPopResultCreateComponent} from './prep/create-dataresult/prep-pop-re
 import {PrepNormalDetailDataresultComponent} from './prep/detail-dataresult/prep-normal-detail-dataresult.component';
 import {PrepPopDetailDataresultComponent} from './prep/detail-dataresult/prep-pop-detail-dataresult.component';
 import {PrepDetailLnbComponent} from './prep/component/prep-detail-lnb.component';
+import {PrepRnbResultListComponent} from './prep/component/prep-rnb-result-list.component';
 
 const dataPreparationRoutes: Routes = [
     { path: '', component: PrepListComponent },
@@ -226,7 +227,8 @@ const dataPreparationRoutes: Routes = [
       PrepPopResultCreateComponent,
       PrepNormalDetailDataresultComponent,
       PrepPopDetailDataresultComponent,
-      PrepDetailLnbComponent
+      PrepDetailLnbComponent,
+      PrepRnbResultListComponent
   ],
   providers: [
       PrepPopCreateComponent,
