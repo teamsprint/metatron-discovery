@@ -11,7 +11,7 @@
 .pb-box-main .pb-ui-main-summary{padding:0 25px;}
 .pb-box-main .pb-ui-main-summary .pb-ui-tags {padding:15px 0 15px 0;}
 .pb-box-main .pb-ui-main-summary .pb-ui-tags .pb-component-tag {margin-right:6px;}
-.pb-box-main .pb-ui-main-summary .pb-ui-type {position:relative; padding-left:91px;min-height: 70px!important;}
+.pb-box-main .pb-ui-main-summary .pb-ui-type {position:relative; padding-left:91px;min-height: 75px!important;}
 .pb-box-main .pb-ui-main-summary .pb-ui-type .pb-wrap-type {display:inline-block; position:absolute; top:0; left:0; width:70px; height:70px; border-radius:50%; overflow:hidden; background-color:#f5f5ef;}
 
 .pb-box-main .pb-ui-main-summary .pb-ui-type .pb-wrap-type .pb-img-dataset2 {position:absolute; top:50%; left:50%;}
@@ -33,6 +33,7 @@
 .pb-box-main .pb-ui-main-summary .pb-ui-name{color:#222; font-size:17px; margin-top:5px;font-weight:600;word-wrap: break-word;display: -webkit-box;-webkit-line-clamp: 3;-webkit-box-orient: vertical;height: 43px;line-height: 20px;overflow: hidden;text-overflow: ellipsis;}
 .pb-box-main .pb-ui-main-summary .pb-data-num .pb-txt-num .pb-file-type {margin-right:4px; position:relative; top:-1px;vertical-align:middle;}
 .pb-box-main .pb-ui-main-summary .pb-ui-des {padding:4px 0 25px 0; color:#737373; font-size:13px;}
+.pb-box-main .pb-ui-main-summary.type-flow .pb-ui-des {min-height:47px;}
 .pb-box-main .pb-ui-main-summary .pb-ui-result {position:relative; padding:0 0 0 60px;}
 .pb-box-main .pb-ui-main-summary .pb-ui-result .pb-img-state {position:absolute; top:41px; left:0;}
 
@@ -41,7 +42,7 @@
 .pb-box-main .pb-ui-main-summary .pb-ui-result .pb-txt-state.type-error {color:#ff4d23;}
 .pb-box-main .pb-ui-main-summary .pb-ui-result .pb-txt-state.type-success {color:#14933d;}
 .pb-box-main .pb-ui-main-summary .pb-ui-result .pb-txt-state.type-success2 {color:#a3a3a3;}
-.pb-box-main .pb-ui-graph {height:63px; margin:4px 0 5px;background: url(../../images/img_diagram.png) no-repeat 21px 3px;}
+.pb-box-main .pb-ui-graph {/*height:63px;*/ height:45px; margin:4px 0 5px;background: url(../../images/img_diagram.png) no-repeat 21px 3px;}
 .pb-box-main.type-dataset {padding:10px 0 0 0;}
 .pb-box-main.type-dataset .pb-ui-tags {padding:5px 0 0 0;}
 .pb-box-main.type-dataset .pb-box-bottom {border-top:1px solid #d8d8d8;}
