@@ -41,7 +41,7 @@
             값 입력시 : is-value 추가
 
         -->
-        <div class="pb-component-selectbox type-white ">
+        <div class="pb-component-selectbox type-white " style="display:none;">
           <span class="pb-txt-selectbox">Recently</span>
           <!-- popup -->
           <div class="pb-select-popup">
@@ -177,8 +177,8 @@
           <div class="pb-txt-data">
             <span class="pb-data-label">Used in</span>{{item.refDfCount}}
           </div>
-          <div class="pb-txt-data">
-            {{item.dsType === DsType.IMPORTED ? prepCommonUtil.getDatasetType(item) : item.creatorDfName}}
+          <div class="pb-txt-data ddp-ellipsis">
+            <span class="pb-data-label">Dataflow</span>{{item.dsType === DsType.IMPORTED ? prepCommonUtil.getDatasetType(item) : item.creatorDfName}}
           </div>
         </div>
         <!-- //data summary -->

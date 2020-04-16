@@ -3,6 +3,8 @@
 /***********************************************************************
      Compontent : selectbox form
  *************************************************************************/
+.pb-select-popup {height:auto;overflow: scroll;max-height:200px;}
+
 .pb-form-selectbox {position:relative; padding-right:30px; height: 36px; border-radius: 4px; border: solid 1px #dedede; background-color: #fff;cursor:pointer;}
 .pb-form-selectbox:after {display:inline-block; position:absolute; top:50%; right:10px; margin-top:-4px;width:9px; height:7px; background:url(../../images/icon_selectbox.png) no-repeat; content:'';}
 .pb-form-selectbox.is-selected {border:1px solid #f37135;}
@@ -35,7 +37,7 @@
 .pb-form-edit .pb-select-popup ul.pb-list-command li a em.pb-ui-round{display: inline-block;padding: 2px 2px 1px 2px;margin-left: 2px;margin-right: 5px;border-radius: 50%;border: 1px solid #F37135;color: #F37135;font-size: 14px;font-weight:600;}
 .pb-form-edit .pb-select-popup ul.pb-list-command li a span.pb-ui-code{display: block;padding: 5px 0 0 29px;color: #737373;font-size: 14px;}
 
-.pb-select-popup {height: 100px;overflow: scroll;}
+
 
 /***********************************************************************
      Compontent : error

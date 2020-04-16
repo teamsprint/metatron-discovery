@@ -9,7 +9,7 @@
 .pb-component-selectbox.is-value .pb-txt-selectbox {color:rgba(1,1,1,1);}
 .pb-component-selectbox .pb-txt-selectbox {display:block; position:relative; padding:9px 25px 9px 15px; font-size:15px; color:rgba(1,1,1,0.4);  border:1px solid #d0d3d3; border-radius:5px; z-index:5; background-color:#fff;}
 .pb-component-selectbox.is-selected .pb-select-popup {display:block; z-index:1;}
-.pb-component-selectbox .pb-select-popup {display:none; position:absolute; top:100%; left:0; right:0; margin-top:-3px;border:1px solid #d0d3d3; border-radius:0 0 5px 5px;  overflow:hidden; background-color:#fff;}
+.pb-component-selectbox .pb-select-popup {display:none; position:absolute; top:100%; left:0; right:0; margin-top:-3px;border:1px solid #d0d3d3; border-radius:0 0 5px 5px;  overflow:hidden; background-color:#fff;z-index:15;}
 .pb-component-selectbox .pb-select-popup ul.pb-list-selectbox {padding-top:2px; }
 .pb-component-selectbox .pb-select-popup ul.pb-list-selectbox li:first-of-type {border-top:none;}
 .pb-component-selectbox .pb-select-popup ul.pb-list-selectbox li {border-top:1px solid #d0d3d3;}
