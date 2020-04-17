@@ -33,6 +33,9 @@ export class PrepRnbResultListComponent extends AbstractComponent {
 
     public snapshotList : PrDataSnapshot[]= [];
 
+    private inInterval: any;
+    private delayTime: number = 10000;
+
 
     // 생성자
     constructor(protected elementRef: ElementRef,
@@ -73,13 +76,50 @@ export class PrepRnbResultListComponent extends AbstractComponent {
 
     public getSnapshotList(): void {
         this.dataflowService.getWorkList({dsId : this.dsId}).then((result) => {
-            this.snapshotList = [];
+            // this.snapshotList = [];
             if(result['snapshots'] && 0 < result['snapshots'].length) {
                 this.snapshotList = result['snapshots'];
+            }else{
+                this.snapshotList = [];
+            }
+
+            let chk : number = -1;
+            if(this.snapshotList.length > 0) {
+                for(let i =0; i< this.snapshotList.length; i++ ) {
+                    if(this.snapshotList[i].status !== Status.SUCCEEDED && this.snapshotList[i].status !== Status.FAILED) {
+                        chk =i;
+                        break;
+                    }
+                }
+                // TIMER
+                if(chk>-1) {
+                    this.timerExec();
+                }
+
             }
         }).catch(() => {
             //
         })
     }
+
+
+    private timerExec(): void {
+
+        if(this.inInterval != null) {
+            clearTimeout(this.inInterval);
+            this. inInterval = null;
+        }
+
+        const vthis = this;
+        this.inInterval = setTimeout(function () {
+            vthis.getSnapshotList();
+            clearTimeout(vthis.inInterval);
+        }, vthis.delayTime)
+    }
+
+
+
+
+
 
 }
