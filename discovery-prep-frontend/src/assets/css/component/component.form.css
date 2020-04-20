@@ -56,7 +56,7 @@
  *************************************************************************/
 .pb-compomnent-checkbox {font-size:0;}
 .pb-compomnent-checkbox input:disabled {cursor:no-drop;}
-.pb-compomnent-checkbox i {display:inline-block; position:relative; top:-7px; right:13px;width:12px; height:17px; margin-right:6px; background:url(../../images/icon_checkbox.png) no-repeat 0 5px; vertical-align:middle;}
+.pb-compomnent-checkbox i {display:inline-block; position:relative; top:-7px; right:12px;width:12px; height:17px; margin-right:6px; background:url(../../images/icon_checkbox.png) no-repeat 0 5px; vertical-align:middle;}
 
 .pb-compomnent-checkbox:hover i {background-position:left -34px;}
 .pb-compomnent-checkbox.type-all input:checked + i {background-position:left -85px;}
