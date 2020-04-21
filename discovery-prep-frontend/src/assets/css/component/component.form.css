@@ -13,8 +13,8 @@
 .pb-form-selectbox.type-value .pb-txt-selectbox {color:#4b515b; }
 .pb-form-selectbox.type-info {width:90%;}
 
+.pb-form-selectbox .pb-select-popup {position:absolute; width:100%; top:100%;min-height:300px;margin:5px 0 0 0; padding:5px 0; border-radius:0 0 4px 4px; box-shadow:  0 0 5px 2px #d7d7d7, 0 1px 0 0 #d7d7d7; background-color:#fff; overflow:auto;z-index:15;}
 .pb-form-selectbox.is-selected .pb-select-popup {display:block;}
-.pb-form-selectbox .pb-select-popup {position:absolute; top:100%;min-height:300px;margin:5px 0 0 0; padding:5px 0; border-radius:0 0 4px 4px; box-shadow:  0 0 5px 2px #d7d7d7, 0 1px 0 0 #d7d7d7; background-color:#fff; z-index:15;}
 .pb-form-selectbox .pb-select-popup .pb-list-selectbox li a{display:block ; position:relative; padding:6px 10px; color:#222; font-size:15px;}
 .pb-form-selectbox .pb-select-popup .pb-list-selectbox li a:hover {background-color:#fffdf5;}
 .pb-form-selectbox .pb-select-popup .pb-list-selectbox li.is-selected a {padding-right:30px; color:#f37135;}
@@ -63,11 +63,8 @@
 .pb-compomnent-checkbox input:disabled + i {background-position:left top;}
 .pb-compomnent-checkbox input:disabled:checked + i {background-position:left -51px;}
 .pb-compomnent-checkbox input:checked + i {background-position:left -68px;}
-.pb-compomnent-checkbox .pb-txt-checkbox {color:#222; font-size:16px;}
 .pb-compomnent-checkbox input:disabled + i + .pb-txt-checkbox {color:#dedede;}
-.pb-compomnent-checkbox.type-font-s .pb-txt-checkbox {font-size:14px;}
-.pb-compomnent-checkbox.type-font-s i {top:0;}
-
+.pb-compomnent-checkbox.type-font-s .pb-txt-checkbox {line-height:25px;font-size:14px;}
 
 /***********************************************************************
      Compontent : radio
