@@ -21,86 +21,34 @@
                             <input type="text" class="pb-component-input" placeholder="{{ 'msg.dp.ui.ss-name' | translate }}" [(ngModel)]="snapshot.ssName" maxlength="50"
                                    (keyup)="changeSSUri()"
                                    (keydown)="ssNameKeyDown()">
+                            <span class="pb-form-error" *ngIf="showNameError">{{'msg.storage.ui.required' | translate}}</span>
                         </div>
                     </div>
+
 
                     <div class="pb-form-create type-result">
                         <div class="pb-create-label">Result Type</div>
                         <div class="pb-form-edit">
                             <label class="pb-compomnent-radio">
-                                <input type="radio" checked="{{firstLoading}}" (change)="changeSsType(SsType.URI)" name="snapshotFormatRadio">
+                                <input type="radio" value="{{SsType.URI}}" [(ngModel)]="snapshot.ssType" (change)="changeSsType(SsType.URI)" name="snapshotFormatRadio">
                                 <i></i>
                                 <span class="pb-txt-radio">{{'msg.dp.ui.file-system' | translate }}</span>
                             </label>
                             <label class="pb-compomnent-radio">
-                                <input type="radio" (change)="changeSsType(SsType.DATABASE)" name="snapshotFormatRadio">
+                                <input type="radio" value="{{SsType.DATABASE}}" [(ngModel)]="snapshot.ssType" (change)="changeSsType(SsType.DATABASE)" name="snapshotFormatRadio">
                                 <i></i>
-                                <span class="pb-txt-radio">DB</span>
+
+                                <span class="pb-txt-radio">{{'msg.dp.th.db-type' | translate }}</span>
                             </label>
                         </div>
                     </div>
 
-                    <div class="pb-form-create type-result" *ngIf="snapshot.ssType && snapshot.ssType === SsType.DATABASE">
-                        <div class="pb-create-label">Data Connection</div>
-                        <div class="pb-form-edit">
-                            <div class="pb-component-selectbox is-value" (clickOutside)="isLocationListShow =false">
-                                <span class="pb-txt-selectbox" *ngIf="fileLocations.length == 0">
-                                    No data
-                                </span>
-
-                                <span class="pb-txt-selectbox" (click)="isLocationListShow = true" *ngIf="fileLocations.length > 0">
-                                    {{fileLocations[locationSelectedIndex].label}}
-                                </span>
-
-                                <!-- popup -->
-                                <div class="pb-select-popup" *ngIf="isLocationListShow" [style.display]="'block'">
-                                    <ul class="pb-list-selectbox">
-                                        <li *ngFor="let location of fileLocations">
-                                            <a href="javascript:;" (click)="onSelected(location,'location')">
-                                                {{location.label}}
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <!-- //popup -->
-                            </div>
-                            <!-- //selectbox -->
-                        </div>
-                    </div>
-
-                    <div class="pb-form-create type-result" *ngIf="snapshot.ssType && snapshot.ssType === SsType.DATABASE">
-                        <div class="pb-create-label">Table</div>
-                        <div class="pb-form-edit">
-                            <div class="pb-component-selectbox is-value" (clickOutside)="isLocationListShow =false">
-                                <span class="pb-txt-selectbox" *ngIf="fileLocations.length == 0">
-                                    No data
-                                </span>
-
-                                <span class="pb-txt-selectbox" (click)="isLocationListShow = true" *ngIf="fileLocations.length > 0">
-                                    {{fileLocations[locationSelectedIndex].label}}
-                                </span>
-
-                                <!-- popup -->
-                                <div class="pb-select-popup" *ngIf="isLocationListShow" [style.display]="'block'">
-                                    <ul class="pb-list-selectbox">
-                                        <li *ngFor="let location of fileLocations">
-                                            <a href="javascript:;" (click)="onSelected(location,'location')">
-                                                {{location.label}}
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <!-- //popup -->
-                            </div>
-                            <!-- //selectbox -->
-                        </div>
-                    </div>
 
                     <div class="pb-form-create type-result" *ngIf="snapshot.ssType && snapshot.ssType === SsType.URI">
                         <div class="pb-create-label">{{'msg.dp.ui.location' | translate }}</div>
-                        <div class="pb-form-edit" (clickOutside)="isLocationListShow =false">
-                            <label class="pb-compomnent-radio" *ngFor="let location of fileLocations">
-                                <input type="radio" name="fileLocationRadio" checked="{{firstLoading}}" (click)="onSelected(location,'location')" >
+                        <div class="pb-form-edit">
+                            <label class="pb-compomnent-radio" *ngFor="let location of fileLocations;let idx = index">
+                                <input type="radio" name="fileLocationRadio" (click)="onSelected(location,'location')" [checked]="idx == locationSelectedIndex">
                                 <i></i>
                                 <span class="pb-txt-radio">{{location.label}}</span>
                             </label>
@@ -109,9 +57,9 @@
 
                     <div class="pb-form-create type-result" *ngIf="snapshot.ssType && snapshot.ssType === SsType.URI">
                         <div class="pb-create-label">File format</div>
-                        <div class="pb-form-edit" (clickOutside)="isLocationListShow =false">
+                        <div class="pb-form-edit">
                             <label class="pb-compomnent-radio" *ngFor="let formatitem  of fileFormat">
-                                <input type="radio" name="fileLocationRadio" checked="{{firstLoading}}" (click)="onSelected(formatitem,'format')" >
+                                <input type="radio" name="fileFormatRadio" (click)="onSelected(formatitem,'format')" value="{{formatitem.value}}" [(ngModel)]="uriFileFormat">
                                 <i></i>
                                 <span class="pb-txt-radio">{{formatitem.label}}</span>
                             </label>
@@ -122,96 +70,36 @@
                         <div class="pb-create-label">{{ 'msg.dp.ui.file-url' | translate }}</div>
                         <div class="pb-form-edit">
                             <input type="text" class="pb-component-input"
-                            [(ngModel)]="snapshot.storedUri"
-                            (ngModelChange)="onChangeStoredUri($event)"
-                            (keydown)="fileUriKeyDown()">
+                                   [(ngModel)]="snapshot.storedUri"
+                                   (ngModelChange)="onChangeStoredUri($event)"
+                                   (keydown)="fileUriKeyDown()">
+                            <span class="pb-form-error" *ngIf="showFileURLError">{{'msg.storage.ui.required' | translate}}</span>
                         </div>
                     </div>
 
-                    <!--is-selected-->
-                    <div class="pb-box-setting" [ngClass]="{ 'is-selected' : isAdvancedPrefOpen }" *ngIf="snapshot.ssType && snapshot.ssType === SsType.URI">
-                        <div class="pb-box-fold pb-clear">
-                            <!-- setting edit -->
-                            <div class="pb-setting-edit" *ngIf="isAdvancedPrefOpen">
-                                <div class="pb-edit-label">{{'msg.dp.th.ss.etl-engine' | translate}}</div>
-                                <div class="pb-form-edit type-radio" style="width:600px;">
-                                    <label class="pb-compomnent-radio">
-                                        <input type="radio" checked="{{firstLoading}}" (change)="changeEtlEngine(Engine.EMBEDDED)" name="EtlEngineRadio">
-                                        <i></i>
-                                        <span class="pb-txt-radio">{{'msg.dp.th.ss.etl-engine.embedded' | translate }}</span>
-                                    </label>
-                                    <label class="pb-compomnent-radio">
-                                        <input type="radio" [disabled]="false===isSparkEnabled()" (change)="changeEtlEngine(Engine.SPARK)" name="EtlEngineRadio">
-                                        <i></i>
-                                        <span class="pb-txt-radio">{{'msg.dp.th.ss.etl-engine.spark' | translate }}</span>
-                                    </label>
-                                </div>
-                            </div>
-                            <!-- //setting edit -->
-                            <a href="javascript:" class="pb-btn-setting" (click)="toggleAdvancedSettingBtn()">Advanced setting</a>
-                        </div>
-                        <!-- //box setting -->
-
-                        <!--<div class="pb-setting-sub pb-clear">-->
-                            <!--&lt;!&ndash; setting edit &ndash;&gt;-->
-                            <!--<div class="pb-setting-edit" *ngIf="isAdvancedPrefOpen">-->
-                                <!--<div class="pb-edit-label">{{'msg.dp.th.file-format' | translate}}</div>-->
-                                <!--<div class="pb-form-edit" style="width:600px;">-->
-
-                                    <!--<div class="pb-component-selectbox is-value" (clickOutside)="isFormatListShow =false">-->
-                                        <!--<span class="pb-txt-selectbox" *ngIf="uriFileFormat == null">No data</span>-->
-                                        <!--<span class="pb-txt-selectbox" (click)="isFormatListShow = true" *ngIf="uriFileFormat != null">{{uriFileFormat}}</span>-->
-                                        <!--&lt;!&ndash; popup &ndash;&gt;-->
-                                        <!--<div class="pb-select-popup" *ngIf="isFormatListShow" [style.display]="'block'">-->
-                                            <!--<ul class="pb-list-selectbox">-->
-                                                <!--<li *ngFor="let formatitem  of fileFormat">-->
-                                                    <!--<a href="javascript:;" (click)="onSelected(formatitem,'format')">-->
-                                                        <!--{{formatitem.label}}-->
-                                                    <!--</a>-->
-                                                <!--</li>-->
-                                            <!--</ul>-->
-                                        <!--</div>-->
-                                    <!--</div>-->
-                                <!--</div>-->
-                                <!--&lt;!&ndash; //setting edit &ndash;&gt;-->
-                            <!--</div>-->
-                        <!--</div>-->
-
-                        <!--<div class="pb-setting-sub pb-clear">-->
-                            <!--&lt;!&ndash; setting edit &ndash;&gt;-->
-                            <!--<div class="pb-setting-edit" *ngIf="isAdvancedPrefOpen">-->
-                                <!--<div class="pb-edit-label">{{ 'msg.dp.ui.file-url' | translate }}</div>-->
-                                <!--<div class="pb-form-edit" style="width:600px;">-->
-                                    <!--<input type="text" class="pb-component-input"-->
-                                           <!--[(ngModel)]="snapshot.storedUri"-->
-                                           <!--(ngModelChange)="onChangeStoredUri($event)"-->
-                                           <!--(keydown)="fileUriKeyDown()">-->
-                                <!--</div>-->
-                                <!--&lt;!&ndash; //setting edit &ndash;&gt;-->
-                            <!--</div>-->
-                        <!--</div>-->
-
-
-                    </div>
 
 
 
-
-
-                    <div class="pb-form-create type-result" *ngIf="snapshot.ssType && snapshot.ssType === SsType.STAGING_DB">
-                        <div class="pb-create-label">{{'msg.dp.th.db-name' | translate}}</div>
+                    <div class="pb-form-create type-result" *ngIf="snapshot.ssType && snapshot.ssType === SsType.DATABASE">
+                        <div class="pb-create-label">Data Connection</div>
                         <div class="pb-form-edit">
-                            <!-- selectbox -->
-                            <div class="pb-component-selectbox is-value" (clickOutside)="isDbListShow =false">
-                                <span class="pb-txt-selectbox" *ngIf="dbList ==null || dbList.length == 0">No data</span>
-                                <span class="pb-txt-selectbox" (click)="isDbListShow=true" *ngIf="dbList != null && dbList.length > 0">{{snapshot['dbName']}}</span>
+                            <div class="pb-component-selectbox is-value" (clickOutside)="isConnectionListShow =false">
+                                <span class="pb-txt-selectbox" *ngIf="connectionList.length == 0 || selectedConnection == null">
+                                    No data
+                                </span>
+
+                                <span class="pb-txt-selectbox" (click)="isConnectionListShow = true" *ngIf="connectionList.length > 0 && selectedConnection !== null">
+                                    {{selectedConnection.name}}
+                                </span>
+
+                                <span class="pb-form-error" *ngIf="showDataConnectionError">{{'msg.storage.ui.required' | translate}}</span>
 
                                 <!-- popup -->
-                                <div class="pb-select-popup" *ngIf="isDbListShow" [style.display]="'block'" style="z-index:1001;">
+                                <div class="pb-select-popup" *ngIf="isConnectionListShow" [style.display]="'block'">
                                     <ul class="pb-list-selectbox">
-                                        <li *ngFor="let db of dbList">
-                                            <a href="javascript:;" (click)="onSelectedDBName(db, dbList)">
-                                                {{db}}
+                                        <li *ngFor="let connection of connectionList">
+                                            <a href="javascript:;" (click)="onSelected(connection,'connection')">
+                                                {{connection.name}}
                                             </a>
                                         </li>
                                     </ul>
@@ -225,35 +113,92 @@
 
 
 
-                    <div class="pb-form-create type-result" *ngIf="snapshot.ssType && snapshot.ssType === SsType.STAGING_DB">
-                        <div class="pb-create-label">{{'msg.dp.th.tbl-name' | translate}}</div>
+                    <div class="pb-form-create type-result" *ngIf="snapshot.ssType && snapshot.ssType === SsType.DATABASE">
+                        <div class="pb-create-label">Database</div>
                         <div class="pb-form-edit">
-                            <!--<div class="pb-component-selectbox is-value" (clickOutside)="isDbListShow =false">-->
-                                <!--&lt;!&ndash; //popup &ndash;&gt;-->
-                            <!--</div>-->
+                            <div class="pb-component-selectbox is-value" (clickOutside)="isDatabaseListShow =false">
+
+                                <span class="pb-txt-selectbox" (click)="isDatabaseListShow = true" *ngIf="databaseList !== null && databaseList.length > 0">
+                                    <span *ngIf="datasetJdbc.tableInfo.databaseName == null || datasetJdbc.tableInfo.databaseName  == undefined">{{'msg.dp.ui.sel.db' | translate}}</span>
+                                    <span *ngIf="datasetJdbc.tableInfo.databaseName !== null && datasetJdbc.tableInfo.databaseName  !== undefined">{{datasetJdbc.tableInfo.databaseName}}</span>
+                                </span>
+
+                                <span class="pb-txt-selectbox" *ngIf="databaseList === null || databaseList.length == 0">{{'msg.dp.ui.sel.db' | translate}}</span>
+                                <span class="pb-form-error" *ngIf="showDatabaseError">{{'msg.storage.ui.required' | translate}}</span>
+
+                                <!-- popup -->
+                                <div class="pb-select-popup" *ngIf="isDatabaseListShow" [style.display]="'block'">
+                                    <ul class="pb-list-selectbox">
+                                        <li *ngFor="let database of databaseList">
+                                            <a href="javascript:;" (click)="onSelected(database,'database')">
+                                                {{database.name}}
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <!-- //popup -->
+                            </div>
                             <!-- //selectbox -->
-                            <input type="text" class="pb-component-input" placeholder="{{'msg.dp.th.tbl-name.ph' | translate}}"
-                                   (keydown)="tblNameKeyDown()"
-                                   [(ngModel)]="snapshot.tblName" maxlength="30">
+                        </div>
+                    </div>
+
+
+                    <div class="pb-form-create type-result" *ngIf="snapshot.ssType && snapshot.ssType === SsType.DATABASE">
+                        <div class="pb-create-label">Table</div>
+                        <div class="pb-form-edit">
+                            <div class="pb-component-selectbox is-value" (clickOutside)="isSchemaListShow =false">
+                                <span class="pb-txt-selectbox" (click)="isSchemaListShow = true" *ngIf="schemaList !== null && schemaList.length > 0">
+                                    <span *ngIf="datasetJdbc.tableInfo.tableName == null || datasetJdbc.tableInfo.tableName  == undefined">{{'msg.storage.ui.dsource.create.choose-table' | translate}}</span>
+                                    <span *ngIf="datasetJdbc.tableInfo.tableName !== null && datasetJdbc.tableInfo.tableName  !== undefined">{{datasetJdbc.tableInfo.tableName}}</span>
+                                </span>
+
+                                <span class="pb-txt-selectbox" *ngIf="schemaList === null || schemaList.length == 0">{{'msg.storage.ui.dsource.create.choose-table' | translate}}</span>
+                                <span class="pb-form-error" *ngIf="showTableLError">{{'msg.storage.ui.required' | translate}}</span>
+
+                                <!-- popup -->
+                                <div class="pb-select-popup" *ngIf="isSchemaListShow" [style.display]="'block'">
+                                    <ul class="pb-list-selectbox">
+                                        <li *ngFor="let schema of schemaList" (click)="onSelected(schema,'table')">
+                                            <a href="javascript:;">
+                                                {{schema.name}}
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <!-- //popup -->
+                            </div>
+                            <!-- //selectbox -->
+                        </div>
+                    </div>
+
+
+                    <div class="pb-form-create type-result" *ngIf="snapshot.ssType && snapshot.ssType === SsType.DATABASE">
+                        <div class="pb-create-label">{{'msg.dp.th.overwrite-method' | translate }}</div>
+                        <div class="pb-form-edit">
+                            <label class="pb-compomnent-radio" *ngFor="let overwmethod of overwriteMethod;">
+                                <input type="radio" name="overwriteMethodRadio" value="{{overwmethod.value}}" [ngModel]="snapshot.appendMode">
+                                <i></i>
+                                <span class="pb-txt-radio">{{overwmethod.label}}</span>
+                            </label>
                         </div>
                     </div>
 
 
 
                     <!--is-selected-->
-                    <div class="pb-box-setting" [ngClass]="{ 'is-selected' : isAdvancedPrefOpen }" *ngIf="snapshot.ssType && snapshot.ssType === SsType.STAGING_DB">
+                    <div class="pb-box-setting" [ngClass]="{ 'is-selected' : isAdvancedPrefOpen }">
                         <div class="pb-box-fold pb-clear">
                             <!-- setting edit -->
                             <div class="pb-setting-edit" *ngIf="isAdvancedPrefOpen">
                                 <div class="pb-edit-label">{{'msg.dp.th.ss.etl-engine' | translate}}</div>
                                 <div class="pb-form-edit type-radio" style="width:600px;">
                                     <label class="pb-compomnent-radio">
-                                        <input type="radio" checked="{{firstLoading}}" (change)="changeEtlEngine(Engine.EMBEDDED)" name="EtlEngineRadio">
+                                        <input type="radio" (change)="changeEtlEngine(Engine.EMBEDDED)" name="EtlEngineRadio" [checked]="snapshot.engine == Engine.EMBEDDED">
                                         <i></i>
                                         <span class="pb-txt-radio">{{'msg.dp.th.ss.etl-engine.embedded' | translate }}</span>
                                     </label>
                                     <label class="pb-compomnent-radio">
-                                        <input type="radio" [disabled]="false===isSparkEnabled()" (change)="changeEtlEngine(Engine.SPARK)" name="EtlEngineRadio">
+                                        <input type="radio" [disabled]="false===isSparkEnabled()" (change)="changeEtlEngine(Engine.SPARK)" name="EtlEngineRadio" [checked]="snapshot.engine == Engine.SPARK">
                                         <i></i>
                                         <span class="pb-txt-radio">{{'msg.dp.th.ss.etl-engine.spark' | translate }}</span>
                                     </label>
@@ -263,128 +208,9 @@
                             <a href="javascript:" class="pb-btn-setting" (click)="toggleAdvancedSettingBtn()">Advanced setting</a>
                         </div>
                         <!-- //box setting -->
-
-                        <div class="pb-setting-sub pb-clear">
-                            <!-- setting edit -->
-                            <div class="pb-setting-edit" *ngIf="isAdvancedPrefOpen">
-                                <div class="pb-edit-label">{{'msg.dp.th.file-format' | translate}}</div>
-                                <div class="pb-form-edit" style="width:600px;">
-                                    <!-- select -->
-                                    <div class="pb-component-selectbox is-value" (clickOutside)="isHiveEmbeddedFormatShow =false">
-                                        <span class="pb-txt-selectbox" *ngIf="snapshot.hiveFileFormat == null">No data</span>
-                                        <span class="pb-txt-selectbox" (click)="isHiveEmbeddedFormatShow = true" *ngIf="snapshot.hiveFileFormat != null">{{snapshot.hiveFileFormat}}</span>
-                                        <!-- popup -->
-                                        <div class="pb-select-popup" *ngIf="isHiveEmbeddedFormatShow" [style.display]="'block'" style="z-index:1001;">
-                                            <ul class="pb-list-selectbox">
-                                                <li *ngFor="let hiveformatitem  of hiveEmbeddedFormat">
-                                                    <a href="javascript:;" (click)="onSelected(hiveformatitem,'format')">
-                                                        {{hiveformatitem.label}}
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <!-- // select -->
-                                </div>
-                            </div>
-                            <!-- //setting edit -->
-                        </div>
-
-
-                        <div class="pb-setting-sub pb-clear">
-                            <!-- setting edit -->
-                            <div class="pb-setting-edit" *ngIf="isAdvancedPrefOpen">
-                                <div class="pb-edit-label">{{'msg.dp.th.compression' | translate}}</div>
-                                <div class="pb-form-edit" style="width:600px;">
-                                    <!-- select -->
-                                    <div class="pb-component-selectbox is-value" (clickOutside)="isCompressionTypeShow =false">
-                                        <span class="pb-txt-selectbox" *ngIf="snapshot.hiveFileCompression == null">No data</span>
-                                        <span class="pb-txt-selectbox" (click)="isCompressionTypeShow = true" *ngIf="snapshot.hiveFileCompression != null">{{snapshot.hiveFileCompression}}</span>
-                                        <!-- popup -->
-                                        <div class="pb-select-popup" *ngIf="isCompressionTypeShow" [style.display]="'block'" style="z-index:1001;">
-                                            <ul class="pb-list-selectbox">
-                                                <li *ngFor="let compression  of compressionType">
-                                                    <a href="javascript:;" (click)="onSelected(compression,'compression')">
-                                                        {{compression.label}}
-
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <!-- // select -->
-                                </div>
-
-                            </div>
-                            <!-- //setting edit -->
-                        </div>
-
-
-
-
-                        <div class="pb-setting-sub pb-clear">
-                            <!-- setting edit -->
-                            <div class="pb-setting-edit" *ngIf="isAdvancedPrefOpen">
-                                <div class="pb-edit-label">{{'msg.dp.th.overwrite-method' | translate}}</div>
-                                <div class="pb-form-edit" style="width:600px;">
-                                    <!-- select -->
-                                    <div class="pb-component-selectbox is-value" (clickOutside)="isOverwriteMethodShow =false">
-                                        <span class="pb-txt-selectbox" *ngIf="snapshot.hiveFileCompression == null">No data</span>
-                                        <span class="pb-txt-selectbox" (click)="isOverwriteMethodShow = true" *ngIf="snapshot.appendMode != null">{{snapshot.appendMode}}</span>
-                                        <!-- popup -->
-                                        <div class="pb-select-popup" *ngIf="isOverwriteMethodShow" [style.display]="'block'" style="z-index:1001;">
-                                            <ul class="pb-list-selectbox">
-                                                <li *ngFor="let method  of overwriteMethod">
-                                                    <a href="javascript:;" (click)="onSelected(method,'mode')">
-                                                        {{method.label}}
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <!-- // select -->
-                                </div>
-
-                            </div>
-                            <!-- //setting edit -->
-                        </div>
-
-
-
-                        <div class="pb-setting-sub pb-clear">
-                            <!-- setting edit -->
-                            <div class="pb-setting-edit" *ngIf="isAdvancedPrefOpen">
-                                <div class="pb-edit-label">{{'msg.dp.th.partition-keys' | translate}}</div>
-                                <div class="pb-form-edit" style="width:600px;">
-                                    <!-- select -->
-                                    <div class="pb-component-selectbox is-value" (clickOutside)="isFieldsShow =false">
-                                        <span class="pb-txt-selectbox" (click)="isFieldsShow = true">{{getPartitionSelectedInfo()}}</span>
-                                        <!-- popup -->
-                                        <div class="pb-select-popup" *ngIf="isFieldsShow" [style.display]="'block'" style="z-index:1001;">
-                                            <ul class="pb-list-selectbox">
-                                                <li *ngFor="let field  of fields; ">
-                                                    <a href="javascript:;" (click)="onPartitionSelected(field)">
-                                                        <span style="font-weight: bold" *ngIf="getPartitionSelectedStyle(field) == true">{{field.name}}</span>
-                                                        <span *ngIf="getPartitionSelectedStyle(field) == false">{{field.name}}</span>
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <!-- // select -->
-
-                                </div>
-
-                            </div>
-                            <!-- //setting edit -->
-                        </div>
                     </div>
-
-
-
                     <!--//upload -->
-
-
+                </div>
             </div>
 
         </div>
