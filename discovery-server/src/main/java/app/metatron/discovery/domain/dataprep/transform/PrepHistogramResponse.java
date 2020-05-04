@@ -16,6 +16,7 @@ package app.metatron.discovery.domain.dataprep.transform;
 
 import java.io.Serializable;
 import java.util.List;
+import app.metatron.dataprep.teddy.histogram.Histogram;
 
 public class PrepHistogramResponse implements Serializable {
 

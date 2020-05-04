@@ -20,6 +20,9 @@ import static app.metatron.discovery.domain.dataprep.exceptions.PrepMessageKey.M
 import static app.metatron.discovery.domain.dataprep.util.PrepUtil.datasetError;
 import static org.apache.commons.io.FilenameUtils.getExtension;
 
+import app.metatron.dataprep.PrepContext;
+import app.metatron.dataprep.teddy.DataFrame;
+import app.metatron.dataprep.teddy.exceptions.TeddyException;
 import app.metatron.discovery.common.GlobalObjectMapper;
 import app.metatron.discovery.domain.dataconnection.DataConnection;
 import app.metatron.discovery.domain.dataconnection.DataConnectionRepository;
@@ -30,8 +33,6 @@ import app.metatron.discovery.domain.dataprep.PrepKafkaService;
 import app.metatron.discovery.domain.dataprep.PrepPreviewLineService;
 import app.metatron.discovery.domain.dataprep.entity.PrDataset;
 import app.metatron.discovery.domain.dataprep.exceptions.PrepException;
-import app.metatron.discovery.domain.dataprep.teddy.DataFrame;
-import app.metatron.discovery.domain.dataprep.teddy.exceptions.TeddyException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import java.io.IOException;
@@ -72,7 +73,7 @@ public class PrDatasetService {
 
   private String previewSize = "50";
 
-  public DataFrame getImportedPreview(PrDataset dataset) throws IOException, SQLException, TeddyException {
+  public DataFrame getImportedPreview(PrepContext pc, PrDataset dataset) throws IOException, SQLException, TeddyException {
     DataFrame dataFrame;
 
     assert dataset.getDsType() == PrDataset.DS_TYPE.IMPORTED : dataset.getDsType();
@@ -80,10 +81,10 @@ public class PrDatasetService {
     switch (dataset.getImportType()) {
       case UPLOAD:
       case URI:
-        dataFrame = prepDatasetFileService.getPreviewLinesFromFileForDataFrame(dataset, previewSize);
+        dataFrame = prepDatasetFileService.getPreviewLinesFromFileForDataFrame(pc, dataset, previewSize);
         break;
       case DATABASE:
-        dataFrame = datasetJdbcPreviewService.getPreviewLinesFromJdbcForDataFrame(dataset, previewSize);
+        dataFrame = datasetJdbcPreviewService.getPreviewLinesFromJdbcForDataFrame(pc, dataset, previewSize);
         break;
       case STAGING_DB:
         dataFrame = datasetStagingDbPreviewService.getPreviewLinesFromStagedbForDataFrame(dataset, previewSize);

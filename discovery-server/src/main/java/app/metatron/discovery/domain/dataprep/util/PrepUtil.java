@@ -20,6 +20,9 @@ import static app.metatron.discovery.domain.dataprep.exceptions.PrepErrorCodes.P
 import static app.metatron.discovery.domain.dataprep.exceptions.PrepErrorCodes.PREP_SNAPSHOT_ERROR_CODE;
 import static app.metatron.discovery.domain.dataprep.exceptions.PrepErrorCodes.PREP_TRANSFORM_ERROR_CODE;
 
+import app.metatron.dataprep.SourceDesc;
+import app.metatron.dataprep.SourceDesc.Type;
+import app.metatron.discovery.domain.dataconnection.DataConnection;
 import app.metatron.discovery.domain.dataprep.exceptions.PrepException;
 import app.metatron.discovery.domain.dataprep.exceptions.PrepMessageKey;
 import java.io.File;
@@ -148,5 +151,24 @@ public class PrepUtil {
 
   public static PrepException transformError(Exception e) {
     return PrepException.create(PREP_TRANSFORM_ERROR_CODE, e);
+  }
+
+  public static SourceDesc getSrcDesc(DataConnection dataConnection, String sql, int limit) {
+    SourceDesc src = new SourceDesc(SourceDesc.Type.DATABASE);
+
+    // TODO
+
+    return src;
+  }
+
+  public static SourceDesc getSrcDesc(String strUri, String delimiter, String quoteChar, Integer columnCount) {
+    SourceDesc src = new SourceDesc(SourceDesc.Type.URI);
+
+    src.setStrUri(strUri);
+    src.setDelim(delimiter);
+    src.setQuoteChar(quoteChar);
+    src.setColCnt(columnCount);
+
+    return src;
   }
 }

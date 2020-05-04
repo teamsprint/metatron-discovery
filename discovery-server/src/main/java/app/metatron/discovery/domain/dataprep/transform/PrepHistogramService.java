@@ -14,8 +14,8 @@
 
 package app.metatron.discovery.domain.dataprep.transform;
 
-import app.metatron.discovery.domain.dataprep.teddy.ColumnType;
-import app.metatron.discovery.domain.dataprep.teddy.Row;
+import app.metatron.dataprep.teddy.ColumnType;
+import app.metatron.dataprep.teddy.Row;
 import java.util.List;
 import java.util.concurrent.Future;
 import org.springframework.scheduling.annotation.Async;

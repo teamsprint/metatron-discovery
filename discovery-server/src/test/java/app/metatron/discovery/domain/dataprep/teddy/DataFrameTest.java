@@ -16,7 +16,9 @@ package app.metatron.discovery.domain.dataprep.teddy;
 
 import static org.junit.Assert.assertEquals;
 
-import app.metatron.discovery.domain.dataprep.teddy.exceptions.TeddyException;
+import app.metatron.dataprep.PrepContext;
+import app.metatron.dataprep.teddy.DataFrame;
+import app.metatron.dataprep.teddy.exceptions.TeddyException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,6 +27,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class DataFrameTest extends TeddyTest {
+
+  PrepContext pc = PrepContext.DEFAULT;
 
   @BeforeClass
   public static void setUp() throws Exception {
@@ -276,9 +280,8 @@ public class DataFrameTest extends TeddyTest {
     store.show();
 
     String ruleString = "join leftSelectCol: cdate,pcode1,pcode2,pcode3,pcode4,customer_id,detail_store_code rightSelectCol: detail_store_code,customer_id condition: customer_id=customer_id joinType: 'inner' dataset2: '88888888-4444-4444-4444-121212121212'";
-    ArrayList<DataFrame> slaveDFs = new ArrayList<>(Arrays.asList(store));
 
-    DataFrame newDf = apply_rule(contract, ruleString, slaveDFs);
+    DataFrame newDf = apply_rule(contract, ruleString);
     newDf.show();
   }
 
@@ -299,9 +302,8 @@ public class DataFrameTest extends TeddyTest {
     product.show();
 
     String ruleString = "join leftSelectCol: cdate,pcode1,pcode2,pcode3,pcode4,customer_id,detail_store_code rightSelectCol: pcode1,pcode2,pcode3,pcode4,pcode condition: pcode1=pcode1 && pcode2=pcode2 && pcode3=pcode3 && pcode4=pcode4 joinType: 'inner' dataset2: '88888888-4444-4444-4444-121212121212'";
-    ArrayList<DataFrame> slaveDFs = new ArrayList<>(Arrays.asList(product));
 
-    DataFrame newDf = apply_rule(contract, ruleString, slaveDFs);
+    DataFrame newDf = apply_rule(contract, ruleString);
     newDf.show();
   }
 
@@ -322,9 +324,8 @@ public class DataFrameTest extends TeddyTest {
     store.show();
 
     String ruleString = "join leftSelectCol: cdate,pcode1,pcode2,pcode3,pcode4,customer_id,code_sum rightSelectCol: detail_store_code,customer_id condition: code_sum=detail_store_code joinType: 'inner' dataset2: '88888888-4444-4444-4444-121212121212'";
-    ArrayList<DataFrame> slaveDFs = new ArrayList<>(Arrays.asList(store));
 
-    DataFrame newDf = apply_rule(contract, ruleString, slaveDFs);
+    DataFrame newDf = apply_rule(contract, ruleString);
     newDf.show();
   }
 
@@ -356,7 +357,7 @@ public class DataFrameTest extends TeddyTest {
 
     String ruleString = "union";
 
-    DataFrame newDf = apply_rule(store1, ruleString, slaveDataFrames);
+    DataFrame newDf = pc.applyWithDfs(store1, ruleString, slaveDataFrames);
     newDf.show();
   }
 

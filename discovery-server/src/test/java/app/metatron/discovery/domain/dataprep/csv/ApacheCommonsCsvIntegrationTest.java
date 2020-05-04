@@ -14,8 +14,24 @@
 
 package app.metatron.discovery.domain.dataprep.csv;
 
-import com.facebook.presto.jdbc.internal.jackson.core.JsonProcessingException;
+import static org.junit.Assert.assertNull;
 
+import app.metatron.dataprep.file.PrepCsvUtil;
+import app.metatron.dataprep.file.PrepFileUtil;
+import app.metatron.dataprep.file.PrepParseResult;
+import app.metatron.dataprep.teddy.DataFrame;
+import app.metatron.discovery.AbstractRestIntegrationTest;
+import app.metatron.discovery.core.oauth.OAuthTestExecutionListener;
+import app.metatron.discovery.domain.dataprep.PrepProperties;
+import app.metatron.discovery.domain.dataprep.exceptions.PrepErrorCodes;
+import app.metatron.discovery.domain.dataprep.exceptions.PrepException;
+import app.metatron.discovery.domain.dataprep.exceptions.PrepMessageKey;
+import com.facebook.presto.jdbc.internal.jackson.core.JsonProcessingException;
+import java.io.File;
+import java.io.IOException;
+import java.io.Reader;
+import java.net.URI;
+import java.net.URISyntaxException;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataOutputStream;
 import org.apache.hadoop.fs.FileSystem;
@@ -26,25 +42,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.TestExecutionListeners;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.Reader;
-import java.net.URI;
-import java.net.URISyntaxException;
-
-import app.metatron.discovery.AbstractRestIntegrationTest;
-import app.metatron.discovery.core.oauth.OAuthTestExecutionListener;
-import app.metatron.discovery.domain.dataprep.PrepProperties;
-import app.metatron.discovery.domain.dataprep.exceptions.PrepErrorCodes;
-import app.metatron.discovery.domain.dataprep.exceptions.PrepException;
-import app.metatron.discovery.domain.dataprep.exceptions.PrepMessageKey;
-import app.metatron.discovery.domain.dataprep.file.PrepCsvUtil;
-import app.metatron.discovery.domain.dataprep.file.PrepFileUtil;
-import app.metatron.discovery.domain.dataprep.file.PrepParseResult;
-import app.metatron.discovery.domain.dataprep.teddy.DataFrame;
-
-import static org.junit.Assert.assertNull;
 
 @TestExecutionListeners(value = OAuthTestExecutionListener.class, mergeMode = TestExecutionListeners.MergeMode.MERGE_WITH_DEFAULTS)
 public class ApacheCommonsCsvIntegrationTest extends AbstractRestIntegrationTest {

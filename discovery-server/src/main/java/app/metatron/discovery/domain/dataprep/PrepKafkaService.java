@@ -14,9 +14,9 @@
 
 package app.metatron.discovery.domain.dataprep;
 
+import app.metatron.dataprep.teddy.DataFrame;
 import app.metatron.discovery.domain.dataprep.entity.PrDataset;
 import app.metatron.discovery.domain.dataprep.repository.PrDatasetRepository;
-import app.metatron.discovery.domain.dataprep.teddy.DataFrame;
 import com.google.common.collect.Sets;
 import java.util.ArrayList;
 import java.util.List;

@@ -3,10 +3,10 @@ package app.metatron.discovery.domain.dataprep.etl;
 import static app.metatron.discovery.domain.dataprep.PrepProperties.ETL_LIMIT_ROWS;
 import static app.metatron.discovery.domain.dataprep.PrepProperties.ETL_MAX_FETCH_SIZE;
 
+import app.metatron.dataprep.teddy.DataFrame;
+import app.metatron.dataprep.teddy.exceptions.TeddyException;
 import app.metatron.discovery.domain.dataconnection.DataConnection;
 import app.metatron.discovery.domain.dataconnection.DataConnectionHelper;
-import app.metatron.discovery.domain.dataprep.teddy.DataFrame;
-import app.metatron.discovery.domain.dataprep.teddy.exceptions.TeddyException;
 import app.metatron.discovery.domain.dataprep.util.DbInfo;
 import app.metatron.discovery.extension.dataconnection.jdbc.dialect.JdbcDialect;
 import java.sql.Connection;

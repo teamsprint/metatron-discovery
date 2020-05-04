@@ -14,7 +14,8 @@
 
 package app.metatron.discovery.domain.dataprep.teddy;
 
-import app.metatron.discovery.domain.dataprep.teddy.exceptions.TeddyException;
+import app.metatron.dataprep.teddy.DataFrame;
+import app.metatron.dataprep.teddy.exceptions.TeddyException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +54,7 @@ public class UnionTest extends TeddyTest {
     slaveLastDfs.add(store2);
     slaveLastDfs.add(store3);
 
-    DataFrame newDf = apply_rule(store1, ruleString, slaveLastDfs);
+    DataFrame newDf = apply_rule(store1, ruleString);
 
     newDf.show();
 

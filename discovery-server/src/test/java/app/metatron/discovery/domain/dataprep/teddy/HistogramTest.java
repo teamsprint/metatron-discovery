@@ -14,8 +14,9 @@
 
 package app.metatron.discovery.domain.dataprep.teddy;
 
-import app.metatron.discovery.domain.dataprep.teddy.exceptions.ColumnNotFoundException;
-import app.metatron.discovery.domain.dataprep.teddy.exceptions.TeddyException;
+import app.metatron.dataprep.teddy.DataFrame;
+import app.metatron.dataprep.teddy.exceptions.ColumnNotFoundException;
+import app.metatron.dataprep.teddy.exceptions.TeddyException;
 import app.metatron.discovery.domain.dataprep.transform.Histogram;
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -14,6 +14,9 @@
 
 package app.metatron.discovery.domain.dataprep;
 
+import app.metatron.dataprep.PrepContext;
+import app.metatron.dataprep.SourceDesc;
+import app.metatron.dataprep.teddy.DataFrame;
 import app.metatron.discovery.domain.dataconnection.DataConnection;
 import app.metatron.discovery.domain.dataconnection.DataConnectionHelper;
 import app.metatron.discovery.domain.dataconnection.DataConnectionRepository;
@@ -22,8 +25,7 @@ import app.metatron.discovery.domain.dataprep.entity.PrDataset.RS_TYPE;
 import app.metatron.discovery.domain.dataprep.jdbc.PrepJdbcService;
 import app.metatron.discovery.domain.dataprep.repository.PrDatasetRepository;
 import app.metatron.discovery.domain.dataprep.service.PrDatasetService;
-import app.metatron.discovery.domain.dataprep.teddy.DataFrame;
-import app.metatron.discovery.domain.dataprep.transform.TeddyImpl;
+import app.metatron.discovery.domain.dataprep.util.PrepUtil;
 import app.metatron.discovery.extension.dataconnection.jdbc.accessor.JdbcAccessor;
 import app.metatron.discovery.extension.dataconnection.jdbc.dialect.JdbcDialect;
 import com.google.common.collect.Sets;
@@ -53,9 +55,6 @@ public class PrepDatasetDatabaseService {
 
   @Autowired
   PrDatasetService datasetService;
-
-  @Autowired
-  TeddyImpl teddyImpl;
 
   ExecutorService poolExecutorService = null;
   Set<Future<Integer>> futures = null;
@@ -147,7 +146,7 @@ public class PrepDatasetDatabaseService {
     this.futures.add(poolExecutorService.submit(callable));
   }
 
-  public DataFrame getPreviewLinesFromJdbcForDataFrame(PrDataset dataset, String size) {
+  public DataFrame getPreviewLinesFromJdbcForDataFrame(PrepContext pc, PrDataset dataset, String size) {
     DataFrame dataFrame;
     String dcId = dataset.getDcId();
     DataConnection dataConnection = this.datasetService.findRealDataConnection(this.connectionRepository.findOne(dcId));
@@ -161,7 +160,9 @@ public class PrepDatasetDatabaseService {
     String sql = dataset.getRsType() == RS_TYPE.QUERY ? dataset.getQueryStmt() :
             String.format("SELECT * FROM %s.%s", getDatabaseName(dataset), getTableName(dataset));
 
-    dataFrame = teddyImpl.loadJdbcDataFrame(dataConnection, sql, limit, null);
+    SourceDesc src = PrepUtil.getSrcDesc(dataConnection, sql, limit);
+    String dsId = pc.load(src, null);
+    dataFrame = pc.fetch(dsId);
 
     countTotalLines(dataset, dataConnection);
     return dataFrame;

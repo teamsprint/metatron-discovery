@@ -14,6 +14,7 @@
 
 package app.metatron.discovery.domain.dataprep.transform;
 
+import app.metatron.dataprep.teddy.exceptions.CannotSerializeIntoJsonException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import org.slf4j.Logger;
@@ -30,7 +31,6 @@ import java.util.Map;
 import app.metatron.discovery.common.GlobalObjectMapper;
 import app.metatron.discovery.domain.dataprep.entity.PrDataset;
 import app.metatron.discovery.domain.dataprep.repository.PrDatasetRepository;
-import app.metatron.discovery.domain.dataprep.teddy.exceptions.CannotSerializeIntoJsonException;
 import app.metatron.discovery.prep.parser.preparation.RuleVisitorParser;
 import app.metatron.discovery.prep.parser.preparation.rule.*;
 import app.metatron.discovery.prep.parser.preparation.rule.expr.Constant.ArrayExpr;

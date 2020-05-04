@@ -14,8 +14,8 @@
 
 package app.metatron.discovery.domain.dataprep.entity;
 
+import app.metatron.dataprep.teddy.DataFrame;
 import app.metatron.discovery.domain.AbstractHistoryEntity;
-import app.metatron.discovery.domain.dataprep.teddy.DataFrame;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;

@@ -14,9 +14,10 @@
 
 package app.metatron.discovery.domain.dataprep.teddy;
 
+import app.metatron.dataprep.teddy.DataFrame;
+import app.metatron.dataprep.teddy.exceptions.TeddyException;
 import app.metatron.discovery.domain.dataprep.entity.PrSnapshot;
 import app.metatron.discovery.domain.dataprep.etl.TeddyOrcWriter;
-import app.metatron.discovery.domain.dataprep.teddy.exceptions.TeddyException;
 import java.io.File;
 import java.io.IOException;
 import org.apache.hadoop.conf.Configuration;

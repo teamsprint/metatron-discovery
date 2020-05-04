@@ -14,12 +14,12 @@
 
 package app.metatron.discovery.domain.dataprep.transform;
 
+import app.metatron.dataprep.teddy.DataFrame;
 import app.metatron.discovery.domain.dataprep.PrepSnapshotRequestPost;
 import app.metatron.discovery.domain.dataprep.exceptions.PrepErrorCodes;
 import app.metatron.discovery.domain.dataprep.exceptions.PrepException;
 import app.metatron.discovery.domain.dataprep.exceptions.PrepMessageKey;
 import app.metatron.discovery.domain.dataprep.rule.ExprFunction;
-import app.metatron.discovery.domain.dataprep.teddy.DataFrame;
 import app.metatron.discovery.prep.parser.preparation.RuleVisitorParser;
 import app.metatron.discovery.prep.parser.preparation.rule.Keep;
 import app.metatron.discovery.prep.parser.preparation.rule.Rule;

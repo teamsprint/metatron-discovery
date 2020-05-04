@@ -14,17 +14,18 @@
 
 package app.metatron.discovery.domain.dataprep;
 
+import app.metatron.dataprep.PrepContext;
+import app.metatron.dataprep.teddy.ColumnDescription;
+import app.metatron.dataprep.teddy.ColumnType;
+import app.metatron.dataprep.teddy.DataFrame;
+import app.metatron.dataprep.teddy.Row;
+import app.metatron.dataprep.teddy.exceptions.TeddyException;
 import app.metatron.discovery.common.GlobalObjectMapper;
 import app.metatron.discovery.domain.dataprep.entity.PrDataset;
 import app.metatron.discovery.domain.dataprep.exceptions.PrepErrorCodes;
 import app.metatron.discovery.domain.dataprep.exceptions.PrepException;
 import app.metatron.discovery.domain.dataprep.repository.PrDatasetRepository;
 import app.metatron.discovery.domain.dataprep.service.PrDatasetService;
-import app.metatron.discovery.domain.dataprep.teddy.ColumnDescription;
-import app.metatron.discovery.domain.dataprep.teddy.ColumnType;
-import app.metatron.discovery.domain.dataprep.teddy.DataFrame;
-import app.metatron.discovery.domain.dataprep.teddy.Row;
-import app.metatron.discovery.domain.dataprep.teddy.exceptions.TeddyException;
 import app.metatron.discovery.domain.dataprep.transform.PrepTransformResponse;
 import app.metatron.discovery.domain.dataprep.transform.PrepTransformService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -121,7 +122,7 @@ public class PrepPreviewLineService {
     return size;
   }
 
-  public DataFrame getPreviewLines(String dsId) {
+  public DataFrame getPreviewLines(PrepContext pc, String dsId) {
     DataFrame dataFrame;
 
     try {
@@ -134,7 +135,7 @@ public class PrepPreviewLineService {
       if (theFile.exists()) {
         dataFrame = mapper.readValue(theFile, DataFrame.class);
       } else {
-        dataFrame = savePreviewLines(dsId);
+        dataFrame = savePreviewLines(pc, dsId);
       }
       assert dataFrame != null;
 
@@ -183,7 +184,7 @@ public class PrepPreviewLineService {
     return dataFrame;
   }
 
-  public DataFrame savePreviewLines(String dsId) throws IOException, SQLException, TeddyException {
+  public DataFrame savePreviewLines(PrepContext pc, String dsId) throws IOException, SQLException, TeddyException {
     DataFrame dataFrame = null;
 
     PrDataset dataset = datasetRepository.findRealOne(datasetRepository.findOne(dsId));
@@ -191,7 +192,7 @@ public class PrepPreviewLineService {
 
     switch (dataset.getDsType()) {
       case IMPORTED:
-        dataFrame = datasetService.getImportedPreview(dataset);
+        dataFrame = datasetService.getImportedPreview(pc, dataset);
         break;
       case WRANGLED:
         PrepTransformResponse transformResponse = transformService.fetch(dsId, null);

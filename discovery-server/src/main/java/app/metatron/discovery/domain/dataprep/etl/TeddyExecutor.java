@@ -14,6 +14,10 @@
 
 package app.metatron.discovery.domain.dataprep.etl;
 
+import app.metatron.dataprep.PrepContext;
+import app.metatron.dataprep.teddy.DataFrame;
+import app.metatron.dataprep.teddy.Row;
+import app.metatron.dataprep.teddy.exceptions.TeddyException;
 import com.google.common.collect.Maps;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -45,15 +49,11 @@ import app.metatron.discovery.domain.dataprep.entity.PrSnapshot;
 import app.metatron.discovery.domain.dataprep.entity.PrSnapshot.STATUS;
 import app.metatron.discovery.domain.dataprep.exceptions.PrepException;
 import app.metatron.discovery.domain.dataprep.service.PrSnapshotService;
-import app.metatron.discovery.domain.dataprep.teddy.DataFrame;
-import app.metatron.discovery.domain.dataprep.teddy.DataFrameService;
-import app.metatron.discovery.domain.dataprep.teddy.Row;
-import app.metatron.discovery.domain.dataprep.teddy.exceptions.TeddyException;
 import app.metatron.discovery.domain.dataprep.util.DbInfo;
-import app.metatron.discovery.prep.parser.exceptions.RuleException;
-import app.metatron.discovery.prep.parser.preparation.RuleVisitorParser;
-import app.metatron.discovery.prep.parser.preparation.rule.Join;
-import app.metatron.discovery.prep.parser.preparation.rule.Rule;
+import app.metatron.dataprep.parser.exception.RuleException;
+import app.metatron.dataprep.parser.RuleVisitorParser;
+import app.metatron.dataprep.parser.rule.Join;
+import app.metatron.dataprep.parser.rule.Rule;
 
 import static app.metatron.discovery.domain.dataprep.PrepProperties.ETL_CORES;
 import static app.metatron.discovery.domain.dataprep.PrepProperties.ETL_LIMIT_ROWS;
@@ -74,9 +74,6 @@ public class TeddyExecutor {
   private static Logger LOGGER = LoggerFactory.getLogger(TeddyExecutor.class);
 
   Map<String, Object> jobList = Maps.newHashMap();
-
-  @Autowired(required = false)
-  DataFrameService dataFrameService;
 
   @Autowired
   PrSnapshotService snapshotService;
@@ -101,6 +98,8 @@ public class TeddyExecutor {
   Map<String, String> replaceMap = new HashMap(); // origTeddyDsId -> newFullDsId
   Map<String, String> reverseMap = new HashMap(); // newFullDsId -> origTeddyDsId
 
+  PrepContext pc;
+
   private Map<String, DataFrame> cache = Maps.newHashMap();
 
   private void setPrepPropertiesInfo(Map<String, Object> prepPropertiesInfo) {
@@ -108,6 +107,7 @@ public class TeddyExecutor {
     timeout = (Integer) prepPropertiesInfo.get(ETL_TIMEOUT);
     limitRows = (Integer) prepPropertiesInfo.get(ETL_LIMIT_ROWS);
     maxFetchSize = (Integer) prepPropertiesInfo.get(ETL_MAX_FETCH_SIZE);
+    pc = (new PrepContext()).withLimitRows(limitRows);
   }
 
   private void putStackTraceIntoCustomField(String ssId, Exception e) {
@@ -151,7 +151,7 @@ public class TeddyExecutor {
     }
 
     // 2. Transform the DataFrame with rule strings
-    if (!transformDf(ssId, dsInfo)) {
+    if (!transformDf(pc, ssId, dsInfo)) {
       return new AsyncResult("Dummy");
     }
 
@@ -204,12 +204,12 @@ public class TeddyExecutor {
     return new AsyncResult("Dummy");
   }
 
-  private boolean transformDf(String ssId, Map<String, Object> dsInfo) {
+  private boolean transformDf(PrepContext pc, String ssId, Map<String, Object> dsInfo) {
     Exception exception = null;
     STATUS status = SUCCEEDED;
 
     try {
-      transformRecursive(ssId, dsInfo);
+      transformRecursive(pc, ssId, dsInfo);
     } catch (CancellationException | InterruptedException e) {
       LOGGER.info("runTeddy(): interrupted or canceled: ssid={}", ssId);
       status = CANCELED;
@@ -230,7 +230,7 @@ public class TeddyExecutor {
     return false;
   }
 
-  void transformRecursive(String ssId, Map<String, Object> dsInfo) throws ClassNotFoundException, SQLException,
+  void transformRecursive(PrepContext pc, String ssId, Map<String, Object> dsInfo) throws ClassNotFoundException, SQLException,
           TeddyException, URISyntaxException, TimeoutException, InterruptedException {
     snapshotService.cancelCheck(ssId);
     String origTeddyDsId = (String) dsInfo.get("origTeddyDsId");
@@ -242,7 +242,7 @@ public class TeddyExecutor {
     List<Map<String, Object>> upstreamDatasetInfos;
     upstreamDatasetInfos = (List<Map<String, Object>>) dsInfo.get("upstreamDatasetInfos");
     for (Map<String, Object> upstreamDatasetInfo : upstreamDatasetInfos) {
-      transformRecursive(ssId, upstreamDatasetInfo);
+      transformRecursive(pc, ssId, upstreamDatasetInfo);
     }
 
     List<String> ruleStrings = (List<String>) dsInfo.get("ruleStrings");
@@ -256,7 +256,7 @@ public class TeddyExecutor {
       }
       replacedRuleStrings.add(replacedRuleString);
     }
-    applyRuleStrings(ssId, newFullDsId, replacedRuleStrings);
+    applyRuleStrings(pc, ssId, newFullDsId, replacedRuleStrings);
   }
 
   // returns total rule count of the snapshot (including slave datasets)
@@ -270,7 +270,7 @@ public class TeddyExecutor {
     return ruleCntTotal + ((List<String>) dsInfo.get("ruleStrings")).size();
   }
 
-  private void applyRuleStrings(String ssId, String masterFullDsId, List<String> ruleStrings)
+  private void applyRuleStrings(PrepContext pc, String ssId, String masterFullDsId, List<String> ruleStrings)
           throws TeddyException, TimeoutException, InterruptedException {
     long ruleCntDone = 0L;
 
@@ -286,7 +286,7 @@ public class TeddyExecutor {
       Rule rule = new RuleVisitorParser().parse(ruleString);
 
       // FIXME: use 'rule'. avoid redundant parsing
-      List<String> slaveDsIds = DataFrameService.getSlaveDsIds(ruleString);
+      List<String> slaveDsIds = pc.getSlaveDsIds(ruleString);
       if (slaveDsIds != null) {
         for (String slaveDsId : slaveDsIds) {
           slaveDfs.add(cache.get(slaveDsId));
@@ -314,9 +314,10 @@ public class TeddyExecutor {
             for (int rowno = 0; rowno < rowcnt; rowno += partSize) {
               LOGGER.debug("applyRuleStrings(): add thread: rowno={} partSize={} rowcnt={}", rowno,
                       partSize, rowcnt);
-              futures.add(dataFrameService
-                      .gatherAsync(df, newDf, preparedArgs, rowno, Math.min(partSize, rowcnt - rowno),
-                              limitRows));
+              // TODO: We will use fork() soon
+//              futures.add(dataFrameService
+//                      .gatherAsync(df, newDf, preparedArgs, rowno, Math.min(partSize, rowcnt - rowno),
+//                              limitRows));
             }
 
             addJob(ssId, futures);

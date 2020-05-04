@@ -1,10 +1,9 @@
 package app.metatron.discovery.domain.dataprep.csv;
 
+import app.metatron.dataprep.file.PrepCsvUtil;
+import app.metatron.dataprep.file.PrepParseResult;
+import app.metatron.dataprep.teddy.DataFrame;
 import org.junit.Test;
-
-import app.metatron.discovery.domain.dataprep.file.PrepCsvUtil;
-import app.metatron.discovery.domain.dataprep.file.PrepParseResult;
-import app.metatron.discovery.domain.dataprep.teddy.DataFrame;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

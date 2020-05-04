@@ -26,10 +26,9 @@ import static app.metatron.discovery.domain.dataprep.transform.Histogram.Granule
 import static app.metatron.discovery.domain.dataprep.transform.Histogram.Granule.YEAR;
 import static app.metatron.discovery.domain.dataprep.util.PrepUtil.transformError;
 
+import app.metatron.dataprep.teddy.ColumnType;
+import app.metatron.dataprep.teddy.Row;
 import app.metatron.discovery.common.GlobalObjectMapper;
-import app.metatron.discovery.domain.dataprep.teddy.ColumnType;
-import app.metatron.discovery.domain.dataprep.teddy.DataFrame;
-import app.metatron.discovery.domain.dataprep.teddy.Row;
 import app.metatron.discovery.domain.dataprep.util.PrepUtil;
 import java.io.IOException;
 import java.io.Serializable;
@@ -47,7 +46,7 @@ import org.slf4j.LoggerFactory;
 // 각 column마다 1개씩
 public class Histogram implements Serializable {
 
-  private static Logger LOGGER = LoggerFactory.getLogger(DataFrame.class);
+  private static Logger LOGGER = LoggerFactory.getLogger(Histogram.class);
 
   public enum Granule {
     NOT_USED,

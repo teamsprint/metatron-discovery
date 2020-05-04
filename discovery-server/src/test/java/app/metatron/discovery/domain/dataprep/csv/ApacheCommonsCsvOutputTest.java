@@ -1,5 +1,11 @@
 package app.metatron.discovery.domain.dataprep.csv;
 
+import static app.metatron.dataprep.file.PrepFileUtil.getReader;
+
+import app.metatron.dataprep.file.PrepCsvUtil;
+import app.metatron.dataprep.file.PrepParseResult;
+import app.metatron.dataprep.teddy.DataFrame;
+import app.metatron.dataprep.teddy.Row;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.hadoop.conf.Configuration;
@@ -16,12 +22,6 @@ import java.util.List;
 import app.metatron.discovery.domain.dataprep.exceptions.PrepErrorCodes;
 import app.metatron.discovery.domain.dataprep.exceptions.PrepException;
 import app.metatron.discovery.domain.dataprep.exceptions.PrepMessageKey;
-import app.metatron.discovery.domain.dataprep.file.PrepCsvUtil;
-import app.metatron.discovery.domain.dataprep.file.PrepParseResult;
-import app.metatron.discovery.domain.dataprep.teddy.DataFrame;
-import app.metatron.discovery.domain.dataprep.teddy.Row;
-
-import static app.metatron.discovery.domain.dataprep.file.PrepFileUtil.getReader;
 
 public class ApacheCommonsCsvOutputTest {
 

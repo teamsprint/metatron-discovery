@@ -14,7 +14,7 @@
 
 package app.metatron.discovery.domain.dataprep.kafka;
 
-import app.metatron.discovery.domain.dataprep.teddy.exceptions.TeddyException;
+import app.metatron.dataprep.teddy.exceptions.TeddyException;
 import com.facebook.presto.jdbc.internal.jackson.core.JsonProcessingException;
 import java.net.URISyntaxException;
 import org.junit.Before;

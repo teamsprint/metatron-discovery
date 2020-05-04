@@ -14,12 +14,12 @@
 
 package app.metatron.discovery.domain.dataprep.etl;
 
+import app.metatron.dataprep.teddy.ColumnDescription;
+import app.metatron.dataprep.teddy.ColumnType;
+import app.metatron.dataprep.teddy.DataFrame;
+import app.metatron.dataprep.teddy.Row;
 import app.metatron.discovery.domain.dataprep.entity.PrSnapshot;
 import app.metatron.discovery.domain.dataprep.entity.PrSnapshot.HIVE_FILE_COMPRESSION;
-import app.metatron.discovery.domain.dataprep.teddy.ColumnDescription;
-import app.metatron.discovery.domain.dataprep.teddy.ColumnType;
-import app.metatron.discovery.domain.dataprep.teddy.DataFrame;
-import app.metatron.discovery.domain.dataprep.teddy.Row;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;

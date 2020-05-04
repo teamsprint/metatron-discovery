@@ -14,6 +14,8 @@
 
 package app.metatron.discovery.domain.dataprep.service;
 
+import app.metatron.dataprep.PrepContext;
+import app.metatron.dataprep.teddy.DataFrame;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
@@ -58,7 +60,6 @@ import app.metatron.discovery.domain.dataprep.entity.PrUploadFile;
 import app.metatron.discovery.domain.dataprep.exceptions.PrepMessageKey;
 import app.metatron.discovery.domain.dataprep.repository.PrDatasetRepository;
 import app.metatron.discovery.domain.dataprep.repository.PrUploadFileRepository;
-import app.metatron.discovery.domain.dataprep.teddy.DataFrame;
 import app.metatron.discovery.domain.dataprep.transform.PrepTransformService;
 import app.metatron.discovery.domain.storage.StorageProperties;
 
@@ -148,7 +149,7 @@ public class PrDatasetController {
         datasetService.changeFileFormatToCsv(dataset);
       }
 
-      previewLineService.savePreviewLines(savedDataset.getDsId());
+      previewLineService.savePreviewLines(new PrepContext(), savedDataset.getDsId());
 
       datasetRepository.flush();
     } catch (Exception e) {
@@ -171,7 +172,7 @@ public class PrDatasetController {
     try {
       dataset = getDatasetEntity(dsId);
       if (preview) {
-        DataFrame dataFrame = previewLineService.getPreviewLines(dsId);
+        DataFrame dataFrame = previewLineService.getPreviewLines(new PrepContext(), dsId);
         dataset.setGridResponse(dataFrame);
       }
 
@@ -308,7 +309,8 @@ public class PrDatasetController {
     Map<String, Object> response;
     try {
       datasetFileService.checkStoredUri(storedUri);
-      response = datasetFileService.makeFileGrid(storedUri, size, delimiterCol, quoteChar, manualColumnCount,
+      // FIXME: move to TransformService
+      response = datasetFileService.makeFileGrid(new PrepContext(), storedUri, size, delimiterCol, quoteChar, manualColumnCount,
               Boolean.parseBoolean(autoTyping));
     } catch (Exception e) {
       LOGGER.error("fileGrid(): caught an exception: ", e);

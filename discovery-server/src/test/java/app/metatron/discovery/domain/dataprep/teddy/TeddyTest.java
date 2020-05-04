@@ -17,9 +17,12 @@ package app.metatron.discovery.domain.dataprep.teddy;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
-import app.metatron.discovery.domain.dataprep.file.PrepCsvUtil;
-import app.metatron.discovery.domain.dataprep.file.PrepParseResult;
-import app.metatron.discovery.domain.dataprep.teddy.exceptions.TeddyException;
+import app.metatron.dataprep.PrepContext;
+import app.metatron.dataprep.file.PrepCsvUtil;
+import app.metatron.dataprep.file.PrepParseResult;
+import app.metatron.dataprep.teddy.DataFrame;
+import app.metatron.dataprep.teddy.Row;
+import app.metatron.dataprep.teddy.exceptions.TeddyException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,6 +31,8 @@ import java.util.List;
 import java.util.Map;
 
 public class TeddyTest {
+
+  private static PrepContext pc = PrepContext.DEFAULT;
 
   public static Map<String, PrepParseResult> grids = new HashMap<>();
 
@@ -192,26 +197,14 @@ public class TeddyTest {
   }
 
   public static DataFrame apply_rule(DataFrame df, String ruleString) throws TeddyException {
-    DataFrameService dataFrameService = new DataFrameService();
-
-    df = dataFrameService.applyRuleInternal(df, ruleString, null, 1, 10000, 10000);
-
-    return df;
-  }
-
-  public static DataFrame apply_rule(DataFrame df, String ruleString, List<DataFrame> slaveDFs) throws TeddyException {
-    DataFrameService dataFrameService = new DataFrameService();
-
-    df = dataFrameService.applyRuleInternal(df, ruleString, slaveDFs, 1, 10000, 10000);
+    df = pc.apply(df, ruleString);
 
     return df;
   }
 
   public static DataFrame apply_rules(DataFrame df, List<String> ruleStrings) throws TeddyException {
-    DataFrameService dataFrameService = new DataFrameService();
-
     for (String ruleString : ruleStrings) {
-      df = dataFrameService.applyRuleInternal(df, ruleString, null, 1, 10000, 10000);
+      df = apply_rule(df, ruleString);
     }
     return df;
   }

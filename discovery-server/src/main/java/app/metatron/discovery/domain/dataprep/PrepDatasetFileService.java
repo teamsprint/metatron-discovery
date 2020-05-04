@@ -30,18 +30,17 @@ import static app.metatron.discovery.domain.dataprep.util.PrepUtil.configError;
 import static app.metatron.discovery.domain.dataprep.util.PrepUtil.dataflowError;
 import static app.metatron.discovery.domain.dataprep.util.PrepUtil.datasetError;
 
+import app.metatron.dataprep.PrepContext;
+import app.metatron.dataprep.file.PrepCsvUtil;
+import app.metatron.dataprep.file.PrepJsonUtil;
+import app.metatron.dataprep.teddy.DataFrame;
+import app.metatron.dataprep.teddy.exceptions.TeddyException;
 import app.metatron.discovery.domain.dataprep.entity.PrDataset;
 import app.metatron.discovery.domain.dataprep.entity.PrUploadFile;
 import app.metatron.discovery.domain.dataprep.exceptions.PrepErrorCodes;
 import app.metatron.discovery.domain.dataprep.exceptions.PrepException;
 import app.metatron.discovery.domain.dataprep.exceptions.PrepMessageKey;
-import app.metatron.discovery.domain.dataprep.file.PrepCsvUtil;
-import app.metatron.discovery.domain.dataprep.file.PrepJsonUtil;
 import app.metatron.discovery.domain.dataprep.repository.PrDatasetRepository;
-import app.metatron.discovery.domain.dataprep.teddy.DataFrame;
-import app.metatron.discovery.domain.dataprep.teddy.DataFrameService;
-import app.metatron.discovery.domain.dataprep.teddy.exceptions.TeddyException;
-import app.metatron.discovery.domain.dataprep.transform.TeddyImpl;
 import app.metatron.discovery.domain.dataprep.util.PrepUtil;
 import app.metatron.discovery.domain.storage.StorageProperties;
 import app.metatron.discovery.util.ExcelProcessor;
@@ -104,12 +103,6 @@ public class PrepDatasetFileService {
 
   @Autowired(required = false)
   StorageProperties storageProperties;
-
-  @Autowired
-  TeddyImpl teddyImpl;
-
-  @Autowired
-  DataFrameService dataFrameService;
 
   ExecutorService poolExecutorService = null;
   Set<Future<Map<String, Long>>> futures = null;
@@ -318,7 +311,7 @@ public class PrepDatasetFileService {
     return grid;
   }
 
-  private Map<String, Object> getResponseMapFromExcel(String storedUri, String extensionType, int limitRows,
+  private Map<String, Object> getResponseMapFromExcel(PrepContext pc, String storedUri, String extensionType, int limitRows,
           Integer columnCount, boolean autoTyping) throws IOException, TeddyException {
     Map<String, Object> responseMap = Maps.newHashMap();
     List<String> sheetNames = Lists.newArrayList();
@@ -395,7 +388,7 @@ public class PrepDatasetFileService {
       df.setByGrid(getGridFromExcel(sheet, limitRows, columnCount), null);
 
       if (autoTyping && 0 < df.rows.size()) {
-        df = teddyImpl.applyAutoTyping(df);
+        df = pc.applyAutoTyping(df);
       }
 
       sheetNames.add(sheet.getSheetName());
@@ -407,7 +400,7 @@ public class PrepDatasetFileService {
     return responseMap;
   }
 
-  private Map<String, Object> getResponseMapFromJson(String storedUri, int limitRows, Integer columnCount,
+  private Map<String, Object> getResponseMapFromJson(PrepContext pc, String storedUri, int limitRows, Integer columnCount,
           boolean autoTyping) throws TeddyException {
     Map<String, Object> responseMap = Maps.newHashMap();
     List<DataFrame> gridResponses = Lists.newArrayList();
@@ -417,7 +410,7 @@ public class PrepDatasetFileService {
     df.setByGrid(PrepJsonUtil.parse(storedUri, limitRows, columnCount, hadoopConf));
 
     if (autoTyping && 0 < df.rows.size()) {
-      df = teddyImpl.applyAutoTyping(df);
+      df = pc.applyAutoTyping(df);
     }
 
     gridResponses.add(df);
@@ -426,7 +419,7 @@ public class PrepDatasetFileService {
     return responseMap;
   }
 
-  private Map<String, Object> getResponseMapFromCsv(String storedUri, int limitRows, String delimiterCol,
+  private Map<String, Object> getResponseMapFromCsv(PrepContext pc, String storedUri, int limitRows, String delimiterCol,
           String quoteChar, Integer columnCount, boolean autoTyping) throws TeddyException {
     Map<String, Object> responseMap = Maps.newHashMap();
     List<DataFrame> gridResponses = Lists.newArrayList();
@@ -442,7 +435,7 @@ public class PrepDatasetFileService {
     df.setByGrid(csvUtil.parse(storedUri));
 
     if (autoTyping && 0 < df.rows.size()) {
-      df = teddyImpl.applyAutoTyping(df);
+      df = pc.applyAutoTyping(df);
     }
 
     gridResponses.add(df);
@@ -475,7 +468,7 @@ public class PrepDatasetFileService {
 
   }
 
-  public Map<String, Object> makeFileGrid(String storedUri, Integer size, String delimiterCol, String quoteChar,
+  public Map<String, Object> makeFileGrid(PrepContext pc, String storedUri, Integer size, String delimiterCol, String quoteChar,
           Integer columnCount,
           boolean autoTyping) {
 
@@ -487,13 +480,13 @@ public class PrepDatasetFileService {
       switch (extensionType) {
         case "xlsx":
         case "xls":
-          responseMap = getResponseMapFromExcel(storedUri, extensionType, limitRows, columnCount, autoTyping);
+          responseMap = getResponseMapFromExcel(pc, storedUri, extensionType, limitRows, columnCount, autoTyping);
           break;
         case "json":
-          responseMap = getResponseMapFromJson(storedUri, limitRows, columnCount, autoTyping);
+          responseMap = getResponseMapFromJson(pc, storedUri, limitRows, columnCount, autoTyping);
           break;
         default:
-          responseMap = getResponseMapFromCsv(storedUri, limitRows, delimiterCol, quoteChar, columnCount, autoTyping);
+          responseMap = getResponseMapFromCsv(pc, storedUri, limitRows, delimiterCol, quoteChar, columnCount, autoTyping);
       }
     } catch (IOException e) {
       e.printStackTrace();
@@ -506,7 +499,7 @@ public class PrepDatasetFileService {
     return responseMap;
   }
 
-  public DataFrame getPreviewLinesFromFileForDataFrame(PrDataset dataset, String size)
+  public DataFrame getPreviewLinesFromFileForDataFrame(PrepContext pc, PrDataset dataset, String size)
           throws IOException, TeddyException {
     DataFrame dataFrame = null;
 
@@ -536,12 +529,12 @@ public class PrepDatasetFileService {
           // Excel files are treated as CSV
           break;
         case "json":
-          responseMap = getResponseMapFromJson(storedUri, limitRows, columnCount, autoTyping);
+          responseMap = getResponseMapFromJson(pc, storedUri, limitRows, columnCount, autoTyping);
           break;
         default:
           String delimiterCol = dataset.getDelimiter();
           String quoteChar = dataset.getQuoteChar();
-          responseMap = getResponseMapFromCsv(storedUri, limitRows, delimiterCol, quoteChar, columnCount, autoTyping);
+          responseMap = getResponseMapFromCsv(pc, storedUri, limitRows, delimiterCol, quoteChar, columnCount, autoTyping);
       }
 
       if (responseMap != null) {

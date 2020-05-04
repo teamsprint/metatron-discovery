@@ -14,6 +14,7 @@
 
 package app.metatron.discovery.domain.mdm.lineage;
 
+import app.metatron.dataprep.PrepContext;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
@@ -276,7 +277,7 @@ public class LineageEdgeController {
       String storedUri = (String) params.get("storedUri");
 
       if (storedUri != null) {
-        gridResponses = prepDatasetFileService.makeFileGrid("file://" + storedUri, 1000, ",", "\"", 8, false);
+        gridResponses = prepDatasetFileService.makeFileGrid(new PrepContext(), "file://" + storedUri, 1000, ",", "\"", 8, false);
       }
     } catch (IllegalStateException e) {
       LOGGER.error("lineage_file POST(): caught an exception: ", e);

@@ -16,7 +16,9 @@ package app.metatron.discovery.domain.dataprep.teddy;
 
 import static org.junit.Assert.assertEquals;
 
-import app.metatron.discovery.domain.dataprep.teddy.exceptions.TeddyException;
+import app.metatron.dataprep.teddy.ColumnType;
+import app.metatron.dataprep.teddy.DataFrame;
+import app.metatron.dataprep.teddy.exceptions.TeddyException;
 import java.io.IOException;
 import org.junit.BeforeClass;
 import org.junit.Test;
