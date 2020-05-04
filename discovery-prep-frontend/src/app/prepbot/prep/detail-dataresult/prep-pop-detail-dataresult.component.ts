@@ -595,9 +595,9 @@ export class PrepPopDetailDataresultComponent extends AbstractComponent implemen
                         this.progressbarWidth = '100%';
                     }
                     // Whenever received response at the status of preparing, it requests snapshot data
-                    setTimeout(() => {
-                        this.getSnapshot();
-                    }, 2000)
+                    // setTimeout(() => {
+                    //     this.getSnapshot();
+                    // }, 2000)
 
                 }
 

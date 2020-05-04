@@ -411,10 +411,11 @@ export class PrepPopResultCreateComponent extends AbstractComponent implements O
         this.snapshot = new SnapShotCreateDomain();
         this.snapshot.ssName = this.ssName;
         this.snapshot.ssType = ssType;
-        this.changeEtlEngine(Engine.EMBEDDED);
+
         if (ssType === SsType.DATABASE) {
             this.snapshot.appendMode = AppendMode.OVERWRITE;
         } else if (ssType === SsType.URI) {
+            this.changeEtlEngine(Engine.EMBEDDED);
             // Default file format is CSV
             this.uriFileFormat = this.fileFormat[0].value;
             this.snapshot.storedUri = this._getDefaultStoredUri();

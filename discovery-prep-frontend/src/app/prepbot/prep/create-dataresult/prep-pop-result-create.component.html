@@ -186,7 +186,7 @@
 
 
                     <!--is-selected-->
-                    <div class="pb-box-setting" [ngClass]="{ 'is-selected' : isAdvancedPrefOpen }">
+                    <div class="pb-box-setting" [ngClass]="{ 'is-selected' : isAdvancedPrefOpen }" *ngIf="snapshot.ssType && snapshot.ssType === SsType.URI">
                         <div class="pb-box-fold pb-clear">
                             <!-- setting edit -->
                             <div class="pb-setting-edit" *ngIf="isAdvancedPrefOpen">
