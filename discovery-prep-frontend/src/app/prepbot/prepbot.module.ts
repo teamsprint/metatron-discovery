@@ -25,7 +25,6 @@ import {LongUpdatePopupComponent} from "./component/long-update-popup.component"
 import {RadioSelectDatasetComponent} from "./component/radio-select-dataset.component";
 import {SnapshotLoadingComponent} from "./component/snapshot-loading.component";
 import {DataflowComponent} from "./dataflow/dataflow.component";
-import {CreateDataflowNameDescComponent} from "./dataflow/create-dataflow-name-desc.component";
 import {DatasetDetailComponent} from "./dataset/dataset-detail.component";
 import {CreateDatasetComponent} from "./dataset/create-dataset/create-dataset.component";
 import {CreateDatasetDataTypeComponent} from "./dataset/create-dataset/create-dataset-datatype.component";
@@ -192,7 +191,6 @@ const dataPreparationRoutes: Routes = [
         CreateDatasetSelectfileComponent,
         CreateDatasetSelectsheetComponent,
         CreateDatasetSelecturlComponent,
-        CreateDataflowNameDescComponent,
         CreateDatasetStagingSelectdataComponent,
         DatasetInfoPopupComponent,
         DataflowDetailComponent,

@@ -28,7 +28,6 @@ import {Modal} from '../../common/domain/modal';
 import {DeleteModalComponent} from '../../common/component/modal/delete/delete.component';
 import {Alert} from '../../common/util/alert.util';
 import {MomentDatePipe} from '../../common/pipe/moment.date.pipe';
-import {CreateDataflowNameDescComponent} from './create-dataflow-name-desc.component';
 import {isNullOrUndefined} from "util";
 import {StringUtil} from "../../common/util/string.util";
 import {ActivatedRoute} from "@angular/router";
@@ -55,9 +54,6 @@ export class DataflowComponent extends AbstractComponent implements OnInit, OnDe
    |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
   @ViewChild(DeleteModalComponent)
   public deleteModalComponent: DeleteModalComponent;
-
-  @ViewChild(CreateDataflowNameDescComponent)
-  public createDataflowComponent : CreateDataflowNameDescComponent;
 
   public dataflows : PrDataflow[];
 
@@ -151,14 +147,6 @@ export class DataflowComponent extends AbstractComponent implements OnInit, OnDe
     ).then();
   } // function - reloadPage
 
-
-
-  /**
-   * Create new dataflow
-   */
-  public createDataflow() {
-    this.createDataflowComponent.init();
-  }
 
 
   /**
@@ -321,25 +309,6 @@ export class DataflowComponent extends AbstractComponent implements OnInit, OnDe
       this.reloadPage(false);
     }
   } // function - changePage
-  /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-   | Protected Method
-   |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
-
-  /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-   | Private Method
-   |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
-  /**
-   * @param event Event
-   */
-  @HostListener('document:keydown.enter', ['$event'])
-  private _onEnterKeydownHandler(event: KeyboardEvent) {
-    if(event.keyCode === 13  && this.deleteModalComponent.isShow) {
-      this.deleteModalComponent.done();
-    } else if (event.keyCode === 13 && this.createDataflowComponent.isShow) {
-      this.createDataflowComponent.createDataflow();
-    }
-  }
-
 
   /**
    * Returns parameter for dataflow list
