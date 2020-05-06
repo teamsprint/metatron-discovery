@@ -1,0 +1,164 @@
+<div class="pb-box-ruleedit">
+    <div class="pb-ruleedit-top">
+        <div class="pb-label-title">Edit Rule</div>
+        <div class="pb-ui-buttons">
+            <a href="javascript:" class="pb-btn-icons-type type-close"></a>
+        </div>
+        <a href="javascript:" class="pb-component-btn type-dark">SAVE</a>
+        <!-- <div class="pb-btn-bottom">
+            <a href="javascript:" class="pb-component-btn type-dark">
+                <em class="pb-icon-dictionary"></em>SAVE
+            </a>
+        </div> -->
+    </div>
+
+    <!-- part -->
+    <div class="pb-ui-part">
+        <div class="pb-label-part">Command</div>
+        <!-- box select -->
+        <div class="pb-box-command">
+            <!-- select box -->
+            <!-- 클릭시 ddp-selected 추가 -->
+            <div class="pb-form-selectbox type-value"
+                 tabindex="1"
+                 [ngClass]="{'ddp-selected' : isCommandListShow }"
+                 [class.ddp-result]="ruleVO.command"
+                 (click)="$event.stopImmediatePropagation(); showCommandList()"
+                 (keydown)="navigateWithKeyboardShortList($event, filteredCommandList, 'command')">
+                <!-- 선택시 자동 input display:block; -->
+                <input class="pb-input-selectbox" placeholder="{{'msg.dp.th.command' | translate}}" [(ngModel)]="commandSearchText" id="commandSearch">
+                <span class="pb-txt-selectbox" >{{ruleVO.command !== '' ?  ruleVO.command : 'msg.dp.ui.command.input.ph' | translate }}</span>
+                <div class="pb-select-popup">
+                    <ul class="pb-list-selectbox pb-list-command"
+                        *ngIf="isCommandListShow"
+                        (clickOutside)="isCommandListShow = false; initSelectedCommand(filteredCommandList)">
+                        <li *ngFor="let command of filteredCommandList; let index = index;"
+                            (click)="selectCommand($event, command)"
+                            (mouseout)="commandListHover($event,index)"
+                            (mouseover)="commandListHover($event,index)"
+                            (mousemove)="flag === true ? flag = false : flag = true">
+                            <a href="javascript:" [ngStyle]="command.isHover ? {'background-color': '#f6f6f7' }:{}">
+                                  <span class="pb-ui-type">
+                                    <em class="ddp-ui-round">{{command.alias}}</em>{{command.command}}
+                                  </span>
+                                <span class="pb-ui-code">
+                                    {{command.desc}}
+                                  </span>
+                            </a>
+                        </li>
+                        <li *ngIf="filteredCommandList.length ===0"><span class="ddp-noresult">No Result</span></li>
+                    </ul>
+                </div>
+            </div>
+            <!-- //select box -->
+
+        </div>
+    </div>
+    <div class="pb-block-part">
+        <a href="javascript:" class="pb-component-btn"><em class="pb-icon-refresh"></em>switch to editor</a>
+
+
+        <div class="pb-part-content" *ngIf="'' !== ruleVO.command">
+
+            <!--startHeader-->
+            <edit-rule-header2 #editRule *ngIf="'header' === ruleVO.command" ></edit-rule-header2>
+            <!-- //endHeader-->
+        </div>
+
+        <!--&lt;!&ndash;builder 모드 &ndash;&gt;-->
+        <!--<div class="pb-part-content">-->
+            <!--<table class="pb-table-data">-->
+                <!--<colgroup><col width="30%">-->
+                    <!--<col width="*">-->
+                <!--</colgroup>-->
+                <!--<tbody>-->
+                <!--<tr>-->
+                    <!--<th>Column</th>-->
+                    <!--<td>-->
+                        <!--<div class="pb-form-edit">-->
+                            <!--<input type="text" class="pb-component-input" placeholder="Placeholder">-->
+                        <!--</div>-->
+                    <!--</td>-->
+                <!--</tr>-->
+                <!--<tr>-->
+                    <!--<th>Pattern</th>-->
+                    <!--<td>-->
+                        <!--<div class="pb-form-edit">-->
+                            <!--<input type="text" class="pb-component-input" placeholder="Placeholder">-->
+                        <!--</div>-->
+                    <!--</td>-->
+                <!--</tr>-->
+                <!--<tr>-->
+                    <!--<th>New value</th>-->
+                    <!--<td>-->
+                        <!--<div class="pb-form-edit">-->
+                            <!--<input type="text" class="pb-component-input" placeholder="Placeholder">-->
+                        <!--</div>-->
+                    <!--</td>-->
+                <!--</tr>-->
+                <!--<tr>-->
+                    <!--<th>Quote character</th>-->
+                    <!--<td>-->
+                        <!--<div class="pb-form-edit">-->
+                            <!--<input type="text" class="pb-component-input" placeholder="Placeholder">-->
+                        <!--</div>-->
+                    <!--</td>-->
+                <!--</tr>-->
+                <!--<tr>-->
+                    <!--<th>Match ocurrences</th>-->
+                    <!--<td>-->
+                        <!--<div class="pb-form-edit">-->
+                            <!--<label class="pb-compomnent-radio">-->
+                                <!--<input type="radio" checked="checked">-->
+                                <!--<i></i>-->
+                                <!--<span class="pb-txt-radio">checked</span>-->
+                            <!--</label>-->
+                            <!--<label class="pb-compomnent-radio">-->
+                                <!--<input type="radio">-->
+                                <!--<i></i>-->
+                                <!--<span class="pb-txt-radio">unchecked</span>-->
+                            <!--</label>-->
+                        <!--</div>-->
+                    <!--</td>-->
+                <!--</tr>-->
+                <!--<tr>-->
+                    <!--<th>Ignore case</th>-->
+                    <!--<td>-->
+                        <!--<div class="pb-form-edit">-->
+                            <!--<label class="pb-compomnent-radio">-->
+                                <!--<input type="radio" checked="checked">-->
+                                <!--<i></i>-->
+                                <!--<span class="pb-txt-radio">checked</span>-->
+                            <!--</label>-->
+                            <!--<label class="pb-compomnent-radio">-->
+                                <!--<input type="radio">-->
+                                <!--<i></i>-->
+                                <!--<span class="pb-txt-radio">unchecked</span>-->
+                            <!--</label>-->
+                        <!--</div>-->
+                    <!--</td>-->
+                <!--</tr>-->
+                <!--<tr>-->
+                    <!--<th>Use only under the following conditions</th>-->
+                    <!--<td>-->
+                        <!--<div class="pb-form-edit">-->
+                            <!--<textarea class="pb-component-textarea-auto" placeholder="Please insert command" style="height: 141px;"></textarea>-->
+                        <!--</div>-->
+                    <!--</td>-->
+                <!--</tr>-->
+                <!--</tbody>-->
+            <!--</table>-->
+        <!--</div>-->
+        <!--// builder 모드 -->
+        <!-- editor 모드 -->
+        <div class="pb-part-content" style="display:none;">
+            <div class="pb-form-create">
+                <div class="pb-create-label">Command</div>
+                <div class="pb-form-edit">
+                    <textarea class="pb-component-textarea-auto" placeholder="Please insert command" style="height: 300px;"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- //part -->
+</div>
