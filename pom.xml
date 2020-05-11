@@ -30,6 +30,7 @@
         <module>discovery-common</module>
         <module>discovery-extensions</module>
         <module>discovery-distribution</module>
+        <module>prep-runner</module>
     </modules>
 
     <properties>
