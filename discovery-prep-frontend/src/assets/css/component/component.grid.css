@@ -43,6 +43,7 @@ table.pb-component-table tr th.pb-txt-center,
 table.pb-component-table tr td.pb-txt-center {padding:0 15px !important;}
 table.pb-component-table tr th em.pb-icon-array {position:relative; top:2px; margin:-5px 0 0 0; }
 table.pb-component-table tr td {padding:12px 15px; border-bottom:1px solid #eee; color:#222; font-size:14px;}
+table.pb-component-table tr td a {color:#222; font-size:14px;}
 table.pb-component-table tr td input {font-size:14px;}
 table.pb-component-table tr td textarea {font-size:14px;}
 table.pb-component-table tr td label .pb-txt-radio,
@@ -52,6 +53,8 @@ table.pb-component-table tr td:first-of-type{padding-left:30px;}
 table.pb-component-table tr th:last-of-type,
 table.pb-component-table tr td:last-of-type{padding-right:30px;}
 table.pb-component-table tr td .pb-img-file {vertical-align:middle; margin-right:10px;}
+
+table.pb-component-table.type-cursor tr td {cursor:pointer;}
 
 /***********************************************************************
      Compontent : grid Left

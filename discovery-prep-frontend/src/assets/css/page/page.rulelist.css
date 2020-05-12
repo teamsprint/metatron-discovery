@@ -24,7 +24,7 @@
      Page : ADD RULE
  *************************************************************************/
 .pb-rnb-sub.type-rule-list .pb-wrap-line-add {position: relative;cursor: pointer;height:2px;box-sizing: border-box;overflow: hidden;z-index: 10;}
-.pb-rnb-sub.type-rule-list .pb-line-add,
+.pb-rnb-sub.type-rule-list .pb-line-add, 
 .pb-rnb-sub.type-rule-list .pb-wrap-line-add.pb-selected .pb-line-add {display: none;}
 .pb-rnb-sub.type-rule-list .pb-wrap-line-add .pb-line-add {display: block;background-color: #f37135;}
 /*.pb-rnb-sub.type-rule-list .pb-wrap-line-add.is-focus {height: auto;}

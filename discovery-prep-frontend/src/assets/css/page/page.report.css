@@ -20,7 +20,7 @@
 .ddp-wrap-datadetail .ddp-wrap-rules-flow.ddp-snapshot .ddp-box-title {font-size:16px; font-weight:normal; vertical-align:middle;}
 .ddp-wrap-datadetail .ddp-wrap-rules-flow.ddp-snapshot .ddp-data-num {position:relative; top:-1px;}
 .ddp-wrap-datadetail .ddp-form-box {height:350px; border:1px solid #d0d1d8;}
-.ddp-wrap-datadetail .ddp-info-right {display:block; padding-left:50px; padding-right:35px; overflow:auto; flex:auto;}
+.ddp-wrap-datadetail .ddp-info-right {display:block; padding-left:35px; padding-right:35px; overflow:auto; flex:auto;}
 table.ddp-table-detail.type-sub {padding-left:27px;}
 table.ddp-table-detail {table-layout:fixed; width:100%; margin-top:30px;}
 table.ddp-table-detail.ddp-mgt20 {margin-top:20px;}
@@ -119,6 +119,6 @@ table.ddp-table-detail tbody tr td.ddp-link-url a {text-decoration: underline;co
 /***********************************************************************
      Page : Button
  *************************************************************************/
-.pb-wrap-button {float: right;padding-left: 10px;background-color: #fff;position: absolute;top: 6px;right: 0;}
-.pb-wrap-button .pb-component-btn.type-dark{min-width: 5px;padding: 5px;}
-.pb-wrap-button .pb-component-btn em{margin: 0 3px;}
+ .pb-wrap-button {float: right;padding-left: 10px;background-color: #fff;position: absolute;top: 6px;right: 0;}
+ .pb-wrap-button .pb-component-btn.type-dark{min-width: 5px;padding: 5px;}
+ .pb-wrap-button .pb-component-btn em{margin: 0 3px;}

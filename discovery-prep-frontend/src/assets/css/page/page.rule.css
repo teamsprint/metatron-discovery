@@ -495,14 +495,8 @@ table.pb-table-union tr td .pb-data-dropped strong {color:#666eb2; font-weight:n
 .pb-wrap-drop-search .pb-ui-drop-search ul.pb-list-selectbox2 li {padding: 5px 13px;font-size: 13px;cursor: pointer;}
 .pb-wrap-drop-search ul.pb-list-selectbox2 .pb-txt-search {color: #666eb2;}
 .pb-wrap-drop-search .pb-ui-drop-search .pb-data-message {padding: 5px 13px;color: #d0d1d8;font-size: 12px;cursor: default;}
-.pb-label-checkbox {display: inline-block;position: relative;padding-left: 19px;cursor: pointer;}
-.pb-label-checkbox input[type="checkbox"] {position: absolute;top: 50%;left: 0;margin-top: -7px;opacity: 0;}
-.pb-label-checkbox i.pb-icon-checkbox {display: inline-block;position: absolute;top: 50%;left: 0;margin-top: -6px;width: 12px;height: 12px;background: url(../../images/icon_checkbox.png) no-repeat;}
-.pb-label-checkbox {display: inline-block;position: relative;padding-left: 19px;cursor: pointer;}
-.pb-label-checkbox input[type="checkbox"] {position: absolute;top: 50%;left: 0;margin-top: -7px;opacity: 0;}
-.pb-label-checkbox.pb-type2 i {display: inline-block;position: absolute;width: 12px;height: 12px;top: 50%;left: 0;margin-top: -6px;background: url(../../images/icon_checkbox2.png) no-repeat;background-position: left -13px;}
-.pb-label-checkbox span.pb-txt-checkbox {display: inline-block;font-size: 13px;color: #36393e;vertical-align: bottom;word-break: break-all;}
-.pb-label-checkbox.pb-type2 span.pb-txt-checkbox {margin-bottom:2px;color: #90969f;font-size: 12px;}
+
+
 .pb-txt-error {display: inline-block;color: #DC494F;font-size: 12px;font-style: italic;}
 .pb-ui-popup-join .pb-btn-bottom .pb-txt-error {font-style: italic;}
 .pb-ui-data-option .pb-btn-bottom {border-top:1px solid #dbdce0;}
