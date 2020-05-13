@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog dbchangelog-3.8.xsd">
+    <changeSet author="initial (generated)" id="1589356858050-1">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="pr_notification" />
+            </not>
+        </preConditions>
+        <createTable tableName="pr_notification">
+            <column name="noti_id" type="${varchar.type}(255)">
+                <constraints primaryKey="true" />
+            </column>
+            <column name="created_by" type="${varchar.type}(255)" />
+            <column name="created_time" type="${datetime.type}" />
+            <column name="modified_by" type="${varchar.type}(255)" />
+            <column name="modified_time" type="${datetime.type}" />
+            <column name="version" type="${bigint.type}" />
+            <column name="noti_cd" type="${varchar.type}(100)" />
+            <column name="noti_step" type="${varchar.type}(100)" />
+            <column name="full_message" type="${varchar.type}(2000)"/>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

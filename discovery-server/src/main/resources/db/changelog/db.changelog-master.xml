@@ -137,4 +137,8 @@
 
     <!-- discovery release based changelog -->
     <include file="discovery.changelog-3.4.0.xml" relativeToChangelogFile="true"/>
+
+
+    <include file="discovery.changelog-notification.xml" relativeToChangelogFile="true"/>
+
 </databaseChangeLog>
