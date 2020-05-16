@@ -1,0 +1,4 @@
+settype col: content type: map
+unnest col: content idx: 'info', 'campaignReport'
+drop col: content
+flatten col: campaignReport

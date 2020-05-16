@@ -1,0 +1,5 @@
+{
+  "type": "URI",
+  "limit": 1000000,
+  "strUri": "file:///tmp/fb_ad_report.json"
+}

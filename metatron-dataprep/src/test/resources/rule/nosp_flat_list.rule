@@ -1,0 +1,4 @@
+settype col: content type: map
+unnest col: content idx: 'result'
+drop col: content
+flatten col: result

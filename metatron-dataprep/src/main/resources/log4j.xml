@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+  <!-- 콘솔 로그 -->
+  <appender name="stdout" class="org.apache.log4j.ConsoleAppender">
+    <!-- 패턴 레이아웃 설정.. -->
+    <layout class="org.apache.log4j.PatternLayout">
+      <param name="ConversionPattern" value="%t%gt; [%d{yyyy-MM-dd HH:mm:ss}] [%c{1}] [%L] [%p] %m %n"/>
+    </layout>
+  </appender>
+
+  <!-- 특정 로거 설정 -->
+  <logger name="org.apache.commons.beanutils.converters" additivity="false">
+    <level value="WARN" />
+  </logger>
+
+  <!-- root 로거 기본 설정 -->
+  <root>
+    <level value="DEBUG"/>
+  </root>
+</log4j:configuration>

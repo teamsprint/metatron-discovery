@@ -1,0 +1,10 @@
+{
+  "type": "DATABASE",
+  "limit": 1000000,
+  "driver": "com.mysql.jdbc.Driver",
+  "connStr": "jdbc:mysql://c6:3306",
+  "user": "polaris",
+  "pw": "Metatron123$",
+  "db": "campaign",
+  "tbl": "nospcampaign"
+}

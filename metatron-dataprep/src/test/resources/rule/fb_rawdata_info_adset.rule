@@ -1,0 +1,11 @@
+keep row: table == 'AdSet'
+drop col: table
+settype col: rows type: array
+flatten col: rows
+settype col: rows type: map
+unnest col: rows into: MAP idx: 'id','account_id','campaign_id','name','optimization_goal','optimization_sub_event','targeting','billing_event','start_time'
+drop col: rows
+unnest col: targeting into: MAP idx: 'age_max','age_min','geo_locations','user_device','user_os','brand_safety_content_filter_levels','publisher_platforms','facebook_positions','device_platforms'
+drop col: targeting
+drop col: geo_locations,user_device,user_os,brand_safety_content_filter_levels,publisher_platforms,facebook_positions,device_platforms,optimization_sub_event,billing_event,optimization_goal,account_id
+rename col: id,campaign_id to: 'adset_id','camp_id'

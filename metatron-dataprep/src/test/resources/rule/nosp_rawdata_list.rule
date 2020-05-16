@@ -1,0 +1,3 @@
+settype col: result type: map
+unnest col: result into: MAP idx: 'date','campId','regYmdt','modYmdt','campNm','campstartYmdt','campendYmdt','statNm','sponsorNm','brandNm','bizcatNm','tradetypeNm','agencyNm','repNm','regUserNm','ctrtMny','svcMny','purchaseMny'
+drop col: result

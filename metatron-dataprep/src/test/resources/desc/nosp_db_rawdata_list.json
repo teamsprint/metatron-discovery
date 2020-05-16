@@ -1,0 +1,10 @@
+{
+  "type": "DATABASE",
+  "limit": 1000000,
+  "driver": "com.mysql.jdbc.Driver",
+  "connStr": "jdbc:mysql://localhost:3306",
+  "user": "polaris",
+  "pw": "polaris",
+  "db": "rawdata",
+  "tbl": "nosp_list"
+}

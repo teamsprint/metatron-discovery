@@ -1,0 +1,4 @@
+drop col: info
+settype col: campaignReport type: map
+unnest col: campaignReport into: MAP idx: 'date','spendMny','adMny','imp','clk','landingClk','interactiveClk','view','play25p','play50p','play75p','play100p','play3s','play10s','adlineReport'
+drop col: campaignReport, adlineReport

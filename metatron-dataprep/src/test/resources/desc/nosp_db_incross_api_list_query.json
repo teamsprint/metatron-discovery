@@ -1,0 +1,9 @@
+{
+  "type": "DATABASE",
+  "limit": 1000000,
+  "driver": "com.mysql.jdbc.Driver",
+  "connStr": "jdbc:mysql://c6:3306",
+  "user": "polaris",
+  "pw": "Metatron123$",
+  "queryStmt": "select n1.content from incross_api.nospcampaigns n1 left join incross_api.nospcampaigns n2 on n1.id < n2.id where n2.id is null"
+}

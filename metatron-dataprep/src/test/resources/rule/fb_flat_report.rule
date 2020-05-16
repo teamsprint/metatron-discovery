@@ -1,0 +1,7 @@
+settype col: whole type: array
+flatten col: whole
+settype col: whole type: map
+unnest col: whole idx: 'table', 'rows'
+drop col: whole
+settype col: rows type: array
+flatten col: rows

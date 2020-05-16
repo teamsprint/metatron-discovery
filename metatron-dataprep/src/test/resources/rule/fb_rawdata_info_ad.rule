@@ -1,0 +1,11 @@
+keep row: table == 'Ad'
+drop col: table
+settype col: rows type: array
+flatten col: rows
+settype col: rows type: map
+unnest col: rows into: MAP idx: 'id','account_id','adset_id','campaign_id','bid_type','configured_status','conversion_specs','created_time','updated_time','creative','effective_status','name','source_ad_id','status','tracking_specs','preview_shareable_link'
+drop col: rows
+drop col: account_id,bid_type,configured_status,conversion_specs
+unnest col: creative into: MAP idx: 'id'
+rename col: id_1 to: 'creative_id'
+drop col: creative,updated_time,effective_status,status,tracking_specs
