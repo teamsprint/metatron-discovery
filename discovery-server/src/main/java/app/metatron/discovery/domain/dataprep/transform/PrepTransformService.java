@@ -135,9 +135,6 @@ public class PrepTransformService {
   PrSnapshotService snapshotService;
 
   @Autowired
-  DataFrameService dataFrameService;
-
-  @Autowired
   PrepTransformRuleService transformRuleService;
 
   @Autowired(required = false)
@@ -1434,7 +1431,8 @@ public class PrepTransformService {
                   .getHibernateLazyInitializer().getImplementation();
         }
 
-        gridResponse = teddyImpl.loadJdbcDataset(pc, wrangledDsId, dataConnection, queryStmt, wrangledDataset.getDsName());
+        gridResponse = teddyImpl
+                .loadJdbcDataset(pc, wrangledDsId, dataConnection, queryStmt, wrangledDataset.getDsName());
         break;
 
       case STAGING_DB:

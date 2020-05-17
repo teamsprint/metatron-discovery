@@ -14,47 +14,6 @@
 
 package app.metatron.discovery.domain.dataprep.etl;
 
-import app.metatron.dataprep.parser.RuleVisitorParser;
-import app.metatron.dataprep.parser.exception.RuleException;
-import app.metatron.dataprep.parser.rule.Join;
-import app.metatron.dataprep.parser.rule.Rule;
-import app.metatron.dataprep.teddy.DataFrame;
-import app.metatron.dataprep.teddy.Row;
-import app.metatron.dataprep.teddy.exceptions.TeddyException;
-import com.google.common.collect.Maps;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-
-import org.apache.commons.io.FilenameUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.AsyncResult;
-import org.springframework.stereotype.Service;
-
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.CancellationException;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-
-import app.metatron.discovery.common.GlobalObjectMapper;
-import app.metatron.discovery.domain.dataprep.entity.PrSnapshot;
-import app.metatron.discovery.domain.dataprep.entity.PrSnapshot.STATUS;
-import app.metatron.discovery.domain.dataprep.exceptions.PrepException;
-import app.metatron.discovery.domain.dataprep.service.PrSnapshotService;
-import app.metatron.discovery.domain.dataprep.transform.DataFrameService;
-import app.metatron.discovery.domain.dataprep.util.DbInfo;
-
 import static app.metatron.discovery.domain.dataprep.PrepProperties.ETL_CORES;
 import static app.metatron.discovery.domain.dataprep.PrepProperties.ETL_LIMIT_ROWS;
 import static app.metatron.discovery.domain.dataprep.PrepProperties.ETL_MAX_FETCH_SIZE;
@@ -68,15 +27,42 @@ import static app.metatron.discovery.domain.dataprep.exceptions.PrepMessageKey.M
 import static app.metatron.discovery.domain.dataprep.exceptions.PrepMessageKey.MSG_DP_ALERT_SNAPSHOT_TYPE_NOT_SUPPORTED_YET;
 import static app.metatron.discovery.domain.dataprep.util.PrepUtil.snapshotError;
 
+import app.metatron.dataprep.PrepContext;
+import app.metatron.dataprep.teddy.DataFrame;
+import app.metatron.dataprep.teddy.Row;
+import app.metatron.dataprep.teddy.exceptions.TeddyException;
+import app.metatron.discovery.common.GlobalObjectMapper;
+import app.metatron.discovery.domain.dataprep.entity.PrSnapshot;
+import app.metatron.discovery.domain.dataprep.entity.PrSnapshot.STATUS;
+import app.metatron.discovery.domain.dataprep.service.PrSnapshotService;
+import app.metatron.discovery.domain.dataprep.util.DbInfo;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.google.common.collect.Maps;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeoutException;
+import org.apache.commons.io.FilenameUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.AsyncResult;
+import org.springframework.stereotype.Service;
+
 @Service
 public class TeddyExecutor {
 
   private static Logger LOGGER = LoggerFactory.getLogger(TeddyExecutor.class);
 
   Map<String, Object> jobList = Maps.newHashMap();
-
-  @Autowired(required = false)
-  DataFrameService dataFrameService;
 
   @Autowired
   PrSnapshotService snapshotService;
@@ -93,6 +79,8 @@ public class TeddyExecutor {
   @Autowired
   TeddyStagingDbService stagingDbService;
 
+  PrepContext pc;
+
   public Integer timeout;
   public Integer cores;
   public Integer limitRows;
@@ -100,8 +88,6 @@ public class TeddyExecutor {
 
   Map<String, String> replaceMap = new HashMap(); // origTeddyDsId -> newFullDsId
   Map<String, String> reverseMap = new HashMap(); // newFullDsId -> origTeddyDsId
-
-  private Map<String, DataFrame> cache = Maps.newHashMap();
 
   private void setPrepPropertiesInfo(Map<String, Object> prepPropertiesInfo) {
     cores = (Integer) prepPropertiesInfo.get(ETL_CORES);
@@ -150,6 +136,8 @@ public class TeddyExecutor {
       throw snapshotError(MSG_DP_ALERT_SNAPSHOT_TYPE_IS_MISSING, "The request does not contain snapshot type.");
     }
 
+    pc = PrepContext.DEFAULT;
+
     // 2. Transform the DataFrame with rule strings
     if (!transformDf(ssId, dsInfo)) {
       return new AsyncResult("Dummy");
@@ -157,7 +145,7 @@ public class TeddyExecutor {
 
     // 3. Write the transformed DataFrame.
     String masterFullDsId = replaceMap.get(masterTeddyDsId);
-    DataFrame df = cache.get(masterFullDsId);
+    DataFrame df = pc.fetch(masterFullDsId);
     callback.updateSnapshot(ssId, "totalLines", String.valueOf(df.rows.size()));
     callback.updateStatus(ssId, WRITING);
 
@@ -193,9 +181,9 @@ public class TeddyExecutor {
     String jsonColDescs = GlobalObjectMapper.getDefaultMapper().writeValueAsString(df.colDescs);
     callback.updateSnapshot(ssId, "custom", "{'colDescs':" + jsonColDescs + "}");
 
-    // Remove all full datasets from cache.
+    // Remove all full datasets from PrepContext
     for (String fullDsId : reverseMap.keySet()) {
-      cache.remove(fullDsId);
+      pc.remove(fullDsId);
     }
 
     callback.updateStatus(ssId, SUCCEEDED);
@@ -280,71 +268,10 @@ public class TeddyExecutor {
     for (String ruleString : ruleStrings) {     // create rule has been removed already
       snapshotService.cancelCheck(ssId);
 
-      List<Future<List<Row>>> futures = new ArrayList();
-      List<DataFrame> slaveDfs = new ArrayList();
+      DataFrame df = pc.fetch(masterFullDsId);
+      df = pc.apply(df, ruleString);
+      pc.put(masterFullDsId, df);
 
-      Rule rule = new RuleVisitorParser().parse(ruleString);
-
-      // FIXME: use 'rule'. avoid redundant parsing
-      List<String> slaveDsIds = DataFrameService.getSlaveDsIds(ruleString);
-      if (slaveDsIds != null) {
-        for (String slaveDsId : slaveDsIds) {
-          slaveDfs.add(cache.get(slaveDsId));
-        }
-      }
-
-      DataFrame df = cache.get(masterFullDsId);
-      DataFrame newDf = DataFrame.getNewDf(rule, df.dsName, ruleString);
-
-      try {
-        LOGGER.debug("applyRuleStrings(): start: ruleString={}", ruleString);
-        List<Object> preparedArgs = newDf.prepare(df, rule, slaveDfs);
-        int rowcnt = df.rows.size();
-
-        if (rowcnt > 0) {
-          if (DataFrame.isParallelizable(rule)) {
-            int partSize = rowcnt / cores + 1;  // +1 to prevent being 0
-
-            // Outer joins cannot be parallelized. (But, implemented as prepare-gather structure)
-            if (rule.getName().equals("join")
-                    && ((Join) rule).getJoinType().equalsIgnoreCase("INNER") == false) {
-              partSize = rowcnt;
-            }
-
-            for (int rowno = 0; rowno < rowcnt; rowno += partSize) {
-              LOGGER.debug("applyRuleStrings(): add thread: rowno={} partSize={} rowcnt={}", rowno,
-                      partSize, rowcnt);
-              futures.add(dataFrameService
-                      .gatherAsync(df, newDf, preparedArgs, rowno, Math.min(partSize, rowcnt - rowno),
-                              limitRows));
-            }
-
-            addJob(ssId, futures);
-
-            for (int i = 0; i < futures.size(); i++) {
-              List<Row> rows = futures.get(i).get(timeout, TimeUnit.SECONDS);
-              assert rows != null : rule.toString();
-              newDf.rows.addAll(rows);
-            }
-
-            removeJob(ssId);
-          } else {
-            // if not parallelizable, newDf comes to be modified directly.
-            // then, 'rows' returned is only for assertion.
-            List<Row> rows = newDf.gather(df, preparedArgs, 0, rowcnt, limitRows);
-            assert rows == null : ruleString;
-          }
-        }
-      } catch (RuleException e) {
-        LOGGER.error("applyRuleStrings(): rule syntax error: ", e);
-        throw PrepException.fromTeddyException(TeddyException.fromRuleException(e));
-      } catch (ExecutionException e) {
-        e.getCause().printStackTrace();
-        LOGGER.error("applyRuleStrings(): execution error on " + ruleString, e);
-      }
-
-      LOGGER.debug("applyRuleStrings(): end: ruleString={}", ruleString);
-      cache.put(masterFullDsId, newDf);
       callback.updateSnapshot(ssId, "ruleCntDone", String.valueOf(++ruleCntDone));
     }
 
@@ -369,21 +296,21 @@ public class TeddyExecutor {
         Integer manualColCnt = (Integer) dsInfo.get("manualColumnCount");
         String extensionType = FilenameUtils.getExtension(storedUri).toLowerCase();
         if (extensionType.equals("json")) {
-          cache.put(newFullDsId, fileService.loadJsonFile(newFullDsId, storedUri, manualColCnt));
+          pc.put(newFullDsId, fileService.loadJsonFile(newFullDsId, storedUri, manualColCnt));
         } else {
           String delimiter = (String) dsInfo.get("delimiter");
           String quoteChar = (String) dsInfo.get("quoteChar");
-          cache.put(newFullDsId, fileService.loadCsvFile(newFullDsId, storedUri, delimiter, quoteChar, manualColCnt));
+          pc.put(newFullDsId, fileService.loadCsvFile(newFullDsId, storedUri, delimiter, quoteChar, manualColCnt));
         }
         break;
 
       case "DATABASE":
         String sql = (String) dsInfo.get("sourceQuery");
-        cache.put(newFullDsId, databaseService.loadDatabaseTable(newFullDsId, sql, new DbInfo(dsInfo)));
+        pc.put(newFullDsId, databaseService.loadDatabaseTable(newFullDsId, sql, new DbInfo(dsInfo)));
         break;
 
       case "STAGING_DB":
-        cache.put(newFullDsId, stagingDbService.loadHiveTable(newFullDsId, (String) dsInfo.get("sourceQuery")));
+        pc.put(newFullDsId, stagingDbService.loadHiveTable(newFullDsId, (String) dsInfo.get("sourceQuery")));
         break;
 
       default:
