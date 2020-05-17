@@ -394,12 +394,6 @@ public class PrepContext {
     return apply(df, ruleString, null);
   }
 
-  // public for tests
-  public DataFrame applyWithDfs(DataFrame df, String ruleString, List<DataFrame> slaveDfs) throws TeddyException {
-    DataFrame newDf = ruleExecutor.apply(df, ruleString, slaveDfs, null);
-    return newDf;
-  }
-
   public DataFrame undo(String dsId) {
     RevisionSet rs = rsCache.get(dsId);
     Revision rev = rs.undo();
