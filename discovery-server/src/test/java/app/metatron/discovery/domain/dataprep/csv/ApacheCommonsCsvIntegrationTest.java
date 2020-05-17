@@ -14,6 +14,10 @@
 
 package app.metatron.discovery.domain.dataprep.csv;
 
+import app.metatron.dataprep.file.PrepCsvUtil;
+import app.metatron.dataprep.file.PrepFileUtil;
+import app.metatron.dataprep.file.PrepParseResult;
+import app.metatron.dataprep.teddy.DataFrame;
 import com.facebook.presto.jdbc.internal.jackson.core.JsonProcessingException;
 
 import org.apache.hadoop.conf.Configuration;
@@ -39,10 +43,6 @@ import app.metatron.discovery.domain.dataprep.PrepProperties;
 import app.metatron.discovery.domain.dataprep.exceptions.PrepErrorCodes;
 import app.metatron.discovery.domain.dataprep.exceptions.PrepException;
 import app.metatron.discovery.domain.dataprep.exceptions.PrepMessageKey;
-import app.metatron.discovery.domain.dataprep.file.PrepCsvUtil;
-import app.metatron.discovery.domain.dataprep.file.PrepFileUtil;
-import app.metatron.discovery.domain.dataprep.file.PrepParseResult;
-import app.metatron.discovery.domain.dataprep.teddy.DataFrame;
 
 import static org.junit.Assert.assertNull;
 

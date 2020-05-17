@@ -11,6 +11,10 @@ import static app.metatron.discovery.domain.dataprep.PrepProperties.STAGEDB_USER
 import static app.metatron.discovery.domain.dataprep.entity.PrSnapshot.STATUS.TABLE_CREATING;
 import static app.metatron.discovery.domain.dataprep.util.PrepUtil.snapshotError;
 
+import app.metatron.dataprep.teddy.ColumnDescription;
+import app.metatron.dataprep.teddy.ColumnType;
+import app.metatron.dataprep.teddy.DataFrame;
+import app.metatron.dataprep.teddy.exceptions.TeddyException;
 import app.metatron.discovery.common.GlobalObjectMapper;
 import app.metatron.discovery.domain.dataconnection.DataConnection;
 import app.metatron.discovery.domain.dataconnection.DataConnectionHelper;
@@ -18,10 +22,6 @@ import app.metatron.discovery.domain.dataprep.entity.PrSnapshot.HIVE_FILE_COMPRE
 import app.metatron.discovery.domain.dataprep.entity.PrSnapshot.HIVE_FILE_FORMAT;
 import app.metatron.discovery.domain.dataprep.exceptions.PrepMessageKey;
 import app.metatron.discovery.domain.dataprep.service.PrSnapshotService;
-import app.metatron.discovery.domain.dataprep.teddy.ColumnDescription;
-import app.metatron.discovery.domain.dataprep.teddy.ColumnType;
-import app.metatron.discovery.domain.dataprep.teddy.DataFrame;
-import app.metatron.discovery.domain.dataprep.teddy.exceptions.TeddyException;
 import app.metatron.discovery.domain.dataprep.util.HiveInfo;
 import app.metatron.discovery.domain.dataprep.util.PrepUtil;
 import app.metatron.discovery.extension.dataconnection.jdbc.accessor.JdbcAccessor;

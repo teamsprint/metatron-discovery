@@ -14,6 +14,7 @@
 
 package app.metatron.discovery.domain.dataprep;
 
+import app.metatron.dataprep.teddy.DataFrame;
 import app.metatron.discovery.domain.dataconnection.DataConnection;
 import app.metatron.discovery.domain.dataconnection.DataConnectionHelper;
 import app.metatron.discovery.domain.dataconnection.DataConnectionRepository;
@@ -22,7 +23,6 @@ import app.metatron.discovery.domain.dataprep.entity.PrDataset.RS_TYPE;
 import app.metatron.discovery.domain.dataprep.jdbc.PrepJdbcService;
 import app.metatron.discovery.domain.dataprep.repository.PrDatasetRepository;
 import app.metatron.discovery.domain.dataprep.service.PrDatasetService;
-import app.metatron.discovery.domain.dataprep.teddy.DataFrame;
 import app.metatron.discovery.domain.dataprep.transform.TeddyImpl;
 import app.metatron.discovery.extension.dataconnection.jdbc.accessor.JdbcAccessor;
 import app.metatron.discovery.extension.dataconnection.jdbc.dialect.JdbcDialect;
@@ -169,8 +169,8 @@ public class PrepDatasetDatabaseService {
 
   public String getDatabaseName(PrDataset dataset) {
     String dbName = dataset.getDbName();
-    if( dataset.getDcImplementor().equalsIgnoreCase("PostgreSQL")==true ) {
-      if( dbName.matches("[a-z0-9]+")==false) {
+    if (dataset.getDcImplementor().equalsIgnoreCase("PostgreSQL") == true) {
+      if (dbName.matches("[a-z0-9]+") == false) {
         dbName = '"' + dbName + '"';
       }
     }
@@ -179,8 +179,8 @@ public class PrepDatasetDatabaseService {
 
   public String getTableName(PrDataset dataset) {
     String tblName = dataset.getTblName();
-    if( dataset.getDcImplementor().equalsIgnoreCase("PostgreSQL")==true ) {
-      if( tblName.matches("[a-z0-9]+")==false) {
+    if (dataset.getDcImplementor().equalsIgnoreCase("PostgreSQL") == true) {
+      if (tblName.matches("[a-z0-9]+") == false) {
         tblName = '"' + tblName + '"';
       }
     }

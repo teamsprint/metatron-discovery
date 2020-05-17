@@ -14,11 +14,11 @@
 
 package app.metatron.discovery.domain.dataprep.kafka;
 
-import app.metatron.discovery.domain.dataprep.file.PrepCsvUtil;
-import app.metatron.discovery.domain.dataprep.file.PrepParseResult;
-import app.metatron.discovery.domain.dataprep.teddy.DataFrame;
-import app.metatron.discovery.domain.dataprep.teddy.Row;
-import app.metatron.discovery.domain.dataprep.teddy.exceptions.TeddyException;
+import app.metatron.dataprep.file.PrepCsvUtil;
+import app.metatron.dataprep.file.PrepParseResult;
+import app.metatron.dataprep.teddy.DataFrame;
+import app.metatron.dataprep.teddy.Row;
+import app.metatron.dataprep.teddy.exceptions.TeddyException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;

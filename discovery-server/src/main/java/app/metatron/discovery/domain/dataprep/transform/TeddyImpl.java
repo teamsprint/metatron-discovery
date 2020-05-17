@@ -16,23 +16,20 @@ package app.metatron.discovery.domain.dataprep.transform;
 
 import static app.metatron.discovery.domain.dataprep.exceptions.PrepErrorCodes.PREP_TEDDY_ERROR_CODE;
 
+import app.metatron.dataprep.PrepContext;
+import app.metatron.dataprep.teddy.ColumnType;
+import app.metatron.dataprep.teddy.DataFrame;
+import app.metatron.dataprep.teddy.Row;
+import app.metatron.dataprep.teddy.exceptions.IllegalColumnNameForHiveException;
+import app.metatron.dataprep.teddy.exceptions.TeddyException;
+import app.metatron.dataprep.teddy.exceptions.TransformExecutionFailedException;
+import app.metatron.dataprep.teddy.exceptions.TransformTimeoutException;
 import app.metatron.discovery.domain.dataconnection.DataConnection;
 import app.metatron.discovery.domain.dataconnection.DataConnectionHelper;
 import app.metatron.discovery.domain.dataprep.PrepKafkaService;
 import app.metatron.discovery.domain.dataprep.PrepProperties;
 import app.metatron.discovery.domain.dataprep.entity.PrDataset;
 import app.metatron.discovery.domain.dataprep.exceptions.PrepException;
-import app.metatron.discovery.domain.dataprep.file.PrepCsvUtil;
-import app.metatron.discovery.domain.dataprep.file.PrepJsonUtil;
-import app.metatron.discovery.domain.dataprep.teddy.ColumnType;
-import app.metatron.discovery.domain.dataprep.teddy.DataFrame;
-import app.metatron.discovery.domain.dataprep.teddy.DataFrameService;
-import app.metatron.discovery.domain.dataprep.teddy.Row;
-import app.metatron.discovery.domain.dataprep.teddy.exceptions.IllegalColumnNameForHiveException;
-import app.metatron.discovery.domain.dataprep.teddy.exceptions.TeddyException;
-import app.metatron.discovery.domain.dataprep.teddy.exceptions.TransformExecutionFailedException;
-import app.metatron.discovery.domain.dataprep.teddy.exceptions.TransformTimeoutException;
-import app.metatron.discovery.domain.dataprep.util.PrepUtil;
 import app.metatron.discovery.domain.storage.StorageProperties;
 import app.metatron.discovery.domain.storage.StorageProperties.StageDBConnection;
 import app.metatron.discovery.extension.dataconnection.jdbc.accessor.JdbcAccessor;
@@ -51,8 +48,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-import org.apache.commons.io.FilenameUtils;
-import org.apache.hadoop.conf.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -275,38 +270,12 @@ public class TeddyImpl {
     addRev(dsId, newRev);
   }
 
-  public DataFrame loadFileDataset(String dsId, String strUri, String delimiter, String quoteChar,
-          Integer columnCount, String dsName) {
-    DataFrame df = new DataFrame(dsName);   // to provide dataset name in join, union
-    Configuration hadoopConf = PrepUtil.getHadoopConf(prepProperties.getHadoopConfDir(false));
-    int samplingRows = prepProperties.getSamplingLimitRows();
-
-    String extensionType = FilenameUtils.getExtension(strUri);
-    switch (extensionType) {
-      case "json":
-        df.setByGrid(PrepJsonUtil.parse(strUri, samplingRows, columnCount, hadoopConf));
-        break;
-      default: // csv
-        PrepCsvUtil csvUtil = PrepCsvUtil.DEFAULT
-                .withDelim(delimiter)
-                .withQuoteChar(quoteChar)
-                .withLimitRows(samplingRows)
-                .withManualColCnt(columnCount)
-                .withHadoopConf(hadoopConf);
-        df.setByGrid(csvUtil.parse(strUri));
-    }
-
-    return createStage0(dsId, df);
-  }
-
-  private DataFrame createStage0(String dsId, DataFrame df) {
-    Revision rev = new Revision(df);
-    RevisionSet rs = new RevisionSet(rev);
-    revisionSetCache.put(dsId, rs);
+  private DataFrame createStage0(PrepContext pc, String dsId, DataFrame df) {
+    pc.put(dsId, df);
     return df;
   }
 
-  public DataFrame loadStageDBDataset(String dsId, String sql, String dsName) throws PrepException {
+  public DataFrame loadStageDBDataset(PrepContext pc, String dsId, String sql, String dsName) throws PrepException {
 
     DataConnection hiveConnection = new DataConnection();
     StageDBConnection stageDB = storageProperties.getStagedb();
@@ -339,12 +308,13 @@ public class TeddyImpl {
       throw PrepException.fromTeddyException(e);
     }
 
-    return createStage0(dsId, df);
+    return createStage0(pc, dsId, df);
   }
 
-  public DataFrame loadKafkaDataset(PrDataset wrangledDataset, PrDataset importedDataset) throws PrepException {
+  public DataFrame loadKafkaDataset(PrepContext pc, PrDataset wrangledDataset, PrDataset importedDataset)
+          throws PrepException {
     DataFrame df = kafkaService.createDataFrame(importedDataset, prepProperties.getSamplingLimitRows());
-    return createStage0(wrangledDataset.getDsId(), df);
+    return createStage0(pc, wrangledDataset.getDsId(), df);
   }
 
   public DataFrame loadJdbcDataFrame(DataConnection dataConnection, String sql, int limit, String dsName) {
@@ -372,10 +342,11 @@ public class TeddyImpl {
     return df;
   }
 
-  public DataFrame loadJdbcDataset(String dsId, DataConnection dataConnection, String sql, String dsName)
+  public DataFrame loadJdbcDataset(PrepContext pc, String dsId, DataConnection dataConnection, String sql,
+          String dsName)
           throws PrepException {
     DataFrame df = loadJdbcDataFrame(dataConnection, sql, prepProperties.getSamplingLimitRows(), dsName);
-    return createStage0(dsId, df);
+    return createStage0(pc, dsId, df);
   }
 
   public List<String> getRuleStrings(String dsId) {

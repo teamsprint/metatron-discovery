@@ -30,18 +30,17 @@ import static app.metatron.discovery.domain.dataprep.util.PrepUtil.configError;
 import static app.metatron.discovery.domain.dataprep.util.PrepUtil.dataflowError;
 import static app.metatron.discovery.domain.dataprep.util.PrepUtil.datasetError;
 
+import app.metatron.dataprep.PrepContext;
+import app.metatron.dataprep.file.PrepCsvUtil;
+import app.metatron.dataprep.file.PrepJsonUtil;
+import app.metatron.dataprep.teddy.DataFrame;
+import app.metatron.dataprep.teddy.exceptions.TeddyException;
 import app.metatron.discovery.domain.dataprep.entity.PrDataset;
 import app.metatron.discovery.domain.dataprep.entity.PrUploadFile;
 import app.metatron.discovery.domain.dataprep.exceptions.PrepErrorCodes;
 import app.metatron.discovery.domain.dataprep.exceptions.PrepException;
 import app.metatron.discovery.domain.dataprep.exceptions.PrepMessageKey;
-import app.metatron.discovery.domain.dataprep.file.PrepCsvUtil;
-import app.metatron.discovery.domain.dataprep.file.PrepJsonUtil;
 import app.metatron.discovery.domain.dataprep.repository.PrDatasetRepository;
-import app.metatron.discovery.domain.dataprep.teddy.DataFrame;
-import app.metatron.discovery.domain.dataprep.teddy.DataFrameService;
-import app.metatron.discovery.domain.dataprep.teddy.exceptions.TeddyException;
-import app.metatron.discovery.domain.dataprep.transform.TeddyImpl;
 import app.metatron.discovery.domain.dataprep.util.PrepUtil;
 import app.metatron.discovery.domain.storage.StorageProperties;
 import app.metatron.discovery.util.ExcelProcessor;
@@ -105,14 +104,10 @@ public class PrepDatasetFileService {
   @Autowired(required = false)
   StorageProperties storageProperties;
 
-  @Autowired
-  TeddyImpl teddyImpl;
-
-  @Autowired
-  DataFrameService dataFrameService;
-
   ExecutorService poolExecutorService = null;
   Set<Future<Map<String, Long>>> futures = null;
+
+  PrepContext pc;
 
   public class PrepDatasetTotalLinesCallable implements Callable {
 
@@ -180,6 +175,8 @@ public class PrepDatasetFileService {
   public PrepDatasetFileService() {
     this.poolExecutorService = Executors.newCachedThreadPool();
     this.futures = Sets.newHashSet();
+
+    pc = PrepContext.DEFAULT;
   }
 
   private String fileDatasetUploadLocalPath = null;
@@ -395,7 +392,7 @@ public class PrepDatasetFileService {
       df.setByGrid(getGridFromExcel(sheet, limitRows, columnCount), null);
 
       if (autoTyping && 0 < df.rows.size()) {
-        df = teddyImpl.applyAutoTyping(df);
+        df = pc.applyAutoTyping(df);
       }
 
       sheetNames.add(sheet.getSheetName());
@@ -417,7 +414,7 @@ public class PrepDatasetFileService {
     df.setByGrid(PrepJsonUtil.parse(storedUri, limitRows, columnCount, hadoopConf));
 
     if (autoTyping && 0 < df.rows.size()) {
-      df = teddyImpl.applyAutoTyping(df);
+      df = pc.applyAutoTyping(df);
     }
 
     gridResponses.add(df);
@@ -442,7 +439,7 @@ public class PrepDatasetFileService {
     df.setByGrid(csvUtil.parse(storedUri));
 
     if (autoTyping && 0 < df.rows.size()) {
-      df = teddyImpl.applyAutoTyping(df);
+      df = pc.applyAutoTyping(df);
     }
 
     gridResponses.add(df);

@@ -14,6 +14,13 @@
 
 package app.metatron.discovery.domain.dataprep.etl;
 
+import app.metatron.dataprep.parser.RuleVisitorParser;
+import app.metatron.dataprep.parser.exception.RuleException;
+import app.metatron.dataprep.parser.rule.Join;
+import app.metatron.dataprep.parser.rule.Rule;
+import app.metatron.dataprep.teddy.DataFrame;
+import app.metatron.dataprep.teddy.Row;
+import app.metatron.dataprep.teddy.exceptions.TeddyException;
 import com.google.common.collect.Maps;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -45,15 +52,8 @@ import app.metatron.discovery.domain.dataprep.entity.PrSnapshot;
 import app.metatron.discovery.domain.dataprep.entity.PrSnapshot.STATUS;
 import app.metatron.discovery.domain.dataprep.exceptions.PrepException;
 import app.metatron.discovery.domain.dataprep.service.PrSnapshotService;
-import app.metatron.discovery.domain.dataprep.teddy.DataFrame;
-import app.metatron.discovery.domain.dataprep.teddy.DataFrameService;
-import app.metatron.discovery.domain.dataprep.teddy.Row;
-import app.metatron.discovery.domain.dataprep.teddy.exceptions.TeddyException;
+import app.metatron.discovery.domain.dataprep.transform.DataFrameService;
 import app.metatron.discovery.domain.dataprep.util.DbInfo;
-import app.metatron.discovery.prep.parser.exceptions.RuleException;
-import app.metatron.discovery.prep.parser.preparation.RuleVisitorParser;
-import app.metatron.discovery.prep.parser.preparation.rule.Join;
-import app.metatron.discovery.prep.parser.preparation.rule.Rule;
 
 import static app.metatron.discovery.domain.dataprep.PrepProperties.ETL_CORES;
 import static app.metatron.discovery.domain.dataprep.PrepProperties.ETL_LIMIT_ROWS;

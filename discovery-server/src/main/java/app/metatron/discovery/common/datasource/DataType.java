@@ -212,25 +212,4 @@ public enum DataType {
         return UNKNOWN;
     }
   }
-
-  // To be deleted soon - when row-base grid serialization comes.
-  public static DataType teddyTypeToFieldType(ColumnType type) {
-    switch (type) {
-      case BOOLEAN:
-        return BOOLEAN;
-      case LONG:
-        return LONG;
-      case DOUBLE:
-        return DOUBLE;
-      case ARRAY:
-        return ARRAY;
-      case MAP:
-        return DataType.MAP;
-      case STRING:
-        return STRING;
-      case UNKNOWN:
-      default:
-        return UNKNOWN;
-    }
-  }
 }

@@ -16,6 +16,11 @@ package app.metatron.discovery.domain.dataprep;
 
 import static app.metatron.discovery.domain.dataprep.entity.PrDataset.RS_TYPE.QUERY;
 
+import app.metatron.dataprep.file.PrepCsvUtil;
+import app.metatron.dataprep.file.PrepJsonUtil;
+import app.metatron.dataprep.teddy.ColumnType;
+import app.metatron.dataprep.teddy.DataFrame;
+import app.metatron.dataprep.teddy.Row;
 import app.metatron.discovery.common.exception.ResourceNotFoundException;
 import app.metatron.discovery.domain.dataconnection.DataConnection;
 import app.metatron.discovery.domain.dataconnection.DataConnectionHelper;
@@ -23,11 +28,7 @@ import app.metatron.discovery.domain.dataconnection.DataConnectionRepository;
 import app.metatron.discovery.domain.dataprep.entity.PrDataset;
 import app.metatron.discovery.domain.dataprep.exceptions.PrepErrorCodes;
 import app.metatron.discovery.domain.dataprep.exceptions.PrepException;
-import app.metatron.discovery.domain.dataprep.file.PrepCsvUtil;
-import app.metatron.discovery.domain.dataprep.file.PrepJsonUtil;
 import app.metatron.discovery.domain.dataprep.repository.PrDatasetRepository;
-import app.metatron.discovery.domain.dataprep.teddy.ColumnType;
-import app.metatron.discovery.domain.dataprep.teddy.DataFrame;
 import app.metatron.discovery.domain.datasource.connection.jdbc.JdbcConnectionService;
 import app.metatron.discovery.domain.storage.StorageProperties;
 import app.metatron.discovery.domain.storage.StorageProperties.StageDBConnection;
@@ -312,7 +313,7 @@ public class PrepDatasetStagingDbService {
 
         int readRows = 0;
         while (rs.next()) {
-          app.metatron.discovery.domain.dataprep.teddy.Row row = new app.metatron.discovery.domain.dataprep.teddy.Row();
+          Row row = new Row();
           for (int i = 0; i < numberOfColumns; i++) {
             Object value = rs.getObject(i + 1);
             // 현재 모두 String 처리중
@@ -415,7 +416,7 @@ public class PrepDatasetStagingDbService {
 
         int readRows = 0;
         while (rs.next()) {
-          app.metatron.discovery.domain.dataprep.teddy.Row row = new app.metatron.discovery.domain.dataprep.teddy.Row();
+          Row row = new Row();
           for (int i = 0; i < numberOfColumns; i++) {
             Object value = rs.getObject(i + 1);
 

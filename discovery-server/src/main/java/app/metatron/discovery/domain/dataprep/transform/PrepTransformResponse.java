@@ -14,8 +14,8 @@
 
 package app.metatron.discovery.domain.dataprep.transform;
 
+import app.metatron.dataprep.teddy.DataFrame;
 import app.metatron.discovery.domain.dataprep.entity.PrTransformRule;
-import app.metatron.discovery.domain.dataprep.teddy.DataFrame;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;

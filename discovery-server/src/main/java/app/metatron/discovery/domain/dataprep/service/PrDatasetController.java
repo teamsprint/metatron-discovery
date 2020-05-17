@@ -14,6 +14,7 @@
 
 package app.metatron.discovery.domain.dataprep.service;
 
+import app.metatron.dataprep.teddy.DataFrame;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
@@ -58,7 +59,6 @@ import app.metatron.discovery.domain.dataprep.entity.PrUploadFile;
 import app.metatron.discovery.domain.dataprep.exceptions.PrepMessageKey;
 import app.metatron.discovery.domain.dataprep.repository.PrDatasetRepository;
 import app.metatron.discovery.domain.dataprep.repository.PrUploadFileRepository;
-import app.metatron.discovery.domain.dataprep.teddy.DataFrame;
 import app.metatron.discovery.domain.dataprep.transform.PrepTransformService;
 import app.metatron.discovery.domain.storage.StorageProperties;
 

@@ -17,11 +17,11 @@ package app.metatron.discovery.domain.dataprep.rest;
 import static com.jayway.restassured.RestAssured.given;
 import static org.junit.Assert.assertEquals;
 
+import app.metatron.dataprep.teddy.exceptions.TeddyException;
 import app.metatron.discovery.AbstractRestIntegrationTest;
 import app.metatron.discovery.core.oauth.OAuthRequest;
 import app.metatron.discovery.core.oauth.OAuthTestExecutionListener;
 import app.metatron.discovery.domain.dataprep.entity.PrDataset.DS_TYPE;
-import app.metatron.discovery.domain.dataprep.teddy.exceptions.TeddyException;
 import com.facebook.presto.jdbc.internal.jackson.core.JsonProcessingException;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;

@@ -115,7 +115,7 @@ public class PrepContext {
     }
   }
 
-  public String load(SourceDesc src, String dsName) {
+  public String load(SourceDesc src, String dsName, String dsId) {
     DataFrame df = null;
 
     setDefaultValue(src);
@@ -135,11 +135,22 @@ public class PrepContext {
 
     Revision rev = new Revision(df);
     RevisionSet rs = new RevisionSet(rev);
-
-    String dsId = UUID.randomUUID().toString();
     rsCache.put(dsId, rs);
 
     return dsId;
+  }
+
+  // Temporary code before add dataprep own connection.
+  public String put(String dsId, DataFrame df) {
+    Revision rev = new Revision(df);
+    RevisionSet rs = new RevisionSet(rev);
+    rsCache.put(dsId, rs);
+
+    return dsId;
+  }
+
+  public String load(SourceDesc src, String dsName) {
+    return load(src, dsName, UUID.randomUUID().toString());
   }
 
   public void save(String dsId, TargetDesc target) {
