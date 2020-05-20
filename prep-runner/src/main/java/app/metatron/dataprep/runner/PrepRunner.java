@@ -14,19 +14,15 @@
 
 package app.metatron.dataprep.runner;
 
-import static app.metatron.dataprep.runner.RunnerUtil.buildSourceDesc;
-import static app.metatron.dataprep.runner.RunnerUtil.buildTargetDesc;
-import static app.metatron.dataprep.runner.RunnerUtil.getLinesFromFile;
 import static app.metatron.dataprep.runner.RunnerUtil.prepareOptions;
-import static app.metatron.dataprep.runner.RunnerUtil.printArguments;
 
 import app.metatron.dataprep.PrepContext;
 import app.metatron.dataprep.SourceDesc;
-import app.metatron.dataprep.TargetDesc;
 import app.metatron.dataprep.teddy.DataFrame;
 import app.metatron.dataprep.teddy.exceptions.TeddyException;
+import app.metatron.dataprep.util.JobSpec;
 import java.io.IOException;
-import java.util.Arrays;
+import java.net.URISyntaxException;
 import java.util.List;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -83,41 +79,67 @@ public class PrepRunner {
 
     pc = PrepContext.DEFAULT.withDop(dop);
 
-    SourceDesc src = buildSourceDesc(cmd);
-    TargetDesc target = buildTargetDesc(cmd);
+    //    SourceDesc src = buildSourceDesc(cmd);
+    //    TargetDesc target = buildTargetDesc(cmd);
 
-    String ruleListFile = cmd.getOptionValue("rule-list-file");
+    //    String ruleListFile = cmd.getOptionValue("rule-list-file");
+    //
+    //    List<String> ruleStrs;
+    //    if (ruleListFile != null) {
+    //      ruleStrs = getLinesFromFile(ruleListFile);
+    //    } else {
+    //      ruleStrs = Arrays.asList(cmd.getArgs());
+    //    }
 
-    List<String> ruleStrs;
-    if (ruleListFile != null) {
-      ruleStrs = getLinesFromFile(ruleListFile);
-    } else {
-      ruleStrs = Arrays.asList(cmd.getArgs());
+    String jobSpecFile = cmd.getOptionValue("job-spec-file");
+    JobSpec job = null;
+    try {
+      job = JobSpec.readJson(jobSpecFile);
+    } catch (URISyntaxException e) {
+      e.printStackTrace();
+      System.exit(-2);
     }
 
     if (verbose) {
-      printArguments(cmd, src, target, ruleStrs);
+      System.out.println("Command line arguments: " + cmd);
     }
 
-    // Load source
-    String dsId = pc.load(src, "runner");
-    show(dsId);
-
-    // Transform
-    DataFrame df = process(dsId, ruleStrs);
+    // Load & Transform
+    String dsId = transformRecursive(job.getSrc());
 
     if (dryRun) {
       System.exit(0);
     }
 
     // Save to target
-    pc.save(df, target);
+    pc.save(dsId, job.getTarget());
 
-    LOGGER.info(String.format("Runner: %d rows written.", df.rows.size()));
+    LOGGER.info(String.format("Runner: %d rows written.", pc.fetch(dsId).rows.size()));
+  }
+
+  private static String transformRecursive(SourceDesc src) throws TeddyException {
+    if (src.getUpstreams() != null) {
+      List<SourceDesc> upstreams = src.getUpstreams();
+      assert upstreams.size() > 0;
+      for (SourceDesc upstream : upstreams) {
+        transformRecursive(upstream);
+      }
+    }
+
+    String dsName = src.toString();
+    dsName = dsName.substring(0, Math.min(dsName.length(), 2000));
+    String dsId = pc.load(src, dsName, src.getDsId());
+
+    pc.put(dsId, process(dsId, src.getRuleStrs()));
+    return dsId;
   }
 
   private static DataFrame process(String dsId, List<String> ruleStrs) throws TeddyException {
     DataFrame df = pc.fetch(dsId);
+    if (ruleStrs == null) {
+      return df;
+    }
+
     for (String ruleStr : ruleStrs) {
       df = pc.apply(df, ruleStr);
       show(df);

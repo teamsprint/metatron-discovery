@@ -1,0 +1,26 @@
+{
+  "src": {
+    "type": "DATABASE",
+    "limit": 1000000,
+    "driver": "com.mysql.jdbc.Driver",
+    "connStr": "XXX",
+    "user": "polaris",
+    "pw": "XXX",
+    "dbName": "rawdata",
+    "tblName": "google_list",
+    "ruleStrs": [
+      "drop col: campaignName"
+    ]
+  },
+  "target": {
+    "type": "DATABASE",
+    "limit": 1000000,
+    "driver": "com.mysql.jdbc.Driver",
+    "connStr": "XXX",
+    "user": "polaris",
+    "pw": "XXX",
+    "dbName": "runner",
+    "tblName": "google_list",
+    "append": "false"
+  }
+}

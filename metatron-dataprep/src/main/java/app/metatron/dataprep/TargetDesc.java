@@ -15,6 +15,11 @@
 package app.metatron.dataprep;
 
 import static app.metatron.dataprep.TargetDesc.Type.URI;
+import static app.metatron.dataprep.util.GlobalObjectMapper.getDefaultMapper;
+
+import app.metatron.dataprep.util.GlobalObjectMapper;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import java.util.Map;
 
 public class TargetDesc {
 
@@ -71,6 +76,33 @@ public class TargetDesc {
 
   public TargetDesc(String strType) {
     this(Type.valueOf(strType));
+  }
+
+  public TargetDesc(Map<String, Object> map) {
+    String type = (String) map.get("type");
+    if (type != null) {
+      this.type = Type.valueOf(type);
+    }
+
+    Integer limit = (Integer) map.get("limit");
+    if (limit != null) {
+      this.limit = limit;
+    }
+
+    String append = (String) map.get("append");
+    if (append != null) {
+      this.append = Boolean.valueOf(append);
+    }
+
+    strUri = ((String) map.get("strUri"));
+    hadoopConfDir = ((String) map.get("hadoopConfDir"));
+    driver = ((String) map.get("driver"));
+    connStr = ((String) map.get("connStr"));
+    user = ((String) map.get("user"));
+    pw = ((String) map.get("pw"));
+    dbName = ((String) map.get("dbName"));
+    tblName = ((String) map.get("tblName"));
+    custom = ((String) map.get("custom"));
   }
 
   public Type getType() {

@@ -160,6 +160,11 @@ public class RunnerUtil {
             .hasArg()
             .build();
 
+    Option jobSpecFile = Option.builder("j")
+            .longOpt("job-spec-file")
+            .hasArg()
+            .build();
+
     return options
             .addOption(verbose)
             .addOption(dryRun)
@@ -186,7 +191,8 @@ public class RunnerUtil {
             .addOption(targetTbl)
             .addOption(srcDescFile)
             .addOption(targetDescFile)
-            .addOption(ruleListFile);
+            .addOption(ruleListFile)
+            .addOption(jobSpecFile);
   }
 
   public static Map<String, Object> getMapFromJsonFile(String path) throws IOException {
@@ -228,6 +234,22 @@ public class RunnerUtil {
     String srcDb = null;
     String srcTbl = null;
     String srcQueryStmt = null;
+
+    String jobSpecFile = cmd.getOptionValue("job-spec-file");
+    if (jobSpecFile != null) {
+      Map<String, Object> spec = getMapFromJsonFile(jobSpecFile);
+      Map<String, Object> map = (Map) spec.get("src");
+      srcType = ((String) map.get("type"));
+      srcLimit = String.valueOf(map.get("limit"));
+      srcUri = (String) map.get("strUri");
+      srcDriver = (String) map.get("driver");
+      srcConnStr = (String) map.get("connStr");
+      srcUser = (String) map.get("user");
+      srcPw = (String) map.get("pw");
+      srcDb = (String) map.get("db");
+      srcTbl = (String) map.get("tbl");
+      srcQueryStmt = (String) map.get("queryStmt");
+    }
 
     String srcDescFile = cmd.getOptionValue("src-desc-file");
     if (srcDescFile != null) {
@@ -296,8 +318,22 @@ public class RunnerUtil {
     String targetDb = null;
     String targetTbl = null;
 
-    String targetDescFile = cmd.getOptionValue("target-desc-file");
+    String jobSpecFile = cmd.getOptionValue("job-spec-file");
+    if (jobSpecFile != null) {
+      Map<String, Object> spec = getMapFromJsonFile(jobSpecFile);
+      Map<String, Object> map = (Map) spec.get("target");
+      targetType = (String) map.get("type");
+      targetAppend = (String) map.get("append");
+      targetUri = (String) map.get("strUri");
+      targetDriver = (String) map.get("driver");
+      targetConnStr = (String) map.get("connStr");
+      targetUser = (String) map.get("user");
+      targetPw = (String) map.get("pw");
+      targetDb = (String) map.get("db");
+      targetTbl = (String) map.get("tbl");
+    }
 
+    String targetDescFile = cmd.getOptionValue("target-desc-file");
     if (targetDescFile != null) {
       Map<String, Object> map = getMapFromJsonFile(targetDescFile);
       targetType = (String) map.get("type");

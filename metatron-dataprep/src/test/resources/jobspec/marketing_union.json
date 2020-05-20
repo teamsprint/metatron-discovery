@@ -1,0 +1,128 @@
+{
+  "src": {
+    "upstreams": [
+      {
+        "upstreams": [
+          {
+            "dsId": "RECIPE_1",
+            "type": "DATABASE",
+            "limit": 1000000,
+            "driver": "com.mysql.jdbc.Driver",
+            "connStr": "XXX",
+            "user": "polaris",
+            "pw": "XXX",
+            "dbName": "rawdata",
+            "tblName": "nosp_list"
+          }
+        ],
+        "dsId": "RECIPE_2",
+        "type": "DATABASE",
+        "limit": 1000000,
+        "driver": "com.mysql.jdbc.Driver",
+        "connStr": "XXX",
+        "user": "polaris",
+        "pw": "XXX",
+        "dbName": "rawdata",
+        "tblName": "nosp_report",
+        "ruleStrs": [
+          "join leftSelectCol: `date`,`campaignId`,`spendMny`,`adMny`,`imp`,`clk`,`landingClk`,`interactiveClk`,`view`,`play25p`,`play50p`,`play75p`,`play100p`,`play3s`,`play10s`,`adlineReport` rightSelectCol: `campId`,`campNm` condition: `campaignId`=`campId` joinType: 'inner' dataset2: 'RECIPE_1'",
+          "drop col: `campId`",
+          "move col: `campNm` after: `campaignId`",
+          "drop col: `adlineReport`,`play100p`,`play3s`,`play10s`,`play75p`,`play50p`,`play25p`,`view`,`interactiveClk`,`landingClk`,`spendMny`",
+          "derive value: 'nosp' as: 'platform'",
+          "move col: `platform` after: `date`",
+          "move col: `adMny` after: `clk`",
+          "derive value: `adMny`/`clk` as: 'cpc'",
+          "rename col: `campaignId`,`campNm`,`adMny` to: 'camp_id','camp_nm','spend'",
+          "set col: `cpc` value: if(ismismatched(`cpc`,'DOUBLE'), 0, `cpc`)",
+          "split col: `camp_nm` on: '-' limit: 3 ignoreCase: false",
+          "drop col: `split_camp_nm1`",
+          "rename col: `split_camp_nm2`,`split_camp_nm3` to: 'camp_nm','detail'"
+        ]
+      },
+      {
+        "dsId": "RECIPE_3",
+        "type": "DATABASE",
+        "limit": 1000000,
+        "driver": "com.mysql.jdbc.Driver",
+        "connStr": "XXX",
+        "user": "polaris",
+        "pw": "XXX",
+        "dbName": "rawdata",
+        "tblName": "google_report",
+        "ruleStrs": [
+          "drop col: `startDate`,`endDate`,`channelType`,`channelSubType`,`biddingStrategyType`,`status`,`videoViews`,`conversions`,`interactions`,`engagements`,`averageCpm`,`averageCpe`,`averageCpv`,`costPerConversion`,`adGroup`",
+          "derive value: 'google' as: 'platform'",
+          "move col: `platform` after: `date`",
+          "move col: `cost` after: `clicks`",
+          "rename col: `campaignId`,`campaignName`,`impressions`,`clicks`,`cost`,`averageCpc` to: 'camp_id','camp_nm','imp','clk','spend','cpc'",
+          "split col: `camp_nm` on: '_' limit: 3 ignoreCase: false",
+          "drop col: `split_camp_nm1`",
+          "rename col: `split_camp_nm2`,`split_camp_nm3` to: 'camp_nm','detail'"
+        ]
+      },
+      {
+        "dsId": "RECIPE_4",
+        "type": "URI",
+        "strUri": "file:///Users/jhkim/git-repos/teamsprint/metatron-discovery/metatron-dataprep/src/test/resources/csv/project_mapping.csv",
+        "ruleStrs": [
+          "header rownum: 1"
+        ]
+      },
+      {
+        "dsId": "RECIPE_5",
+        "type": "DATABASE",
+        "limit": 1000000,
+        "driver": "com.mysql.jdbc.Driver",
+        "connStr": "XXX",
+        "user": "polaris",
+        "pw": "XXX",
+        "dbName": "rawdata",
+        "tblName": "facebook_list",
+        "ruleStrs": [
+        ]
+      }
+    ],
+    "type": "DATABASE",
+    "limit": 1000000,
+    "driver": "com.mysql.jdbc.Driver",
+    "connStr": "XXX",
+    "user": "polaris",
+    "pw": "XXX",
+    "dbName": "rawdata",
+    "tblName": "facebook_report",
+    "ruleStrs": [
+      "join leftSelectCol: `date_start`,`campaignId`,`clicks`,`cpc`,`cpm`,`cpp`,`ctr`,`frequency`,`impressions`,`reach`,`spend`,`unique_clicks`,`unique_ctr`,`video_play_curve_actions`,`adSetReport` rightSelectCol: `campaignId`,`campaignName` condition: `campaignId`=`campaignId` joinType: 'inner' dataset2: 'RECIPE_5'",
+      "drop col: `r_campaignId`",
+      "move col: `campaignName` after: `campaignId`",
+      "rename col: `date_start`,`campaignId`,`campaignName`,`clicks`,`cpc`,`cpm`,`cpp`,`ctr`,`frequency`,`impressions`,`reach`,`spend`,`unique_clicks`,`unique_ctr`,`video_play_curve_actions`,`adSetReport` to: 'date','camp_id','camp_nm','clk','cpc','cpm','cpp','ctr','frequency','imp','reach','spend','unique_clicks','unique_ctr','video_play_curve_actions','adSetReport'",
+      "move col: `imp` before: `clk`",
+      "move col: `cpc` after: `spend`",
+      "settype col: `imp`,`clk` type: long",
+      "settype col: `spend`,`cpc` type: double",
+      "split col: `camp_nm` on: ']' limit: 2 ignoreCase: false",
+      "replace col: `split_camp_nm1` with: '' on: '[' global: true ignoreCase: false",
+      "rename col: `split_camp_nm1` to: 'platform'",
+      "move col: `platform` after: `date`",
+      "split col: `split_camp_nm2` on: '_' limit: 3 ignoreCase: false",
+      "drop col: `split_split_camp_nm21`",
+      "rename col: `split_split_camp_nm22`,`split_split_camp_nm23` to: 'camp_nm','detail'",
+      "union masterCol: `date`,`platform`,`camp_id`,`camp_nm`,`imp`,`clk`,`spend`,`cpc` dataset2: 'RECIPE_2','RECIPE_3'",
+      "set col: `platform` value: upper($col)",
+      "join leftSelectCol: `date`,`platform`,`camp_id`,`camp_nm`,`imp`,`clk`,`spend`,`cpc` rightSelectCol: `camp_id`,`proj_id`,`platform` condition: `camp_id`=`camp_id` && `platform`=`platform` joinType: 'inner' dataset2: 'RECIPE_4'",
+      "drop col: `r_platform`,`r_camp_id`",
+      "move col: `proj_id` before: `date`"
+    ]
+  },
+  "target": {
+    "type": "DATABASE",
+    "limit": 1000000,
+    "driver": "com.mysql.jdbc.Driver",
+    "connStr": "XXX",
+    "user": "polaris",
+    "pw": "XXX",
+    "dbName": "runner",
+    "tblName": "union_report",
+    "append": "false"
+  }
+}

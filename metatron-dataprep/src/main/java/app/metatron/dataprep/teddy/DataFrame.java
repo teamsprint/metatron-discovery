@@ -45,10 +45,8 @@ import app.metatron.dataprep.teddy.exceptions.UnsupportedAggregationFunctionExpr
 import app.metatron.dataprep.teddy.exceptions.UnsupportedConstantType;
 import app.metatron.dataprep.teddy.exceptions.WorksOnlyOnStringException;
 import app.metatron.dataprep.teddy.histogram.Histogram;
-import app.metatron.dataprep.util.GlobalObjectMapper;
 import app.metatron.dataprep.util.TimestampTemplate;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -698,6 +696,10 @@ public class DataFrame implements Serializable, Transformable {
   }
 
   protected ColumnType decideType_internal(Expression expr) throws TeddyException {
+    return decideType_internal(expr, null);
+  }
+
+  protected ColumnType decideType_internal(Expression expr, ColumnType origType) throws TeddyException {
     ColumnType resultType = ColumnType.UNKNOWN;
     String errmsg;
 
@@ -713,7 +715,11 @@ public class DataFrame implements Serializable, Transformable {
       if (expr instanceof Constant.StringExpr) {
         resultType = getColTypeFromExprType(ExprType.STRING);
       } else if (expr instanceof Constant.LongExpr) {
-        resultType = getColTypeFromExprType(ExprType.LONG);
+        if (origType != null && origType == ColumnType.DOUBLE) {
+          resultType = ColumnType.DOUBLE;
+        } else {
+          resultType = getColTypeFromExprType(ExprType.LONG);
+        }
       } else if (expr instanceof Constant.DoubleExpr) {
         resultType = getColTypeFromExprType(ExprType.DOUBLE);
       } else if (expr instanceof Constant.BooleanExpr) {
@@ -767,6 +773,8 @@ public class DataFrame implements Serializable, Transformable {
                 resultType = falseExpr;
               } else if (falseExpr == ColumnType.UNKNOWN) {
                 resultType = trueExpr;
+              } else if (origType != null && origType == ColumnType.DOUBLE) {
+                resultType = ColumnType.DOUBLE;
               } else {
                 throw new TypeDifferentException(
                         String.format("decideType(): type different: trueVal=%s falseVal=%s", args.get(1).toString(),

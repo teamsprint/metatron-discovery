@@ -1145,20 +1145,21 @@ public class PrepTransformService {
     switch (ssType) {
       case URI:
       case STAGING_DB:
+      case DATABASE:
         runTransformer(wrangledDsId, snapshot, authorization);
         LOGGER.info("transform_snapshot(): snapshot generation successfully start");
         break;
-      case DATABASE:
-        // For now, target database has to be the same to the imported dataset.
-        // No upstream dataset is permitted, either.
-        SourceDesc src = buildSourceDesc(wrangledDsId);
-        TargetDesc target = buildTargetDesc(requestPost);
-        String ip = InetAddress.getLocalHost().getHostAddress();
-        String port = getServerPort();
-        target.setCallbackUrl(String.format("http://%s:%s/api/preparationsnapshots/%s", ip, port, snapshot.getSsId()));
-        target.setOauthToken(authorization);
-        createDatabaseSnapshot(src, target, ssName, getRuleStrs(wrangledDsId));
-        break;
+//      case DATABASE:
+//        // For now, target database has to be the same to the imported dataset.
+//        // No upstream dataset is permitted, either.
+//        SourceDesc src = buildSourceDesc(wrangledDsId);
+//        TargetDesc target = buildTargetDesc(requestPost);
+//        String ip = InetAddress.getLocalHost().getHostAddress();
+//        String port = getServerPort();
+//        target.setCallbackUrl(String.format("http://%s:%s/api/preparationsnapshots/%s", ip, port, snapshot.getSsId()));
+//        target.setOauthToken(authorization);
+//        createDatabaseSnapshot(src, target, ssName, getRuleStrs(wrangledDsId));
+//        break;
       case DRUID:
         throw new IllegalArgumentException(requestPost.toString());
     }

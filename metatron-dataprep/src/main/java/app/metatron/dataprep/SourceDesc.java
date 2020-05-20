@@ -16,6 +16,10 @@ package app.metatron.dataprep;
 
 import static app.metatron.dataprep.SourceDesc.Type.URI;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 public class SourceDesc {
 
   public enum Type {
@@ -49,6 +53,11 @@ public class SourceDesc {
 
   // All extra information, like dsId, dsName, and so on, in a JSON form.
   private String custom;
+
+  private List<String> ruleStrs;
+  private List<SourceDesc> upstreams;
+
+  private String dsId;  // W.DS ID for join, union
 
   public SourceDesc() {
     this(URI);
@@ -201,5 +210,112 @@ public class SourceDesc {
 
   public void setCustom(String custom) {
     this.custom = custom;
+  }
+
+  public List<String> getRuleStrs() {
+    return ruleStrs;
+  }
+
+  public void setRuleStrs(List<String> ruleStrs) {
+    this.ruleStrs = ruleStrs;
+  }
+
+  public List<SourceDesc> getUpstreams() {
+    return upstreams;
+  }
+
+  public void setUpstreams(List<SourceDesc> upstreams) {
+    this.upstreams = upstreams;
+  }
+
+  public String getDsId() {
+    return dsId;
+  }
+
+  public void setDsId(String dsId) {
+    this.dsId = dsId;
+  }
+
+  public void setByMap(Map<String, Object> map) {
+    List<Object> upstreams = (List<Object>) map.get("upstreams");
+    if (upstreams != null) {
+      for (Object upstream : upstreams) {
+        if (this.upstreams == null) {
+          this.upstreams = new ArrayList<>();
+        }
+        SourceDesc src = new SourceDesc();
+        src.setByMap((Map<String, Object>) upstream);
+        this.upstreams.add(src);
+      }
+    }
+
+    setStrUri((String) map.get("strUri"));
+    if (map.get("delim") != null) {
+      setDelim((String) map.get("delim"));
+    }
+    if (map.get("quoteChar") != null) {
+      setQuoteChar((String) map.get("quoteChar"));
+    }
+    setHadoopConfDir((String) map.get("hadoopConfDir"));
+    setDriver((String) map.get("driver"));
+    setConnStr((String) map.get("connStr"));
+    setUser((String) map.get("user"));
+    setPw((String) map.get("pw"));
+    setDbName((String) map.get("dbName"));
+    setTblName((String) map.get("tblName"));
+    setQueryStmt((String) map.get("queryStmt"));
+    setCustom((String) map.get("custom"));
+    setDsId((String) map.get("dsId"));
+
+    String type = (String) map.get("type");
+    if (type != null) {
+      setType(Type.valueOf(type));
+    }
+
+    Integer limit = (Integer) map.get("limit");
+    if (limit != null) {
+      setLimit(limit);
+    }
+
+    String colCnt = (String) map.get("colCnt");
+    if (colCnt != null) {
+      setColCnt(Integer.valueOf(colCnt));
+    }
+
+    Integer fetchCnt = (Integer) map.get("fetchCnt");
+    if (fetchCnt != null) {
+      setFetchCnt(fetchCnt);
+    }
+
+    List<String> ruleStrs = (List<String>) map.get("ruleStrs");
+    if (ruleStrs != null) {
+      this.ruleStrs = new ArrayList<>();
+      this.ruleStrs.addAll(ruleStrs);
+    }
+  }
+
+  @Override
+  public String toString() {
+    return "SourceDesc{" +
+            "type=" + type +
+            ", limit=" + limit +
+            ", strUri='" + strUri + '\'' +
+            ", delim='" + delim + '\'' +
+            ", quoteChar='" + quoteChar + '\'' +
+            ", colCnt=" + colCnt +
+            ", hadoopConfDir='" + hadoopConfDir + '\'' +
+            ", driver='" + driver + '\'' +
+            ", connStr='" + connStr + '\'' +
+            ", user='" + user + '\'' +
+            ", pw='" + pw + '\'' +
+            ", dbName='" + dbName + '\'' +
+            ", tblName='" + tblName + '\'' +
+            ", queryStmt='" + queryStmt + '\'' +
+            ", fetchCnt=" + fetchCnt +
+            ", custom='" + custom + '\'' +
+            ", ruleStrs=" + ruleStrs +
+            ", upstreams=" + upstreams +
+            ", dsId='" + dsId + '\'' +
+            '}';
   }
 }

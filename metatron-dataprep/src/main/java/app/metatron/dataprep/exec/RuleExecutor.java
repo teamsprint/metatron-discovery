@@ -70,12 +70,15 @@ public class RuleExecutor {
     if (jobId == null) {
       return;
     }
+    cancelJob(jobId);
     jobs.remove(jobId);
   }
 
   public void cancelJob(String jobId) {
     ExecutorService es = jobs.get(jobId);
-    es.shutdownNow();
+    if (es != null) {
+      es.shutdownNow();
+    }
   }
 
   public DataFrame apply(DataFrame df, String ruleStr, List<DataFrame> slaveDfs, String jobId) throws TeddyException {

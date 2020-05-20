@@ -14,14 +14,14 @@
 
 package app.metatron.dataprep.teddy;
 
-import app.metatron.dataprep.teddy.exceptions.TeddyException;
-import app.metatron.dataprep.teddy.exceptions.WrongTargetColumnExpressionException;
 import app.metatron.dataprep.parser.RuleVisitorParser;
 import app.metatron.dataprep.parser.rule.Rule;
 import app.metatron.dataprep.parser.rule.Set;
 import app.metatron.dataprep.parser.rule.expr.Expr;
 import app.metatron.dataprep.parser.rule.expr.Expression;
 import app.metatron.dataprep.parser.rule.expr.Identifier;
+import app.metatron.dataprep.teddy.exceptions.TeddyException;
+import app.metatron.dataprep.teddy.exceptions.WrongTargetColumnExpressionException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -85,7 +85,7 @@ public class DfSet extends DataFrame {
       if (replacedColExprs.containsKey(colno)) {
         // Column type can be changed according to the result values.
         // This is the same behavior to Apache Spark.
-        ColumnType newType = prevDf.decideType_internal(replacedColExprs.get(colno));
+        ColumnType newType = prevDf.decideType_internal(replacedColExprs.get(colno), prevDf.getColType(colno));
         addColumn(prevDf.getColName(colno), newType == ColumnType.UNKNOWN ? prevDf.getColType(colno) : newType);
       } else {
         addColumn(prevDf.getColName(colno), prevDf.getColDesc(colno));
