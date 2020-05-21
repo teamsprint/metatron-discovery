@@ -18,7 +18,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.sql.Types;
 
-import app.metatron.discovery.domain.dataprep.teddy.ColumnType;
 import app.metatron.discovery.domain.datasource.Field;
 
 /**
