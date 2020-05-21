@@ -25,7 +25,6 @@
     <modules>
         <module>metatron-dataprep</module>
         <module>discovery-server</module>
-        <module>discovery-prep-parser</module>
         <module>discovery-prep-frontend</module>
         <module>discovery-common</module>
         <module>discovery-extensions</module>
