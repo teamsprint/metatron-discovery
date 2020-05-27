@@ -14,6 +14,8 @@
 
 package app.metatron.dataprep.teddy;
 
+import static app.metatron.dataprep.teddy.TeddyUtil.getColTypeFromString;
+
 import app.metatron.dataprep.teddy.exceptions.TeddyException;
 import app.metatron.dataprep.teddy.exceptions.WrongTargetColumnExpressionException;
 import app.metatron.dataprep.parser.rule.Rule;
@@ -39,30 +41,7 @@ public class DfSetType extends DataFrame {
 
     Expression targetColExpr = setType.getCol();
     String timestampFormat = setType.getFormat();
-
-    ColumnType toType;
-    switch (setType.getType().toUpperCase()) {
-      case "DOUBLE":
-        toType = ColumnType.DOUBLE;
-        break;
-      case "LONG":
-        toType = ColumnType.LONG;
-        break;
-      case "BOOLEAN":
-        toType = ColumnType.BOOLEAN;
-        break;
-      case "TIMESTAMP":
-        toType = ColumnType.TIMESTAMP;
-        break;
-      case "MAP":
-        toType = ColumnType.MAP;
-        break;
-      case "ARRAY":
-        toType = ColumnType.ARRAY;
-        break;
-      default:
-        toType = ColumnType.STRING;
-    }
+    ColumnType toType = getColTypeFromString(setType.getType());
 
     List<String> targetColNames = TeddyUtil.getIdentifierList(targetColExpr);
     if (targetColNames.isEmpty()) {

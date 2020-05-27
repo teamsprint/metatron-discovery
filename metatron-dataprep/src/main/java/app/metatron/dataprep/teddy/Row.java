@@ -43,6 +43,12 @@ public class Row implements Expr.NumericBinding {
     colCnt = 0;
   }
 
+  public Row(int size) {
+    objCols = new ArrayList<>(size);
+    nameIdxs = new HashMap<>(size);
+    colCnt = 0;
+  }
+
   public void add(String colName, Object objCol) {
     objCols.add(objCol);
     nameIdxs.put(colName, colCnt++);

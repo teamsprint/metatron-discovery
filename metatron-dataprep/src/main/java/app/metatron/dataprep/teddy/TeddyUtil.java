@@ -82,6 +82,10 @@ public class TeddyUtil {
   public static List<String> getIdentifierList(Expression expr) {
     List<String> colNames = new ArrayList<>();
 
+    if (expr == null) {
+      return colNames;
+    }
+
     if (expr instanceof IdentifierExpr) {
       colNames.add(((IdentifierExpr) expr).getValue());
     } else if (expr instanceof IdentifierArrayExpr) {
@@ -95,17 +99,50 @@ public class TeddyUtil {
   }
 
   public static List<String> getStringList(Expression expr) {
-    List<String> colNames = new ArrayList<>();
+    List<String> strs = new ArrayList<>();
+
+    if (expr == null) {
+      return strs;
+    }
 
     if (expr instanceof StringExpr) {
-      colNames.add(((StringExpr) expr).getEscapedValue());
+      strs.add(((StringExpr) expr).getEscapedValue());
     } else if (expr instanceof ArrayExpr) {
       List quotedStrs = ((ArrayExpr) expr).getValue();
       for (Object str : quotedStrs) {
-        colNames.add(strip((String) str));
+        strs.add(strip((String) str));
       }
     }
-    return colNames;
+    return strs;
+  }
+
+  public static ColumnType getColTypeFromString(String strType) {
+    switch (strType.toUpperCase()) {
+      case "DOUBLE":
+        return ColumnType.DOUBLE;
+      case "LONG":
+        return ColumnType.LONG;
+      case "BOOLEAN":
+        return ColumnType.BOOLEAN;
+      case "TIMESTAMP":
+        return ColumnType.TIMESTAMP;
+      case "MAP":
+        return ColumnType.MAP;
+      case "ARRAY":
+        return ColumnType.ARRAY;
+      default:
+        return ColumnType.STRING;
+    }
+  }
+
+  public static List<ColumnType> getColTypeListFromExpr(Expression expr) {
+    List<ColumnType> colTypes = new ArrayList<>();
+
+    List<String> strTypes = getStringList(expr);
+    for (String strType : strTypes) {
+      colTypes.add(getColTypeFromString(strType));
+    }
+    return colTypes;
   }
 
   public static List<FunctionExpr> getFuncExprList(Expression expr) {

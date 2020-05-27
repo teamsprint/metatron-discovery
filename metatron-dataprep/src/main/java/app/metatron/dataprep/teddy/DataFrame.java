@@ -249,10 +249,10 @@ public class DataFrame implements Serializable, Transformable {
       case "nest":
       case "unpivot":
       case "join":
+      case "union":
         return true;
 
       case "sort":
-      case "union":
       case "setformat":
       case "aggregate":
       case "pivot":
@@ -397,6 +397,10 @@ public class DataFrame implements Serializable, Transformable {
   String addColumnWithDf(DataFrame df, int colno) {
     return addColumn(df.colNames.get(colno),
             df.colDescs.get(colno));
+  }
+
+  String addColumnWithDfByColName(DataFrame df, String colName) throws ColumnNotFoundException {
+    return addColumnWithDf(df, df.getColnoByColName(colName));
   }
 
   void addColumnWithDfAll(DataFrame df) {

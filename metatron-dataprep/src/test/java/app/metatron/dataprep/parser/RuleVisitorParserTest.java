@@ -139,7 +139,8 @@ public class RuleVisitorParserTest {
   @Test
   public void countPatternTest() {
     String ruleCode = "countpattern col: City on: /H.*/ ignoreCase: true";
-    assertEquals("CountPattern{col=City, on=/H.*/, after=null, before=null, ignoreCase=true, quote=''}", runAndPrint(ruleCode));
+    assertEquals("CountPattern{col=City, on=/H.*/, after=null, before=null, ignoreCase=true, quote=''}",
+            runAndPrint(ruleCode));
   }
 
   @Test
@@ -284,9 +285,15 @@ public class RuleVisitorParserTest {
 
   @Test
   public void unionTest() {
-    String ruleCode = "union masterCol: ItemA,ItemB,ItemC, dataset2: df2,df3 slaveCol: ItemD,ItemE,ItemF totalCol: col1, col2, col3";
+    String ruleCode =
+            "union dataset2: '%s' masterCol: date,platform,imp,clk,spend,etc"
+                    + " type: 'timestamp','string','string','long','long','string'"
+                    + " format: 'yyyy-MM-dd','','','','',''"
+                    + " slaveCol: '','platform','imp','clk','','','date','media','impression','click','cost',''";
     assertEquals(
-            "Union{dataset2=[df2, df3], masterCol=[ItemA, ItemB, ItemC], slaveCol=[ItemD, ItemE, ItemF], totalCol=[col1, col2, col3]}",
+            "Union{dataset2='%s', masterCol=[date, platform, imp, clk, spend, etc], slaveCol=['', 'platform', 'imp',"
+                    + " 'clk', '', '', 'date', 'media', 'impression', 'click', 'cost', ''], type=['timestamp',"
+                    + " 'string', 'string', 'long', 'long', 'string'], format=['yyyy-MM-dd', '', '', '', '', '']}",
             runAndPrint(ruleCode));
   }
 

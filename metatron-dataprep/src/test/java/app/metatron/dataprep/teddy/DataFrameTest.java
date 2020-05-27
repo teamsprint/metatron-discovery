@@ -206,17 +206,6 @@ public class DataFrameTest {
   }
 
   @Test
-  public void test_union() {
-    String dsId1 = loadStore(pc);
-    String dsId2 = loadStore(pc);
-    String dsId3 = loadStore(pc);
-    String dsId4 = loadStore(pc);
-
-    append(pc, dsId1, String.format("union dataset2: '%s', '%s', '%s'", dsId2, dsId3, dsId4));
-    assertEquals(pc.fetch(dsId1).rows.size(), pc.fetch(dsId2).rows.size() * 4);
-  }
-
-  @Test
   public void test_nest_unnest_map() {
     String dsId = loadContract(pc);
     append(pc, dsId, "nest col: pcode1, pcode2, pcode3, pcode4 into: map as: pcode");

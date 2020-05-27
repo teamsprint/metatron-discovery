@@ -1,0 +1,5 @@
+date,campaignName,impression,click,cost,additional_info,media
+2020-05-25,Samsung,85000,120,350000,"{""a"": ""x"", ""b"": ""y""}",facebook
+2020-05-25,LG,22000,40,150000,"{""a"": ""x"", ""b"": ""y""}",facebook
+2020-05-26,Samsung,85500,125,358000,"{""a"": ""x"", ""b"": ""y""}",facebook
+2020-05-26,LG,22500,45,158000,"{""a"": ""x"", ""b"": ""y""}",facebook

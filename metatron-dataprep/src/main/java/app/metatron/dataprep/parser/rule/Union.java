@@ -21,16 +21,18 @@ public class Union implements Rule, Rule.Factory {
   Expression masterCol;
   Expression dataset2;
   Expression slaveCol;
-  Expression totalCol;
+  Expression type;
+  Expression format;
 
   public Union() {
   }
 
-  public Union(Expression masterCol, Expression dataset2, Expression slaveCol, Expression totalCol) {
+  public Union(Expression masterCol, Expression dataset2, Expression slaveCol, Expression type) {
     this.masterCol = masterCol;
     this.dataset2 = dataset2;
     this.slaveCol = slaveCol;
-    this.totalCol = totalCol;
+    this.type = type;
+    this.format = format;
   }
 
   public Expression getMasterCol() {
@@ -57,12 +59,20 @@ public class Union implements Rule, Rule.Factory {
     this.slaveCol = slaveCol;
   }
 
-  public Expression getTotalCol() {
-    return totalCol;
+  public Expression getType() {
+    return type;
   }
 
-  public void setTotalCol(Expression totalCol) {
-    this.totalCol = totalCol;
+  public void setType(Expression type) {
+    this.type = type;
+  }
+
+  public Expression getFormat() {
+    return format;
+  }
+
+  public void setFormat(Expression format) {
+    this.format = format;
   }
 
   @Override
@@ -81,7 +91,8 @@ public class Union implements Rule, Rule.Factory {
             "dataset2=" + dataset2 +
             ", masterCol=" + masterCol +
             ", slaveCol=" + slaveCol +
-            ", totalCol=" + totalCol +
+            ", type=" + type +
+            ", format=" + format +
             '}';
   }
 }

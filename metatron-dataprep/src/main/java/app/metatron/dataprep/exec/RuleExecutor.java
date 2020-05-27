@@ -20,6 +20,7 @@ import app.metatron.dataprep.parser.RuleVisitorParser;
 import app.metatron.dataprep.parser.exception.RuleException;
 import app.metatron.dataprep.parser.rule.Join;
 import app.metatron.dataprep.parser.rule.Rule;
+import app.metatron.dataprep.parser.rule.Union;
 import app.metatron.dataprep.teddy.DataFrame;
 import app.metatron.dataprep.teddy.Row;
 import app.metatron.dataprep.teddy.exceptions.TeddyException;
@@ -88,14 +89,29 @@ public class RuleExecutor {
     DataFrame newDf = DataFrame.getNewDf(rule, df.dsName, ruleStr);
 
     try {
-      ExecutorService es = Executors.newFixedThreadPool(dop);
+      ExecutorService es = null;
 
       List<Object> args = newDf.prepare(df, rule, slaveDfs);
       int rowcnt = df.rows.size();
       List<Future<List<Row>>> futures = new ArrayList<>();
 
-      if (rowcnt > 0) {
+      if (rule instanceof Union) {
+        // The master df has already been added to slaveDfs.
+        es = Executors.newFixedThreadPool(slaveDfs.size());
+
+        int totalRows = 0;
+        for (int i = 0; i < slaveDfs.size() && totalRows < limitRows; i++) {
+          int dsSize = slaveDfs.get(i).rows.size();
+          int targetRows = Math.min(dsSize, limitRows - totalRows);
+          LOGGER.debug("applyRule(): add thread: Union: dsSize={} totalRows={} targetRows={}", dsSize, totalRows,
+                  targetRows);
+          futures.add(es.submit(new RowCollector(newDf, slaveDfs.get(i), args, 0, targetRows, limitRows)));
+          totalRows += targetRows;
+        }
+        addJob(jobId, es);
+      } else if (rowcnt > 0) {
         if (DataFrame.isParallelizable(rule)) {
+          es = Executors.newFixedThreadPool(dop);
           int partSize = Math.max(rowcnt / dop, 1);
 
           // Outer joins cannot be parallelized. (But, implemented as prepare-gather structure)
@@ -106,25 +122,26 @@ public class RuleExecutor {
           for (int rowno = 0; rowno < rowcnt; rowno += partSize) {
             int targetSize = Math.min(partSize, rowcnt - rowno);
             LOGGER.debug("applyRule(): add thread: rowno={} targetSize={} rowcnt={}", rowno, targetSize, rowcnt);
-            futures.add(
-                    es.submit(new RowCollector(newDf, df, args, rowno, targetSize, limitRows)));
+            futures.add(es.submit(new RowCollector(newDf, df, args, rowno, targetSize, limitRows)));
           }
-
           addJob(jobId, es);
-          es.shutdown();
-
-          for (int i = 0; i < futures.size(); i++) {
-            List<Row> rows = futures.get(i).get(timeout, TimeUnit.SECONDS);
-            assert rows != null : rule.toString();
-            newDf.rows.addAll(rows);
-          }
-          removeJob(jobId);
         } else {
           // if not parallelizable, newDf comes to be modified directly.
           // then, 'rows' returned is only for assertion.
           List<Row> rows = newDf.gather(df, args, 0, rowcnt, limitRows);
           assert rows == null : ruleStr;
         }
+      }
+
+      if (futures.size() > 0) {
+        es.shutdown();
+
+        for (int i = 0; i < futures.size(); i++) {
+          List<Row> rows = futures.get(i).get(timeout, TimeUnit.SECONDS);
+          assert rows != null : rule.toString();
+          newDf.rows.addAll(rows);
+        }
+        removeJob(jobId);
       }
     } catch (RuleException e) {
       LOGGER.error("applyRule(): rule syntax error", e);

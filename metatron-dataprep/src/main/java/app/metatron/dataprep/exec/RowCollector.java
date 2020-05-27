@@ -28,7 +28,8 @@ public class RowCollector implements Callable<List<Row>> {
   private int length;
   private int limitRows;
 
-  public RowCollector(DataFrame df, DataFrame prevDf, List<Object> preparedArgs, int offset, int length, int limitRows) {
+  public RowCollector(DataFrame df, DataFrame prevDf, List<Object> preparedArgs, int offset, int length,
+          int limitRows) {
     this.df = df;
     this.prevDf = prevDf;
     this.preparedArgs = preparedArgs;
