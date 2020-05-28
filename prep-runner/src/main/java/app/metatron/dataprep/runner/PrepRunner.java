@@ -79,18 +79,6 @@ public class PrepRunner {
 
     pc = PrepContext.DEFAULT.withDop(dop);
 
-    //    SourceDesc src = buildSourceDesc(cmd);
-    //    TargetDesc target = buildTargetDesc(cmd);
-
-    //    String ruleListFile = cmd.getOptionValue("rule-list-file");
-    //
-    //    List<String> ruleStrs;
-    //    if (ruleListFile != null) {
-    //      ruleStrs = getLinesFromFile(ruleListFile);
-    //    } else {
-    //      ruleStrs = Arrays.asList(cmd.getArgs());
-    //    }
-
     String jobSpecFile = cmd.getOptionValue("job-spec-file");
     JobSpec job = null;
     try {
@@ -100,8 +88,18 @@ public class PrepRunner {
       System.exit(-2);
     }
 
+    String srcQueryStmt = cmd.getOptionValue("src-query-stmt");
+    if (srcQueryStmt != null) {
+      job.getSrc().setQueryStmt(srcQueryStmt);
+    }
+
+    String append = cmd.getOptionValue("target-append");
+    if (append != null) {
+      job.getTarget().setAppend(Boolean.valueOf(append));
+    }
+
     if (verbose) {
-      System.out.println("Command line arguments: " + cmd);
+      System.out.println("Job Spec: " + job);
     }
 
     // Load & Transform
