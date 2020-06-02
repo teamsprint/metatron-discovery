@@ -29,9 +29,9 @@ import app.metatron.discovery.domain.workspace.Workspace;
 /**
  * DataConnectionRepository
  */
-@RepositoryRestResource(path = "connections",
-    itemResourceRel = "connection", collectionResourceRel = "connections",
-    excerptProjection = DataConnectionProjections.defaultProjection.class)
+//@RepositoryRestResource(path = "connections",
+//    itemResourceRel = "connection", collectionResourceRel = "connections",
+//    excerptProjection = DataConnectionProjections.defaultProjection.class)
 public interface DataConnectionRepository extends JpaRepository<DataConnection, String>,
                                                   QueryDslPredicateExecutor<DataConnection> {
 

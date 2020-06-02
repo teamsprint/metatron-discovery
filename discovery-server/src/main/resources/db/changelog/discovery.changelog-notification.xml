@@ -20,4 +20,36 @@
             <column name="full_message" type="${varchar.type}(2000)"/>
         </createTable>
     </changeSet>
+
+    <changeSet author="initial (generated)" id="1589356858050-2">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="pr_notification"/>
+        </preConditions>
+        <dropTable tableName="pr_notification"/>
+    </changeSet>
+
+
+    <changeSet author="initial (generated)" id="1589356858050-3">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="notification" />
+            </not>
+        </preConditions>
+        <createTable tableName="notification">
+            <column name="noti_id" type="${varchar.type}(255)">
+                <constraints primaryKey="true" />
+            </column>
+            <column name="created_by" type="${varchar.type}(255)" />
+            <column name="created_time" type="${datetime.type}" />
+            <column name="modified_by" type="${varchar.type}(255)" />
+            <column name="modified_time" type="${datetime.type}" />
+            <column name="version" type="${bigint.type}" />
+            <column name="noti_cd" type="${varchar.type}(100)" />
+            <column name="noti_step" type="${varchar.type}(100)" />
+            <column name="noti_source_id" type="${varchar.type}(100)" />
+            <column name="custom" type="${clob.type}" />
+            <column name="read_yn" type="${varchar.type}(1)"/>
+        </createTable>
+    </changeSet>
+
 </databaseChangeLog>

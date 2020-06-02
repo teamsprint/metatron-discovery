@@ -139,6 +139,10 @@
     <include file="discovery.changelog-3.4.0.xml" relativeToChangelogFile="true"/>
 
 
+    <!-- prep-bot notification -->
     <include file="discovery.changelog-notification.xml" relativeToChangelogFile="true"/>
+
+    <!-- prep-bot entity renewal -->
+    <include file="discovery.changelog-renewal-0.0.1.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>

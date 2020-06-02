@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog dbchangelog-3.8.xsd">
+    <changeSet author="initial (generated)" id="r001-connection-1589873558641-1">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="connection" />
+            </not>
+        </preConditions>
+        <createTable tableName="connection">
+            <column name="conn_id" type="${varchar.type}(255)">
+                <constraints primaryKey="true" />
+            </column>
+            <column name="created_by" type="${varchar.type}(255)" />
+            <column name="created_time" type="${datetime.type}" />
+            <column name="modified_by" type="${varchar.type}(255)" />
+            <column name="modified_time" type="${datetime.type}" />
+            <column name="version" type="${bigint.type}" />
+            <column name="name" type="${varchar.type}(150)">
+                <constraints nullable="false" />
+            </column>
+            <column name="description" type="${clob.type}" />
+            <column name="conn_implementor" type="${varchar.type}(255)" />
+            <column name="conn_hostname" type="${varchar.type}(255)" />
+            <column name="conn_port" type="${int.type}(11)" />
+            <column name="conn_database" type="${varchar.type}(255)" />
+            <column name="conn_catalog" type="${varchar.type}(255)" />
+            <column name="conn_sid" type="${varchar.type}(255)" />
+            <column name="conn_string_url" type="${varchar.type}(500)" />
+            <column name="conn_username" type="${varchar.type}(255)" />
+            <column name="conn_password" type="${varchar.type}(255)" />
+            <column name="conn_type" type="${varchar.type}(255)" />
+            <column name="modify_sub_yn" type="${varchar.type}(1)" defaultValue="Y"/>
+        </createTable>
+    </changeSet>
+
+
+    <changeSet author="initial (generated)" id="r001-dataflow-1589873558641-1">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="dataflow" />
+            </not>
+        </preConditions>
+        <createTable tableName="dataflow">
+            <column name="df_id" type="${varchar.type}(255)">
+                <constraints primaryKey="true" />
+            </column>
+            <column name="created_by" type="${varchar.type}(255)" />
+            <column name="created_time" type="${datetime.type}" />
+            <column name="modified_by" type="${varchar.type}(255)" />
+            <column name="modified_time" type="${datetime.type}" />
+            <column name="version" type="${bigint.type}" />
+            <column name="name" type="${varchar.type}(2000)">
+                <constraints nullable="false" />
+            </column>
+            <column name="description" type="${clob.type}" />
+            <column name="custom" type="${clob.type}" />
+        </createTable>
+    </changeSet>
+
+
+    <changeSet author="initial (generated)" id="r001-dataset-1589873558641-1">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="dataset" />
+            </not>
+        </preConditions>
+        <createTable tableName="dataset">
+            <column name="ds_id" type="${varchar.type}(255)">
+                <constraints primaryKey="true" />
+            </column>
+            <column name="created_by" type="${varchar.type}(255)" />
+            <column name="created_time" type="${datetime.type}" />
+            <column name="modified_by" type="${varchar.type}(255)" />
+            <column name="modified_time" type="${datetime.type}" />
+            <column name="version" type="${bigint.type}" />
+            <column name="name" type="${varchar.type}(2000)">
+                <constraints nullable="false" />
+            </column>
+            <column name="description" type="${clob.type}" />
+            <column name="custom" type="${clob.type}" />
+            <column name="import_type" type="${varchar.type}(255)" />
+            <column name="conn_id" type="${varchar.type}(255)"/>
+            <column name="rs_type" type="${varchar.type}(255)" />
+            <column name="db_name" type="${varchar.type}(255)" />
+            <column name="tbl_name" type="${varchar.type}(255)" />
+            <column name="query_stmt" type="${clob.type}" />
+            <column name="file_format" type="${varchar.type}(255)" />
+            <column name="filename_before_upload" type="${clob.type}" />
+            <column name="sheet_name" type="${varchar.type}(2000)" />
+            <column name="stored_uri" type="${clob.type}" />
+            <column name="delimiter" type="${varchar.type}(255)" />
+            <column name="quote_char" type="${varchar.type}(255)" />
+            <column name="serialized_preview" type="${clob.type}" />
+            <column name="manual_column_count" type="${int.type}" />
+            <column name="total_lines" type="${bigint.type}" />
+            <column name="total_bytes" type="${bigint.type}" />
+        </createTable>
+    </changeSet>
+
+
+    <changeSet author="initial (generated)" id="r001-recipe-1589873558641-1">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="recipe" />
+            </not>
+        </preConditions>
+        <createTable tableName="recipe">
+            <column name="re_id" type="${varchar.type}(255)">
+                <constraints primaryKey="true" />
+            </column>
+            <column name="created_by" type="${varchar.type}(255)" />
+            <column name="created_time" type="${datetime.type}" />
+            <column name="modified_by" type="${varchar.type}(255)" />
+            <column name="modified_time" type="${datetime.type}" />
+            <column name="version" type="${bigint.type}" />
+            <column name="name" type="${varchar.type}(2000)">
+                <constraints nullable="false" />
+            </column>
+            <column name="description" type="${clob.type}" />
+            <column name="custom" type="${clob.type}" />
+            <column name="creator_df_id" type="${varchar.type}(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="creator_ds_id" type="${varchar.type}(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="rule_cur_idx" type="${int.type}" />
+            <column name="total_bytes" type="${bigint.type}" />
+            <column name="total_lines" type="${bigint.type}" />
+        </createTable>
+    </changeSet>
+
+
+    <changeSet author="initial (generated)" id="r001-dataflow-diagram-1589873558641-1">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="dataflow_diagram" />
+            </not>
+        </preConditions>
+        <createTable tableName="dataflow_diagram">
+            <column name="order_no" type="${bigint.type}">
+                <constraints primaryKey="true" />
+            </column>
+            <column name="df_id" type="${varchar.type}(255)">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="ds_id" type="${varchar.type}(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="re_id" type="${varchar.type}(255)"/>
+
+            <column name="object_type" type="${varchar.type}(255)">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+    </changeSet>
+
+
+
+
+    <changeSet author="initial (generated)" id="r001-recipe_rule-1589873558641-1">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="recipe_rule" />
+            </not>
+        </preConditions>
+        <createTable tableName="recipe_rule">
+            <column name="re_id" type="${varchar.type}(255)">
+                <constraints primaryKey="true" />
+            </column>
+            <column name="rule_no" type="${int.type}">
+                <constraints primaryKey="true" />
+            </column>
+            <column name="custom" type="${clob.type}" />
+            <column name="is_valid" type="${boolean.type}">
+                <constraints nullable="false" />
+            </column>
+            <column name="ui_context" type="${clob.type}" />
+            <column name="rule_string" type="${clob.type}">
+                <constraints nullable="false" />
+            </column>
+            <column name="short_rule_string" type="${clob.type}" />
+        </createTable>
+    </changeSet>
+
+
+
+    <changeSet author="initial (generated)" id="r001-job_rule-1589873558641-1">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="job_rule" />
+            </not>
+        </preConditions>
+        <createTable tableName="job_rule">
+            <column name="job_id" type="${varchar.type}(255)">
+                <constraints primaryKey="true" />
+            </column>
+            <column name="rule_no" type="${int.type}">
+                <constraints primaryKey="true" />
+            </column>
+            <column name="creator_re_id" type="${varchar.type}(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="custom" type="${clob.type}" />
+            <column name="is_valid" type="${boolean.type}">
+                <constraints nullable="false" />
+            </column>
+            <column name="rule_string" type="${clob.type}">
+                <constraints nullable="false" />
+            </column>
+            <column name="short_rule_string" type="${clob.type}" />
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>
