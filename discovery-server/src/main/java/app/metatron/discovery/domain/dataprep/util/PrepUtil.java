@@ -19,6 +19,7 @@ import static app.metatron.discovery.domain.dataprep.exceptions.PrepErrorCodes.P
 import static app.metatron.discovery.domain.dataprep.exceptions.PrepErrorCodes.PREP_INVALID_CONFIG_CODE;
 import static app.metatron.discovery.domain.dataprep.exceptions.PrepErrorCodes.PREP_SNAPSHOT_ERROR_CODE;
 import static app.metatron.discovery.domain.dataprep.exceptions.PrepErrorCodes.PREP_TRANSFORM_ERROR_CODE;
+import static app.metatron.discovery.domain.dataprep.exceptions.PrepErrorCodes.PREP_NOTIFICATION_ERROR_CODE;
 
 import app.metatron.discovery.domain.dataprep.exceptions.PrepException;
 import app.metatron.discovery.domain.dataprep.exceptions.PrepMessageKey;
@@ -148,5 +149,18 @@ public class PrepUtil {
 
   public static PrepException transformError(Exception e) {
     return PrepException.create(PREP_TRANSFORM_ERROR_CODE, e);
+  }
+
+
+  public static PrepException notificationError(PrepMessageKey msgKey, String detail) {
+    return PrepException.create(PREP_NOTIFICATION_ERROR_CODE, msgKey, detail);
+  }
+
+  public static PrepException notificationError(PrepMessageKey msgKey) {
+    return PrepException.create(PREP_NOTIFICATION_ERROR_CODE, msgKey, null);
+  }
+
+  public static PrepException notificationError(Exception e) {
+    return PrepException.create(PREP_NOTIFICATION_ERROR_CODE, e);
   }
 }

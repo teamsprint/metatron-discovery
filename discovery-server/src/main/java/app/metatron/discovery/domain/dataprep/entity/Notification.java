@@ -4,8 +4,7 @@ import app.metatron.discovery.domain.AbstractHistoryEntity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import javax.persistence.*;
-import javax.validation.constraints.Size;
-
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -20,6 +19,7 @@ public class Notification extends AbstractHistoryEntity {
         DATAFLOW,
         JOB,
         CONNECTION;
+
         @JsonValue
         public String toJson() {
             return name();
@@ -31,6 +31,7 @@ public class Notification extends AbstractHistoryEntity {
         CREATE,
         UPDATE,
         DELETE;
+
         @JsonValue
         public String toJson() {
             return name();
@@ -52,7 +53,7 @@ public class Notification extends AbstractHistoryEntity {
     private Notification.NOTI_STEP notiStep;
 
     @Column(name = "noti_source_id")
-    private String  notiSourceId;
+    private String notiSourceId;
 
     @Lob
     @Column(name = "custom")
@@ -61,6 +62,13 @@ public class Notification extends AbstractHistoryEntity {
     @Column(name = "read_yn")
     protected String readYn;
 
+    @Transient
+    @JsonProperty
+    String notiSourceName;
+
+    @Transient
+    @JsonProperty
+    String division;
 
     public String getNotiId() {
         return notiId;
@@ -70,19 +78,19 @@ public class Notification extends AbstractHistoryEntity {
         this.notiId = notiId;
     }
 
-    public Notification.NOTI_CD getNotiCd() {
+    public NOTI_CD getNotiCd() {
         return notiCd;
     }
 
-    public void setNotiCd(Notification.NOTI_CD notiCd) {
+    public void setNotiCd(NOTI_CD notiCd) {
         this.notiCd = notiCd;
     }
 
-    public Notification.NOTI_STEP getNotiStep() {
+    public NOTI_STEP getNotiStep() {
         return notiStep;
     }
 
-    public void setNotiStep(Notification.NOTI_STEP notiStep) {
+    public void setNotiStep(NOTI_STEP notiStep) {
         this.notiStep = notiStep;
     }
 
@@ -108,5 +116,21 @@ public class Notification extends AbstractHistoryEntity {
 
     public void setReadYn(String readYn) {
         this.readYn = readYn;
+    }
+
+    public String getNotiSourceName() {
+        return notiSourceName;
+    }
+
+    public void setNotiSourceName(String notiSourceName) {
+        this.notiSourceName = notiSourceName;
+    }
+
+    public String getDivision() {
+        return division;
+    }
+
+    public void setDivision(String division) {
+        this.division = division;
     }
 }
