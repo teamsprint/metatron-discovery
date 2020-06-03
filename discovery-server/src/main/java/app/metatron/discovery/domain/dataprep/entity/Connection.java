@@ -18,7 +18,7 @@ public class Connection extends AbstractHistoryEntity {
     @JsonFormat(shape = JsonFormat.Shape.OBJECT)
     public enum ConnType {
         API,
-        JDBC;
+        DATABASE;
         @JsonValue
         public String toJson() {
             return name();

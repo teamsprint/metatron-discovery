@@ -7,9 +7,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 import org.hibernate.annotations.GenericGenerator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 
@@ -17,8 +14,6 @@ import javax.validation.constraints.Size;
 @Entity
 @Table(name = "dataset")
 public class Dataset extends AbstractHistoryEntity {
-
-//    private static final Logger LOGGER = LoggerFactory.getLogger(Dataset.class);
 
     @JsonFormat(shape = JsonFormat.Shape.OBJECT)
     public enum IMPORT_TYPE {
@@ -184,86 +179,6 @@ public class Dataset extends AbstractHistoryEntity {
     public void setConnId(String connId) {
         this.connId = connId;
     }
-
-//    public String getImplementor() {
-//        return implementor;
-//    }
-//
-//    public void setImplementor(String implementor) {
-//        this.implementor = implementor;
-//    }
-//
-//    public String getHostname() {
-//        return hostname;
-//    }
-//
-//    public void setHostname(String hostname) {
-//        this.hostname = hostname;
-//    }
-//
-//    public Integer getPort() {
-//        return port;
-//    }
-//
-//    public void setPort(Integer port) {
-//        this.port = port;
-//    }
-//
-//    public String getDatabase() {
-//        return database;
-//    }
-//
-//    public void setDatabase(String database) {
-//        this.database = database;
-//    }
-//
-//    public String getCatalog() {
-//        return catalog;
-//    }
-//
-//    public void setCatalog(String catalog) {
-//        this.catalog = catalog;
-//    }
-//
-//    public String getSid() {
-//        return sid;
-//    }
-//
-//    public void setSid(String sid) {
-//        this.sid = sid;
-//    }
-//
-//    public String getUrl() {
-//        return url;
-//    }
-//
-//    public void setUrl(String url) {
-//        this.url = url;
-//    }
-//
-//    public String getUsername() {
-//        return username;
-//    }
-//
-//    public void setUsername(String username) {
-//        this.username = username;
-//    }
-//
-//    public String getPassword() {
-//        return password;
-//    }
-//
-//    public void setPassword(String password) {
-//        this.password = password;
-//    }
-//
-//    public Connection.ConnType getConnType() {
-//        return connType;
-//    }
-//
-//    public void setConnType(Connection.ConnType connType) {
-//        this.connType = connType;
-//    }
 
     public RS_TYPE getRsType() {
         return rsType;

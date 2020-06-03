@@ -46,8 +46,7 @@ public class DatasetController {
 
         try {
             dataset = datasetResource.getContent();
-            this.datasetService.setConnectionInfo(dataset);
-
+            // this.datasetService.setConnectionInfo(dataset);
             savedDataset = this.datasetRepository.save(dataset);
             LOGGER.debug(savedDataset.toString());
 

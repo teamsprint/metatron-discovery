@@ -7,8 +7,6 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.validator.constraints.NotBlank;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -18,8 +16,6 @@ import java.util.List;
 @Entity
 @Table(name = "recipe")
 public class Recipe extends AbstractHistoryEntity {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(Recipe.class);
 
     @Id
     @GeneratedValue(generator = "uuid")
@@ -54,14 +50,8 @@ public class Recipe extends AbstractHistoryEntity {
     @OneToMany(mappedBy = "recipe", fetch = FetchType.LAZY)
     private List<RecipeRule> recipeRules;
 
-
-
     @Column(name = "rule_cur_idx")
     private Integer ruleCurIdx;
-
-//    @Column(name = "manual_column_count")
-//    private Integer manualColumnCount;
-
 
     @Column(name = "total_lines")
     private Long totalLines;
