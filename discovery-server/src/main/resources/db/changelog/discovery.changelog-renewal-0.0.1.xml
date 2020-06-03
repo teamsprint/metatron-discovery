@@ -33,6 +33,14 @@
         </createTable>
     </changeSet>
 
+    <changeSet author="initial (generated)" id="r001-connection-1589873558641-2">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="connection"/>
+        </preConditions>
+        <update tableName="connection">
+            <column name="conn_type" value="DATABASE"/>
+        </update>
+    </changeSet>
 
     <changeSet author="initial (generated)" id="r001-dataflow-1589873558641-1">
         <preConditions onFail="MARK_RAN">
