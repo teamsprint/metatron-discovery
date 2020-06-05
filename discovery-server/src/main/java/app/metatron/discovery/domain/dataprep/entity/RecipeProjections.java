@@ -1,5 +1,6 @@
 package app.metatron.discovery.domain.dataprep.entity;
 
+import app.metatron.dataprep.teddy.DataFrame;
 import org.springframework.data.rest.core.config.Projection;
 
 import java.util.List;
@@ -25,17 +26,11 @@ public class RecipeProjections {
 
         List<RecipeRule> getRecipeRules();
 
+        DataFrame getGridResponse();
+
         Long getTotalLines();
 
         Long getTotalBytes();
-
-
-
-
-
-
-
-
 
 
     }

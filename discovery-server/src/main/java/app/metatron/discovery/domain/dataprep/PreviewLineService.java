@@ -62,7 +62,6 @@ public class PreviewLineService {
     private String getPreviewPath(String dsId) {
         String tempDirPath = getPreviewPath();
         String pathStr = tempDirPath + File.separator + dsId + ".df";
-
         return pathStr;
     }
 

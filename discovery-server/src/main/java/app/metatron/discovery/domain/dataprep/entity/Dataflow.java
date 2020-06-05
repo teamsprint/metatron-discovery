@@ -1,9 +1,10 @@
 package app.metatron.discovery.domain.dataprep.entity;
-
 import app.metatron.discovery.domain.AbstractHistoryEntity;
+import app.metatron.discovery.domain.dataprep.Upstream;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -37,6 +38,11 @@ public class Dataflow extends AbstractHistoryEntity {
     @OneToMany(mappedBy = "dataflow", fetch = FetchType.LAZY)
     @JsonIgnore
     private List<DataflowDiagram> diagrams;
+
+
+    @Transient
+    @JsonProperty
+    List<Upstream> upstreams;
 
 
     public String getDfId() {
@@ -80,6 +86,13 @@ public class Dataflow extends AbstractHistoryEntity {
     }
 
 
+    public List<Upstream> getUpstreams() {
+        return upstreams;
+    }
+
+    public void setUpstreams(List<Upstream> upstreams) {
+        this.upstreams = upstreams;
+    }
 
     public boolean addDiagram(DataflowDiagram diagram) {
         if (diagram != null) {

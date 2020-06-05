@@ -1,5 +1,6 @@
 package app.metatron.discovery.domain.dataprep.entity;
 
+import app.metatron.dataprep.teddy.DataFrame;
 import app.metatron.discovery.domain.user.UserProfile;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Value;
@@ -49,6 +50,8 @@ public class DatasetProjections {
         Long getTotalLines();
 
         Long getTotalBytes();
+
+        DataFrame getGridResponse();
 
         DateTime getCreatedTime();
 

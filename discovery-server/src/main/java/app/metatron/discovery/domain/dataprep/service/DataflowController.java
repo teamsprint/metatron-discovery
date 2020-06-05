@@ -122,6 +122,25 @@ public class DataflowController {
         try {
             dataflow = this.dataflowRepository.findOne(dfId);
             if (dataflow != null) {
+                List<Upstream> upstreams = Lists.newArrayList();
+                if(dataflow.getDiagrams()!=null) {
+                    for (DataflowDiagram diagram : dataflow.getDiagrams()) {
+                        if (diagram.getObjType() == DataflowDiagram.ObjectType.RECIPE) {
+                            String recipeId = diagram.getRecipe().getRecipeId();
+                            List<String> upstreamDsIds = this.transformService.getUpstreamDsIds(recipeId);
+                            if (null != upstreamDsIds) {
+                                for (String upstreamDsId : upstreamDsIds) {
+                                    Upstream upstream = new Upstream();
+                                    upstream.setDfId(dfId);
+                                    upstream.setReId(recipeId);
+                                    upstream.setUpstreamDsId(upstreamDsId);
+                                    upstreams.add(upstream);
+                                }
+                            }
+                        }
+                    }
+                }
+                dataflow.setUpstreams(upstreams);
                 DataflowProjections.DefaultProjection projection = projectionFactory
                         .createProjection(DataflowProjections.DefaultProjection.class, dataflow);
                 projectedDataflow = new Resource<>(projection);
@@ -233,7 +252,7 @@ public class DataflowController {
             throw PrepException.create(PrepErrorCodes.PREP_DATAFLOW_ERROR_CODE, e);
         }
 
-        return ResponseEntity.status(HttpStatus.SC_CREATED).body(upstreams);
+        return ResponseEntity.status(HttpStatus.SC_OK).body(upstreams);
     }
 
 

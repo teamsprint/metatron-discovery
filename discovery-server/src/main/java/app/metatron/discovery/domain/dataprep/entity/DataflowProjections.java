@@ -1,5 +1,6 @@
 package app.metatron.discovery.domain.dataprep.entity;
 
+import app.metatron.discovery.domain.dataprep.Upstream;
 import app.metatron.discovery.domain.user.UserProfile;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,6 +32,8 @@ public class DataflowProjections {
         Integer getDatasetCount();
 
         Integer getRecipeCount();
+
+        List<Upstream> getUpstreams();
 
         @Value("#{@cachedUserService.findUserProfile(target.createdBy)}")
         UserProfile getCreatedBy();
