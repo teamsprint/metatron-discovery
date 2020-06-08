@@ -1,8 +1,14 @@
 package app.metatron.discovery.domain.dataprep.transform;
 
+
+
+import app.metatron.dataprep.PrepContext;
+
+import app.metatron.dataprep.teddy.exceptions.TeddyException;
 import app.metatron.discovery.domain.dataprep.PrepProperties;
 import app.metatron.discovery.domain.dataprep.PreviewLineService;
 import app.metatron.discovery.domain.dataprep.entity.*;
+import app.metatron.discovery.domain.dataprep.exceptions.PrepException;
 import app.metatron.discovery.domain.dataprep.repository.ConnectionRepository;
 import app.metatron.discovery.domain.dataprep.repository.DataflowRepository;
 import app.metatron.discovery.domain.dataprep.repository.DatasetRepository;
@@ -18,6 +24,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import org.hibernate.Hibernate;
 import org.hibernate.proxy.HibernateProxy;
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +33,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 @Service
 public class TransformService {
@@ -64,6 +72,10 @@ public class TransformService {
     @Autowired(required = false)
     RecipeTeddyImpl teddyImpl;
 
+    @Autowired
+    PrepHistogramService prepHistogramService;
+
+
     public enum OP_TYPE {
         CREATE,
         APPEND,
@@ -75,6 +87,8 @@ public class TransformService {
         PREVIEW,
         NOT_USED
     }
+
+    PrepContext pc;
 
 
     // create stage0 (POST)
@@ -151,7 +165,7 @@ public class TransformService {
                     for (int i = 0; i < ruleStrings.size(); i++) {
                         String ruleString = ruleStrings.get(i);
                         String jsonRuleString = transformRuleService.jsonizeRuleString(ruleString);
-                        transform(recipeId, PrepTransformService.OP_TYPE.APPEND, i, ruleString, jsonRuleString, true);
+                        transform(recipeId, TransformService.OP_TYPE.APPEND, i, ruleString, jsonRuleString, true);
                     }
                     break;
                 default:
@@ -165,6 +179,52 @@ public class TransformService {
         LOGGER.trace("create(): end");
         return response;
     }
+
+
+    @Transactional(rollbackFor = Exception.class)
+    public TransformResponse clone(String recipedId) throws Exception {
+        Recipe recipe = recipeRepository.findOne(recipedId);
+        Dataset importedDataset = datasetRepository.findRealOne(datasetRepository.findOne(recipe.getCreatorDsId()));
+
+        String upstreamDsId = getFirstUpstreamDsId(recipedId);
+
+        TransformResponse response = create(upstreamDsId, recipe.getCreatorDfId(),
+                importedDataset.getName());
+        String cloneDsId = response.getRecipeId();
+
+        List<RecipeRule> recipeRules = getRulesInOrder(recipedId);
+        for (int i = 1; i < recipeRules.size(); i++) {
+            String ruleString = recipeRules.get(i).getRuleString();
+            String jsonRuleString = recipeRules.get(i).getUiContext();
+            try {
+                response = transform(cloneDsId, TransformService.OP_TYPE.APPEND, i - 1, ruleString, jsonRuleString, true);
+            } catch (TeddyException te) {
+                LOGGER.info("clone(): A TeddyException is suppressed: {}", te.getMessage());
+            }
+        }
+        return response;
+    }
+
+
+    @Transactional(rollbackFor = Exception.class)
+    public TransformResponse fetch(String recipeId, Integer stageIdx) throws IOException {
+        TransformResponse response;
+
+        try {
+            loadWrangledDataset(recipeId);
+
+            response = fetch_internal(recipeId, stageIdx);
+        } catch (CannotSerializeIntoJsonException e) {
+            e.printStackTrace();
+            throw PrepException.fromTeddyException(e);
+        }
+
+        response.setRecipeRules(getRulesInOrder(recipeId), false, false);
+        response.setRuleCurIdx(stageIdx != null ? stageIdx : pc.getCurStageIdx(recipeId));
+
+        return response;
+    }
+
 
     public void putAddedInfo(TransformResponse transformResponse, Recipe recipe) {
         if (transformResponse != null && recipe != null) {
@@ -249,7 +309,7 @@ public class TransformService {
 
     // transform (PUT)
     @Transactional(rollbackFor = Exception.class)
-    public TransformResponse transform(String recipeId, PrepTransformService.OP_TYPE op, Integer stageIdx,
+    public TransformResponse transform(String recipeId, TransformService.OP_TYPE op, Integer stageIdx,
                                            String ruleString, String jsonRuleString, boolean suppress) throws Exception {
         LOGGER.trace("transform(): start: recipeId={} op={} stageIdx={} ruleString={} jsonRuleString={}",
                 recipeId, op, stageIdx, ruleString, jsonRuleString);
@@ -304,7 +364,27 @@ public class TransformService {
         return postTransform(recipeId, op);
     }
 
-    private TransformResponse postTransform(String recipeId, PrepTransformService.OP_TYPE op)
+    // transform_histogram (POST)
+    public PrepHistogramResponse transform_histogram(String recipedId, Integer stageIdx,
+                                                     List<Integer> colnos, List<Integer> colWidths) throws Exception {
+        LOGGER.trace("transform_histogram(): start: recipedId={} curRevIdx={} stageIdx={} colnos={} colWidths={}",
+                recipedId, pc.getCurRevIdx(recipedId), stageIdx, colnos, colWidths);
+
+        loadWrangledDataset(recipedId);
+
+        assert stageIdx != null;
+        assert stageIdx >= 0 : stageIdx;
+
+        DataFrame df = pc.fetch(recipedId, stageIdx);
+        List<Histogram> colHists = createHistsWithColWidths(df, colnos, colWidths);
+
+        LOGGER.trace("transform_histogram(): end");
+        return new PrepHistogramResponse(colHists);
+    }
+
+
+
+    private TransformResponse postTransform(String recipeId, TransformService.OP_TYPE op)
             throws CannotSerializeIntoJsonException, JsonProcessingException {
         Recipe recipe = recipeRepository.getOne(recipeId);
         assert recipe != null : recipeId;
@@ -336,6 +416,28 @@ public class TransformService {
         return response;
     }
 
+
+    // transform_timestampFormat
+    public Map<String, Object> transform_timestampFormat(String recipedId, List<String> colNames) throws Exception {
+        loadWrangledDataset(recipedId);
+
+        DataFrame df = pc.fetch(recipedId);
+        Map<String, Object> response = new HashMap<>();
+
+        if (colNames.size() == 0) {
+            colNames.add("");
+        }
+
+        for (String colName : colNames) {
+            response.put(colName, getTimestampFormatList(df, colName));
+        }
+
+        return response;
+    }
+
+
+
+
     public TransformResponse fetch_internal(String recipeId, Integer stageIdx) {
         DataFrame gridResponse = teddyImpl.fetch(recipeId, stageIdx);
         TransformResponse response = new TransformResponse(gridResponse);
@@ -358,9 +460,9 @@ public class TransformService {
 
 
 
-    private int preTransform(String recipeId, PrepTransformService.OP_TYPE op, String ruleString)
+    private int preTransform(String recipeId, TransformService.OP_TYPE op, String ruleString)
             throws CannotSerializeIntoJsonException, IOException {
-        if (op == PrepTransformService.OP_TYPE.APPEND || op == PrepTransformService.OP_TYPE.UPDATE || op == PrepTransformService.OP_TYPE.PREVIEW) {
+        if (op == TransformService.OP_TYPE.APPEND || op == TransformService.OP_TYPE.UPDATE || op == TransformService.OP_TYPE.PREVIEW) {
             PrepRuleChecker.confirmRuleStringForException(ruleString);
 
             // Check in advance, or a severe inconsistency between stages and rules can happen,
@@ -589,8 +691,115 @@ public class TransformService {
     }
 
 
+    private List<Histogram> createHistsWithColWidths(DataFrame df, List<Integer> colnos, List<Integer> colWidths) {
+        LOGGER.debug("createHistsWithColWidths(): df.colCnt={}, colnos={} colWidths={}", df.getColCnt(), colnos, colWidths);
+
+        df.colHists = new ArrayList<>();
+        List<Future<Histogram>> futures = new ArrayList<>();
+        List<Histogram> colHists = new ArrayList<>();
+
+        assert colnos.size() == colWidths.size() : String
+                .format("colnos.size()=%d colWidths.size()=%d", colnos.size(), colWidths.size());
+
+        int dop = 16;
+        int issued = 0;
+
+        for (int i = 0; i < colnos.size(); i++) {
+            int colno = colnos.get(i);
+            int colWidth = colWidths.get(i);
+            futures.add(prepHistogramService
+                    .updateHistWithColWidth(df.getColName(colno), df.getColType(colno), df.rows, colno, colWidth));
+
+            if (++issued == dop) {
+                for (int j = 0; j < issued; j++) {
+                    try {
+                        colHists.add(futures.get(j).get());
+                    } catch (InterruptedException e) {
+                        LOGGER.error("createHistsWithColWidths(): interrupted", e);
+                    } catch (ExecutionException e) {
+                        e.getCause().printStackTrace();
+                        LOGGER.error("createHistsWithColWidths(): execution error on " + df.dsName, e);
+                    }
+                }
+                issued = 0;
+                futures.clear();
+            }
+        }
+
+        if (issued > 0) {
+            for (int j = 0; j < issued; j++) {
+                try {
+                    colHists.add(futures.get(j).get());
+                } catch (InterruptedException e) {
+                    LOGGER.error("createHistsWithColWidths(): interrupted", e);
+                } catch (ExecutionException e) {
+                    e.getCause().printStackTrace();
+                    LOGGER.error("createHistsWithColWidths(): execution error on " + df.dsName, e);
+                }
+            }
+        }
+
+        LOGGER.trace("createHistsWithColWidths(): finished");
+        return colHists;
+    }
 
 
+    private Map<String, Integer> getTimestampFormatList(DataFrame df, String colName)
+            throws Exception {
+        Map<String, Integer> timestampFormatList = new LinkedHashMap<>();
+        List<TimestampTemplate> timestampStyleGuess = new ArrayList<>();
+        int colNo;
+
+        // 기본 포맷은 항상 리턴
+        for (TimestampTemplate tt : TimestampTemplate.values()) {
+            String timestampFormat = tt.getFormatForRuleString();
+            timestampFormatList.put(timestampFormat, 0);
+        }
+
+        if (colName.equals("")) {
+        } else {
+
+            try {
+                colNo = df.getColnoByColName(colName);
+            } catch (Exception e) {
+                //return null;
+
+                // null은 안된다는 UI 요청. 원칙적으로 colNo가 없을 수는 없는데 룰 로직의 버그로 발생할 수 있는 듯.
+                // 확인 필요.
+                // 우선 템플릿 중 첫번째 포맷을 디폴트로 사용함
+                return timestampFormatList;
+            }
+
+            int rowCount = df.rows.size() < 100 ? df.rows.size() : 100;
+
+            for (int i = 0; i < rowCount; i++) {
+                if (df.rows.get(i).get(colNo) == null) {
+                    continue;
+                }
+
+                String str = df.rows.get(i).get(colNo).toString();
+
+                for (TimestampTemplate tt : TimestampTemplate.values()) {
+                    try {
+                        DateTimeFormatter dtf = DateTimeFormat.forPattern(tt.getFormat()).withLocale(Locale.ENGLISH);
+                        DateTime.parse(str, dtf);
+
+                        timestampStyleGuess.add(tt);
+                        break;
+                    } catch (Exception e) {
+                        // Suppress
+                    }
+                }
+            }
+        }
+
+        for (TimestampTemplate tt : timestampStyleGuess) {
+            String timestampFormat = tt.getFormatForRuleString();
+            timestampFormatList.put(timestampFormat, timestampFormatList.get(timestampFormat) + 1);
+        }
+
+        return timestampFormatList;
+    }
 
 
 }
