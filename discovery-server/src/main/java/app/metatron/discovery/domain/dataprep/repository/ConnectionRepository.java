@@ -2,7 +2,6 @@ package app.metatron.discovery.domain.dataprep.repository;
 
 import app.metatron.discovery.domain.dataprep.entity.Connection;
 import app.metatron.discovery.domain.dataprep.entity.ConnectionProjections;
-
 import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 
 import org.springframework.data.domain.Page;
@@ -16,6 +15,9 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
         excerptProjection = ConnectionProjections.DefaultProjection.class)
 public interface  ConnectionRepository extends JpaRepository<Connection, String>,
         QueryDslPredicateExecutor<Connection> {
+
+
+    Page<Connection> findByNameContaining(@Param("name") String name, Pageable pageable);
 
 
 }
