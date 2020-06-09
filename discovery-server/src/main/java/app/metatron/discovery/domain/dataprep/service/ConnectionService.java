@@ -1,29 +1,33 @@
+/*
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package app.metatron.discovery.domain.dataprep.service;
 
 import app.metatron.discovery.common.GlobalObjectMapper;
 import app.metatron.discovery.common.datasource.DataType;
 import app.metatron.discovery.common.exception.FunctionWithException;
-//import app.metatron.discovery.domain.dataconnection.DataConnection;
-//import app.metatron.discovery.domain.dataconnection.DataConnectionHelper;
-//import app.metatron.discovery.domain.dataprep.PrepDatasetDatabaseService;
 import app.metatron.discovery.domain.dataprep.entity.Dataset;
-//import app.metatron.discovery.domain.dataprep.entity.PrDataset;
 import app.metatron.discovery.domain.dataprep.exceptions.PrepException;
-import app.metatron.discovery.domain.dataprep.jdbc.PrepJdbcService;
 import app.metatron.dataprep.teddy.DataFrame;
 import app.metatron.dataprep.teddy.exceptions.TeddyException;
 import app.metatron.discovery.domain.datasource.Field;
 import app.metatron.discovery.domain.datasource.ingestion.jdbc.SelectQueryBuilder;
-
 import app.metatron.discovery.domain.dataprep.repository.ConnectionRepository;
 import app.metatron.discovery.domain.dataprep.repository.DatasetRepository;
 
-//import app.metatron.discovery.extension.dataconnection.jdbc.accessor.JdbcAccessor;
-//import app.metatron.discovery.extension.dataconnection.jdbc.dialect.JdbcDialect;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Predicate;
 
 import app.metatron.discovery.domain.dataprep.entity.Connection;
@@ -36,8 +40,6 @@ import org.joda.time.DateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
-//import org.springframework.jdbc.support.JdbcUtils;
-//import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.Page;

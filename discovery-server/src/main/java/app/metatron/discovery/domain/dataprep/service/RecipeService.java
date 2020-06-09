@@ -11,19 +11,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package app.metatron.discovery.domain.dataprep.service;
 
-import java.util.List;
-import app.metatron.discovery.common.criteria.ListFilterRequest;
+import app.metatron.discovery.domain.dataprep.entity.Recipe;
+import app.metatron.discovery.domain.dataprep.repository.RecipeRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-public class ConnectionFilterRequest extends ListFilterRequest {
-    List<String> implementor;
+@Service
+@Transactional
+public class RecipeService {
 
-    public List<String> getImplementor() {
-        return implementor;
-    }
-
-    public void setImplementor(List<String> implementor) {
-        this.implementor = implementor;
-    }
+    @Autowired
+    RecipeRepository recipeRepository;
 }

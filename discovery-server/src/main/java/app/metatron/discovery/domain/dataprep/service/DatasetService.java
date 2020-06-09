@@ -1,19 +1,26 @@
+/*
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package app.metatron.discovery.domain.dataprep.service;
 
-import app.metatron.discovery.domain.dataprep.entity.Connection;
 import app.metatron.discovery.domain.dataprep.entity.Dataset;
-import app.metatron.discovery.domain.dataprep.service.ConnectionService;
-import app.metatron.discovery.domain.dataprep.entity.PrDataset;
-import app.metatron.discovery.domain.dataprep.repository.ConnectionRepository;
-import app.metatron.discovery.domain.dataprep.exceptions.PrepException;
 import app.metatron.discovery.domain.dataprep.DatasetFileService;
-
 import app.metatron.dataprep.teddy.DataFrame;
 import app.metatron.dataprep.teddy.exceptions.TeddyException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -28,35 +35,12 @@ import static org.apache.commons.io.FilenameUtils.getExtension;
 public class DatasetService {
 
     @Autowired
-    private ConnectionRepository connectionRepository;
-
-    @Autowired
     private DatasetFileService datasetFileService;
 
     @Autowired
     private ConnectionService connectionService;
 
     private String previewSize = "50";
-
-    public void setConnectionInfo(Dataset dataset) throws PrepException {
-//        String connId = dataset.getConnId();
-//        if (connId != null) {
-//            Connection connection = this.connectionRepository.getOne(connId);
-//            if(connection!= null) {
-//                dataset.setImplementor(connection.getImplementor());
-//                dataset.setHostname(connection.getHostname());
-//                dataset.setPort(connection.getPort());
-//                dataset.setDatabase(connection.getDatabase());
-//                dataset.setCatalog(connection.getCatalog());
-//                dataset.setSid(connection.getSid());
-//                dataset.setUrl(connection.getUrl());
-//                dataset.setUsername(connection.getUsername());
-//                dataset.setPassword(connection.getPassword());
-//                dataset.setConnType(connection.getConnType());
-//            }
-//        }
-    }
-
 
     public void changeFileFormatToCsv(Dataset dataset) throws Exception {
         String storedUri = dataset.getStoredUri();
