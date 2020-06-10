@@ -6,8 +6,8 @@
     "prestart": "npm run lint",
     "start": "ng serve",
     "prebuild": "npm run lint",
-    "build": "ng build",
-    "postbuild": "gzipper --verbose ./dist",
+    "build": "ng build --configuration=production",
+    "postbuild": "npx gzipper ./target/classes/resource",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
