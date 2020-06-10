@@ -1,0 +1,177 @@
+<!-- 클릭시 is-selected 추가 -->
+<div class="pb-ui-lnb"
+     routerLinkActive="is-selected"
+     [routerLink]="ROUTER_URLS.Managements.getMainUrl()"
+     [routerLinkActiveOptions]="{exact:true}">
+  <!--suppress JSUnnecessarySemicolon -->
+  <a href="javascript:;" class="pb-lnb-menu type-home"></a>
+</div>
+
+<hr class="pb-line">
+
+<div class="pb-ui-lnb" #typeFlows
+     routerLinkActive="is-selected"
+     [routerLink]="ROUTER_URLS.Managements.getFlowsUrl()"
+     [routerLinkActiveOptions]="{exact:true}"
+     (mouseover)="typeFlows.setAttribute('aria-expanded', 'true')"
+     (mouseleave)="typeFlows.setAttribute('aria-expanded', 'false')">
+  <!--suppress JSUnnecessarySemicolon -->
+  <a href="javascript:;" class="pb-lnb-menu type-flows">
+
+    <!-- tooltip -->
+    <div class="pb-ui-tooltip-info">
+      <em class="pb-icon-view-left"></em>
+      Data Flows
+    </div>
+    <!-- //tooltip -->
+  </a>
+
+  <!-- 2depth -->
+  <div class="pb-ui-lnb-2depth">
+    <div class="pb-txt-label">Data Flow</div>
+
+    <!-- search -->
+    <div class="pb-form-search">
+      <!--suppress HtmlFormInputWithoutLabel -->
+      <input type="text" placeholder="Search for values">
+      <!--suppress JSUnnecessarySemicolon -->
+      <a href="javascript:;" class="pb-btn-del"></a>
+    </div>
+    <!-- //search -->
+
+    <ul class="pb-list-lnb-name">
+      <!-- new 일 때 type-new 추가 -->
+      <li class="type-new">
+        <!--suppress JSUnnecessarySemicolon -->
+        <a href="javascript:;">
+          <span class="txt-name">FlFlowFlowFlowFlowFlowFlowFlowow Name4</span>
+        </a>
+      </li>
+      <li>
+        <!--suppress JSUnnecessarySemicolon -->
+        <a href="javascript:;">
+          <span class="txt-name">Flow Name4</span>
+        </a>
+      </li>
+      <li class="type-new">
+        <!--suppress JSUnnecessarySemicolon -->
+        <a href="javascript:;">
+          <span class="txt-name">Flow Name4</span>
+        </a>
+      </li>
+      <li>
+        <!--suppress JSUnnecessarySemicolon -->
+        <a href="javascript:;">
+          <span class="txt-name">Flow Name4</span>
+        </a>
+      </li>
+      <li>
+        <!--suppress JSUnnecessarySemicolon -->
+        <a href="javascript:;">
+          <span class="txt-name">Flow Name4</span>
+        </a>
+      </li>
+      <li>
+        <!--suppress JSUnnecessarySemicolon -->
+        <a href="javascript:;">
+          <span class="txt-name">Flow Name4</span>
+        </a>
+      </li>
+      <li>
+        <!--suppress JSUnnecessarySemicolon -->
+        <a href="javascript:;">
+          <span class="txt-name">Flow Name4</span>
+        </a>
+      </li>
+      <li>
+        <!--suppress JSUnnecessarySemicolon -->
+        <a href="javascript:;">
+          <span class="txt-name">Flow Name4</span>
+        </a>
+      </li>
+      <li>
+        <!--suppress JSUnnecessarySemicolon -->
+        <a href="javascript:;">
+          <span class="txt-name">Flow Name4</span>
+        </a>
+      </li>
+      <li>
+        <!--suppress JSUnnecessarySemicolon -->
+        <a href="javascript:;">
+          <span class="txt-name">Flow Name4</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+  <!-- //2depth -->
+</div>
+
+<div class="pb-ui-lnb" #typeResults
+     (mouseover)="typeResults.setAttribute('aria-expanded', 'true')"
+     (mouseleave)="typeResults.setAttribute('aria-expanded', 'false')">
+  <!--suppress JSUnnecessarySemicolon -->
+  <a href="javascript:;" class="pb-lnb-menu type-results">
+
+    <!-- tooltip -->
+    <div class="pb-ui-tooltip-info">
+      <em class="pb-icon-view-left"></em>
+      Job Results
+    </div>
+    <!-- //tooltip -->
+  </a>
+</div>
+
+<hr class="pb-line">
+
+<div class="pb-ui-lnb" #typeSets
+     (mouseover)="typeSets.setAttribute('aria-expanded', 'true')"
+     (mouseleave)="typeSets.setAttribute('aria-expanded', 'false')">
+  <!--suppress JSUnnecessarySemicolon -->
+  <a href="javascript:;" class="pb-lnb-menu type-sets">
+    <!-- tooltip -->
+    <div class="pb-ui-tooltip-info">
+      <em class="pb-icon-view-left"></em>
+      Data Sets
+    </div>
+    <!-- //tooltip -->
+  </a>
+</div>
+
+<div class="pb-ui-lnb" #typeConnections
+     (mouseover)="typeConnections.setAttribute('aria-expanded', 'true')"
+     (mouseleave)="typeConnections.setAttribute('aria-expanded', 'false')">
+  <!--suppress JSUnnecessarySemicolon -->
+  <a href="javascript:;" class="pb-lnb-menu type-connections">
+
+    <!-- tooltip -->
+    <div class="pb-ui-tooltip-info">
+      <em class="pb-icon-view-left"></em>
+      Data Connections
+    </div>
+    <!-- //tooltip -->
+  </a>
+</div>
+
+<!--
+  aria-expanded ="true" 일 때 popup show
+-->
+<div class="pb-ui-lnb type-bottom" #typeCreate
+     (mouseover)="typeCreate.setAttribute('aria-expanded', 'true')"
+     (mouseleave)="typeCreate.setAttribute('aria-expanded', 'false')">
+  <a href="javascript:" class="pb-lnb-menu type-create">
+    <!-- tooltip -->
+    <div class="pb-ui-tooltip-info">
+      <em class="pb-icon-view-left"></em>
+      Create
+    </div>
+    <!-- //tooltip -->
+  </a>
+  <!-- popup  create-->
+  <div class="pb-pop-create">
+    <a href="javascript:">Create Dataset</a>
+    <hr class="pb-line">
+    <a href="javascript:">Create Data Flow</a>
+    <a href="javascript:" (click)="openCreateConnectionPopup()">Create Data Connection</a>
+  </div>
+  <!-- //popup  create-->
+</div>

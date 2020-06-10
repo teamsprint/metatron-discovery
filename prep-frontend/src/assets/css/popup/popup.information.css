@@ -1,0 +1,18 @@
+.pb-pop-information .pb-ui-data-option {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 27px 0 0 0;
+  box-sizing: border-box;
+}
+
+.pb-data-txt {
+  float: left;
+  padding-left: 10px;
+  color: #222;
+  font-size: 12px;
+}
+
+.pb-ui-datadetail {
+  margin-bottom: 30px;
+}

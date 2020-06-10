@@ -1,0 +1,37 @@
+<a href="javascript:;" class="link-logo"
+   (click)="$event.stopPropagation(); $event.preventDefault(); goMainPage()">
+</a>
+
+<!-- user -->
+<!-- 클릭시 is-selected 추가 -->
+<div class="pb-ui-user"
+     (clickOutside)="hideProfile()"
+     [class.is-selected]="isShowProfile">
+  <em class="pb-data-photo">
+    <!--suppress HtmlRequiredAltAttribute -->
+    <img [src]="IMAGE_CONSTANT.DEFAULT_PROFILE_IMAGE_SRC"
+         (click)="$event.stopPropagation(); $event.preventDefault(); toggleProfile()">
+  </em>
+  <!-- popup -->
+  <div class="pb-pop-user">
+    <div class="pb-user-name">
+      <span class="pb-data-name">{{ userFullName$ | async }}</span>
+      <span class="pb-data-id">{{ (user && user.email) ? user.email : '' }}</span>
+    </div>
+
+    <ul class="pb-list-user">
+      <li>
+        <a href="javascript:;" class="type-profile">Profile</a>
+      </li>
+      <li>
+        <a href="javascript:;" class="type-setting">Setting</a>
+      </li>
+    </ul>
+
+    <a href="javascript:;" class="pb-link-logout"
+       (click)="logout()">Log out
+    </a>
+  </div>
+  <!-- //popup -->
+</div>
+<!-- //user -->

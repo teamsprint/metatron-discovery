@@ -1,0 +1,92 @@
+@charset "utf-8";
+
+/***********************************************************************
+     Compontent : button
+ *************************************************************************/
+.pb-ui-tooltip-info {
+  display: none;
+  position: absolute;
+  top: -7px;
+  left: 17px;
+  min-width: 15px;
+  padding: 6px;
+  color: #fff;
+  font-size: 12px;
+  line-height:14px;
+  white-space: nowrap;
+  border-radius: 3px;
+  background-color: rgba(0, 0, 0, 0.9);
+  z-index: 1;
+}
+
+.pb-ui-tooltip-info em.pb-icon-view-top {
+  display: inline-block;
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  width: 4px;
+  height: 8px;
+  margin-left: -4px;
+  background: url(../../images/icon_tagview.png) no-repeat;
+  transform: rotate(90deg);
+  background-position:left -27px;
+}
+
+.pb-ui-tooltip-info em.pb-icon-view-left {
+  display: inline-block;
+  position: absolute;
+  top: 50%;
+  left: -4px;
+  width: 4px;
+  height: 8px;
+  margin-top: -4px;
+  background: url(../../images/icon_tagview.png) no-repeat;
+}
+
+.pb-ui-tooltip-info em.pb-icon-view-right {
+  display: inline-block;
+  position: absolute;
+  top: 50%;
+  left: 100%;
+  width: 4px;
+  height: 8px;
+  margin-top: -4px;
+  background: url(../../images/icon_tagview.png) no-repeat;
+  transform: rotate(180deg);
+}
+
+.pb-ui-tooltip-info em.pb-icon-view-down {
+  display: inline-block;
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  width: 4px;
+  height: 8px;
+  margin-left: -4px;
+  background: url(../../images/icon_tagview.png) no-repeat;
+  transform: rotate(-90deg);
+}
+
+
+.pb-ui-tooltip-info.ddp-down {
+  position: absolute;
+  top: 100%;
+  left: inherit;
+  right: -10px;
+  margin-top: 6px;
+  font-weight: normal;
+}
+
+.pb-ui-tooltip-info.ddp-down em.pb-icon-view-top {
+  left: inherit;
+  right: 15px;
+}
+
+.pb-ui-tooltip-info.ddp-top {
+  position: absolute;
+  bottom: 100%;
+  top: initial;
+  left: 0;
+  margin-bottom: 6px;
+
+}

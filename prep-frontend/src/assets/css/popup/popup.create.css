@@ -1,0 +1,200 @@
+@charset "utf-8";
+
+/***********************************************************************
+     Popup : Create
+ *************************************************************************/
+.pb-pop-create {
+}
+
+.pb-pop-create .pb-ui-data-option {
+  display:flex;
+  padding: 15px 0 0 39px;
+  height:auto;
+  overflow:initial;
+}
+.pb-pop-create .pb-ui-data-option.type-flex {
+  display:flex;
+}
+.pb-pop-create .pb-ui-data-option .pb-form-option {display:flex; margin-right:30px; align-items: center;}
+.pb-pop-create .pb-ui-data-option .pb-form-option .pb-form-selectbox {width:280px;}
+.pb-pop-create .pb-ui-data-option .pb-form-option .pb-label-title {
+  padding: 0 17px 0 0;
+  color: #4b515b;
+  font-size: 14px;
+  font-weight:600;
+}
+
+.pb-pop-create .pb-ui-data-option .pb-form-option .pb-component-select-button {
+  float: left;
+  width: 420px;
+}
+
+.pb-wrap-data-connect {
+  display: flex;
+  flex-direction: column;
+  flex: auto;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+}
+
+.pb-wrap-data-connect .pb-img-create {
+  display: inline-block;
+  width: 121px;
+  height: 94px;
+  background: url(../../images/img_create.png) no-repeat;
+}
+
+.pb-wrap-data-connect .pb-txt-title {
+  padding: 25px 0 0 0;
+  color: #000;
+  font-size: 30px;
+}
+
+.pb-wrap-data-connect .pb-txt-det {
+  padding: 20px 0 0 0;
+  color: rgba(0, 0, 0, 0.7);
+  font-size: 18px;
+  text-align: center;
+}
+
+.pb-ui-data-expression {
+  flex: auto;
+  position: relative;
+  height: 100%;
+  padding: 0 10% 20px 10%;
+}
+
+.pb-pop-create .pb-ui-data-expression {
+  padding: 15px 38px 0 39px;
+  flex:auto;
+}
+.pb-pop-create .pb-ui-data-expression .pb-ui-grid {
+  height:100%;
+}
+
+.pb-ui-data-expression .pb-ui-grid-option .pb-grid-input {
+  display: inline-block;
+  position: relative;
+  float: left;
+  padding: 5px 9px;
+  margin: -5px 0 0 14px;
+  width: 61px;
+  height: 25px;
+  border-radius: 3px;
+  border: 1px solid #929292;
+  font-size: 15px;
+}
+
+.pb-ui-data-expression .pb-ui-grid-option {
+}
+
+.pb-ui-data-expression .pb-ui-grid-option .pb-fleft [class*="pb-icon-grid"]:first-of-type {
+  margin-left: 0;
+}
+
+.pb-ui-data-expression .pb-ui-grid-option .pb-fright [class*="pb-icon-grid"] {
+  top: -6px;
+}
+
+.pb-ui-data-expression .pb-ui-grid-option [class*="pb-icon-grid"] {
+  position: relative;
+  display: inline-block;
+  float: left;
+  margin-left: 15px;
+  background: url(../../images/icon_grid.png) no-repeat;
+}
+
+.pb-ui-data-expression .pb-ui-grid-option .pb-icon-grid {
+  width: 15px;
+  height: 15px;
+}
+
+.pb-ui-data-expression .pb-ui-grid-option .pb-icon-grid-set {
+  top: -1px;
+  width: 18px;
+  height: 18px;
+  background-position: left -16px;
+}
+
+.pb-ui-data-expression .pb-ui-grid-option .pb-icon-grid-search {
+  width: 18px;
+  height: 18px;
+  background-position: left -35px;
+}
+
+.pb-ui-data-expression .pb-ui-grid-option .pb-icon-grid-pause {
+  width: 18px;
+  height: 18px;
+  background-position: left -55px;
+}
+
+.pb-ui-data-expression .pb-ui-grid-option .pb-icon-grid-refresh {
+  width: 18px;
+  height: 18px;
+  background-position: left -74px;
+}
+
+.pb-ui-data-expression .pb-ui-grid-option .pb-icon-grid-resize {
+  width: 17px;
+  height: 18px;
+  background-position: left -93px;
+}
+
+.pb-ui-data-expression .pb-ui-grid-option .pb-wrap-slider3 {
+  float: left;
+  width: 188px;
+  margin-left: 25px;
+}
+
+.pb-box-empty {
+  height: 100%;
+  padding: 50px 50px 0 50px;
+}
+
+.pb-box-empty .pb-data-empty {
+  height: 100%;
+  border-radius: 20px;
+  border: dashed 6px rgba(222, 222, 222, 0.8);
+}
+
+.pb-box-empty .pb-img-create {
+  display: inline-block;
+  width: 76px;
+  height: 101px;
+  background-position: left -95px;
+}
+
+.pb-box-empty .pb-txt-title {
+  padding-top: 15px;
+  color: #d1d1d1;
+  font-size: 40px;
+  font-weight: bold;
+  line-height: 61px;
+}
+
+.pb-box-empty .pb-txt-det {
+  padding: 0;
+  color: #d1d1d1;
+  font-size: 20px;
+}
+
+/***********************************************************************
+     임시 Popup : Create - Input
+ *************************************************************************/
+
+.pb-input-type {
+  display: block;
+  position: relative;
+  padding: 9px 25px 9px 15px;
+  font-size: 15px;
+  color: rgba(1, 1, 1, 0.4);
+  border: 1px solid #d0d3d3;
+  border-radius: 5px;
+  z-index: 5;
+  background-color: #fff;
+}
+
+.pb-input-type.pb-input-long {
+  min-widht: 80%;
+}

@@ -1,0 +1,54 @@
+@charset "utf-8";
+
+/***********************************************************************
+     Compontent : Tag
+ *************************************************************************/
+.pb-component-tag {
+  display: inline-block;
+  padding: 3px 6px 2px 6px;
+  border-radius: 2px;
+  font-size: 13px;
+}
+
+.pb-component-tag.type-dataflow {
+  border: solid 1px #528aa9;
+  background-color: #ebf3f5;
+  color: #276384;
+}
+
+.pb-component-tag.type-new {
+  color: #fff;
+  font-weight: bold;
+  background-color: #f76515;
+  border: 1px solid #f76515;
+}
+
+.pb-component-tag.type-wrangled {
+  color: #506917;
+  border: 1px solid #9ab65a;
+  background-color: #f0f3e9;
+}
+
+.pb-component-tag.type-type {
+  border: 1px solid #a3a3a3;
+  color: #fff;
+  font-weight: normal;
+  background-color: #a09e9b;
+}
+
+.pb-txt-status {
+  font-size:14px;
+  font-weight:bold;
+}
+.pb-txt-status.type-failed {color:#ef3738;}
+.pb-txt-status.type-running {color:#fdab00;}
+.pb-txt-status.type-suspended {color:#7962e7;}
+.pb-txt-status.type-succeeded {color:#3898e2;}
+
+
+
+
+
+
+
+

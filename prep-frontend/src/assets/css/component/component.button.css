@@ -1,0 +1,397 @@
+@charset "utf-8";
+
+/***********************************************************************
+     Compontent : button
+ *************************************************************************/
+.pb-component-btn {
+  display: inline-block;
+  min-width: 83px;
+  height: 30px;
+  padding: 5px 10px;
+  border-radius: 3px;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.pb-component-btn:hover {
+  background-color: #f1f1ee;
+}
+.pb-component-btn.type-basic {
+  padding:7px 10px;
+  font-size:13px;
+  font-weight:normal;
+  color:#484847;
+}
+.pb-component-btn.type-bg {
+  color: #fff;
+  background-color: #f77115;
+  border: 1px solid #f77115;
+}
+
+.pb-component-btn.type-bg:hover {
+  color: #fff;
+  border: 1px solid #dd591c;
+  background-color: #dd591c;
+}
+
+.pb-component-btn.type-bg.tpye-normal {
+  font-weight: normal;
+}
+
+.pb-component-btn.type-bg2 {
+}
+
+.pb-component-btn.type-line {
+  border: 1px solid #a3a3a3;
+  color: #000;
+}
+
+.pb-component-btn.type-dark {
+  border: 1px solid #71706d;
+  background-color: #71706d;
+  color: #fff;
+}
+
+.pb-component-btn.type-dark:hover {
+  background-color: #484847;
+}
+
+.pb-component-btn.type-dark2 {
+  background-color: #cfcec7;
+  color: #4e4e4e;
+  font-weight: normal;
+}
+
+.pb-component-btn em[class*="pb-icon-"] {
+  display: inline-block;
+  margin-right: 9px;
+  background: url(../../images/icon_buttons.png) no-repeat;
+  vertical-align: middle;
+}
+
+.pb-component-btn em.pb-icon-analytics {
+  width: 27px;
+  height: 20px;
+}
+
+.pb-component-btn em.pb-icon-add {
+  width: 13px;
+  height: 13px;
+  background-position: left -20px;
+}
+
+.pb-component-btn em.pb-icon-add-r {
+  width: 14px;
+  height: 13px;
+  position: relative;
+  top: -1px;
+  background-position: left -49px;
+}
+
+.pb-component-btn.type-bg em.pb-icon-add-r, .pb-component-btn.type-dark em.pb-icon-add-r {
+  background-position: left -89px;
+}
+
+.pb-component-btn em.pb-icon-refresh {
+  width: 11px;
+  height: 12px;
+  position: relative;
+  top: -1px;
+  background-position: left -75px;
+}
+.pb-component-btn em.pb-icon-switch {
+  width: 12px;
+  height: 16px;
+  position: relative;
+  top: -1px;
+  background-position: left -103px;
+}
+
+.pb-component-btn em.pb-icon-dictionary {
+  width: 14px;
+  height: 14px;
+  background-position: left -34px;
+}
+
+.pb-component-btn em.pb-icon-move {
+  width: 13px;
+  height: 11px;
+  background-position: left -63px;
+}
+
+.pb-component-btn.is-disabled,
+.pb-component-btn.is-disabled:hover {
+  opacity: 0.4;
+  cursor: no-drop;
+  color: #fff;
+  background-color: #f77115;
+  border: 1px solid #f77115;
+}
+
+.pb-component-btn-s {
+  display: inline-block;
+  min-width: 36px;
+  height: 26px;
+  padding: 5px 10px;
+  border-radius: 3px;
+  font-size: 12px;
+  color: #313131;
+  font-weight: 600;
+  text-align: center;
+  border: 1px solid #b5b5b2;
+  background-color: #fff;
+}
+
+.pb-component-btn-s:hover {
+  background-color: #e4e3de;
+}
+
+.pb-component-btn-s.type-bg {
+  border-color: #f37135;
+  background-color: #f37135;
+  color: #fff;
+}
+
+.pb-component-btn-s.type-bg:hover {
+  background-color: #dd591c;
+}
+
+/***********************************************************************
+     Compontent : button icons
+ *************************************************************************/
+.pb-btn-icons-type {
+  display: inline-block;
+  position: relative;
+  width: 16px;
+  height: 16px;
+}
+
+.pb-btn-icons-type:before {
+  display: inline-block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  background: url(../../images/btn_icons.png) no-repeat;
+  content: '';
+}
+
+.pb-btn-icons-type.type-del:before {
+  width: 10px;
+  height: 13px;
+  margin: -7px 0 0 -5px;
+}
+
+.pb-btn-icons-type.type-del:hover:before {
+  background-position-x: -11px;
+}
+
+.pb-btn-icons-type.type-close:before {
+  width: 8px;
+  height: 9px;
+  margin: -5px 0 0 -4px;
+  background-position: left -14px;
+}
+.pb-btn-icons-type.type-close:hover:before {
+  background-position-x: -9px;
+}
+
+.pb-btn-icons-type.type-close-b:before {
+  width: 12px;
+  height: 12px;
+  margin: -6px 0 0 -6px;
+  background-position: left -38px;
+}
+.pb-btn-icons-type.type-close-b:hover:before {
+  background-position-x:-13px;
+}
+
+.pb-btn-icons-type.type-edit:before {
+  width: 12px;
+  height: 13px;
+  margin: -7px 0 0 -7px;
+  background-position: left -24px;
+}
+
+.pb-btn-icons-type.type-edit:hover:before {
+  background-position-x: -13px;
+}
+
+.pb-component-btn-pop {
+  display: inline-block;
+  min-width: 130px;
+  height: 42px;
+  padding: 10px 10px;
+  border-radius: 3px;
+  font-size: 16px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.pb-component-btn-pop.type-line {
+  border: 1px solid #b5b5b2;
+  color: #313131;
+}
+
+.pb-component-btn-pop.type-line:hover {
+  border: 1px solid #f37135;
+  background-color: #fffdf5;
+  color: #f37135;
+}
+
+.pb-component-btn-pop.type-bg {
+  border: 1px solid #f37135;
+  background-color: #f37135;
+  color: #fff;
+}
+
+.pb-component-btn-pop.type-bg:hover {
+  background-color: #dd591c;
+  border-color: #dd591c;
+}
+
+.pb-component-btn-pop.type-dark {
+  border: 1px solid #71706d;
+  background-color: #71706d;
+  color: #fff;
+}
+
+.pb-component-btn-pop.type-dark:hover {
+  border: 1px solid #484847;
+  background-color: #484847;
+}
+
+/***********************************************************************
+     Compontent : box icons button
+ *************************************************************************/
+.pb-btn-box-icons {
+  display:inline-block;
+  position:relative;
+  width:30px;
+  height:30px;
+  border-radius:3px;
+  background-color:#dedede;
+}
+.pb-btn-box-icons:hover {
+  background-color:#b9b9b9;
+}
+.pb-btn-box-icons.type-bg {
+  background-color:#f37135;
+}
+.pb-btn-box-icons.type-bg:hover {
+  background-color:#DD591C;
+}
+.pb-btn-box-icons[class*="type-"]:before {
+  display:inline-block;
+  position:absolute;
+  top:50%;
+  left:50%;
+  background:url(../../images/icon_buttons.png) no-repeat;
+  content:'';
+}
+.pb-btn-box-icons.type-close:before {
+  width:12px;
+  height:12px;
+  margin:-6px 0 0 -6px;
+  background-position:left -120px;
+}
+.pb-btn-box-icons.type-check:before {
+  width:14px;
+  height:11px;
+  margin:-6px 0 0 -7px;
+  background-position:left -133px;
+}
+/***********************************************************************
+     Compontent : tab button
+ *************************************************************************/
+.pb-component-tab-btn {
+}
+
+.pb-component-tab-btn li:first-of-type a {
+  border-radius: 3px 0 0 3px;
+}
+
+.pb-component-tab-btn li:last-of-type a {
+  border-radius: 0 3px 3px 0;
+}
+
+.pb-component-tab-btn li {
+  display: inline-block;
+  float: left;
+}
+
+.pb-component-tab-btn li a {
+  display: block;
+  position: relative;
+  width: 40px;
+  height: 28px;
+  background-color: #e4e3de;
+}
+
+.pb-component-tab-btn a:before {
+  display: inline-block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  background: url(../../images/btn_tab.png) no-repeat;
+  content: '';
+}
+
+.pb-component-tab-btn li a:hover {
+  background-color: #cfcec7;
+}
+
+.pb-component-tab-btn .pb-icon-grid:before {
+  width: 11px;
+  height: 11px;
+  margin: -5px 0 0 -6px;
+}
+
+.pb-component-tab-btn .pb-icon-list:before {
+  width: 12px;
+  height: 10px;
+  margin: -5px 0 0 -6px;
+  background-position: left -11px;
+}
+
+.pb-component-tab-btn li.is-selected .pb-icon-grid:before {
+  background-position-x: -12px;
+}
+
+.pb-component-tab-btn li.is-selected .pb-icon-list:before {
+  background-position-x: -13px;
+}
+
+.pb-component-tab-btn li.is-selected a {
+  background-color: #71706d
+}
+
+/***********************************************************************
+     Compontent : tab button
+ *************************************************************************/
+.pb-component-btn-valid {
+  display: inline-block;
+  padding: 7px 12px;
+  border-radius: 2px;
+  font-size: 14px;
+  color: #fff;
+  background-color: #a09e9b;
+}
+
+.pb-component-btn-valid:hover {
+  background-color: #71706d;
+  color: #fff;
+}
+
+.pb-form-valid .pb-txt-valid {
+  display: inline-block;
+  padding: 7px 0 0 9px;
+  color: #14933d;
+  font-size: 16px;
+}
+
+.pb-form-valid .pb-txt-valid.type-invalid {
+  color: #ff465c;
+}
+
+

@@ -1,0 +1,170 @@
+@charset "utf-8";
+
+/***********************************************************************
+     Popup : Create
+ *************************************************************************/
+.pb-wrap-dataset {
+  display: flex;
+}
+
+.pb-wrap-dataset-type {
+  width: 500px;
+  min-width: 500px;
+  height: 100%;
+  padding: 18px 15px;
+  background-color: #f7f7f5;
+  overflow: auto;
+}
+.pb-wrap-dataset-type .pb-label-type {
+  color:#4b515b; font-size:16px; font-weight:600;
+
+}
+ul.pb-list-dataset-type {
+  margin: -4px;
+  padding:19px 0;
+  overflow: hidden;
+}
+
+ul.pb-list-dataset-type li {
+  position: relative;
+  float: left;
+  width: 50%;
+  padding: 4px;
+}
+
+ul.pb-list-dataset-type li .pb-box-dataset {
+  position: relative;
+  height: 65px;
+  padding: 21px 0 0 54px;
+  border-radius: 5px;
+  background-color: #ebeae8;
+  border: 1px solid #ebeae8;
+  cursor: pointer;
+  font-size: 16px;
+  color: #4e4e4e;
+  font-weight: 600;
+}
+
+ul.pb-list-dataset-type li .pb-box-dataset .pb-img-dataset {
+  position: absolute;
+  top: 50%;
+  left: 20px;
+}
+
+ul.pb-list-dataset-type li .pb-box-dataset .pb-img-dataset.type-mysql {
+  margin-top: -12px;
+}
+
+ul.pb-list-dataset-type li .pb-box-dataset .pb-img-dataset.type-tibero {
+  margin-top: -11px;
+}
+
+ul.pb-list-dataset-type li .pb-box-dataset .pb-img-dataset.type-hive {
+  margin-top: -11px;
+}
+
+ul.pb-list-dataset-type li .pb-box-dataset .pb-img-dataset.type-oracle {
+  margin-top: -10px;
+}
+
+ul.pb-list-dataset-type li .pb-box-dataset .pb-img-dataset.type-phoenix {
+  margin-top: -11px;
+}
+
+ul.pb-list-dataset-type li .pb-box-dataset .pb-img-dataset.type-post {
+  margin-top: -11px;
+}
+
+ul.pb-list-dataset-type li .pb-box-dataset .pb-img-dataset.type-presto {
+  margin-top: -9px;
+}
+
+ul.pb-list-dataset-type li .pb-box-dataset .pb-img-dataset.type-druid {
+  margin-top: -8px;
+}
+
+ul.pb-list-dataset-type li .pb-box-dataset .pb-img-dataset.type-rds {
+  margin-top: -11px;
+}
+
+ul.pb-list-dataset-type li .pb-box-dataset .pb-img-dataset.type-mssql {
+  margin-top: -12px;
+}
+
+ul.pb-list-dataset-type li .pb-box-dataset .pb-img-dataset.type-custom {
+  margin-top: -11px;
+}
+
+ul.pb-list-dataset-type li.is-selected .pb-box-dataset,
+ul.pb-list-dataset-type li .pb-box-dataset:hover {
+  border: 1px solid #f37135;
+  background-color: #fffdf5;
+}
+
+ul.pb-list-dataset-type li.is-selected .pb-box-dataset:after {
+  display: inline-block;
+  position: absolute;
+  top: 50%;
+  right: 23px;
+  margin: -6px 0 0 0;
+  width: 13px;
+  height: 11px;
+  background: url(../../images/icon_check.png) no-repeat;
+  content: '';
+}
+
+ul.pb-list-dataset-type li.is-disabled:before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  cursor: no-drop;
+  content: '';
+  z-index: 1;
+}
+
+ul.pb-list-dataset-type li.is-disabled .pb-box-dataset {
+  opacity: 0.3;
+}
+
+.pb-wrap-dataset .pb-ui-create {
+  flex: auto;
+  height: 100%;
+  padding-left: 35px;
+  margin: 0 -5px 0 0;
+  overflow: auto;
+}
+
+.pb-wrap-dataset .pb-ui-create .pb-ui-create-in {
+  margin: 0 0 25px 0;
+}
+
+.pb-wrap-dataset .pb-ui-create .pb-ui-create-in .pb-ui-create {
+  margin-top: 0;
+}
+
+.pb-wrap-dataset .pb-ui-create .pb-ui-create-in:first-of-type {
+  margin-top: 0;
+}
+
+.pb-wrap-dataset .pb-ui-create [class*="pb-col-"] {
+  padding: 0 5px;
+}
+
+.pb-wrap-dataset .pb-ui-create [class*="pb-col-"]:first-of-type {
+  padding-left: 0;
+}
+
+.pb-wrap-dataset .pb-ui-create [class*="pb-col-"]:last-of-type {
+  padding-right: 0;
+}
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,11 @@
+@charset "utf-8";
+
+/***********************************************************************
+     Compontent : pop box
+ *************************************************************************/
+.pb-component-pop-box {min-width:200px; padding:5px 0;border-radius:5px; box-shadow:0 2px 5px 0 rgba(0, 0, 0, 0.15); background-color:#fff;}
+.pb-component-pop-box > a {display:block; position:relative; padding:6px 6px 6px 30px; color:#222; font-size:14px; line-height:20px;}
+.pb-component-pop-box > a [class*="pb-icon-pop-"] {display:inline-block; position:absolute; top:50%; left:10px; background:url(../../images/icon_pop_box.png) no-repeat;}
+.pb-component-pop-box > a .pb-icon-pop-del {width:10px; height:13px; margin:-6px 0 0 0;}
+.pb-component-pop-box > a:hover {background-color:#fffdf5; color:#f37135;}
+.pb-component-pop-box > a:hover .pb-icon-pop-del {background-position-x:-11px;}

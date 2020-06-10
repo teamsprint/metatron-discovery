@@ -239,7 +239,7 @@
     <dependencies>
         <dependency>
             <groupId>app.metatron.discovery</groupId>
-            <artifactId>discovery-prep-frontend</artifactId>
+            <artifactId>prep-frontend</artifactId>
             <version>${project.version}</version>
         </dependency>
 

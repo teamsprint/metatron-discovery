@@ -1,0 +1,34 @@
+<div class="pb-wrap-login">
+  <div class="pb-ui-login">
+    <em class="pb-login-logo"></em>
+    <div class="pb-login-title">
+      Welcome Metatron Prep-bot
+    </div>
+    <div class="pb-login-buttons">
+      <div class="pb-form-login">
+        <input type="text"
+               class="pb-input-login"
+               placeholder="id"
+               [(ngModel)]="user.username">
+        <input type="password"
+               class="pb-input-login"
+               placeholder="password"
+               [(ngModel)]="user.password"
+               (keyup.enter)="login()">
+      </div>
+      <a href="javascript:;" class="pb-btn-login-bg">Welcome to Metatron Station <em class="pb-icon-view"></em></a>
+      <a href="javascript:;"
+         class="pb-btn-login-line"
+         (click)="login()">
+        Sign-in
+      </a>
+    </div>
+  </div>
+  <!-- bottom -->
+  <div class="pb-login-bottom">
+    <div class="pb-txt-copy">
+      Copyright &copy; SK Telecom Co., Ltd. All rights reserved.
+    </div>
+  </div>
+  <!-- //bottom -->
+</div>

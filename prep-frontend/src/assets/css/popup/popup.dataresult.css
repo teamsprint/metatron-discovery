@@ -1,0 +1,75 @@
+@charset "utf-8";
+
+/***********************************************************************
+     Popup : Data Result
+ *************************************************************************/
+
+/* rule */
+ul.ddp-list-rule2 {
+  padding: 10px 0 0 0;
+}
+
+ul.ddp-list-rule2 li {
+  position: relative;
+}
+
+ul.ddp-list-rule2 li .ddp-data-type {
+  float: left;
+  position: relative;
+  min-width: 23px;
+  min-height: 18px;
+  margin-right: 5px;
+  margin-top: -1px;
+  color: #727ab7;
+  font-size: 13px;
+  box-sizing: border-box;
+  vertical-align: middle;
+}
+
+ul.ddp-list-rule2 li .ddp-data-type .ddp-ui-round {
+  display: inline-block;
+  width: 17px;
+  height: 17px;
+  line-height: 17px;
+  text-align: center;
+  border-radius: 50%;
+  color: #727ab7;
+  font-size: 9px;
+  border: 1px solid #727ab7;
+  overflow: hidden;
+  vertical-align: middle;
+}
+
+ul.ddp-list-rule2 li .ddp-ui-code {
+  display: block;
+  position: relative;
+  top: -3px;
+  font-size: 13px;
+  line-height: 18px;
+  color: #444;
+  overflow: hidden;
+}
+
+ul.ddp-list-rule2 li .ddp-ui-code .ddp-type-code {
+  color: #727ab7;
+  font-size: 13px;
+  line-height: 18px;
+}
+
+ul.ddp-list-rule2 li .ddp-ui-code.ddp-error {
+  color: #eb5f58;
+}
+
+ul.ddp-list-rule2 li .ddp-ui-code.ddp-error2 {
+  color: rgba(235, 95, 88, 0.5);
+}
+
+ul.ddp-list-rule2 li.ddp-disabled {
+  cursor: no-drop;
+}
+
+ul.ddp-list-rule2 li.ddp-disabled .ddp-data-type .ddp-ui-round {
+  border: 1px solid #b8bac2;
+  color: #b8bac2;
+}
+
