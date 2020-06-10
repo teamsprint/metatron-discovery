@@ -71,7 +71,7 @@
             "proxyConfig": "proxy.conf.js",
             "host": "0.0.0.0",
             "disableHostCheck": true,
-            "port": 3000
+            "port": 4200
           },
           "configurations": {
             "production": {
