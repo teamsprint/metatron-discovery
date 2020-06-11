@@ -12,12 +12,13 @@ import {PreMainGuard} from '../main/services/pre-main/pre-main.guard';
 import {DataflowListComponent} from '../dataflow/components/dataflow-list.component';
 import {DataflowDetailComponent} from '../dataflow/components/dataflow-detail.component';
 import {DatasetComponent} from '../dataset/components/dataset.component';
-import {LnbComponent} from './components/lnb.component';
 import {GnbComponent} from './components/gnb.component';
+import {LnbModule} from '../lnb/lnb.module';
 
 @NgModule({
   imports: [
     SharedModule,
+    LnbModule,
     DataflowModule,
     DatasetModule,
     RouterModule.forChild([
@@ -67,7 +68,6 @@ import {GnbComponent} from './components/gnb.component';
   ],
   declarations: [
     LayoutComponent,
-    LnbComponent,
     GnbComponent,
     MainComponent
   ],

@@ -84,9 +84,9 @@
 .pb-form-selectbox .pb-select-popup .pb-list-selectbox li a {
   display: block;
   position: relative;
-  padding: 10px 8px;
+  padding: 8px 8px;
   color: #222;
-  font-size: 15px;
+  font-size: 14px;
 }
 
 .pb-form-selectbox .pb-select-popup .pb-list-selectbox li a:hover {
@@ -271,9 +271,9 @@
   border-radius: 4px;
   border: 1px solid #dedede;
   background-color: #fff;
-  line-height: 34px;
+  line-height: 28px;
   color: #4b515b;
-  font-size: 13px;
+  font-size: 14px;
 }
 
 .pb-component-input:focus,
@@ -315,6 +315,7 @@
   display:block;
   padding:6px 14px 6px 14px;
   color:#4e4e4e;
+  font-size:14px;
 }
 .pb-form-input-popup .pb-select-input-popup .pb-list-selectbox li a:hover {
   background-color:#FFFDF5;
@@ -386,7 +387,7 @@
 
 .pb-compomnent-checkbox .pb-txt-checkbox {
   display: block;
-  font-size: 13px;
+  font-size: 14px;
   color: #222;
   word-break: break-all;
   overflow: hidden;
@@ -422,7 +423,7 @@
   background: url(../../images/icon_checkbox.png) no-repeat;
   background-position: left -13px;
   vertical-align: middle;
-}
+}.pb-txt-label2
 
 .pb-label-checkbox input:checked + i.pb-icon-checkbox {
   background-position-x: -68px;
@@ -430,7 +431,7 @@
 
 .pb-label-checkbox span.pb-txt-checkbox {
   display: block;
-  font-size: 13px;
+  font-size: 14px;
   color: #222;
   word-break: break-all;
   overflow: hidden;
@@ -490,7 +491,7 @@
 
 .pb-compomnent-radio .pb-txt-radio {
   color: #222;
-  font-size: 13px;
+  font-size: 14px;
   margin-left: 5px;
 }
 
@@ -541,8 +542,10 @@
 /***********************************************************************
      Compontent : create
  *************************************************************************/
-
 .pb-form-create {
+  margin-bottom:25px;
+}
+.pb-ui-create-in .pb-form-create {
   margin-bottom: 0;
 }
 .pb-form-create.type-check {
@@ -585,12 +588,12 @@
  *************************************************************************/
 .pb-component-textarea-auto {
   display: block;
-  height: 36px;
-  padding: 7px 10px;
+  height: 30px;
+  padding: 6px 10px;
   width: 100%;
   border: 1px solid #dedede;
   border-radius: 4px;
-  font-size: 16px;
+  font-size: 14px;
 }
 .pb-component-textarea-resize {
   padding:9px 10px;

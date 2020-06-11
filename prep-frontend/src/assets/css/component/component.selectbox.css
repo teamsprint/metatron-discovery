@@ -29,8 +29,8 @@
 .pb-component-selectbox .pb-txt-selectbox {
   display: block;
   position: relative;
-  padding: 9px 25px 9px 15px;
-  font-size: 15px;
+  padding: 6px 25px 6px 15px;
+  font-size: 14px;
   color: rgba(1, 1, 1, 0.4);
   border: 1px solid #d0d3d3;
   border-radius: 5px;
@@ -72,9 +72,9 @@
 .pb-component-selectbox .pb-select-popup ul.pb-list-selectbox li a {
   display: block;
   position: relative;
-  padding: 9px 0 9px 16px;
+  padding: 8px 0 8px 16px;
   color: #010101;
-  font-size: 15px;
+  font-size: 14px;
   background-color: #fff;
 }
 
@@ -111,11 +111,11 @@
   display: inline-block;
   position: relative;
   width: 110px;
-  padding: 9px 0 9px 0;
+  padding: 7px 0 7px 0;
   border-radius: 0 5px 5px 0;
   background-color: #787983;
   color: rgba(255, 255, 255, 0.5);
-  font-size: 15px;
+  font-size: 14px;
   text-align: center;
   z-index: 10;
 }
@@ -185,7 +185,7 @@
   display: block;
   padding: 10px 13px 4px 13px;
   color: #b7b9c2;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: bold;
 }
 
@@ -201,7 +201,7 @@ ul.pb-list-popup li a {
   display: block;
   position: relative;
   padding: 6px 14px 6px 14px;
-  font-size: 13px;
+  font-size: 14px;
   color: #4b515b;
 }
 ul.pb-list-popup li a:hover {
