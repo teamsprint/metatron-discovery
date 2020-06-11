@@ -1,0 +1,239 @@
+<!-- box popup -->
+<div class="pb-box-popup">
+  <a href="javascript:" class="pb-btn-pop-close" (click)="onClose.emit()"></a>
+  <!-- step -->
+  <div class="pb-ui-step">
+    <span class="pb-txt-step is-selected">1</span>
+    <span class="pb-txt-step">2</span>
+  </div>
+  <!-- //step -->
+  <!-- top -->
+  <div class="pb-popup-top pb-clear">
+    <div class="pb-txt-title">Create Data Connection</div>
+  </div>
+  <!-- //top -->
+  <!-- contents -->
+  <div class="pb-popup-contents ">
+    <div class="pb-popup-contents-in pb-wrap-dataset">
+      <!-- dataset type -->
+      <div class="pb-wrap-dataset-type">
+        <span class="pb-label-type">Database</span>
+        <!--
+            선택시 li class="is-selected" 추가
+            disabled 시 li class="is-disabled" 추가
+        -->
+        <ul class="pb-list-dataset-type">
+
+          <li [ngClass]="{'is-selected': connectionInfo!=null && connectionInfo.implementor=='MySQL'}">
+            <div class="pb-box-dataset" (click)="onChangeConnectionType('MySQL')">
+              <em class="pb-img-dataset type-mysql"></em>
+              MySQL
+            </div>
+          </li>
+
+          <li [ngClass]="{'is-selected': connectionInfo!=null && connectionInfo.implementor=='Hive'}">
+            <div class="pb-box-dataset" (click)="onChangeConnectionType('Hive')">
+              <em class="pb-img-dataset type-hive"></em>
+              Hive
+            </div>
+          </li>
+
+          <li [ngClass]="{'is-selected': connectionInfo!=null && connectionInfo.implementor=='PostgreSQL'}">
+            <div class="pb-box-dataset" (click)="onChangeConnectionType('PostgreSQL')">
+              <em class="pb-img-dataset type-post"></em>
+              PostgreSQL
+            </div>
+          </li>
+
+          <li [ngClass]="{'is-selected': connectionInfo!=null && connectionInfo.implementor=='Presto'}">
+            <div class="pb-box-dataset" (click)="onChangeConnectionType('Presto')">
+              <em class="pb-img-dataset type-presto"></em>
+              Presto
+            </div>
+          </li>
+
+
+
+          <li class="is-disabled">
+            <div class="pb-box-dataset">
+              <em class="pb-img-dataset type-tibero"></em>
+              Tibero
+            </div>
+          </li>
+
+
+
+          <li class="is-disabled">
+            <div class="pb-box-dataset">
+              <em class="pb-img-dataset type-oracle"></em>
+              Oracle
+            </div>
+          </li>
+
+          <li class="is-disabled">
+            <div class="pb-box-dataset">
+              <em class="pb-img-dataset type-phoenix"></em>
+              Phoenix
+            </div>
+          </li>
+
+          <li class="is-disabled">
+            <div class="pb-box-dataset">
+              <em class="pb-img-dataset type-druid"></em>
+              Druid
+            </div>
+          </li>
+
+          <li class="is-disabled">
+            <div class="pb-box-dataset">
+              <em class="pb-img-dataset type-rds"></em>
+              Rds
+            </div>
+          </li>
+
+
+          <li class="is-disabled">
+            <div class="pb-box-dataset">
+              <em class="pb-img-dataset type-custom"></em>
+              Custom
+            </div>
+          </li>
+        </ul>
+      </div>
+      <!-- //dataset type -->
+
+
+
+      <div class="pb-ui-create ">
+
+
+        <!-- clear -->
+        <div class="pb-ui-create-in pb-clear" *ngIf="isUsedUrl">
+          <div class="pb-col-10">
+            <!-- form create -->
+            <div class="pb-form-create">
+              <div class="pb-create-label">URL</div>
+              <div class="pb-form-edit">
+                <input type="text" class="pb-component-input" placeholder="" [ngModel]="url">
+                <span class="pb-form-error" *ngIf="isUrlError"></span>
+
+              </div>
+              <label class="pb-compomnent-checkbox type-font-s" (click)="onChangeUseUrl(); $event.defaultPrevented;">
+                <input type="checkbox" [checked]="isUsedUrl" tabindex="-1" >
+                <i></i>
+                <span class="pb-txt-checkbox">URL only </span>
+              </label>
+            </div>
+            <!-- //form create -->
+          </div>
+        </div>
+        <!-- //clear -->
+
+
+
+        <div class="pb-ui-create-in pb-clear" *ngIf="!isUsedUrl">
+          <div class="pb-col-4">
+            <!-- form create -->
+            <div class="pb-form-create">
+              <div class="pb-create-label">Host</div>
+              <div class="pb-form-edit">
+                <input type="text" class="pb-component-input" placeholder="Placeholder" [ngModel]="hostname">
+                <span class="pb-form-error">Required</span>
+              </div>
+              <label class="pb-compomnent-checkbox type-font-s" (click)="onChangeUseUrl(); $event.defaultPrevented;">
+                <input type="checkbox" [checked]="isUsedUrl">
+                <i></i>
+                <span class="pb-txt-checkbox">URL only </span>
+              </label>
+            </div>
+            <!-- //form create -->
+          </div>
+          <div class="pb-col-3">
+            <!-- form create -->
+            <div class="pb-form-create">
+              <div class="pb-create-label"> Port</div>
+              <div class="pb-form-edit">
+                <input type="text" class="pb-component-input" placeholder="Placeholder" [ngModel]="port" maxlength="5" input-mask="number">
+                <span class="pb-form-error" *ngIf="isPortError">Required</span>
+              </div>
+            </div>
+            <!-- //form create -->
+          </div>
+          <div class="pb-col-3">
+
+
+
+            <!-- form create -->
+            <div class="pb-form-create" *ngIf="!isDisableSid()">
+              <div class="pb-create-label">SID</div>
+              <div class="pb-form-edit">
+                <input type="text" class="pb-component-input" placeholder="Placeholder" [ngModel]="sid">
+                <span class="pb-form-error" *ngIf="isSidError">Required</span>
+              </div>
+            </div>
+            <!-- //form create -->
+
+
+
+          </div>
+        </div>
+        <!-- //clear -->
+
+
+
+        <!-- clear -->
+        <div class="pb-ui-create-in pb-clear">
+          <div class="pb-col-5">
+            <!-- form create -->
+            <div class="pb-form-create">
+              <div class="pb-create-label">User ID</div>
+              <div class="pb-form-edit">
+                <input type="text" class="pb-component-input" placeholder="Placeholder">
+                <span class="pb-form-error">Required</span>
+              </div>
+
+            </div>
+            <!-- //form create -->
+          </div>
+          <div class="pb-col-5">
+            <!-- form create -->
+            <div class="pb-form-create">
+              <div class="pb-create-label">User Password</div>
+              <div class="pb-form-edit">
+                <input type="password" class="pb-component-input" placeholder="Placeholder">
+                <span class="pb-form-error">Required</span>
+              </div>
+            </div>
+            <!-- //form create -->
+          </div>
+        </div>
+        <!-- //clear -->
+
+
+        <!-- clear -->
+        <div class="pb-ui-create-in pb-clear">
+          <!-- form create -->
+          <div class="pb-form-create type-check">
+            <div class="pb-form-valid">
+              <a href="javascirpt:" class="pb-component-btn-valid" (click)="checkConnection()">Validation Check</a>
+              <span class="pb-txt-valid type-invalid" *ngIf="isRequireCheckConnection()">Required</span>
+              <span class="pb-txt-valid type-invalid" *ngIf="isDisableConnection()">Invalid Connection. Please check server and account information</span>
+              <span class="pb-txt-valid" *ngIf="isEnableConnection()">Valid Connection</span>
+            </div>
+          </div>
+          <!-- //form create -->
+        </div>
+        <!-- //clear -->
+      </div>
+
+
+    </div>
+
+  </div>
+  <!-- //contents -->
+  <div class="pb-popup-bottom ">
+    <a href="javascript:" class="pb-component-btn-pop type-line" (click)="onClose.emit()">CANCEL</a>
+    <a href="javascript:" class="pb-component-btn-pop type-bg">NEXT</a>
+  </div>
+</div>
+<!-- //box popup -->

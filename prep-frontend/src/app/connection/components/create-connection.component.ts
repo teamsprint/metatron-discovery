@@ -1,7 +1,8 @@
-import {Component, EventEmitter, HostBinding, Output} from '@angular/core';
+import {Component, EventEmitter, HostBinding, Output, Input} from '@angular/core';
+import {Connection} from '../domains/connection';
 
 @Component({
-  selector: 'div[create]',
+  selector: 'div[create-connection]',
   templateUrl: './create-connection.component.html',
   styleUrls: ['./create-connection.component.css']
 })
@@ -12,4 +13,18 @@ export class CreateConnectionComponent {
 
   @Output()
   public readonly onClose = new EventEmitter();
+
+  public connectionInfo: Connection.Entity;
+  public step = '';
+
+
+
+  public createConnectionInfo(): void {
+    this.connectionInfo = new Connection.Entity();
+    this.connectionInfo.connType = Connection.ConnType.DATABASE;
+    this.connectionInfo.implementor = 'MySQL';
+    this.step = 'create-connection-info';
+  }
+
+
 }

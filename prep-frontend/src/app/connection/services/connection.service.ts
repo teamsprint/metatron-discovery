@@ -13,9 +13,23 @@ export class ConnectionService {
   constructor(private readonly http: HttpClient) {
   }
 
+  checkConnection(connectionParam: Connection.Entity) {
+
+    const url = `${CommonConstant.API_CONSTANT.API_URL}/connections/query/check`;
+    if (!connectionParam) {
+      return of(new HttpErrorResponse({
+        url,
+        status: 400,
+        statusText: 'Invalid connection value'
+      }));
+    }
+    const param = {connection: connectionParam};
+    return this.http.post(url, JSON.stringify(param));
+  }
+
   createConnection(connection: Connection.Entity) {
 
-    const url = `${CommonConstant.API_CONSTANT.API_URL}/connections/${connection?.connId}`;
+    const url = `${CommonConstant.API_CONSTANT.API_URL}/connections/${connection.connId}`;
 
     if (!connection) {
       return of(new HttpErrorResponse({

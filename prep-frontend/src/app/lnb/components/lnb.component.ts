@@ -22,6 +22,7 @@ export class LnbComponent {
   public openCreateConnectionPopup() {
     const createComponentComponentRef = this.viewContainerRef
       .createComponent(this.componentFactoryResolver.resolveComponentFactory(CreateConnectionComponent));
+    createComponentComponentRef.instance.createConnectionInfo();
     createComponentComponentRef.instance.onClose.subscribe(() => {
       createComponentComponentRef.destroy();
     });

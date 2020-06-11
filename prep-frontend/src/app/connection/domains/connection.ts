@@ -23,4 +23,10 @@ export namespace Connection {
     API = 'API',
     DATABASE = 'DATABASE'
   }
+
+  export enum ConnectionValid {
+    ENABLE_CONNECTION = 0,
+    DISABLE_CONNECTION = 1,
+    REQUIRE_CONNECTION_CHECK = 2
+  }
 }
