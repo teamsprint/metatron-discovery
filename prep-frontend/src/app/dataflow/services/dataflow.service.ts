@@ -1,32 +1,32 @@
 import {Injectable} from '@angular/core';
-import {DataFlowModule} from '../data-flow.module';
+import {DataflowModule} from '../dataflow.module';
 import {HttpClient} from '@angular/common/http';
 
 @Injectable({
-  providedIn: DataFlowModule
+  providedIn: DataflowModule
 })
-export class DataFlowService {
+export class DataflowService {
 
   constructor(private readonly http: HttpClient) {
   }
 
-  createDataFlow() {
+  createDataflow() {
     return this.http.post(``, {});
   }
 
-  getDataFlow() {
+  getDataflow() {
     return this.http.get(``);
   }
 
-  getDataFlows() {
+  getDataflows() {
     return this.http.get(``);
   }
 
-  updateDataFlow() {
+  updateDataflow() {
     return this.http.patch(``, {});
   }
 
-  deleteDataFlow() {
+  deleteDataflow() {
     return this.http.delete(``);
   }
 }

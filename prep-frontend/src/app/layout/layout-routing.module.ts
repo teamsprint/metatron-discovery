@@ -2,15 +2,15 @@ import {NgModule} from '@angular/core';
 import {RouterModule} from '@angular/router';
 import {PreFlowGuard} from './services/pre-flow.guard';
 import {SharedModule} from '../common/shared/shared.module';
-import {DataFlowModule} from '../data-flow/data-flow.module';
+import {DataflowModule} from '../dataflow/dataflow.module';
 import {DatasetModule} from '../dataset/dataset.module';
 import {LayoutComponent} from './components/layout.component';
 import {RouterUrls} from '../common/constants/router.constant';
 import {MainComponent} from '../main/components/main.component';
 import {UserVerifyGuard} from '../main/services/user-verify/user-verify.guard';
 import {PreMainGuard} from '../main/services/pre-main/pre-main.guard';
-import {DataFlowListComponent} from '../data-flow/components/data-flow-list.component';
-import {DataFlowDetailComponent} from '../data-flow/components/data-flow-detail.component';
+import {DataflowListComponent} from '../dataflow/components/dataflow-list.component';
+import {DataflowDetailComponent} from '../dataflow/components/dataflow-detail.component';
 import {DatasetComponent} from '../dataset/components/dataset.component';
 import {LnbComponent} from './components/lnb.component';
 import {GnbComponent} from './components/gnb.component';
@@ -18,7 +18,7 @@ import {GnbComponent} from './components/gnb.component';
 @NgModule({
   imports: [
     SharedModule,
-    DataFlowModule,
+    DataflowModule,
     DatasetModule,
     RouterModule.forChild([
       {
@@ -43,11 +43,11 @@ import {GnbComponent} from './components/gnb.component';
             children: [
               {
                 path: '',
-                component: DataFlowListComponent,
+                component: DataflowListComponent,
               },
               {
                 path: ':id',
-                component: DataFlowDetailComponent,
+                component: DataflowDetailComponent,
                 canActivate: [
                   UserVerifyGuard
                 ]

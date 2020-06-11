@@ -1,12 +1,12 @@
 import {NgModule} from '@angular/core';
 import {SharedModule} from '../common/shared/shared.module';
 import {RouterModule} from '@angular/router';
-import {DataFlowDetailComponent} from './components/data-flow-detail.component';
-import {DataFlowListComponent} from './components/data-flow-list.component';
+import {DataflowDetailComponent} from './components/dataflow-detail.component';
+import {DataflowListComponent} from './components/dataflow-list.component';
 
 const COMPONENTS = [
-  DataFlowDetailComponent,
-  DataFlowListComponent
+  DataflowDetailComponent,
+  DataflowListComponent
 ];
 
 @NgModule({
@@ -21,5 +21,5 @@ const COMPONENTS = [
     ...COMPONENTS
   ]
 })
-export class DataFlowModule {
+export class DataflowModule {
 }

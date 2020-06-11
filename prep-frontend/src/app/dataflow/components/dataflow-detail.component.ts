@@ -3,10 +3,10 @@ import {RouterUrls} from '../../common/constants/router.constant';
 import {CommonUtil} from '../../common/utils/common-util';
 
 @Component({
-  templateUrl: './data-flow-detail.component.html',
-  styleUrls: ['./data-flow-detail.component.css']
+  templateUrl: './dataflow-detail.component.html',
+  styleUrls: ['./dataflow-detail.component.css']
 })
-export class DataFlowDetailComponent {
+export class DataflowDetailComponent {
 
   public readonly ROUTER_URLS = RouterUrls;
   public readonly COMMON_UTIL = CommonUtil;

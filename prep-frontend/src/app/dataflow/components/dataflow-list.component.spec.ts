@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DataFlowDetailComponent } from './data-flow-detail.component';
+import { DataflowListComponent } from './dataflow-list.component';
 
-describe('DetailComponent', () => {
-  let component: DataFlowDetailComponent;
-  let fixture: ComponentFixture<DataFlowDetailComponent>;
+describe('ListComponent', () => {
+  let component: DataflowListComponent;
+  let fixture: ComponentFixture<DataflowListComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ DataFlowDetailComponent ]
+      declarations: [ DataflowListComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DataFlowDetailComponent);
+    fixture = TestBed.createComponent(DataflowListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

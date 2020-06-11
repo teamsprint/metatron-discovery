@@ -1,13 +1,13 @@
 import {TestBed} from '@angular/core/testing';
 
-import {DataFlowService} from './data-flow.service';
+import {DataflowService} from './dataflow.service';
 
-describe('DataFlowService', () => {
-  let service: DataFlowService;
+describe('DataflowService', () => {
+  let service: DataflowService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(DataFlowService);
+    service = TestBed.inject(DataflowService);
   });
 
   it('should be created', () => {
