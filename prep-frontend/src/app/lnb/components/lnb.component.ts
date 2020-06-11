@@ -1,4 +1,4 @@
-import {Component, ComponentFactoryResolver, ViewContainerRef} from '@angular/core';
+import {Component, ComponentFactoryResolver, Input, ViewContainerRef} from '@angular/core';
 import {RouterUrls} from '../../common/constants/router.constant';
 import {CreateConnectionComponent} from '../../connection/components/create-connection.component';
 
@@ -11,6 +11,9 @@ import {CreateConnectionComponent} from '../../connection/components/create-conn
 export class LnbComponent {
 
   public readonly ROUTER_URLS = RouterUrls;
+
+  @Input()
+  public readonly is2DepthEnable: boolean;
 
   constructor(private readonly componentFactoryResolver: ComponentFactoryResolver,
               private readonly viewContainerRef: ViewContainerRef) {
