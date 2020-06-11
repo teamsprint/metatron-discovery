@@ -22,7 +22,7 @@ export class CreateConnectionComponent {
   public createConnectionInfo(): void {
     this.connectionInfo = new Connection.Entity();
     this.connectionInfo.connType = Connection.ConnType.DATABASE;
-    this.connectionInfo.implementor = 'MySQL';
+    this.connectionInfo.implementor = 'MYSQL';
     this.step = 'create-connection-info';
   }
 

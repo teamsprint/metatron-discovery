@@ -183,21 +183,21 @@ export class CreateConnectionInfoComponent {
 
   public isDisableSid(): boolean {
     if (this.connectionInfo.implementor !== null && this.connectionInfo.implementor.toUpperCase() === 'TIBERO') {
-      return true;
+      return false;
     }
-    return false;
+    return true;
   }
   public isDisableDatabase(): boolean {
     if (this.connectionInfo.implementor !== null && this.connectionInfo.implementor.toUpperCase() === 'POSTGRESQL') {
-      return true;
+      return false;
     }
-    return false;
+    return true;
   }
   public isDisableCatalog(): boolean {
     if (this.connectionInfo.implementor !== null && this.connectionInfo.implementor.toUpperCase() === 'PRESTO') {
-      return true;
+      return false;
     }
-    return false;
+    return true;
   }
 
   /**

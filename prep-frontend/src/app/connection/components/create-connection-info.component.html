@@ -24,29 +24,29 @@
         -->
         <ul class="pb-list-dataset-type">
 
-          <li [ngClass]="{'is-selected': connectionInfo!=null && connectionInfo.implementor=='MySQL'}">
-            <div class="pb-box-dataset" (click)="onChangeConnectionType('MySQL')">
+          <li [ngClass]="{'is-selected': connectionInfo!=null && connectionInfo.implementor.toLocaleUpperCase()=='MYSQL'}">
+            <div class="pb-box-dataset" (click)="onChangeConnectionType('MYSQL')">
               <em class="pb-img-dataset type-mysql"></em>
               MySQL
             </div>
           </li>
 
-          <li [ngClass]="{'is-selected': connectionInfo!=null && connectionInfo.implementor=='Hive'}">
-            <div class="pb-box-dataset" (click)="onChangeConnectionType('Hive')">
+          <li [ngClass]="{'is-selected': connectionInfo!=null && connectionInfo.implementor=='HIVE'}">
+            <div class="pb-box-dataset" (click)="onChangeConnectionType('HIVE')">
               <em class="pb-img-dataset type-hive"></em>
               Hive
             </div>
           </li>
 
           <li [ngClass]="{'is-selected': connectionInfo!=null && connectionInfo.implementor=='PostgreSQL'}">
-            <div class="pb-box-dataset" (click)="onChangeConnectionType('PostgreSQL')">
+            <div class="pb-box-dataset" (click)="onChangeConnectionType('POSTGRESQL')">
               <em class="pb-img-dataset type-post"></em>
               PostgreSQL
             </div>
           </li>
 
-          <li [ngClass]="{'is-selected': connectionInfo!=null && connectionInfo.implementor=='Presto'}">
-            <div class="pb-box-dataset" (click)="onChangeConnectionType('Presto')">
+          <li [ngClass]="{'is-selected': connectionInfo!=null && connectionInfo.implementor=='PRESTO'}">
+            <div class="pb-box-dataset" (click)="onChangeConnectionType('PRESTO')">
               <em class="pb-img-dataset type-presto"></em>
               Presto
             </div>
@@ -138,7 +138,7 @@
               <div class="pb-create-label">Host</div>
               <div class="pb-form-edit">
                 <input type="text" class="pb-component-input" placeholder="Placeholder" [ngModel]="hostname">
-                <span class="pb-form-error">Required</span>
+                <span class="pb-form-error" *ngIf="isHostnameError">Required</span>
               </div>
               <label class="pb-compomnent-checkbox type-font-s" (click)="onChangeUseUrl(); $event.defaultPrevented;">
                 <input type="checkbox" [checked]="isUsedUrl">
@@ -174,6 +174,27 @@
             <!-- //form create -->
 
 
+            <!-- form create -->
+            <div class="pb-form-create" *ngIf="!isDisableDatabase()">
+              <div class="pb-create-label">Database</div>
+              <div class="pb-form-edit">
+                <input type="text" class="pb-component-input" placeholder="Placeholder" [ngModel]="database">
+                <span class="pb-form-error" *ngIf="isDatabaseError">Required</span>
+              </div>
+            </div>
+            <!-- //form create -->
+
+
+            <!-- form create -->
+            <div class="pb-form-create" *ngIf="!isDisableCatalog()">
+              <div class="pb-create-label">Catalog</div>
+              <div class="pb-form-edit">
+                <input type="text" class="pb-component-input" placeholder="Placeholder" [ngModel]="catalog">
+                <span class="pb-form-error" *ngIf="isCatalogError">Required</span>
+              </div>
+            </div>
+            <!-- //form create -->
+
 
           </div>
         </div>
@@ -189,7 +210,7 @@
               <div class="pb-create-label">User ID</div>
               <div class="pb-form-edit">
                 <input type="text" class="pb-component-input" placeholder="Placeholder">
-                <span class="pb-form-error">Required</span>
+                <span class="pb-form-error" *ngIf="isUsernameError">Required</span>
               </div>
 
             </div>
@@ -201,7 +222,7 @@
               <div class="pb-create-label">User Password</div>
               <div class="pb-form-edit">
                 <input type="password" class="pb-component-input" placeholder="Placeholder">
-                <span class="pb-form-error">Required</span>
+                <span class="pb-form-error" *ngIf="isPasswordError">Required</span>
               </div>
             </div>
             <!-- //form create -->
