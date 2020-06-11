@@ -317,6 +317,11 @@
   height: 12px;
   background-position: left -161px;
 }
+.pb-file-type.type-recipe {
+  width: 13px;
+  height: 12px;
+  background-position: left -161px;
+}
 .pb-file-type.type-dataset2 {
   width: 12px;
   height: 14px;

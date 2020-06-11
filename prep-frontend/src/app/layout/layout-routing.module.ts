@@ -18,9 +18,9 @@ import {LnbModule} from '../lnb/lnb.module';
 @NgModule({
   imports: [
     SharedModule,
-    LnbModule,
     DataflowModule,
     DatasetModule,
+    LnbModule,
     RouterModule.forChild([
       {
         path: '',
@@ -45,6 +45,9 @@ import {LnbModule} from '../lnb/lnb.module';
               {
                 path: '',
                 component: DataflowListComponent,
+                canActivate: [
+                  UserVerifyGuard
+                ]
               },
               {
                 path: ':id',
@@ -76,7 +79,8 @@ import {LnbModule} from '../lnb/lnb.module';
     PreFlowGuard
   ],
   exports: [
-    RouterModule
+    RouterModule,
+    LnbModule
   ]
 })
 export class LayoutRoutingModule {

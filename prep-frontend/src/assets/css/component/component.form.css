@@ -12,7 +12,7 @@
 .pb-form-selectbox {
   position: relative;
   padding-right: 30px;
-  height: 36px;
+  height: 30px;
   border-radius: 4px;
   border: solid 1px #dedede;
   background-color: #fff;
@@ -40,7 +40,7 @@
   padding-left: 10px;
   color: #a3a3a3;
   font-size: 14px;
-  line-height: 34px;
+  line-height: 28px;
   cursor:pointer;
   white-space:nowrap;
   text-overflow:ellipsis;
@@ -560,10 +560,10 @@
 }
 
 .pb-form-create .pb-create-label {
-  padding-bottom: 9px;
+  padding-bottom: 8px;
   color: #4b515b;
   font-weight: 600;
-  font-size: 16px;
+  font-size: 14px;
 }
 
 .pb-form-create .pb-form-edit + .pb-compomnent-checkbox {

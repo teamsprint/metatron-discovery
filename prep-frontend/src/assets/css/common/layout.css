@@ -574,11 +574,12 @@ ul.pb-list-tab-button li a em.pb-icon-listgrid {
 .pb-layout-popup .pb-btn-pop-close {
   display: inline-block;
   position: absolute;
-  top: 26px;
+  top: 28px;
   right: 37px;
-  width: 21px;
-  height: 17px;
+  width: 16px;
+  height: 16px;
   background: url(../../images/btn_close.png) no-repeat;
+  background-position:-17px -92px ;
 }
 
 .pb-box-popup .pb-ui-step {
@@ -616,11 +617,11 @@ ul.pb-list-tab-button li a em.pb-icon-listgrid {
 }
 
 .pb-box-popup .pb-popup-top {
-  padding: 24px 30px;
+  padding: 24px 30px 23px 40px;
   color: #000;
   font-size: 20px;
   font-weight: bold;
-  border-bottom: 1px solid #d0d3d3;
+  border-bottom: 1px solid #dedede;
 }
 
 .pb-box-popup .pb-popup-contents {
@@ -628,6 +629,7 @@ ul.pb-list-tab-button li a em.pb-icon-listgrid {
   flex-direction: column;
   flex: auto;
   overflow: auto;
+  padding-bottom:50px;
 }
 
 .pb-box-popup .pb-popup-contents .pb-popup-contents-in {
@@ -638,6 +640,7 @@ ul.pb-list-tab-button li a em.pb-icon-listgrid {
 .pb-box-popup .pb-popup-bottom {
   padding: 20px 0;
   text-align: center;
+  margin-top:-50px;
 }
 
 .pb-box-popup .pb-popup-bottom .pb-component-btn-pop {

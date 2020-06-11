@@ -292,7 +292,7 @@
   display: inline-block;
   min-width: 135px;
   float: left;
-  padding: 9px 18px 9px 15px;
+  padding: 7px 18px 7px 15px;
   color: #4e4e4e;
   font-size: 14px;
   font-weight: normal;
@@ -350,21 +350,21 @@
 }
 
 .pb-wrap-connect table.pb-table-det tr th {
-  padding: 13px 20px;
-  font-size: 16px;
-  color: #737373;
-  font-weight: normal;
-  text-align: left;
+  padding: 12px 30px 12px 0;
+  font-size: 14px;
+  color: #a3a3a3;
+  font-weight: bold;
+  text-align: right;
 }
 
 .pb-wrap-connect table.pb-table-det tr td {
   color: #4b515b;
-  font-size: 16px;
+  font-size: 14px;
 }
 
 .pb-wrap-connect table.pb-table-det tr td .pb-data-file-name {
   color: #4b515b;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: bold;
 }
 

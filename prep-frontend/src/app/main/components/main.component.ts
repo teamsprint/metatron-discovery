@@ -5,14 +5,13 @@ import {CommonUtil} from '../../common/utils/common-util';
 import {RouterUrls} from '../../common/constants/router.constant';
 
 @Component({
-  selector: 'div[main]',
   templateUrl: './main.component.html',
-  host: { '[class.pb-page-main]': 'true' }
 })
 export class MainComponent {
 
   public readonly IMAGE_CONSTANT = ImageConstant;
   public readonly COMMON_UTIL = CommonUtil;
+  public readonly UUID = this.COMMON_UTIL.Generate.makeUUID();
 
   constructor(private readonly router: Router) {
   }
