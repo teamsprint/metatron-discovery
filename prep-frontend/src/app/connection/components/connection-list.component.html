@@ -1,5 +1,5 @@
 <!-- lnb -->
-<div lnb></div>
+<div lnb (onPageRefresh)="lnbOnPageRefresh()"></div>
 <!-- //lnb -->
 
 <!-- page -->
@@ -29,7 +29,7 @@
           </li>
         </ul>
         <!-- //tab -->
-        <a href="javascript:" class="pb-component-btn type-bg tpye-normal"><em class="pb-icon-add-r"></em>CREATE CONNECTION</a>
+        <a href="javascript:" class="pb-component-btn type-bg tpye-normal" (click)="createConnection()"><em class="pb-icon-add-r"></em>CREATE CONNECTION</a>
       </div>
       <!-- //right -->
     </div>

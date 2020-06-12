@@ -1,10 +1,11 @@
-import {Component} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {ConnectionService} from '../services/connection.service';
 import {LoadingService} from '../../common/services/loading/loading.service';
 import {finalize} from 'rxjs/operators';
 import {CommonConstant} from '../../common/constants/common.constant';
 import {Page} from '../../common/constants/page';
 import {Connection} from '../domains/connection';
+import {LnbComponent} from '../../lnb/components/lnb.component';
 
 @Component({
   templateUrl: './connection-list.component.html',
@@ -15,6 +16,10 @@ export class ConnectionListComponent {
   private readonly page = new Page();
   public searchText = '';
   public connections: Array<Connection.Entity> = [];
+
+  @ViewChild(LnbComponent)
+  public lnbComponent: LnbComponent;
+
 
   constructor(private readonly connectionService: ConnectionService,
               private readonly loadingService: LoadingService) {
@@ -29,9 +34,13 @@ export class ConnectionListComponent {
     this.page.sort = CommonConstant.API_CONSTANT.PAGE_SORT_MODIFIED_TIME_DESC;
   }
 
+  public lnbOnPageRefresh() {
+    this.initialize();
+    this.getConnections(this.page);
+  }
+
   private getConnections(page: Page) {
     this.loadingService.show();
-
     this.connectionService
       .getConnections(this.searchText, page)
       .pipe(finalize(() => this.loadingService.hide()))
@@ -48,5 +57,9 @@ export class ConnectionListComponent {
           this.connections = [];
         }
       });
+  }
+
+  public createConnection(): void {
+    this.lnbComponent.openCreateConnectionPopup();
   }
 }
