@@ -1,4 +1,4 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component, ViewChild, OnInit} from '@angular/core';
 import {ConnectionService} from '../services/connection.service';
 import {LoadingService} from '../../common/services/loading/loading.service';
 import {finalize} from 'rxjs/operators';
@@ -11,7 +11,7 @@ import {LnbComponent} from '../../lnb/components/lnb.component';
   templateUrl: './connection-list.component.html',
   styleUrls: ['./connection-list.component.css']
 })
-export class ConnectionListComponent {
+export class ConnectionListComponent implements OnInit{
 
   private readonly page = new Page();
   public searchText = '';
