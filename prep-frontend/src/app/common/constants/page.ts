@@ -1,13 +1,13 @@
 export class Page {
-  public page;
-  public size;
-  public sort;
-  public column;
+  page: number;
+  size: number;
+  sort: string;
+  column: string;
 }
 
 export class PageResult {
-  public number: number;
-  public size: number;
-  public totalElements: number;
-  public totalPages: number;
+  number: number;
+  size: number;
+  totalElements: number;
+  totalPages: number;
 }

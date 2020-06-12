@@ -1,7 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Token} from '../../domains/token';
-import {CookieConstant} from '../../../common/constants/cookie.constant';
 import {CookieService} from 'ngx-cookie-service';
 import {CommonConstant} from '../../../common/constants/common.constant';
 import {User} from '../../domains/user';
@@ -31,16 +30,6 @@ export class LoginService {
   }
 
   verify(userId: string) {
-    return this.http
-      .get<User>(
-        `${CommonConstant.API_CONSTANT.API_URL}/users/${userId}`,
-        {
-          headers: new HttpHeaders({
-            'Content-Type': 'application/json',
-            Authorization: `${this.cookieService.get(CookieConstant.KEY.LOGIN_TOKEN_TYPE)} ${this.cookieService.get(CookieConstant.KEY.LOGIN_TOKEN)}`
-          }),
-          withCredentials: true
-        }
-      );
+    return this.http.get<User>(`${CommonConstant.API_CONSTANT.API_URL}/users/${userId}`);
   }
 }
