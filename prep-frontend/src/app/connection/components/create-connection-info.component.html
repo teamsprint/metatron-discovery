@@ -1,10 +1,10 @@
 <!-- box popup -->
 <div class="pb-box-popup">
-  <a href="javascript:" class="pb-btn-pop-close" (click)="onClose.emit()"></a>
+  <a href="javascript:;" class="pb-btn-pop-close" (click)="onClose.emit()"></a>
   <!-- step -->
   <div class="pb-ui-step">
     <span class="pb-txt-step is-selected">1</span>
-    <span class="pb-txt-step">2</span>
+    <span class="pb-txt-step" (click)="next()" style="cursor: pointer;">2</span>
   </div>
   <!-- //step -->
   <!-- top -->
@@ -114,8 +114,8 @@
             <div class="pb-form-create">
               <div class="pb-create-label">URL</div>
               <div class="pb-form-edit">
-                <input type="text" class="pb-component-input" placeholder="" [ngModel]="url">
-                <span class="pb-form-error" *ngIf="isUrlError"></span>
+                <input type="text" class="pb-component-input" placeholder="" [(ngModel)]="url" (ngModelChange)="url = $event; isUrlError = undefined; connectionValidInitialize()">
+                <span class="pb-form-error" *ngIf="isUrlError">Required</span>
 
               </div>
               <label class="pb-compomnent-checkbox type-font-s" (click)="onChangeUseUrl(); $event.defaultPrevented;">
@@ -137,7 +137,8 @@
             <div class="pb-form-create">
               <div class="pb-create-label">Host</div>
               <div class="pb-form-edit">
-                <input type="text" class="pb-component-input" placeholder="Placeholder" [ngModel]="hostname">
+                <input type="text" class="pb-component-input" placeholder="Placeholder" [(ngModel)]="hostname"
+                       (ngModelChange)="hostname = $event; isHostnameError = undefined; connectionValidInitialize()">
                 <span class="pb-form-error" *ngIf="isHostnameError">Required</span>
               </div>
               <label class="pb-compomnent-checkbox type-font-s" (click)="onChangeUseUrl(); $event.defaultPrevented;">
@@ -153,7 +154,8 @@
             <div class="pb-form-create">
               <div class="pb-create-label"> Port</div>
               <div class="pb-form-edit">
-                <input type="text" class="pb-component-input" placeholder="Placeholder" [ngModel]="port" maxlength="5" input-mask="number">
+                <input type="text" class="pb-component-input" placeholder="Placeholder" [(ngModel)]="port" maxlength="5" input-mask="number"
+                       (ngModelChange)="port = $event; isPortError = undefined; connectionValidInitialize()">
                 <span class="pb-form-error" *ngIf="isPortError">Required</span>
               </div>
             </div>
@@ -167,7 +169,8 @@
             <div class="pb-form-create" *ngIf="!isDisableSid()">
               <div class="pb-create-label">SID</div>
               <div class="pb-form-edit">
-                <input type="text" class="pb-component-input" placeholder="Placeholder" [ngModel]="sid">
+                <input type="text" class="pb-component-input" placeholder="Placeholder" [(ngModel)]="sid"
+                       (ngModelChange)="sid = $event; isSidError = undefined; connectionValidInitialize()">
                 <span class="pb-form-error" *ngIf="isSidError">Required</span>
               </div>
             </div>
@@ -178,7 +181,8 @@
             <div class="pb-form-create" *ngIf="!isDisableDatabase()">
               <div class="pb-create-label">Database</div>
               <div class="pb-form-edit">
-                <input type="text" class="pb-component-input" placeholder="Placeholder" [ngModel]="database">
+                <input type="text" class="pb-component-input" placeholder="Placeholder" [(ngModel)]="database"
+                       (ngModelChange)="database = $event; isDatabaseError = undefined; connectionValidInitialize()">
                 <span class="pb-form-error" *ngIf="isDatabaseError">Required</span>
               </div>
             </div>
@@ -189,7 +193,8 @@
             <div class="pb-form-create" *ngIf="!isDisableCatalog()">
               <div class="pb-create-label">Catalog</div>
               <div class="pb-form-edit">
-                <input type="text" class="pb-component-input" placeholder="Placeholder" [ngModel]="catalog">
+                <input type="text" class="pb-component-input" placeholder="Placeholder" [(ngModel)]="catalog"
+                       (ngModelChange)="catalog = $event; isCatalogError = undefined; connectionValidInitialize()">
                 <span class="pb-form-error" *ngIf="isCatalogError">Required</span>
               </div>
             </div>
@@ -209,7 +214,8 @@
             <div class="pb-form-create">
               <div class="pb-create-label">User ID</div>
               <div class="pb-form-edit">
-                <input type="text" class="pb-component-input" placeholder="Placeholder">
+                <input type="text" class="pb-component-input" placeholder="Placeholder" [(ngModel)]="username"
+                       (ngModelChange)="username = $event; isUsernameError = undefined; connectionValidInitialize()">
                 <span class="pb-form-error" *ngIf="isUsernameError">Required</span>
               </div>
 
@@ -221,7 +227,8 @@
             <div class="pb-form-create">
               <div class="pb-create-label">User Password</div>
               <div class="pb-form-edit">
-                <input type="password" class="pb-component-input" placeholder="Placeholder">
+                <input type="password" class="pb-component-input" placeholder="Placeholder" [(ngModel)]="password"
+                       (ngModelChange)="password = $event; isPasswordError = undefined; connectionValidInitialize()">
                 <span class="pb-form-error" *ngIf="isPasswordError">Required</span>
               </div>
             </div>
@@ -236,7 +243,7 @@
           <!-- form create -->
           <div class="pb-form-create type-check">
             <div class="pb-form-valid">
-              <a href="javascirpt:" class="pb-component-btn-valid" (click)="checkConnection()">Validation Check</a>
+              <a href="javascript:;" class="pb-component-btn-valid" (click)="checkConnection()">Validation Check</a>
               <span class="pb-txt-valid type-invalid" *ngIf="isRequireCheckConnection()">Required</span>
               <span class="pb-txt-valid type-invalid" *ngIf="isDisableConnection()">Invalid Connection. Please check server and account information</span>
               <span class="pb-txt-valid" *ngIf="isEnableConnection()">Valid Connection</span>
@@ -253,8 +260,8 @@
   </div>
   <!-- //contents -->
   <div class="pb-popup-bottom ">
-    <a href="javascript:" class="pb-component-btn-pop type-line" (click)="onClose.emit()">CANCEL</a>
-    <a href="javascript:" class="pb-component-btn-pop type-bg">NEXT</a>
+    <a href="javascript:;" class="pb-component-btn-pop type-line" (click)="onClose.emit()">CANCEL</a>
+    <a href="javascript:;" class="pb-component-btn-pop type-bg" (click)="next()">NEXT</a>
   </div>
 </div>
 <!-- //box popup -->

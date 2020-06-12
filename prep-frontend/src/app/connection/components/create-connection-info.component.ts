@@ -66,15 +66,20 @@ export class CreateConnectionInfoComponent {
   /**
    * Check valid connection
    */
-  public checkConnection(): void {
-    // init connection validation
+  public checkConnection() {
     this.connectionValidation = undefined;
-    // check valid connection input
     if (this.isValidConnectionInput()) {
-      this.connectionService.checkConnection(this.getConnectionParams()).subscribe();
+      this.connectionService.checkConnection(this.getConnectionParams()).subscribe(result => {this.checkConnectionResult(result);});
     }
   }
 
+  private checkConnectionResult(result: Connection.ConnectionCheck) {
+    if (result !== null && result.connected) {
+      this.connectionValidation = Connection.ConnectionValid.ENABLE_CONNECTION;
+    }else{
+      this.connectionValidation = Connection.ConnectionValid.DISABLE_CONNECTION;
+    }
+  }
 
   /**
    * Is enable connection
@@ -100,6 +105,38 @@ export class CreateConnectionInfoComponent {
     return this.connectionValidation === Connection.ConnectionValid.REQUIRE_CONNECTION_CHECK;
   }
 
+
+
+
+  public next() {
+    if (this.connectionValidation !== Connection.ConnectionValid.ENABLE_CONNECTION ) {
+      this.connectionValidation = Connection.ConnectionValid.REQUIRE_CONNECTION_CHECK;
+      return;
+    }
+
+    // not use URL
+    if (!this.isUsedUrl) {
+      // HOST
+      this.connectionInfo.hostname = this.hostname;
+      this.connectionInfo.port = String(this.port);
+      if (!this.isDisableSid()) {
+        this.connectionInfo.sid = this.sid;
+      } else if (!this.isDisableDatabase()) {
+        this.connectionInfo.database = this.database;
+      } else if (!this.isDisableCatalog()) {
+        this.connectionInfo.catalog = this.catalog;
+      }
+    } else {  // use URL
+      this.connectionInfo.url = this.url;
+    }
+    this.connectionInfo.username = this.username;
+    this.connectionInfo.password = this.password;
+    this.connectionInfo.connType = this.connectionInfo.connType;
+    this.onNext.emit();
+  }
+
+
+
   private getConnectionParams(): Connection.Entity {
     const connectionParam: Connection.Entity = new Connection.Entity();
     connectionParam.implementor = this.connectionInfo.implementor;
@@ -121,8 +158,6 @@ export class CreateConnectionInfoComponent {
     }
     connectionParam.username = this.username;
     connectionParam.password = this.password;
-    connectionParam.sid = null;
-    connectionParam.database = null;
     connectionParam.connType = this.connectionInfo.connType;
     return connectionParam;
   }
@@ -217,7 +252,7 @@ export class CreateConnectionInfoComponent {
   /**
    * Initial connection valid
    */
-  private connectionValidInitialize(): void {
+  public connectionValidInitialize(): void {
     this.connectionValidation = undefined;
   }
 

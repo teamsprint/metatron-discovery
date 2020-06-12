@@ -1,0 +1,125 @@
+<!-- box popup -->
+<div class="pb-box-popup">
+  <a href="javascript:" class="pb-btn-pop-close" (click)="onClose.emit()"></a>
+  <!-- step -->
+  <div class="pb-ui-step">
+    <span class="pb-txt-step" (click)="onPrev.emit()" style="cursor: pointer;">1</span>
+    <span class="pb-txt-step is-selected">2</span>
+  </div>
+  <!-- //step -->
+  <!-- top -->
+  <div class="pb-popup-top pb-clear">
+    <div class="pb-txt-title">Create Data Connection</div>
+
+  </div>
+  <!-- //top -->
+  <!-- contents -->
+  <div class="pb-popup-contents ">
+    <div class="pb-wrap-connect type-connect">
+      <!-- box file detail -->
+      <div class="pb-box-file-detail">
+        <table class="pb-table-det">
+          <colgroup>
+            <col width="125px">
+            <col width="*">
+          </colgroup>
+          <tbody>
+          <tr>
+            <th>Type</th>
+            <td>
+              <span class="pb-data-file-name">
+                <em class="pb-img-dataset type-mysql" *ngIf="connectionInfo.implementor=='MYSQL'"></em>
+                <em class="pb-img-dataset type-hive" *ngIf="connectionInfo.implementor=='HIVE'"></em>
+                <em class="pb-img-dataset type-tibero" *ngIf="connectionInfo.implementor=='TIBERO'"></em>
+                <em class="pb-img-dataset type-presto" *ngIf="connectionInfo.implementor=='PRESTO'"></em>
+                <em class="pb-img-dataset type-post" *ngIf="connectionInfo.implementor=='POSTGRESQL'"></em>
+                                    {{connectionInfo.implementor}}
+              </span>
+            </td>
+          </tr>
+
+
+          <tr *ngIf="connectionInfo.hasOwnProperty('hostname')">
+            <th>Hostname</th>
+            <td>
+              <span class="pb-data-file-name">{{connectionInfo.hostname}}</span>
+            </td>
+          </tr>
+
+
+          <tr *ngIf="connectionInfo.hasOwnProperty('port')">
+            <th>Port</th>
+            <td>
+              <span class="pb-data-file-name">{{connectionInfo.port}}</span>
+            </td>
+          </tr>
+
+          <tr *ngIf="connectionInfo.hasOwnProperty('sid')">
+            <th>Sid</th>
+            <td>
+              <span class="pb-data-file-name">{{connectionInfo.sid}}</span>
+            </td>
+          </tr>
+
+
+          <tr *ngIf="connectionInfo.hasOwnProperty('database')">
+            <th>Database</th>
+            <td>
+              <span class="pb-data-file-name">{{connectionInfo.database}}</span>
+            </td>
+          </tr>
+
+          <tr *ngIf="connectionInfo.hasOwnProperty('catalog')">
+            <th>Catalog</th>
+            <td>
+              <span class="pb-data-file-name">{{connectionInfo.catalog}}</span>
+            </td>
+          </tr>
+
+
+          <tr *ngIf="connectionInfo.hasOwnProperty('username')">
+            <th>username</th>
+            <td>
+              <span class="pb-data-file-name">{{connectionInfo.username}}</span>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+      <!-- //box file detail -->
+
+      <!-- create -->
+      <div class="pb-ui-create">
+        <!-- form create -->
+        <div class="pb-form-create">
+          <div class="pb-create-label">Name</div>
+          <div class="pb-form-edit">
+            <input type="text" class="pb-component-input" maxlength="50" placeholder="Please enter a name" [(ngModel)]="name" (ngModelChange)="name = $event; isNameError = undefined;">
+            <span class="pb-form-error" *ngIf="isNameError">Required</span>
+          </div>
+        </div>
+        <!-- //form create -->
+        <!-- form create -->
+        <div class="pb-form-create">
+          <div class="pb-create-label">Description</div>
+          <div class="pb-form-edit">
+            <input type="text" class="pb-component-input" maxlength="150" placeholder="Please enter a description" [(ngModel)]="description">
+          </div>
+        </div>
+        <!-- //form create -->
+
+      </div>
+      <!-- //create -->
+
+    </div>
+
+  </div>
+  <!-- //contents -->
+  <div class="pb-popup-bottom ">
+    <a href="javascript:" class="pb-component-btn-pop type-line" (click)="onPrev.emit()">PREV</a>
+    <a href="javascript:" class="pb-component-btn-pop type-line" (click)="onClose.emit()">CANCEL</a>
+    <a href="javascript:" class="pb-component-btn-pop type-bg" (click)="complete()">DONE</a>
+
+  </div>
+</div>
+<!-- //box popup -->

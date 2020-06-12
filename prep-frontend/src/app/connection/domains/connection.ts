@@ -19,6 +19,10 @@ export namespace Connection {
     modifySubYn: string;
   }
 
+  export class ConnectionCheck {
+    connected: boolean;
+  }
+
   export enum ConnType {
     API = 'API',
     DATABASE = 'DATABASE'
@@ -29,4 +33,5 @@ export namespace Connection {
     DISABLE_CONNECTION = 1,
     REQUIRE_CONNECTION_CHECK = 2
   }
+
 }

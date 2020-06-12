@@ -26,5 +26,9 @@ export class LnbComponent {
     createComponentComponentRef.instance.onClose.subscribe(() => {
       createComponentComponentRef.destroy();
     });
+    createComponentComponentRef.instance.onDone.subscribe(() => {
+      // 현재 페이지가 connection list 화면인 경우 리스트 갱신 필요
+      createComponentComponentRef.destroy();
+    });
   }
 }

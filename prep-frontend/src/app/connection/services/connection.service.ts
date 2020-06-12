@@ -14,7 +14,6 @@ export class ConnectionService {
   }
 
   checkConnection(connectionParam: Connection.Entity) {
-
     const url = `${CommonConstant.API_CONSTANT.API_URL}/connections/query/check`;
     if (!connectionParam) {
       return of(new HttpErrorResponse({
@@ -24,12 +23,12 @@ export class ConnectionService {
       }));
     }
     const param = {connection: connectionParam};
-    return this.http.post(url, JSON.stringify(param));
+    return this.http.post<Connection.ConnectionCheck>(url, JSON.stringify(param));
   }
 
   createConnection(connection: Connection.Entity) {
 
-    const url = `${CommonConstant.API_CONSTANT.API_URL}/connections/${connection.connId}`;
+    const url = `${CommonConstant.API_CONSTANT.API_URL}/connections`;
 
     if (!connection) {
       return of(new HttpErrorResponse({

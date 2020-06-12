@@ -10,14 +10,13 @@ export class CreateConnectionComponent {
 
   @HostBinding('class.pb-layout-popup')
   public readonly pbLayoutPopupClass = true;
-
   @Output()
   public readonly onClose = new EventEmitter();
+  @Output()
+  public readonly onDone = new EventEmitter();
 
   public connectionInfo: Connection.Entity;
   public step = '';
-
-
 
   public createConnectionInfo(): void {
     this.connectionInfo = new Connection.Entity();
@@ -26,5 +25,12 @@ export class CreateConnectionComponent {
     this.step = 'create-connection-info';
   }
 
+  public createInfoNextEmit(): void {
+    this.step = 'create-connection-name';
+  }
+
+  public createNamePrevEmit(): void {
+    this.step = 'create-connection-info';
+  }
 
 }

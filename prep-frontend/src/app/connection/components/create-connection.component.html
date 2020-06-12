@@ -1,1 +1,2 @@
-<create-connection-info *ngIf="step ==='create-connection-info'" [connectionInfo]="connectionInfo" (onClose)="onClose.emit()"></create-connection-info>
+<create-connection-info *ngIf="step ==='create-connection-info'" [connectionInfo]="connectionInfo" (onNext)="createInfoNextEmit()" (onClose)="onClose.emit()"></create-connection-info>
+<create-connection-name *ngIf="step ==='create-connection-name'" [connectionInfo]="connectionInfo" (onPrev)="createNamePrevEmit()" (onClose)="onClose.emit()" (onDone)="onDone.emit()"></create-connection-name>
