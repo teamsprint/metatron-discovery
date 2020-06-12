@@ -1,8 +1,7 @@
 import {Component, ComponentFactoryResolver, Output, Input, ViewContainerRef, EventEmitter} from '@angular/core';
 import {RouterUrls} from '../../common/constants/router.constant';
-import { Router } from '@angular/router';
+import {Router} from '@angular/router';
 import {CreateConnectionComponent} from '../../connection/components/create-connection.component';
-import {RouterUrls} from '../../common/constants/router.constant';
 
 @Component({
   selector: 'div[lnb]',
@@ -41,7 +40,7 @@ export class LnbComponent {
 
   private createConnectionAfterCheck() {
     const url = this.router.url;
-    const connectionListPath = `${RouterUrls.Managements.ROOT}/${RouterUrls.Managements.PREP_BOT}/${RouterUrls.Managements.CONNECTION}`;
+    const connectionListPath = `${this.ROUTER_URLS.Managements.ROOT}/${this.ROUTER_URLS.Managements.PREP_BOT}/${this.ROUTER_URLS.Managements.CONNECTION}`;
     if (url.indexOf(connectionListPath) > -1) {
       this.onPageRefresh.emit();
     }
