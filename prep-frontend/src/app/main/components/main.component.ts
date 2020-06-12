@@ -7,6 +7,8 @@ import {DataflowService} from '../../dataflow/services/dataflow.service';
 import {Page} from '../../common/constants/page';
 import {CommonConstant} from '../../common/constants/common.constant';
 import {Dataflow} from '../../dataflow/domains/dataflow';
+import {LoadingService} from '../../common/services/loading/loading.service';
+import {finalize} from 'rxjs/operators';
 
 @Component({
   templateUrl: './main.component.html',
@@ -19,9 +21,10 @@ export class MainComponent implements OnInit {
   private readonly SEARCH_TEXT = undefined;
 
   private readonly page = new Page();
-  public dataflows: Array<Dataflow.Entity> = [];
+  public dataflows: Array<Dataflow.Select> = [];
 
   constructor(private readonly router: Router,
+              private readonly loadingService: LoadingService,
               private readonly dataflowService: DataflowService) {
   }
 
@@ -41,8 +44,12 @@ export class MainComponent implements OnInit {
   }
 
   public getDataflows(page: Page) {
+
+    this.loadingService.show();
+
     this.dataflowService
       .getDataflows(this.SEARCH_TEXT, page)
+      .pipe(finalize(() => this.loadingService.hide()))
       .subscribe(dataflows => {
 
         if (!dataflows) {
