@@ -1,6 +1,8 @@
 import {Component, EventEmitter, Output, Input} from '@angular/core';
 import {Connection} from '../domains/connection';
 import {ConnectionService} from '../services/connection.service';
+import {LoadingService} from '../../common/services/loading/loading.service';
+import {finalize} from 'rxjs/operators';
 
 @Component({
   selector: 'create-connection-info',
@@ -38,7 +40,8 @@ export class CreateConnectionInfoComponent {
   public connectionValidation: Connection.ConnectionValid;
 
 
-  constructor(private  connectionService: ConnectionService) {
+  constructor(private readonly connectionService: ConnectionService,
+              private readonly loadingService: LoadingService) {
   }
 
   public onChangeConnectionType(implementor: string): void {
@@ -69,7 +72,18 @@ export class CreateConnectionInfoComponent {
   public checkConnection() {
     this.connectionValidation = undefined;
     if (this.isValidConnectionInput()) {
-      this.connectionService.checkConnection(this.getConnectionParams()).subscribe(result => {this.checkConnectionResult(result);});
+      this.loadingService.show();
+      this.connectionService
+        .checkConnection(this.getConnectionParams())
+        .pipe(finalize(() => this.loadingService.hide()))
+        .subscribe(result => {
+          if (!result) {
+            return;
+          }
+          const connected: Connection.ConnectionCheck = new Connection.ConnectionCheck();
+          connected.connected = result['connected'];
+          this.checkConnectionResult(connected);
+      });
     }
   }
 

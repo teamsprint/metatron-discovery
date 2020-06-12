@@ -1,5 +1,4 @@
 import {AbstractHistory} from '../../common/domain/abstract-history-entity';
-
 export namespace Connection {
 
   export class Entity extends AbstractHistory.Entity {

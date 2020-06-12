@@ -1,6 +1,8 @@
 import {Component, EventEmitter, Output, Input} from '@angular/core';
 import {Connection} from '../domains/connection';
 import {ConnectionService} from '../services/connection.service';
+import {LoadingService} from '../../common/services/loading/loading.service';
+import {finalize} from 'rxjs/operators';
 
 @Component({
   selector: 'create-connection-name',
@@ -21,7 +23,8 @@ export class CreateConnectionNameComponent {
   public name = '';
   public description = '';
 
-  constructor(private  connectionService: ConnectionService) {
+  constructor(private readonly connectionService: ConnectionService,
+              private readonly loadingService: LoadingService) {
   }
 
   /** Complete */
@@ -36,10 +39,13 @@ export class CreateConnectionNameComponent {
     }
     this.connectionInfo.name = this.name;
     this.connectionInfo.description = this.description;
-    this.connectionService.createConnection(this.connectionInfo).subscribe(result => {
-      if (result !== null) {
-        this.onDone.emit();
-      }
+    this.loadingService.show();
+    this.connectionService.createConnection(this.connectionInfo)
+      .pipe(finalize(() => this.loadingService.hide()))
+      .subscribe(result => {
+        if (result !== null) {
+          this.onDone.emit();
+        }
     });
   }
 

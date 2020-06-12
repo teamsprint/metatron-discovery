@@ -8,11 +8,16 @@ export namespace RouterUrls {
 
     public static readonly ROOT = 'management';
     public static readonly PREP_BOT = 'prepbot';
+    public static readonly CONNECTION = 'connections';
     public static readonly FLOWS = 'dataflows';
     public static readonly DATASET = 'datasets';
 
     public static getMainUrl() {
       return `/${Managements.ROOT}/${Managements.PREP_BOT}`;
+    }
+
+    public static getConnectionsUrl() {
+      return `/${Managements.ROOT}/${Managements.PREP_BOT}/${Managements.CONNECTION}`;
     }
 
     public static getFlowsUrl() {

@@ -138,6 +138,9 @@
 </div>
 
 <div class="pb-ui-lnb" #typeConnections
+     routerLinkActive="is-selected"
+     [routerLink]="ROUTER_URLS.Managements.getConnectionsUrl()"
+     [routerLinkActiveOptions]="{exact:true}"
      (mouseover)="typeConnections.setAttribute('aria-expanded', 'true')"
      (mouseleave)="typeConnections.setAttribute('aria-expanded', 'false')">
   <!--suppress JSUnnecessarySemicolon -->
