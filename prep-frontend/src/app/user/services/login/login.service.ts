@@ -1,7 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Token} from '../../domains/token';
-import {CookieService} from 'ngx-cookie-service';
 import {CommonConstant} from '../../../common/constants/common.constant';
 import {User} from '../../domains/user';
 
@@ -10,8 +9,7 @@ import {User} from '../../domains/user';
 })
 export class LoginService {
 
-  constructor(private readonly http: HttpClient,
-              private readonly cookieService: CookieService) {
+  constructor(private readonly http: HttpClient) {
   }
 
   login(user: User) {
