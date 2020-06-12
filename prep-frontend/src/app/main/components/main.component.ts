@@ -17,11 +17,10 @@ export class MainComponent implements OnInit {
 
   public readonly IMAGE_CONSTANT = ImageConstant;
   public readonly COMMON_UTIL = CommonUtil;
-  public readonly UUID = this.COMMON_UTIL.Generate.makeUUID();
   private readonly SEARCH_TEXT = undefined;
 
   private readonly page = new Page();
-  public dataflows: Array<Dataflow.Select> = [];
+  public dataflows: Array<Dataflow.ValueObjects.Select> = [];
 
   constructor(private readonly router: Router,
               private readonly loadingService: LoadingService,
@@ -39,8 +38,12 @@ export class MainComponent implements OnInit {
     this.page.sort = CommonConstant.API_CONSTANT.PAGE_SORT_MODIFIED_TIME_DESC;
   }
 
-  public goFlowDetailView(id: string) {
+  public goDataflowDetailView(id: string) {
     this.router.navigate([RouterUrls.Managements.getFlowDetailUrl(id)]).then();
+  }
+
+  public goDataflowsView() {
+    this.router.navigate([RouterUrls.Managements.getFlowsUrl()]).then();
   }
 
   public getDataflows(page: Page) {

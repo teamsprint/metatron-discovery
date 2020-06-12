@@ -1,3 +1,5 @@
+import {UserDetail} from '../../user/domains/user';
+
 export namespace AbstractHistory {
 
   export class Entity {
@@ -7,13 +9,6 @@ export namespace AbstractHistory {
     modifiedBy: UserDetail;
     modifiedTime: Date;
     lastAccessTime: Date;
-  }
-
-  export class UserDetail {
-    email: string;
-    fullName: string;
-    type: string;
-    username: string;
   }
 }
 

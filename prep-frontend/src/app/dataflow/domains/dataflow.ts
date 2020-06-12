@@ -1,32 +1,45 @@
-/* tslint:disable */
 import {PageResult} from '../../common/constants/page';
-import {AbstractHistory} from '../../common/domain/abstract-history-entity';
+import {UserProfile} from '../../user/domains/user';
 
 export namespace Dataflow {
 
-  export class Create {
-    dfId: string;
-    name: string;
-    description: string;
-    custom: string;
-    dataset: Array<string>;
+  export namespace ValueObjects {
+    export class Create {
+      dfId: string;
+      name: string;
+      description: string;
+      custom: string;
+      dataset: Array<string>;
+    }
+
+    export class Select {
+      dfId: string;
+      name: string;
+      description: string;
+      custom: string;
+
+      // TODO: 무시. 화면에서 사용 불필요
+      // diagrams: Array<DataflowDiagram.Entity>;
+
+      diagramData: Array<DataflowDiagramResponse>;
+      upstreams: Array<Upstream>;
+      datasetCount: number;
+      recipeCount: number;
+
+      createdTime: Date;
+      modifiedTime: Date;
+      createdBy: UserProfile;
+      modifiedBy: UserProfile;
+    }
   }
 
-  export class Select extends AbstractHistory.Entity {
-    dfId: string;
-    name: string;
-    description: string;
-    custom: string;
-    diagrams: Array<DataflowDiagram.Entity>;
-    diagramData: Array<DataflowDiagramResponse>;
-    upstreams: Array<Upstream>;
-    datasetCount: number;
-    recipeCount: number;
-  }
-
-  namespace DataflowDiagram {
+  export namespace DataflowDiagram {
     export class Entity {
-
+      // orderNo: number;
+      // dataflow: Dataflow;
+      // dataset: Dataset;
+      // recipe: Recipe;
+      // objType: DataflowDiagram.ObjectType;
     }
 
     export enum ObjectType {
@@ -35,7 +48,7 @@ export namespace Dataflow {
     }
   }
 
-  class DataflowDiagramResponse {
+  export class DataflowDiagramResponse {
     creatorDfId: string;
     creatorDfName: string;
     objId: string;
@@ -44,7 +57,15 @@ export namespace Dataflow {
     createdTime: Date;
   }
 
-  class Upstream {
+  export class Upstream {
+    dfId: string;
+    upstreamDsId: string;
+    reId: string;
+  }
+
+  export class PrepParamDatasetIdList {
+    dsIds: Array<string>;
+    forSwap: boolean;
   }
 
   export namespace Result {
@@ -53,8 +74,8 @@ export namespace Dataflow {
 
       export class Entity {
         page: PageResult;
-        _embedded: {
-          dataflow: Array<Dataflow.Select>
+        '_embedded': {
+          dataflow: Array<Dataflow.ValueObjects.Select>
         };
       }
 

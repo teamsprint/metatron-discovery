@@ -17,6 +17,20 @@ export class User extends AbstractHistory.Entity {
   confirmPassword: string;
 }
 
+export class UserDetail {
+  email: string;
+  fullName: string;
+  type: string;
+  username: string;
+}
+
+export class UserProfile {
+  username: string;
+  fullName: string;
+  email: string;
+  imageUrl: string;
+}
+
 export enum Status {
   REJECTED = 'REJECTED',
   EXPIRED = 'EXPIRED',
