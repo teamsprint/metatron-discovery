@@ -25,7 +25,9 @@ export class DataflowService {
     return this.http.get(``);
   }
 
-  getDataflows(searchText: string, page: Page, projection: Dataflow.Projections = Dataflow.Projections.FOR_LIST_VIEW) {
+  getDataflows(searchText: string,
+               page: Page,
+               projection: Dataflow.Result.GetDataflows.Projections = Dataflow.Result.GetDataflows.Projections.FOR_LIST_VIEW) {
 
     let params = {};
 
@@ -45,9 +47,11 @@ export class DataflowService {
       params = _.merge({ projection }, params);
     }
 
-    return this.http.get<Dataflow.Result.GetDataflows>(`${CommonConstant.API_CONSTANT.API_URL}/dataflows/search/findByNameContaining`, {
-      params: CommonUtil.Http.makeQueryString(params)
-    });
+    return this.http.get<Dataflow.Result.GetDataflows.Entity>(
+      `${CommonConstant.API_CONSTANT.API_URL}/dataflows/search/findByNameContaining`,
+      {
+        params: CommonUtil.Http.makeQueryString(params)
+      });
   }
 
   updateDataflow() {

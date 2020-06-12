@@ -15,7 +15,7 @@ export namespace CommonUtil {
 
     public static readonly HTTP_PARAMETER_CODER = new HttpParameterCoder();
 
-    public static objectToUrlString(obj, enableEncode = false) {
+    public static objectToUrlString(obj: object, enableEncode = false) {
       if (obj) {
         let params = '';
         for (const key in obj) {
@@ -31,7 +31,7 @@ export namespace CommonUtil {
       return '';
     }
 
-    public static makeQueryString(obj) {
+    public static makeQueryString(obj: object) {
       return new HttpParams({
         encoder: this.HTTP_PARAMETER_CODER,
         fromString: CommonUtil.Http.objectToUrlString(obj)
