@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
-@RepositoryRestResource(path = "dataflows", itemResourceRel = "dataflow", collectionResourceRel = "dataflow"
+@RepositoryRestResource(path = "dataflows", itemResourceRel = "dataflow", collectionResourceRel = "dataflows"
         , excerptProjection = DataflowProjections.DefaultProjection.class)
 public interface DataflowRepository extends JpaRepository<Dataflow, String> {
 

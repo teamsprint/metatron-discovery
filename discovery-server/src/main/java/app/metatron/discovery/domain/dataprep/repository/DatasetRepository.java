@@ -11,7 +11,7 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 import java.util.List;
 
-@RepositoryRestResource(path = "datasets", itemResourceRel = "dataset", collectionResourceRel = "dataset"
+@RepositoryRestResource(path = "datasets", itemResourceRel = "dataset", collectionResourceRel = "datasets"
         , excerptProjection = DatasetProjections.DefaultProjection.class)
 public interface DatasetRepository extends JpaRepository<Dataset, String>, DatasetRepositoryCustom{
 
