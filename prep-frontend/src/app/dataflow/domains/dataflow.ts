@@ -75,7 +75,7 @@ export namespace Dataflow {
       export class Entity {
         page: PageResult;
         '_embedded': {
-          dataflow: Array<Dataflow.ValueObjects.Select>
+          dataflows: Array<Dataflow.ValueObjects.Select>
         };
       }
 

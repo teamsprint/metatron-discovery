@@ -52,15 +52,15 @@ export class LnbComponent {
   }
 
   public openUpdateConnectionPopup(connId: string) {
-    const updateComponentComponentRef = this.viewContainerRef
+    const updateConnectionComponentRef = this.viewContainerRef
       .createComponent(this.componentFactoryResolver.resolveComponentFactory(UpdateConnectionComponent));
-    updateComponentComponentRef.instance.connId = connId;
-    updateComponentComponentRef.instance.updateConnectionInfo();
-    updateComponentComponentRef.instance.onClose.subscribe(() => {
-      updateComponentComponentRef.destroy();
+    updateConnectionComponentRef.instance.connId = connId;
+    updateConnectionComponentRef.instance.updateConnectionInfo();
+    updateConnectionComponentRef.instance.onClose.subscribe(() => {
+      updateConnectionComponentRef.destroy();
     });
-    updateComponentComponentRef.instance.onDone.subscribe(() => {
-      updateComponentComponentRef.destroy();
+    updateConnectionComponentRef.instance.onDone.subscribe(() => {
+      updateConnectionComponentRef.destroy();
       // 현재 페이지가 connection list 화면인 경우 리스트 갱신 필요
       this.updateConnectionAfterCheck();
     });
@@ -81,14 +81,14 @@ export class LnbComponent {
    * Dataflow Pop
    */
   public openCreateDataflowPopup() {
-    const createComponentComponentRef = this.viewContainerRef
+    const createDataflowComponentRef = this.viewContainerRef
       .createComponent(this.componentFactoryResolver.resolveComponentFactory(CreateDataflowComponent));
-    createComponentComponentRef.instance.createDataflowInfo();
-    createComponentComponentRef.instance.onClose.subscribe(() => {
-      createComponentComponentRef.destroy();
+    createDataflowComponentRef.instance.createDataflowInfo();
+    createDataflowComponentRef.instance.onClose.subscribe(() => {
+      createDataflowComponentRef.destroy();
     });
-    createComponentComponentRef.instance.onDone.subscribe(() => {
-      createComponentComponentRef.destroy();
+    createDataflowComponentRef.instance.onDone.subscribe(() => {
+      createDataflowComponentRef.destroy();
       // 현재 페이지가 dataflow list 화면인 경우 리스트 갱신 필요
       // this.createConnectionAfterCheck();
     });

@@ -3,7 +3,7 @@ import {ConnectionService} from '../services/connection.service';
 import {LoadingService} from '../../common/services/loading/loading.service';
 import {finalize} from 'rxjs/operators';
 import {CommonConstant} from '../../common/constants/common.constant';
-import {Page} from '../../common/constants/page';
+import {Page, PageResult} from '../../common/constants/page';
 import {Connection} from '../domains/connection';
 import {LnbComponent} from '../../lnb/components/lnb.component';
 
@@ -14,6 +14,7 @@ import {LnbComponent} from '../../lnb/components/lnb.component';
 export class ConnectionListComponent implements OnInit{
 
   private readonly page = new Page();
+  private pageResult: PageResult = new PageResult();
   public searchText = '';
   public connections: Array<Connection.Entity> = [];
 
@@ -34,28 +35,35 @@ export class ConnectionListComponent implements OnInit{
     this.page.sort = CommonConstant.API_CONSTANT.PAGE_SORT_MODIFIED_TIME_DESC;
   }
 
+
+  /**
+   * Search dataflow
+   */
+  public searchConnections(event) {
+    if (13 === event.keyCode) {
+      this.lnbOnPageRefresh();
+    }
+  }
+
+
   public lnbOnPageRefresh() {
     this.initialize();
     this.getConnections(this.page);
   }
 
   private getConnections(page: Page) {
+    const search: string = encodeURI(this.searchText);
     this.loadingService.show();
     this.connectionService
-      .getConnections(this.searchText, page)
+      .getConnections(search, page)
       .pipe(finalize(() => this.loadingService.hide()))
       .subscribe(connections => {
         if (!connections) {
           this.connections = [];
           return;
         }
-        if (connections.hasOwnProperty('_embedded')) {
-          if (connections['_embedded'].hasOwnProperty('connections')) {
-            this.connections = connections['_embedded']['connections'];
-          }
-        }else{
-          this.connections = [];
-        }
+        this.connections = connections._embedded.connections;
+        this.pageResult  = connections.page;
       });
   }
 
@@ -65,5 +73,13 @@ export class ConnectionListComponent implements OnInit{
 
   public updateConnection(connId: string): void {
     this.lnbComponent.openUpdateConnectionPopup(connId);
+  }
+
+  public returnListNumber(num: number): number {
+    let rtn = 0;
+    if (this.pageResult !== null) {
+      rtn = this.pageResult.totalElements - (this.pageResult.number * this.pageResult.size + num);
+    }
+    return rtn;
   }
 }

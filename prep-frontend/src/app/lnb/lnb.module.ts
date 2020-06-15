@@ -3,6 +3,7 @@ import {SharedModule} from '../common/shared/shared.module';
 import {LnbComponent} from './components/lnb.component';
 import {RouterModule} from '@angular/router';
 import {ConnectionService} from '../connection/services/connection.service';
+import {DataflowService} from '../dataflow/services/dataflow.service';
 
 const COMPONENTS = [
   LnbComponent
@@ -17,7 +18,8 @@ const COMPONENTS = [
     ...COMPONENTS
   ],
   providers: [
-    ConnectionService
+    ConnectionService,
+    DataflowService
   ],
   exports: [
     ...COMPONENTS

@@ -74,7 +74,7 @@ export class ConnectionService {
     if (projection) {
       params = _.merge({ projection }, params);
     }
-    return this.http.get(`${CommonConstant.API_CONSTANT.API_URL}/connections/search/findByNameContaining`,
+    return this.http.get<Connection.Result.GetConnections.SearchedData>(`${CommonConstant.API_CONSTANT.API_URL}/connections/search/findByNameContaining`,
       {params: CommonUtil.Http.makeQueryString(params)});
   }
 

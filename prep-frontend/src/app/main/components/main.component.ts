@@ -60,7 +60,7 @@ export class MainComponent implements OnInit {
           return;
         }
 
-        this.dataflows = dataflows._embedded.dataflow;
+        this.dataflows = dataflows._embedded.dataflows;
       });
   }
 }

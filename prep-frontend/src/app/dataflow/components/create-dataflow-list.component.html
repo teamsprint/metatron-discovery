@@ -1,0 +1,92 @@
+<!-- box popup -->
+<div class="pb-box-popup">
+  <a href="javascript:" class="pb-btn-pop-close" (click)="onClose.emit()"></a>
+  <!-- step -->
+  <div class="pb-ui-step">
+    <span class="pb-txt-step is-selected">1</span>
+    <span class="pb-txt-step">2</span>
+  </div>
+  <!-- //step -->
+  <!-- top -->
+  <div class="pb-popup-top pb-clear">
+    <div class="pb-txt-title">CREATE DATAFLOW</div>
+
+  </div>
+  <!-- //top -->
+  <!-- contents -->
+  <div class="pb-popup-contents ">
+    <div class="pb-wrap-connect type-connect">
+      <!-- data grid -->
+      <div class="pb-wrap-data-grid">
+        <!-- grid top -->
+        <div class="pb-ui-grid-top">
+          <div class="pb-component-search">
+            <input type="text" placeholder="Search for values" maxlength="50" [(ngModel)]="searchText" (keypress)="searchDatasets($event)">
+          </div>
+        </div>
+        <!-- //grid top -->
+        <div class="pb-wrap-table">
+          <table class="pb-component-table type-cursor">
+            <colgroup>
+              <col width="60px">
+              <col width="*">
+              <col width="15%">
+              <col width="20%">
+            </colgroup>
+            <thead>
+            <tr>
+              <th class="pb-txt-center">
+                <label class="pb-compomnent-checkbox type-all type-checkbox">
+                  <input type="checkbox">
+                  <i></i>
+
+                </label>
+              </th>
+              <th (click)="changeOrder('name')">
+                Dataset Name
+                <em class="pb-icon-array" *ngIf="selectedContentSort.key !== 'name' || selectedContentSort.sort === 'default'"></em>
+                <em class="pb-icon-array type-asc" *ngIf="selectedContentSort.key === 'name' && selectedContentSort.sort === 'asc'"></em>
+                <em class="pb-icon-array type-des" *ngIf="selectedContentSort.key === 'name' && selectedContentSort.sort === 'desc'"></em>
+              </th>
+              <th>ImportType
+                <em class="pb-icon-array "></em>
+              </th>
+              <th>
+                Last Updated
+                <em class="pb-icon-array" *ngIf="selectedContentSort.key !== 'modifiedTime' || selectedContentSort.sort === 'default'"></em>
+                <em class="pb-icon-array type-asc" *ngIf="selectedContentSort.key === 'modifiedTime' && selectedContentSort.sort === 'asc'"></em>
+                <em class="pb-icon-array type-des" *ngIf="selectedContentSort.key === 'modifiedTime' && selectedContentSort.sort === 'desc'"></em>
+              </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let dataset of datasets">
+              <td class="pb-txt-center">
+                <label class="pb-compomnent-checkbox type-checkbox">
+                  <input type="checkbox" checked="checked">
+                  <i></i>
+
+                </label>
+              </td>
+              <td>
+                {{dataset.name}}
+              </td>
+              <td>
+                {{dataset.importType}}
+              </td>
+              <td>{{dataset.modifiedTime | date: 'yyyy-MM-dd HH:mm'}} by {{dataset.modifiedBy.fullName}}</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <!-- //data grid -->
+    </div>
+  </div>
+  <!-- //contents -->
+  <div class="pb-popup-bottom ">
+    <a href="javascript:" class="pb-component-btn-pop type-line" (click)="onClose.emit()">CANCEL</a>
+    <a href="javascript:" class="pb-component-btn-pop type-bg" (click)="nextClick()">NEXT</a>
+  </div>
+</div>
+<!-- //box popup -->

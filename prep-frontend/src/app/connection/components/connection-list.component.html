@@ -12,8 +12,8 @@
         <strong class="pb-title">Connections</strong>
         <hr class="pb-bar">
         <div class="pb-component-search ">
-          <input type="text" placeholder="Search by Name or Keyword">
-          <a href="javascript:" class="pb-btn-delete"></a>
+          <input type="text" placeholder="Search by Name or Keyword" [(ngModel)]="searchText" maxlength="100" (keypress)="searchConnections($event);">
+          <a href="javascript:" class="pb-btn-delete" (click)="searchText =''"></a>
         </div>
       </div>
       <!-- //left -->
@@ -161,16 +161,16 @@
         <th>Name</th>
         <th>Desctiption</th>
         <th>Implementor</th>
-        <th>Created</th>
+        <th>Last Updated</th>
       </tr>
       </thead>
       <tbody>
-      <tr *ngFor="let connection of connections" (click)="updateConnection(connection.connId)">
-        <td class="pb-txt-center">132</td>
+      <tr *ngFor="let connection of connections; let i=index" (click)="updateConnection(connection.connId)">
+        <td class="pb-txt-center">{{returnListNumber(i)}}</td>
         <td>{{connection.name}}</td>
         <td>{{connection.description}}</td>
         <td>{{connection.implementor}}</td>
-        <td>{{connection.createdTime | date: 'yyyy-MM-dd HH:mm'}} by {{connection.createdBy.fullName}}</td>
+        <td>{{connection.modifiedTime | date: 'yyyy-MM-dd HH:mm'}} by {{connection.modifiedBy.fullName}}</td>
       </tr>
       </tbody>
     </table>

@@ -22,7 +22,7 @@ export class CreateDataflowComponent {
   public createDataflowInfo(): void {
     this.dataflow = new Dataflow.ValueObjects.Create();
     this.dataflow.dataset = [];
-    this.step = 'create-dataflow-info';
+    this.step = 'create-dataflow-list';
   }
 
 }
