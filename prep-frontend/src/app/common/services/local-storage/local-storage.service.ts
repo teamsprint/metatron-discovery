@@ -10,15 +10,15 @@ export class LocalStorageService {
   constructor(private readonly mainLocalStorageService: MainLocalStorageService) {
   }
 
-  saveMainViewMode(viewMode: ViewMode) {
-    this.mainLocalStorageService.saveMainViewMode(viewMode);
+  saveViewMode(viewMode: ViewMode) {
+    this.mainLocalStorageService.saveViewMode(viewMode);
   }
 
-  currentMainViewMode() {
-    return this.mainLocalStorageService.currentMainViewMode();
+  currentViewMode() {
+    return this.mainLocalStorageService.currentViewMode();
   }
 
-  setDefaultMainViewMode() {
-    this.mainLocalStorageService.setDefaultMainViewMode();
+  setDefaultViewMode() {
+    this.mainLocalStorageService.setDefaultViewMode();
   }
 }

@@ -14,8 +14,8 @@ export class PreMainGuard implements CanActivate {
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
 
-    if (_.isNil(this.localStorageService.currentMainViewMode()) || _.isEmpty(this.localStorageService.currentMainViewMode())) {
-      this.localStorageService.setDefaultMainViewMode();
+    if (_.isNil(this.localStorageService.currentViewMode()) || _.isEmpty(this.localStorageService.currentViewMode())) {
+      this.localStorageService.setDefaultViewMode();
     }
 
     return true;
