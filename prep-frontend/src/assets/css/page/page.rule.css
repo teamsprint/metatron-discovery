@@ -2303,13 +2303,16 @@ ul.pb-list-form-join li em.pb-icon-control-cut {
 /************************************************************************
     page : 데이터 프리퍼레이션 유니온
 **********************************************************************/
+.pb-pop-union {}
 .pb-wrap-union {
+  display:flex;
   position: relative;
   width: 100%;
   height: 100%;
-  margin: 0 30px;
-  overflow: auto;
-  background-color: #fafafa;
+  white-space:nowrap;
+  overflow:hidden;
+  margin-top:30px;
+
 }
 
 .pb-wrap-union .pb-ui-title {
@@ -2320,20 +2323,21 @@ ul.pb-list-form-join li em.pb-icon-control-cut {
 }
 
 .pb-ui-union-output {
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
+  position:relative;
+  display:inline-block;
   width: 258px;
+  min-width:258px;
+  height:100%;
   border-right: 1px solid #e7e7ea;
-  background-color: #fff;
+  z-index:1;
 }
-
+.pb-ui-union-output table.pb-table-union {background-color:#fff;}
 .pb-ui-union-output .pb-data-total {
   display: block;
-  padding-bottom: 8px;
+  padding-bottom: 11px;
   color: #444;
   font-size: 13px;
+  font-weight:bold;
 }
 
 .pb-ui-union-output .pb-data-total .pb-data-num {
@@ -2342,22 +2346,11 @@ ul.pb-list-form-join li em.pb-icon-control-cut {
 
 .pb-wrap-union-list {
   position: relative;
-  float: left;
   width: 100%;
   padding-right: 12px;
   box-sizing: border-box;
 }
 
-.pb-wrap-union-list:before {
-  display: inline-block;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #fff;
-  content: '';
-}
 
 .pb-wrap-union-list ul.pb-list-union li {
   padding-bottom: 10px;
@@ -2369,6 +2362,7 @@ ul.pb-list-form-join li em.pb-icon-control-cut {
   border-radius: 2px;
   border: 1px solid #d0d1d8;
   cursor: pointer;
+  min-width:200px;
 }
 
 .pb-wrap-union-list ul.pb-list-union li .pb-box-column:hover {
@@ -2424,14 +2418,14 @@ ul.pb-list-form-join li em.pb-icon-control-cut {
 }
 
 .pb-ui-union-set {
-  position: absolute;
-  left: 259px;
-  top: 0;
-  right: 0;
-  bottom: 0;
+  display:inline-block;
   background: #fff;
+  overflow:auto;
+  overflow-x:hidden;
 }
-
+.pb-ui-union-set.type-set2 {
+  overflow-x:auto;
+}
 .pb-ui-union-set .pb-ui-title {
   padding: 20px 20px 20px 20px;
 }
@@ -2457,16 +2451,12 @@ ul.pb-list-form-join li em.pb-icon-control-cut {
 }
 
 .pb-wrap-union-set {
-  position: absolute;
-  top: 53px;
-  left: 0;
-  right: 0;
-  bottom: 0;
 }
 
 .pb-ui-union-table {
   display: inline-block;
   white-space: nowrap;
+  background-color: #fafafa;
 }
 
 .pb-ui-union-table table.pb-table-union:first-of-type tr th,
@@ -2543,6 +2533,7 @@ table.pb-table-union tr td {
 
 .pb-ui-union-table table.pb-table-union tr td .pb-box-column {
   padding-left: 35px;
+  min-width:240px;
 }
 
 table.pb-table-union tr td .pb-box-column {

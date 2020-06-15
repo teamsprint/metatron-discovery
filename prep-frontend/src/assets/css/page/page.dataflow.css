@@ -4,10 +4,6 @@
      Page : Dataflow
  *************************************************************************/
 .pb-box-dataflow {
-  position: absolute;
-  top: 5px;
-  bottom: 5px;
-  right: 5px;
   width: 450px;
   padding: 0 15px;
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
