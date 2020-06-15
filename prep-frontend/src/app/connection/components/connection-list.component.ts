@@ -6,12 +6,16 @@ import {CommonConstant} from '../../common/constants/common.constant';
 import {Page} from '../../common/constants/page';
 import {Connection} from '../domains/connection';
 import {LnbComponent} from '../../lnb/components/lnb.component';
+import {LocalStorageService} from '../../common/services/local-storage/local-storage.service';
+import {ViewMode} from '../../main/value-objects/view-mode';
 
 @Component({
   templateUrl: './connection-list.component.html',
   styleUrls: ['./connection-list.component.css']
 })
 export class ConnectionListComponent implements OnInit{
+
+  public readonly VIEW_MODE = ViewMode;
 
   private readonly page = new Page();
   public searchText = '';
@@ -20,9 +24,9 @@ export class ConnectionListComponent implements OnInit{
   @ViewChild(LnbComponent)
   public lnbComponent: LnbComponent;
 
-
   constructor(private readonly connectionService: ConnectionService,
-              private readonly loadingService: LoadingService) {
+              private readonly loadingService: LoadingService,
+              public readonly localStorageService: LocalStorageService) {
   }
   ngOnInit(): void {
     this.initialize();
