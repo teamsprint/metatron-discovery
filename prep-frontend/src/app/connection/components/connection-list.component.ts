@@ -62,4 +62,8 @@ export class ConnectionListComponent implements OnInit{
   public createConnection(): void {
     this.lnbComponent.openCreateConnectionPopup();
   }
+
+  public updateConnection(connId: string): void {
+    this.lnbComponent.openUpdateConnectionPopup(connId);
+  }
 }

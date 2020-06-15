@@ -165,7 +165,7 @@
       </tr>
       </thead>
       <tbody>
-      <tr *ngFor="let connection of connections">
+      <tr *ngFor="let connection of connections" (click)="updateConnection(connection.connId)">
         <td class="pb-txt-center">132</td>
         <td>{{connection.name}}</td>
         <td>{{connection.description}}</td>
