@@ -52,7 +52,6 @@ export class LnbComponent {
   }
 
   public openUpdateConnectionPopup(connId: string) {
-    console.info('openUpdateConnectionPopup', connId);
     const updateComponentComponentRef = this.viewContainerRef
       .createComponent(this.componentFactoryResolver.resolveComponentFactory(UpdateConnectionComponent));
     updateComponentComponentRef.instance.connId = connId;
