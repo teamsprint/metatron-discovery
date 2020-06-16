@@ -42,7 +42,6 @@ export class LnbComponent {
       this.createConnectionAfterCheck();
     });
   }
-
   private createConnectionAfterCheck() {
     const url = this.router.url;
     const connectionListPath = `${this.ROUTER_URLS.Managements.ROOT}/${this.ROUTER_URLS.Managements.PREP_BOT}/${this.ROUTER_URLS.Managements.CONNECTION}`;
@@ -66,8 +65,6 @@ export class LnbComponent {
     });
 
   }
-
-
   private updateConnectionAfterCheck() {
     const url = this.router.url;
     const connectionListPath = `${this.ROUTER_URLS.Managements.ROOT}/${this.ROUTER_URLS.Managements.PREP_BOT}/${this.ROUTER_URLS.Managements.CONNECTION}`;
@@ -81,6 +78,7 @@ export class LnbComponent {
    * Dataflow Pop
    */
   public openCreateDataflowPopup() {
+    const url = this.router.url;
     const createDataflowComponentRef = this.viewContainerRef
       .createComponent(this.componentFactoryResolver.resolveComponentFactory(CreateDataflowComponent));
     createDataflowComponentRef.instance.createDataflowInfo();
@@ -89,8 +87,21 @@ export class LnbComponent {
     });
     createDataflowComponentRef.instance.onDone.subscribe(() => {
       createDataflowComponentRef.destroy();
-      // 현재 페이지가 dataflow list 화면인 경우 리스트 갱신 필요
-      // this.createConnectionAfterCheck();
+      // 현재 페이지가 main 또는 dataflow list 화면인 경우 리스트 갱신 필요
+      this.createDataflowAfterCheck();
     });
   }
+  private createDataflowAfterCheck() {
+    const url = this.router.url;
+    const dataflowListPath = `${this.ROUTER_URLS.Managements.ROOT}/${this.ROUTER_URLS.Managements.PREP_BOT}/${this.ROUTER_URLS.Managements.FLOWS}`;
+    if (url === '/' + `${this.ROUTER_URLS.Managements.ROOT}/${this.ROUTER_URLS.Managements.PREP_BOT}`) {
+      this.onPageRefresh.emit();
+      return;
+    }
+    if (url.indexOf(dataflowListPath) > -1) {
+      this.onPageRefresh.emit();
+      return;
+    }
+  }
+
 }

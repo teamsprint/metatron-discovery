@@ -41,7 +41,7 @@ export class ConnectionListComponent implements OnInit{
 
 
   /**
-   * Search dataflow
+   * Search Connection
    */
   public searchConnections(event) {
     if (13 === event.keyCode) {

@@ -12,8 +12,8 @@
         <strong class="pb-title">Connections</strong>
         <hr class="pb-bar">
         <div class="pb-component-search ">
-          <input type="text" placeholder="Search by Name or Keyword" [(ngModel)]="searchText" maxlength="100" (keypress)="searchConnections($event);">
-          <a href="javascript:" class="pb-btn-delete" (click)="searchText =''"></a>
+          <input type="text" placeholder="Search by Name or Keyword" [(ngModel)]="searchText" maxlength="50" (keypress)="searchConnections($event);">
+          <a href="javascript:" class="pb-btn-delete" (click)="searchText ='';lnbOnPageRefresh();"></a>
         </div>
       </div>
       <!-- //left -->

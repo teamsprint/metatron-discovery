@@ -70,6 +70,9 @@ export class MainComponent implements OnInit {
 
   public openCreateDataflowPopup() {
     this.lnbComponent.openCreateDataflowPopup();
-
+  }
+  public lnbOnPageRefresh() {
+    this.initialize();
+    this.getDataflows(this.page);
   }
 }

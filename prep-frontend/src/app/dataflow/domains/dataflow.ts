@@ -25,7 +25,6 @@ export namespace Dataflow {
       upstreams: Array<Upstream>;
       datasetCount: number;
       recipeCount: number;
-
       createdTime: Date;
       modifiedTime: Date;
       createdBy: UserProfile;

@@ -1,5 +1,5 @@
 <!-- lnb -->
-<div lnb></div>
+<div lnb (onPageRefresh)="lnbOnPageRefresh()"></div>
 <!-- //lnb -->
 
 <!-- page -->
@@ -9,11 +9,11 @@
     <div class="pb-label-type pb-clear">
       <!-- left -->
       <div class="pb-fleft">
-        <strong class="pb-title">Data Flows</strong>
+        <strong class="pb-title">Dataflows</strong>
         <hr class="pb-bar">
         <div class="pb-component-search ">
-          <input type="text" placeholder="Search by Name or Keyword">
-          <a href="javascript:" class="pb-btn-delete"></a>
+          <input type="text" placeholder="Search by Name or Keyword" [(ngModel)]="searchText" maxlength="50" (keypress)="searchDataflows($event);">
+          <a href="javascript:" class="pb-btn-delete" (click)="searchText ='';lnbOnPageRefresh();"></a>
         </div>
       </div>
       <!-- //left -->
@@ -33,7 +33,7 @@
           </li>
         </ul>
         <!-- //tab -->
-        <a href="javascript:" class="pb-component-btn type-bg tpye-normal"><em class="pb-icon-add-r"></em>CREATE DATA FLOW</a>
+        <a href="javascript:" class="pb-component-btn type-bg tpye-normal" (click)="openCreateDataflowPopup()"><em class="pb-icon-add-r"></em>CREATE DATA FLOW</a>
       </div>
       <!-- //right -->
     </div>
@@ -158,7 +158,7 @@
         <col width="*">
         <col width="90px">
         <col width="90px">
-        <col width="250px">
+        <col width="280px">
       </colgroup>
       <thead>
       <tr>
@@ -171,89 +171,23 @@
       </tr>
       </thead>
       <tbody>
-      <tr>
-        <td class="pb-txt-center">132</td>
-        <td>
-          Dataflow 01
-        </td>
-        <td>Description Description </td>
+      <tr *ngFor="let dataflow of dataflows; let i=index">
+        <td class="pb-txt-center">{{returnListNumber(i)}}</td>
+        <td>{{dataflow.name}}</td>
+        <td>{{dataflow.description}}</td>
         <td>
                  <span class="pb-txt-num">
                     <em class="pb-file-type type-dataset2"></em>
-                    99
+                    {{dataflow.datasetCount}}
                 </span>
         </td>
         <td>
                 <span class="pb-txt-num">
                     <em class="pb-file-type type-recipe"></em>
-                    99
+                    {{dataflow.recipeCount}}
                 </span>
         </td>
-        <td>2020-02-20 14:22 by admin</td>
-
-      </tr>
-      <tr>
-        <td class="pb-txt-center">132</td>
-        <td>
-          Dataflow 01
-        </td>
-        <td>Description DescripDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptiontion </td>
-        <td>
-                 <span class="pb-txt-num">
-                    <em class="pb-file-type type-dataset2"></em>
-                    99
-                </span>
-        </td>
-        <td>
-                <span class="pb-txt-num">
-                    <em class="pb-file-type type-recipe"></em>
-                    99
-                </span>
-        </td>
-        <td>2020-02-20 14:22 by admin</td>
-
-      </tr>
-      <tr>
-        <td class="pb-txt-center">132</td>
-        <td>
-          Dataflow 01
-        </td>
-        <td>Description Description </td>
-        <td>
-                 <span class="pb-txt-num">
-                    <em class="pb-file-type type-dataset2"></em>
-                    99
-                </span>
-        </td>
-        <td>
-                <span class="pb-txt-num">
-                    <em class="pb-file-type type-recipe"></em>
-                    99
-                </span>
-        </td>
-        <td>2020-02-20 14:22 by admin</td>
-
-      </tr>
-      <tr>
-        <td class="pb-txt-center">132</td>
-        <td>
-          Dataflow 01
-        </td>
-        <td>Description Description </td>
-        <td>
-                 <span class="pb-txt-num">
-                    <em class="pb-file-type type-dataset2"></em>
-                    99
-                </span>
-        </td>
-        <td>
-                <span class="pb-txt-num">
-                    <em class="pb-file-type type-recipe"></em>
-                    99
-                </span>
-        </td>
-        <td>2020-02-20 14:22 by admin</td>
-
+        <td>{{dataflow.modifiedTime | date: 'yyyy-MM-dd HH:mm'}} by {{dataflow.modifiedBy.fullName}}</td>
       </tr>
       </tbody>
     </table>
