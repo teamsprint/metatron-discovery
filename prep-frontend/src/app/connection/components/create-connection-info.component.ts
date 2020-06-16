@@ -9,6 +9,7 @@ import {finalize} from 'rxjs/operators';
   templateUrl: './create-connection-info.component.html'
 })
 export class CreateConnectionInfoComponent {
+
   @Output()
   public readonly onClose = new EventEmitter();
   @Output()
@@ -39,7 +40,6 @@ export class CreateConnectionInfoComponent {
 
   public connectionValidation: Connection.ConnectionValid;
 
-
   constructor(private readonly connectionService: ConnectionService,
               private readonly loadingService: LoadingService) {
   }
@@ -54,7 +54,6 @@ export class CreateConnectionInfoComponent {
       this.connectionValidInitialize();
     }
   }
-
 
   /**
    * Change use URL
@@ -97,7 +96,6 @@ export class CreateConnectionInfoComponent {
 
   /**
    * Is enable connection
-   * @return {boolean}
    */
   public isEnableConnection(): boolean {
     return this.connectionValidation === Connection.ConnectionValid.ENABLE_CONNECTION;
@@ -105,7 +103,6 @@ export class CreateConnectionInfoComponent {
 
   /**
    * Is disable connection
-   * @return {boolean}
    */
   public isDisableConnection(): boolean {
     return this.connectionValidation === Connection.ConnectionValid.DISABLE_CONNECTION;
@@ -113,14 +110,10 @@ export class CreateConnectionInfoComponent {
 
   /**
    * Is require check connection
-   * @return {boolean}
    */
   public isRequireCheckConnection(): boolean {
     return this.connectionValidation === Connection.ConnectionValid.REQUIRE_CONNECTION_CHECK;
   }
-
-
-
 
   public next() {
     if (this.connectionValidation !== Connection.ConnectionValid.ENABLE_CONNECTION ) {
@@ -149,8 +142,6 @@ export class CreateConnectionInfoComponent {
     this.onNext.emit();
   }
 
-
-
   private getConnectionParams(): Connection.Entity {
     const connectionParam: Connection.Entity = new Connection.Entity();
     connectionParam.implementor = this.connectionInfo.implementor;
@@ -176,11 +167,6 @@ export class CreateConnectionInfoComponent {
     return connectionParam;
   }
 
-
-  /**
-   * Is valid connection input
-   * @return {boolean}
-   */
   private isValidConnectionInput(): boolean {
     let result = true;
     // not use URL
@@ -249,9 +235,6 @@ export class CreateConnectionInfoComponent {
     return true;
   }
 
-  /**
-   * Initial input error
-   */
   private inputErrorInitialize(): void {
     this.isUrlError = undefined;
     this.isHostnameError = undefined;
@@ -270,10 +253,6 @@ export class CreateConnectionInfoComponent {
     this.connectionValidation = undefined;
   }
 
-  /**
-   * Initail connection input
-   * @private
-   */
   private _connectionInputInitialize(): void {
     this.hostname = undefined;
     this.port = undefined;

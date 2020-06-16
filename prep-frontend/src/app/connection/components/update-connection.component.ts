@@ -9,7 +9,6 @@ import {finalize} from 'rxjs/operators';
   templateUrl: './update-connection.component.html',
   styleUrls: ['./update-connection.component.css']
 })
-
 export class UpdateConnectionComponent {
 
   @HostBinding('class.pb-layout-popup')
@@ -47,7 +46,6 @@ export class UpdateConnectionComponent {
   public catalog: string;
   public username: string;
   public password: string;
-
 
   constructor(private readonly connectionService: ConnectionService,
               private readonly loadingService: LoadingService) {
@@ -111,7 +109,6 @@ export class UpdateConnectionComponent {
           this.password = result['password'];
         }
       });
-
   }
 
   public onChangeConnectionType(implementor: string): void {
@@ -166,7 +163,6 @@ export class UpdateConnectionComponent {
 
   /**
    * Is enable connection
-   * @return {boolean}
    */
   public isEnableConnection(): boolean {
     return this.connectionValidation === Connection.ConnectionValid.ENABLE_CONNECTION;
@@ -174,7 +170,6 @@ export class UpdateConnectionComponent {
 
   /**
    * Is disable connection
-   * @return {boolean}
    */
   public isDisableConnection(): boolean {
     return this.connectionValidation === Connection.ConnectionValid.DISABLE_CONNECTION;
@@ -182,14 +177,13 @@ export class UpdateConnectionComponent {
 
   /**
    * Is require check connection
-   * @return {boolean}
    */
   public isRequireCheckConnection(): boolean {
     return this.connectionValidation === Connection.ConnectionValid.REQUIRE_CONNECTION_CHECK;
   }
 
   /**
-   * DONE
+   * Done
    */
   public done() {
     if (this.connectionValidation !== Connection.ConnectionValid.ENABLE_CONNECTION ) {
@@ -257,11 +251,6 @@ export class UpdateConnectionComponent {
     return connectionParam;
   }
 
-
-  /**
-   * Is valid connection input
-   * @return {boolean}
-   */
   private isValidConnectionInput(): boolean {
     let result = true;
     // not use URL
@@ -330,9 +319,6 @@ export class UpdateConnectionComponent {
     return true;
   }
 
-  /**
-   * Initial input error
-   */
   private inputErrorInitialize(): void {
     this.isNameError = undefined;
     this.isUrlError = undefined;
@@ -345,17 +331,10 @@ export class UpdateConnectionComponent {
     this.isPasswordError = undefined;
   }
 
-  /**
-   * Initial connection valid
-   */
   public connectionValidInitialize(): void {
     this.connectionValidation = undefined;
   }
 
-  /**
-   * Initail connection input
-   * @private
-   */
   private _connectionInputInitialize(): void {
     this.name = undefined;
     this.description  = undefined;
