@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {ImageConstant} from '../../common/constants/image.constant';
 import {Router} from '@angular/router';
 import {CommonUtil} from '../../common/utils/common-util';
@@ -8,12 +8,16 @@ import {Page} from '../../common/constants/page';
 import {CommonConstant} from '../../common/constants/common.constant';
 import {Dataflow} from '../../dataflow/domains/dataflow';
 import {LoadingService} from '../../common/services/loading/loading.service';
+import {LnbComponent} from '../../lnb/components/lnb.component';
 import {finalize} from 'rxjs/operators';
 
 @Component({
   templateUrl: './main.component.html',
 })
 export class MainComponent implements OnInit {
+
+  @ViewChild(LnbComponent)
+  public lnbComponent: LnbComponent;
 
   public readonly IMAGE_CONSTANT = ImageConstant;
   public readonly COMMON_UTIL = CommonUtil;
@@ -62,5 +66,10 @@ export class MainComponent implements OnInit {
 
         this.dataflows = dataflows._embedded.dataflows;
       });
+  }
+
+  public openCreateDataflowPopup() {
+    this.lnbComponent.openCreateDataflowPopup();
+
   }
 }
