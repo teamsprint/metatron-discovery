@@ -1,4 +1,4 @@
-import {Component, OnInit, EventEmitter, Output, Input} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Dataflow} from '../../dataflow/domains/dataflow';
 import {LoadingService} from '../../common/services/loading/loading.service';
 import {CommonConstant} from '../../common/constants/common.constant';
@@ -13,7 +13,7 @@ import * as _ from 'lodash';
   templateUrl: './create-dataflow-list.component.html'
 })
 
-export class CreateDataflowListComponent implements OnInit{
+export class CreateDataflowListComponent implements OnInit {
 
   @Output()
   public readonly onClose = new EventEmitter();
@@ -37,10 +37,12 @@ export class CreateDataflowListComponent implements OnInit{
   constructor(private readonly datasetService: DatasetsService,
               private readonly loadingService: LoadingService) {
   }
+
   ngOnInit(): void {
     this.initialize();
     this.getDatasets();
   }
+
   private initialize() {
     this.isAllCheckedStatus = false;
     this.page.page = 0;
@@ -122,18 +124,18 @@ export class CreateDataflowListComponent implements OnInit{
   public isCheckAllDisabled(): boolean {
     return this.datasets.length === 0;
   }
+
   /**
    * 체크박스 전체 선택
    */
   public checkAll(event) {
     event.preventDefault();
     this.isAllCheckedStatus = !this.isAllCheckedStatus;
-    if(this.isAllCheckedStatus) {
+    if (this.isAllCheckedStatus) {
       this._addAllItems();
-    }else{
+    } else {
       this._deleteAllItems();
     }
-
   }
 
   /**
@@ -143,7 +145,7 @@ export class CreateDataflowListComponent implements OnInit{
   private _addAllItems() {
     this.datasets.forEach((item) => {
       item.selected = true;
-      if (-1 === _.findIndex(this.selectedDatasets, {dsId: item.dsId})) {
+      if (-1 === _.findIndex(this.selectedDatasets, { dsId: item.dsId })) {
         this._addSelectedItem(item);
       }
     });
@@ -159,7 +161,7 @@ export class CreateDataflowListComponent implements OnInit{
   /**
    * 모든 아이템 선택 해제
    */
-  private _deleteAllItems(){
+  private _deleteAllItems() {
     this.datasets.forEach((item) => {
       item.selected = false;
       this._deleteSelectedItem(item);
@@ -170,7 +172,7 @@ export class CreateDataflowListComponent implements OnInit{
    * Delete selected item
    */
   private _deleteSelectedItem(ds: Dataset.SimpleListEntity) {
-    const index = _.findIndex(this.selectedDatasets, {dsId: ds.dsId});
+    const index = _.findIndex(this.selectedDatasets, { dsId: ds.dsId });
     if (-1 !== index) {
       this.selectedDatasets.splice(index, 1);
     }
@@ -179,7 +181,7 @@ export class CreateDataflowListComponent implements OnInit{
   /**
    * 체크박스 선택
    */
-  public check($event,  ds: Dataset.SimpleListEntity) {
+  public check($event, ds: Dataset.SimpleListEntity) {
     // 중복 체크 방지
     $event.preventDefault();
 
@@ -189,7 +191,7 @@ export class CreateDataflowListComponent implements OnInit{
     }
 
     ds.selected = !ds.selected;
-    -1 === _.findIndex(this.selectedDatasets, {dsId: ds.dsId}) ?
+    -1 === _.findIndex(this.selectedDatasets, { dsId: ds.dsId }) ?
       this._addSelectedItem(ds) : this._deleteSelectedItem(ds);
   } // function - check
 
@@ -204,5 +206,5 @@ export class CreateDataflowListComponent implements OnInit{
 
 class Order {
   key = 'seq';
-  sort  = 'default';
+  sort = 'default';
 }
