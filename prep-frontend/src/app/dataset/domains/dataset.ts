@@ -26,6 +26,30 @@ export namespace Dataset {
   }
 
 
+  export class SimpleListEntity extends AbstractHistory.Entity {
+    selected: boolean;
+    origin: boolean;
+    dsId: string;
+    name: string;
+    description: string;
+    custom: string;
+    importType: Dataset.IMPORT_TYPE;
+    rsType: RS_TYPE;
+    dbName: string;
+    tblName: string;
+    queryStmt: string;
+    fileFormat: Dataset.FILE_FORMAT;
+    filenameBeforeUpload: string;
+    sheetName: string;
+    storedUri: string;
+    delimiter: string;
+    quoteChar: string;
+    serializedPreview: string;
+    manualColumnCount: number;
+    totalLines: number;
+    totalBytes: number;
+  }
+
 
   export enum IMPORT_TYPE {
     UPLOAD = 'UPLOAD',
@@ -50,7 +74,7 @@ export namespace Dataset {
       export class SearchedData {
         page: PageResult;
         '_embedded': {
-          datasets: Array<Dataset.SimpleEntity>
+          datasets: Array<Dataset.SimpleListEntity>
         };
       }
     }

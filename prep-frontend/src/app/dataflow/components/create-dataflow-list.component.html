@@ -4,7 +4,7 @@
   <!-- step -->
   <div class="pb-ui-step">
     <span class="pb-txt-step is-selected">1</span>
-    <span class="pb-txt-step">2</span>
+    <span class="pb-txt-step" (click)="nextClick()" style="cursor: pointer;">2</span>
   </div>
   <!-- //step -->
   <!-- top -->
@@ -31,15 +31,15 @@
               <col width="60px">
               <col width="*">
               <col width="15%">
+              <col width="10%">
               <col width="20%">
             </colgroup>
             <thead>
             <tr>
               <th class="pb-txt-center">
-                <label class="pb-compomnent-checkbox type-all type-checkbox">
-                  <input type="checkbox">
-                  <i></i>
-
+                <label class="pb-compomnent-checkbox type-all type-checkbox" (click)="checkAll($event);">
+                  <input type="checkbox" [checked]="isAllCheckedStatus==true" [disabled]="isCheckAllDisabled()">
+                  <i class="ddp-icon-checkbox"></i>
                 </label>
               </th>
               <th (click)="changeOrder('name')">
@@ -48,10 +48,10 @@
                 <em class="pb-icon-array type-asc" *ngIf="selectedContentSort.key === 'name' && selectedContentSort.sort === 'asc'"></em>
                 <em class="pb-icon-array type-des" *ngIf="selectedContentSort.key === 'name' && selectedContentSort.sort === 'desc'"></em>
               </th>
-              <th>ImportType
-                <em class="pb-icon-array "></em>
-              </th>
-              <th>
+              <th>ImportType</th>
+
+              <th>TotalLines</th>
+              <th (click)="changeOrder('modifiedTime')">
                 Last Updated
                 <em class="pb-icon-array" *ngIf="selectedContentSort.key !== 'modifiedTime' || selectedContentSort.sort === 'default'"></em>
                 <em class="pb-icon-array type-asc" *ngIf="selectedContentSort.key === 'modifiedTime' && selectedContentSort.sort === 'asc'"></em>
@@ -62,18 +62,23 @@
             <tbody>
             <tr *ngFor="let dataset of datasets">
               <td class="pb-txt-center">
-                <label class="pb-compomnent-checkbox type-checkbox">
-                  <input type="checkbox" checked="checked">
-                  <i></i>
+                <!--<label class="pb-compomnent-checkbox type-checkbox">-->
+                  <!--<input type="checkbox" checked="checked">-->
+                  <!--<i></i>-->
 
+                <!--</label>-->
+
+                <label class="pb-compomnent-checkbox type-checkbox" (click)="check($event, dataset);">
+                  <input type="checkbox" [checked]="dataset.selected && !dataset.origin" [disabled]="dataset.origin">
+                  <i></i>
                 </label>
+
               </td>
               <td>
                 {{dataset.name}}
               </td>
-              <td>
-                {{dataset.importType}}
-              </td>
+              <td>{{dataset.importType}}</td>
+              <td>{{dataset.totalLines}}</td>
               <td>{{dataset.modifiedTime | date: 'yyyy-MM-dd HH:mm'}} by {{dataset.modifiedBy.fullName}}</td>
             </tr>
             </tbody>

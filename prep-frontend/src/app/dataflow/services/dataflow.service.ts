@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
+import {of} from 'rxjs';
 import {DataflowModule} from '../dataflow.module';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {CommonConstant} from '../../common/constants/common.constant';
 import {Page} from '../../common/constants/page';
 import {CookieService} from 'ngx-cookie-service';
@@ -17,8 +18,18 @@ export class DataflowService {
               private readonly cookieService: CookieService) {
   }
 
-  createDataflow() {
-    return this.http.post(``, {});
+  createDataflow(dataflow: Dataflow.ValueObjects.Create) {
+    const url = `${CommonConstant.API_CONSTANT.API_URL}/dataflows`;
+
+    if (!dataflow) {
+      return of(new HttpErrorResponse({
+        url,
+        status: 400,
+        statusText: 'Invalid connection value'
+      }));
+    }
+
+    return this.http.post(url, JSON.stringify(dataflow));
   }
 
   getDataflow() {

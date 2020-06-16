@@ -6,6 +6,7 @@ import {DatasetsService} from '../../dataset/services/datasets.service';
 import {finalize} from 'rxjs/operators';
 import {Page} from '../../common/constants/page';
 import {Dataset} from '../../dataset/domains/dataset';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'create-dataflow-list',
@@ -24,8 +25,8 @@ export class CreateDataflowListComponent implements OnInit{
   @Input()
   public selectedDatasetId: string; // 미리보기를 위해 화면에 선택된 데이터셋
 
-
-  public datasets: Dataset.SimpleEntity[] = []; // 화면에 보여지는 리스트
+  public selectedDatasets: Dataset.SimpleListEntity[] = []; // 선택된 데이터셋 리스트
+  public datasets: Dataset.SimpleListEntity[] = []; // 화면에 보여지는 리스트
 
   public searchText = '';
   public isAllCheckedStatus = false;
@@ -36,13 +37,12 @@ export class CreateDataflowListComponent implements OnInit{
   constructor(private readonly datasetService: DatasetsService,
               private readonly loadingService: LoadingService) {
   }
-
   ngOnInit(): void {
     this.initialize();
     this.getDatasets();
   }
-
   private initialize() {
+    this.isAllCheckedStatus = false;
     this.page.page = 0;
     this.page.size = 100;
     this.page.sort = CommonConstant.API_CONSTANT.PAGE_SORT_MODIFIED_TIME_DESC;
@@ -53,7 +53,8 @@ export class CreateDataflowListComponent implements OnInit{
    */
   public searchDatasets(event) {
     if (13 === event.keyCode) {
-      // this.lnbOnPageRefresh();
+      this.initialize();
+      this.getDatasets();
     }
   }
 
@@ -99,17 +100,19 @@ export class CreateDataflowListComponent implements OnInit{
 
   private getDatasets(): void {
     const search: string = encodeURI(this.searchText);
+
+    this.datasets = [];
+    this.selectedDatasets = [];
     this.loadingService.show();
     this.datasetService
       .getDatasets(search, this.page)
       .pipe(finalize(() => this.loadingService.hide()))
       .subscribe(datasets => {
         if (!datasets) {
-          this.datasets = [];
           return;
         }
-
         this.datasets = datasets._embedded.datasets;
+
       });
   }
 
@@ -119,8 +122,83 @@ export class CreateDataflowListComponent implements OnInit{
   public isCheckAllDisabled(): boolean {
     return this.datasets.length === 0;
   }
+  /**
+   * 체크박스 전체 선택
+   */
+  public checkAll(event) {
+    event.preventDefault();
+    this.isAllCheckedStatus = !this.isAllCheckedStatus;
+    if(this.isAllCheckedStatus) {
+      this._addAllItems();
+    }else{
+      this._deleteAllItems();
+    }
+
+  }
+
+  /**
+   * 모든 아이템 선택
+   * @private
+   */
+  private _addAllItems() {
+    this.datasets.forEach((item) => {
+      item.selected = true;
+      if (-1 === _.findIndex(this.selectedDatasets, {dsId: item.dsId})) {
+        this._addSelectedItem(item);
+      }
+    });
+  }
+
+  /**
+   * Add selected item
+   */
+  private _addSelectedItem(ds: Dataset.SimpleListEntity) {
+    this.selectedDatasets.push(ds);
+  }
+
+  /**
+   * 모든 아이템 선택 해제
+   */
+  private _deleteAllItems(){
+    this.datasets.forEach((item) => {
+      item.selected = false;
+      this._deleteSelectedItem(item);
+    });
+  }
+
+  /**
+   * Delete selected item
+   */
+  private _deleteSelectedItem(ds: Dataset.SimpleListEntity) {
+    const index = _.findIndex(this.selectedDatasets, {dsId: ds.dsId});
+    if (-1 !== index) {
+      this.selectedDatasets.splice(index, 1);
+    }
+  }
+
+  /**
+   * 체크박스 선택
+   */
+  public check($event,  ds: Dataset.SimpleListEntity) {
+    // 중복 체크 방지
+    $event.preventDefault();
+
+    // Original dataset cannot be checked
+    if (ds.origin) {
+      return;
+    }
+
+    ds.selected = !ds.selected;
+    -1 === _.findIndex(this.selectedDatasets, {dsId: ds.dsId}) ?
+      this._addSelectedItem(ds) : this._deleteSelectedItem(ds);
+  } // function - check
+
+  public returnSelectedDatasets(): Dataset.SimpleListEntity[] {
+    return this.selectedDatasets;
+  }
 
   public nextClick(): void {
+    this.onNext.emit();
   }
 }
 

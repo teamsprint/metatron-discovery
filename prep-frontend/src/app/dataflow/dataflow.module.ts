@@ -5,6 +5,7 @@ import {DataflowDetailComponent} from './components/dataflow-detail.component';
 import {DataflowListComponent} from './components/dataflow-list.component';
 import {CreateDataflowComponent} from './components/create-dataflow.component';
 import {CreateDataflowListComponent} from './components/create-dataflow-list.component';
+import {CreateDataflowNameComponent} from './components/create-dataflow-name.component';
 import {DatasetsService} from '../dataset/services/datasets.service';
 import {LnbModule} from '../lnb/lnb.module';
 
@@ -12,7 +13,8 @@ const COMPONENTS = [
   DataflowDetailComponent,
   DataflowListComponent,
   CreateDataflowComponent,
-  CreateDataflowListComponent
+  CreateDataflowListComponent,
+  CreateDataflowNameComponent
 ];
 
 @NgModule({
