@@ -6,8 +6,7 @@ import {delay} from 'rxjs/operators';
 
 @Component({
   selector: 'div[loading]',
-  templateUrl: './loading.component.html',
-  styleUrls: ['./loading.component.css']
+  templateUrl: './loading.component.html'
 })
 export class LoadingComponent implements OnInit, OnDestroy {
 
