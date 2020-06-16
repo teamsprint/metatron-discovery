@@ -145,5 +145,10 @@
     "no-any": true,
     "no-namespace": false
   },
-  "rulesDirectory": []
+  "rulesDirectory": [],
+  "linterOptions": {
+    "exclude": [
+      "src/app/common/components/angular-slickgrid/**"
+    ]
+  }
 }

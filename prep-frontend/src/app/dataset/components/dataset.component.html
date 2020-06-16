@@ -57,16 +57,19 @@
 
             <div class="pb-data-set-num">
               <span class="pb-data-txt"><strong>23</strong> Columns</span>
-              <span class="pb-data-txt"><strong>23</strong> Columns</span>
               <span class="pb-data-txt"><strong>23</strong> Types</span>
             </div>
             <!-- tab button -->
             <ul class="pb-component-tab-btn pb-clear">
-              <li class="is-selected">
-                <a href="javascript:" class="pb-icon-grid "></a>
+              <li [class.is-selected]="localStorageService.currentViewMode() === VIEW_MODE.CARD">
+                <a href="javascript:" class="pb-icon-grid"
+                   (click)="localStorageService.saveViewMode(VIEW_MODE.CARD)">
+                </a>
               </li>
-              <li>
-                <a href="javascript:" class="pb-icon-list"></a>
+              <li [class.is-selected]="localStorageService.currentViewMode() === VIEW_MODE.LIST">
+                <a href="javascript:" class="pb-icon-list"
+                   (click)="localStorageService.saveViewMode(VIEW_MODE.LIST)">
+                </a>
               </li>
             </ul>
             <!-- //tab button -->
@@ -75,117 +78,8 @@
         </div>
         <!-- //setting -->
         <div class="pb-wrap-grid">
-          <table class="pb-table-grid type-icons">
-            <colgroup>
-              <col width="">
-              <col width="">
-              <col width="">
-              <col width="">
-              <col width="">
-            </colgroup>
-            <thead>
-            <tr>
-              <th>
-                <em class="pb-icon-type type-ab"></em>
-                <span class="pb-data-name">
-                                                Category
-                                            </span>
-                <em class="pb-icon-array"> </em>
-              </th>
-              <th>
-                <em class="pb-icon-type type-tf"></em>
-                <span class="pb-data-name">
-                                                Category
-                                            </span>
-                <em class="pb-icon-array type-asc"> </em>
-              </th>
-              <th>
-                <em class="pb-icon-type type-tf"></em>
-                <span class="pb-data-name">
-                                                Category
-                                            </span>
-                <span class="pb-data-day">+09:00 Asia/Seoul </span>
-                <em class="pb-icon-array type-des"> </em>
-              </th>
-
-              <th>
-                <em class="pb-icon-type type-float"></em>
-                <span class="pb-data-name">
-                                                Category
-                                            </span>
-              </th>
-              <th>
-                                            <span class="pb-data-name">
-                                                <em class="pb-icon-type type-calen"></em>
-                                                Category
-                                            </span>
-              </th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-              <td class="">
-                <div class="pb-area-graph"></div>
-              </td>
-              <td class="">
-                <div class="pb-area-graph"></div>
-              </td>
-              <td class="">
-                <div class="pb-area-graph"></div>
-              </td>
-              <td class="">
-                <div class="pb-area-graph"></div>
-              </td>
-              <td class="">
-                <div class="pb-area-graph"></div>
-              </td>
-            </tr>
-            <tr>
-              <td>Office Supplies</td>
-              <td>Office Supplies</td>
-              <td>Office Supplies</td>
-              <td>Office Supplies</td>
-              <td>Office Supplies</td>
-            </tr>
-            <tr>
-              <td>Office Supplies</td>
-              <td>Office Supplies</td>
-              <td>Office Supplies</td>
-              <td>Office Supplies</td>
-              <td>Office Supplies</td>
-            </tr>
-            <tr>
-              <td>Office Supplies</td>
-              <td>Office Supplies</td>
-              <td>Office Supplies</td>
-              <td>Office Supplies</td>
-              <td>Office Supplies</td>
-            </tr>
-            <tr>
-              <td>Office Supplies</td>
-              <td>Office Supplies</td>
-              <td>Office Supplies</td>
-              <td>Office Supplies</td>
-              <td>Office Supplies</td>
-            </tr>
-            <tr>
-              <td>Office Supplies</td>
-              <td>Office Supplies</td>
-              <td>Office Supplies</td>
-              <td>Office Supplies</td>
-              <td>Office Supplies</td>
-            </tr>
-            <tr>
-              <td>Office Supplies</td>
-              <td>Office Supplies</td>
-              <td>Office Supplies</td>
-              <td>Office Supplies</td>
-              <td>Office Supplies</td>
-            </tr>
-            </tbody>
-          </table>
+          <!-- slickgrid -->
         </div>
-
       </div>
 
 

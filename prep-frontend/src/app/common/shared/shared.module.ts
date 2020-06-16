@@ -13,6 +13,8 @@ const MODULES = [
   DragulaModule
 ];
 
+const COMPONENTS = [];
+
 const SERVICES = [
   DragulaService,
   Location
@@ -22,8 +24,12 @@ const SERVICES = [
   imports: [
     ...MODULES
   ],
+  declarations: [
+    ...COMPONENTS
+  ],
   exports: [
-    ...MODULES
+    ...MODULES,
+    ...COMPONENTS
   ],
   providers: [
     ...SERVICES
