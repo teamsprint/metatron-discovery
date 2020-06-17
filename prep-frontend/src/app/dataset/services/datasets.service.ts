@@ -49,4 +49,13 @@ export class DatasetsService {
   deleteDataset() {
     return this.http.delete(``);
   }
+
+  /**
+   * 1st step of 3-way negotiation for file uploading
+   */
+  public getFileUploadNegotiation() {
+    const url = `${CommonConstant.API_CONSTANT.API_URL}/preparationdatasets/file_upload`;
+    // let url = this.API_URL + 'preparationdatasets/file_upload';
+    return this.http.get(url);
+  }
 }

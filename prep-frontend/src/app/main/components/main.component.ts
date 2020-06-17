@@ -19,6 +19,7 @@ export class MainComponent implements OnInit {
   @ViewChild(LnbComponent)
   public lnbComponent: LnbComponent;
 
+  public readonly ROUTER_URLS = RouterUrls;
   public readonly IMAGE_CONSTANT = ImageConstant;
   public readonly COMMON_UTIL = CommonUtil;
   private readonly SEARCH_TEXT = undefined;

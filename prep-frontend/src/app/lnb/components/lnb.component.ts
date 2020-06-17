@@ -4,6 +4,7 @@ import {Router} from '@angular/router';
 import {CreateConnectionComponent} from '../../connection/components/create-connection.component';
 import {UpdateConnectionComponent} from '../../connection/components/update-connection.component';
 import {CreateDataflowComponent} from '../../dataflow/components/create-dataflow.component';
+import {CreateDatasetComponent} from '../../dataset/components/create-dataset.component';
 
 @Component({
   selector: 'div[lnb]',
@@ -103,4 +104,21 @@ export class LnbComponent {
     }
   }
 
+  /**
+   * Dataset Pop
+   */
+  public openCreateDatasetPopup() {
+    const url = this.router.url;
+    const createDatasetComponentRef = this.viewContainerRef
+      .createComponent(this.componentFactoryResolver.resolveComponentFactory(CreateDatasetComponent));
+    createDatasetComponentRef.instance.createDatasetInfo();
+    createDatasetComponentRef.instance.onClose.subscribe(() => {
+      createDatasetComponentRef.destroy();
+    });
+    createDatasetComponentRef.instance.onDone.subscribe(() => {
+      createDatasetComponentRef.destroy();
+      // 현재 페이지가 main 또는 dataflow list 화면인 경우 리스트 갱신 필요
+      this.createDataflowAfterCheck();
+    });
+  }
 }

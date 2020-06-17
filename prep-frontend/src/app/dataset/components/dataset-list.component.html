@@ -156,8 +156,7 @@
         <col width="78px">
         <col width="*">
         <col width="*">
-        <col width="90px">
-        <col width="90px">
+        <col width="180px">
         <col width="280px">
       </colgroup>
       <thead>
@@ -165,8 +164,7 @@
         <th class="pb-txt-center">No.</th>
         <th>Name</th>
         <th>Desctiption</th>
-        <th>Dataset</th>
-        <th>Recipe</th>
+        <th>Type</th>
         <th>Last Updated</th>
       </tr>
       </thead>
@@ -175,8 +173,7 @@
         <td class="pb-txt-center">{{returnListNumber(i)}}</td>
         <td>{{dataset.name}}</td>
         <td>{{dataset.description}}</td>
-        <td></td>
-        <td></td>
+        <td>{{dataset.importType}}</td>
         <td>{{dataset.modifiedTime | date: 'yyyy-MM-dd HH:mm'}} by {{dataset.modifiedBy.fullName}}</td>
       </tr>
       </tbody>

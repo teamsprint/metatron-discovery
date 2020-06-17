@@ -20,7 +20,6 @@ export class CreateDataflowListComponent implements OnInit {
   @Output()
   public readonly onNext = new EventEmitter();
   @Input()
-
   public dataflow: Dataflow.ValueObjects.Create;
   @Input()
   public selectedDatasetId: string; // 미리보기를 위해 화면에 선택된 데이터셋

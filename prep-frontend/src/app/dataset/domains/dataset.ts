@@ -3,7 +3,7 @@ import {PageResult} from '../../common/constants/page';
 
 export namespace Dataset {
 
-  export class SimpleEntity extends AbstractHistory.Entity {
+  export class Entity extends AbstractHistory.Entity {
     dsId: string;
     name: string;
     description: string;
@@ -25,6 +25,26 @@ export namespace Dataset {
     totalBytes: number;
   }
 
+  export class DatasetFile extends Entity {
+    public sheets: string[];
+    public sheetIndex: number;
+    public selectedSheets: object[] = [];
+    public sheetInfo: SheetInfo[];
+    public fileName: string;
+    public fileExtension: string;
+    public selected = false;
+    public error: object;
+  }
+
+  export class SheetInfo {
+    selected: boolean;
+    data: object;
+    fields: object;
+    totalRows?: number;
+    valid: boolean;
+    sheetName?: string;
+    columnCount?: number;
+  }
 
   export class SimpleListEntity extends AbstractHistory.Entity {
     selected: boolean;
@@ -67,6 +87,13 @@ export namespace Dataset {
   export enum RS_TYPE {
     TABLE = 'TABLE',
     QUERY = 'QUERY'
+  }
+
+  export enum FileFormat {
+    CSV = 'CSV',
+    EXCEL = 'EXCEL',
+    JSON = 'JSON',
+    TXT= 'TXT'
   }
 
   export namespace Result {

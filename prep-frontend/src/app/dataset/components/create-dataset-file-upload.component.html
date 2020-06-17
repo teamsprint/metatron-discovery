@@ -1,0 +1,160 @@
+<!-- box popup -->
+<div class="pb-box-popup">
+  <a href="javascript:" class="pb-btn-pop-close" (click)="onClose.emit()"></a>
+  <!-- step -->
+  <div class="pb-ui-step">
+    <span class="pb-txt-step" (click)="onGotoStep.emit('create-dataset-type')" style="cursor: pointer;">1</span>
+    <span class="pb-txt-step is-selected">2</span>
+    <span class="pb-txt-step" (click)="next()" style="cursor: pointer;">3</span>
+    <span class="pb-txt-step">4</span>
+  </div>
+  <!-- //step -->
+  <!-- top -->
+  <div class="pb-popup-top">
+    <div class="pb-txt-title">CREATE DATASET</div>
+
+  </div>
+  <!-- //top -->
+  <!-- contents -->
+  <div class="pb-popup-contents">
+
+
+    <div class="pb-box-empty" #drop_container1 [ngStyle]="{'display': supportedFileCount>0?'none':'block'}" >
+      <div class="pb-data-empty">
+        <div class="pb-wrap-data-connect">
+          <em class="pb-img-create"></em>
+          <div class="pb-txt-title">Drop your file</div>
+          <div class="pb-txt-det">
+            You can create data.
+          </div>
+
+
+          <!--<div class="pb-wrap-option" style="margin: 10px 0; width: 200px;">-->
+            <!--&lt;!&ndash;<span class="pb-label-option">Upload Location</span>&ndash;&gt;-->
+            <!--<div class="pb-component-selectbox " (clickOutside)="isLocationListShow1 =false">-->
+              <!--<span class="pb-txt-selectbox" (click)="isLocationListShow1=true">{{fileLocation}}</span>-->
+              <!--&lt;!&ndash; popup &ndash;&gt;-->
+              <!--<div class="pb-select-popup" *ngIf="isLocationListShow1" [style.display]="'block'">-->
+                <!--<ul class="pb-list-selectbox">-->
+                  <!--<li *ngFor="let fileLocation of fileLocations">-->
+                    <!--<a href="javascript:;" (click)="onSelected(fileLocation)">{{fileLocation.label}}</a>-->
+                  <!--</li>-->
+                <!--</ul>-->
+              <!--</div>-->
+              <!--&lt;!&ndash; //popup &ndash;&gt;-->
+
+            <!--</div>-->
+          <!--</div>-->
+
+        </div>
+      </div>
+    </div>
+
+
+
+    <div class="pb-wrap-connect" [ngStyle]="{'display': supportedFileCount>0?'flex':'none'}" >
+      <!-- file list -->
+      <div class="pb-ui-file-list" >
+        <!-- top -->
+        <div class="pb-ui-top">
+          <span class="pb-txt-title">File upload list</span>
+
+          <a href="javascript:" class="pb-component-btn type-line" (click)="reset()"><em class="pb-icon-refresh"></em>Reset</a>
+        </div>
+        <!-- //top -->
+        <ul class="pb-list-file" (dragenter)="disableEvent($event)" (dragover)="disableEvent($event)" (drop)="disableEvent($event)">
+          <li *ngFor="let item of upFiles" [ngClass]="{'ddp-disabled' : item.isCanceled}" >
+            <div class="pb-box-file">
+              <!--<svg-icon-component [name]="preparationUtil.getFileFormat(item.fileExtension)" [isBlackAndWhite]="true"></svg-icon-component>-->
+              <!--<em class="pb-img-file type-xls" *ngIf="item.fileExtension=='xls'"></em>-->
+              <!--<em class="pb-img-file type-xlsx" *ngIf="item.fileExtension=='xlsx'"></em>-->
+              <!--<em class="pb-img-file type-txt" *ngIf="item.fileExtension=='txt'"></em>-->
+              <!--<em class="pb-img-file type-csv" *ngIf="item.fileExtension=='csv'"></em>-->
+
+
+              <em class="pb-img-file" [ngClass]="getFileItemIconClassName(item.fileExtension).trim()"></em>
+
+              <!--<em class="pb-img-file type-json"></em>-->
+              <!--<em class="pb-img-file type-xml"></em>-->
+              <!--<em class="pb-img-file type-xls"></em>-->
+              <!--<em class="pb-img-file type-file"></em>-->
+
+
+              <div class="pb-file-name">
+                <span class="pb-data-name">{{getFileItemIconClassName(item.fileExtension).trim()}}  {{item.fileName}}.{{item.fileExtension}}</span>
+
+                <span class="pb-data-size">{{formatBytes(item.size,1)}} | {{item.storage_type}}</span>
+              </div>
+              <div class="pb-component-upload">
+                <span class="pb-data-num">{{item.progressPercent}} %</span>
+                <!--<div class="pb-ui-bar">-->
+                <!--<em class="ddp-data-progressbar" [ngStyle]="{'width': item.progressPercent>0? item.progressPercent+'%':'0%'}"></em>-->
+                <!--</div>-->
+                <div class="pb-ui-bar">
+                  <span [ngStyle]="{'width': item.progressPercent>0? item.progressPercent+'%':'0%'}"></span>
+                </div>
+                <a href="javascript:" class="pb-component-btn" *ngIf="item.isCanceled==true">Canceled</a>
+                <a href="javascript:" class="pb-component-btn" *ngIf="item.isUploaded==true">Uploaded</a>
+                <span class="ddp-txt-error" *ngIf="item.isFailed==true"><em class="ddp-icon-error"></em>Failed
+                  <!-- popup -->
+                                        <div class="ddp-box-layout4 ">
+                                            <div class="ddp-data-det">
+                                                {{item.response.message}}
+                                            </div>
+                                        </div>
+                  <!-- //popup -->
+                                  </span>
+              </div>
+            </div>
+          </li>
+
+        </ul>
+
+      </div>
+      <!-- //file list -->
+
+
+      <!-- drop file -->
+      <div class="pb-box-drop-file" #drop_container2>
+
+        <div class="pb-txt-description">
+          <span class="pb-txt-title">Drop your file</span>
+          <span class="pb-txt-sub">xls, .xlsx and .csv formats are allowed</span>
+        </div>
+
+        <!--<div class="pb-wrap-option">-->
+          <!--<span class="pb-label-option">Upload Location</span>-->
+          <!--<div class="pb-component-selectbox " (clickOutside)="isLocationListShow2 =false">-->
+            <!--<span class="pb-txt-selectbox" (click)="isLocationListShow2 = true">{{fileLocation}}</span>-->
+            <!---->
+            <!--&lt;!&ndash; popup &ndash;&gt;-->
+            <!--<div class="pb-select-popup" *ngIf="isLocationListShow2" [style.display]="'block'">-->
+              <!--<ul class="pb-list-selectbox">-->
+                <!--<li *ngFor="let fileLocation of fileLocations">-->
+                  <!--<a href="javascript:;" (click)="onSelected(fileLocation)">{{fileLocation.label}}</a>-->
+                <!--</li>-->
+              <!--</ul>-->
+            <!--</div>-->
+            <!--&lt;!&ndash; //popup &ndash;&gt;-->
+          <!--</div>-->
+        <!--</div>-->
+
+
+
+      </div>
+      <!-- //drop file -->
+
+    </div>
+
+  </div>
+  <!-- //contents -->
+  <!-- bottom -->
+  <div class="pb-popup-bottom ">
+    <a href="javascript:;" class="pb-component-btn-pop type-line" (click)="onGotoStep.emit('create-dataset-type')">PREV</a>
+    <a href="javascript:;" class="pb-component-btn-pop type-line" (click)="onClose.emit()">CANCEL</a>
+    <a href="javascript:;" class="pb-component-btn-pop type-bg" (click)="next()">NEXT</a>
+  </div>
+
+  <!-- //bottom -->
+</div>
+<!-- //box popup -->

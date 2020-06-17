@@ -1,0 +1,54 @@
+<!-- box popup -->
+<div class="pb-box-popup">
+  <a href="javascript:" class="pb-btn-pop-close" (click)="onClose.emit()"></a>
+  <!-- step -->
+  <div class="pb-ui-step">
+    <!--<span class="pb-txt-step is-selected">1</span>-->
+    <!--<span class="pb-txt-step ">2</span>-->
+    <!--<span class="pb-txt-step">3</span>-->
+  </div>
+  <!-- //step -->
+  <!-- top -->
+  <div class="pb-popup-top pb-clear">
+    <div class="pb-txt-title">Create Dataset</div>
+
+  </div>
+  <!-- //top -->
+  <!-- contents -->
+  <div class="pb-popup-contents ">
+    <div class="pb-wrap-fileupload">
+      <div class="pb-txt-det">You can create data.</div>
+      <div class="pb-wrap-box" (click)="onGotoStep.emit('create-dataset-file-upload')">
+        <!-- box -->
+        <div class="pb-box-fileupload">
+          <em class="pb-img-diagram1"></em>
+          File Upload,<br>
+          by loading image from your PC
+          <a href="javascript:" class="pb-btn-box-file">File Upload</a>
+        </div>
+        <!-- //box -->
+        <!-- box -->
+        <div class="pb-box-fileupload" (click)="onGotoStep.emit('create-dataset-database')">
+          <em class="pb-img-diagram2"></em>
+          Connect Dataconnector,<br>
+          by loading image from your PC
+          <a href="javascript:" class="pb-btn-box-file">Connect Dataconnector</a>
+        </div>
+        <!-- //box -->
+        <!-- box -->
+        <div class="pb-box-fileupload is-disabled">
+          <em class="pb-img-diagram3"></em>
+          Connect Kafka,
+          by loading image from your PC
+          <a href="javascript:" class="pb-btn-box-file">Connect Kafka</a>
+        </div>
+        <!-- //box -->
+      </div>
+
+
+    </div>
+  </div>
+  <!-- //contents -->
+
+</div>
+<!-- //box popup -->
