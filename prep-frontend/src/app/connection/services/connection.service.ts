@@ -103,7 +103,7 @@ export class ConnectionService {
   getTables(connectionParam: Connection.Entity, databaseName: string) {
     const url = `${CommonConstant.API_CONSTANT.API_URL}/connections/query/tables`;
 
-    if (!connectionParam) {
+    if (!connectionParam || !databaseName) {
       return of(new HttpErrorResponse({
         url,
         status: 400,
@@ -113,4 +113,18 @@ export class ConnectionService {
     const param = {connection: connectionParam, database: databaseName};
     return this.http.post(url, JSON.stringify(param));
   }
+
+  getPreviewData(connectionParam: Connection.Entity, databaseName: string, tableName: string) {
+    const url = `${CommonConstant.API_CONSTANT.API_URL}/connections/query/data?extractColumnName=false&limit=50`;
+    if (!connectionParam || !databaseName || !tableName) {
+      return of(new HttpErrorResponse({
+        url,
+        status: 400,
+        statusText: 'Invalid connection value'
+      }));
+    }
+    const param = {connection: connectionParam, database: databaseName, query: tableName, type: 'TABLE'};
+    return this.http.post(url, JSON.stringify(param));
+  }
+
 }

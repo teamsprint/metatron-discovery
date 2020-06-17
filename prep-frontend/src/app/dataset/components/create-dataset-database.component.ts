@@ -89,12 +89,21 @@ export class CreateDatasetDatabaseComponent implements OnInit{
   }
 
   public changedDatabase(database) {
+    if (this.selectedDatabase['name'] !== database) {
+      this.selectedTable['name'] = null;
+      this.selectedDatabase['name'] = database;
+      this.getTables(database);
+    }
     this.isDatabaseListShow = false;
-    this.selectedTable['name'] = null;
-    this.selectedDatabase['name'] = database;
-    this.getTables(database);
   }
 
+  public changedTable(table) {
+    if (this.selectedTable['name'] !== table) {
+      this.selectedTable['name'] = table;
+      this.getPreviewData(this.selectedDatabase['name'], table);
+    }
+    this.isTableListShow = false;
+  }
 
   private getConnections(page: Page) {
     this.loadingService.show();
@@ -156,13 +165,13 @@ export class CreateDatasetDatabaseComponent implements OnInit{
       });
   }
 
-  private getTables(database: string) {
+  private getTables(databaseName: string) {
     if (this.connectionValidation !== Connection.ConnectionValid.ENABLE_CONNECTION) return;
     if (this.selectedDatabase['name'] === null) return;
     const temp: Connection.Entity = this.getConnectionParams(this.selectedConnection);
     this.loadingService.show();
     this.connectionService
-      .getTables(temp, database)
+      .getTables(temp, databaseName)
       .pipe(finalize(() => this.loadingService.hide()))
       .subscribe(result => {
         if (!result) {
@@ -175,6 +184,29 @@ export class CreateDatasetDatabaseComponent implements OnInit{
         }
       });
   }
+
+  private getPreviewData(databaseName: string, tableName: string) {
+    if (this.connectionValidation !== Connection.ConnectionValid.ENABLE_CONNECTION) return;
+    if (this.selectedDatabase['name'] === null) return;
+    if (this.selectedTable['name'] === null) return;
+    const temp: Connection.Entity = this.getConnectionParams(this.selectedConnection);
+    this.loadingService.show();
+    this.connectionService
+      .getPreviewData(temp, databaseName, tableName)
+      .pipe(finalize(() => this.loadingService.hide()))
+      .subscribe(result => {
+        if (!result) {
+          return;
+        }
+        // if (result && result.hasOwnProperty('tables')) {
+        //   result['tables'].forEach((item) => {
+        //     this.tableList.push(item['name']);
+        //   });
+        // }
+      });
+  }
+
+
 
   private getConnectionParams(temp: Connection.Entity): Connection.Entity {
     const connectionParam: Connection.Entity = new Connection.Entity();
@@ -207,4 +239,6 @@ export class CreateDatasetDatabaseComponent implements OnInit{
     }
     return false;
   }
+
+  
 }
