@@ -78,11 +78,15 @@
         </div>
         <!-- //setting -->
         <div class="pb-wrap-grid">
-          <!-- slickgrid -->
+          <angular-slickgrid
+            gridId="grid2"
+            [columnDefinitions]="columnDefinitions"
+            [gridOptions]="gridOptions"
+            [dataset]="dataset"
+            (onAngularGridCreated)="angularGridReady($event)">
+          </angular-slickgrid>
         </div>
       </div>
-
-
     </div>
   </div>
 </div>

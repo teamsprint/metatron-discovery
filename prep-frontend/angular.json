@@ -24,10 +24,15 @@
               "src/assets"
             ],
             "styles": [
-              "src/assets/css/import.prep.bot.css"
+              "src/assets/css/import.prep.bot.css",
+              "node_modules/angular-slickgrid/styles/css/slickgrid-theme-salesforce.css",
+              "node_modules/angular-slickgrid/lib/multiple-select/multiple-select.css"
             ],
             "scripts": [
-              "node_modules/jquery/dist/jquery.min.js",
+              "node_modules/jquery/dist/jquery.js",
+              "node_modules/jquery-ui-dist/jquery-ui.min.js",
+              "node_modules/slickgrid/lib/jquery.event.drag-2.3.0.js",
+              "node_modules/angular-slickgrid/lib/multiple-select/multiple-select.js",
               "src/library/plupload/plupload.full.min.js"
             ],
             "es5BrowserSupport": true

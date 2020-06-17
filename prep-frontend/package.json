@@ -30,6 +30,7 @@
     "@ngx-translate/core": "^12.1.2",
     "@ngxs-labs/immer-adapter": "^3.0.5",
     "@ngxs/store": "^3.6.2",
+    "angular-slickgrid": "^2.18.7",
     "core-decorators": "^0.20.0",
     "immer": "^6.0.5",
     "interactjs": "^1.9.19",

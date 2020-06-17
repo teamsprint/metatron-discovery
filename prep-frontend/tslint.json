@@ -43,7 +43,7 @@
     "max-classes-per-file": false,
     "max-line-length": [
       true,
-      140
+      500
     ],
     "member-ordering": [
       true,
@@ -145,10 +145,5 @@
     "no-any": true,
     "no-namespace": false
   },
-  "rulesDirectory": [],
-  "linterOptions": {
-    "exclude": [
-      "src/app/common/components/angular-slickgrid/**"
-    ]
-  }
+  "rulesDirectory": []
 }
