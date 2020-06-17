@@ -4,10 +4,10 @@ import {ViewMode} from '../../main/value-objects/view-mode';
 import {LocalStorageService} from '../../common/services/local-storage/local-storage.service';
 
 @Component({
-  templateUrl: './dataset.component.html',
-  styleUrls: ['./dataset.component.css']
+  templateUrl: './recipe-detail.component.html',
+  styleUrls: ['./recipe-detail.component.css']
 })
-export class DatasetComponent {
+export class RecipeDetailComponent {
 
   public readonly VIEW_MODE = ViewMode;
 

@@ -10,7 +10,8 @@ export namespace RouterUrls {
     public static readonly PREP_BOT = 'prepbot';
     public static readonly CONNECTION = 'connections';
     public static readonly FLOWS = 'dataflows';
-    public static readonly DATASET = 'datasets';
+    public static readonly DATASETS = 'datasets';
+    public static readonly RECIPES = 'recipes';
 
     public static getMainUrl() {
       return `/${Managements.ROOT}/${Managements.PREP_BOT}`;

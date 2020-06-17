@@ -3,7 +3,6 @@ import {RouterModule} from '@angular/router';
 import {PreFlowGuard} from './services/pre-flow.guard';
 import {SharedModule} from '../common/shared/shared.module';
 import {DataflowModule} from '../dataflow/dataflow.module';
-import {DatasetModule} from '../dataset/dataset.module';
 import {ConnectionModule} from '../connection/connection.module';
 import {LayoutComponent} from './components/layout.component';
 import {RouterUrls} from '../common/constants/router.constant';
@@ -12,11 +11,12 @@ import {UserVerifyGuard} from '../main/services/user-verify/user-verify.guard';
 import {PreMainGuard} from '../main/services/pre-main/pre-main.guard';
 import {DataflowListComponent} from '../dataflow/components/dataflow-list.component';
 import {DataflowDetailComponent} from '../dataflow/components/dataflow-detail.component';
-import {DatasetComponent} from '../dataset/components/dataset.component';
 import {GnbComponent} from './components/gnb.component';
 import {ConnectionListComponent} from '../connection/components/connection-list.component';
 import {LnbModule} from '../lnb/lnb.module';
 import {DataflowService} from '../dataflow/services/dataflow.service';
+import {RecipeDetailComponent} from '../recipe/components/recipe-detail.component';
+import {RecipeModule} from '../recipe/recipe.module';
 
 
 @NgModule({
@@ -24,7 +24,7 @@ import {DataflowService} from '../dataflow/services/dataflow.service';
     SharedModule,
     ConnectionModule,
     DataflowModule,
-    DatasetModule,
+    RecipeModule,
     LnbModule,
     RouterModule.forChild([
       {
@@ -69,8 +69,8 @@ import {DataflowService} from '../dataflow/services/dataflow.service';
                 ]
               },
               {
-                path: `:id/${RouterUrls.Managements.DATASET}/:id`,
-                component: DatasetComponent,
+                path: `:id/${RouterUrls.Managements.RECIPES}/:id`,
+                component: RecipeDetailComponent,
                 canActivate: [
                   UserVerifyGuard
                 ]
@@ -92,8 +92,7 @@ import {DataflowService} from '../dataflow/services/dataflow.service';
     PreFlowGuard
   ],
   exports: [
-    RouterModule,
-    LnbModule
+    RouterModule
   ]
 })
 export class LayoutRoutingModule {
