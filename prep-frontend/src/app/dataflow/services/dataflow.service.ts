@@ -1,6 +1,5 @@
 import {Injectable} from '@angular/core';
 import {of} from 'rxjs';
-import {DataflowModule} from '../dataflow.module';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {CommonConstant} from '../../common/constants/common.constant';
 import {Page} from '../../common/constants/page';
@@ -9,9 +8,7 @@ import * as _ from 'lodash';
 import {Dataflow} from '../domains/dataflow';
 import {CommonUtil} from '../../common/utils/common-util';
 
-@Injectable({
-  providedIn: DataflowModule
-})
+@Injectable()
 export class DataflowService {
 
   constructor(private readonly http: HttpClient,

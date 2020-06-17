@@ -16,6 +16,7 @@ import {DatasetComponent} from '../dataset/components/dataset.component';
 import {GnbComponent} from './components/gnb.component';
 import {ConnectionListComponent} from '../connection/components/connection-list.component';
 import {LnbModule} from '../lnb/lnb.module';
+import {DataflowService} from '../dataflow/services/dataflow.service';
 
 
 @NgModule({
@@ -86,6 +87,7 @@ import {LnbModule} from '../lnb/lnb.module';
     MainComponent
   ],
   providers: [
+    DataflowService,
     PreMainGuard,
     PreFlowGuard
   ],

@@ -8,6 +8,7 @@ import {CreateDataflowListComponent} from './components/create-dataflow-list.com
 import {CreateDataflowNameComponent} from './components/create-dataflow-name.component';
 import {DatasetsService} from '../dataset/services/datasets.service';
 import {LnbModule} from '../lnb/lnb.module';
+import {DataflowService} from './services/dataflow.service';
 
 const COMPONENTS = [
   DataflowDetailComponent,
@@ -30,7 +31,8 @@ const COMPONENTS = [
     ...COMPONENTS
   ],
   providers: [
-    DatasetsService
+    DatasetsService,
+    DataflowService
   ],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA
