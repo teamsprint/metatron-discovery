@@ -2,10 +2,7 @@ package app.metatron.discovery.domain.dataprep.entity;
 
 import app.metatron.discovery.domain.AbstractHistoryEntity;
 import app.metatron.dataprep.teddy.DataFrame;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.annotation.*;
 import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -31,6 +28,7 @@ public class Dataset extends AbstractHistoryEntity {
     public enum FILE_FORMAT {
         CSV,
         EXCEL,
+        TXT,
         JSON;
 
         @JsonValue
@@ -212,6 +210,7 @@ public class Dataset extends AbstractHistoryEntity {
         this.queryStmt = queryStmt;
     }
 
+    @JsonIgnore
     public FILE_FORMAT getFileFormat() {
         return fileFormat;
     }
