@@ -93,11 +93,45 @@
   content:'';
 
 }
+[tooltip] {
+  display:inline-block;
+  position: relative;
+  z-index: 1;
+}
+[tooltip]:before,
+[tooltip]:after {
+   display: none !important;
+   content: '';
+ }
+[tooltip]:hover:before,
+[tooltip]:hover:after {
+  display:block !important;
+}
 
-
-
-
-
+[tooltip]:after {
+  position:absolute;
+  bottom:100%;
+  left:-50%;
+  margin-bottom:6px;
+   padding: 6px;
+   content: attr(tooltip);
+   background-color: rgba(53, 57, 63, 0.9);
+   border-radius:2px;
+   color:#fff;
+  font-size:12px;
+  line-height:12px;
+}
+[direction="up"]:before {
+  display: inline-block;
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  width: 4px;
+  height: 8px;
+  margin:0 0 0 -2px;
+  background: url(../../images/icon_tagview.png) no-repeat;
+  transform: rotate(-90deg);
+}
 
 
 

@@ -9,3 +9,23 @@
 .pb-component-pop-box > a .pb-icon-pop-del {width:10px; height:13px; margin:-6px 0 0 0;}
 .pb-component-pop-box > a:hover {background-color:#fffdf5; color:#f37135;}
 .pb-component-pop-box > a:hover .pb-icon-pop-del {background-position-x:-11px;}
+
+/***********************************************************************
+     Compontent : pop box2
+ *************************************************************************/
+.pb-component-pop-box2 {min-width:200px; max-height:410px;padding:5px 0;border-radius:5px; box-shadow:0 2px 5px 0 rgba(0, 0, 0, 0.15); background-color:#fff; overflow:auto;}
+.pb-component-pop-box2 .pb-type-pop-label {padding:8px 12px; color:#737373; font-size:13px; font-weight:bold;}
+.pb-component-pop-box2 .pb-pop-searching {padding:0 12px;}
+.pb-component-pop-box2 .pb-pop-searching .pb-component-search {padding-right:30px; padding-left:30px; width:100%;background-color:#f8f8f8; border-radius:4px;}
+.pb-component-pop-box2 .pb-pop-searching .pb-component-search:before {left:10px;}
+.pb-component-pop-box2 .pb-pop-searching .pb-component-search .pb-btn-delete {right:10px;}
+.pb-component-pop-box2 .pb-list-pop-box {padding:5px 0; margin-top:7px; border-top:1px solid #dedede;}
+.pb-component-pop-box2 .pb-list-pop-box li a {display:flex;align-items: center; justify-content: center;}
+.pb-component-pop-box2 .pb-list-pop-box li a:hover {background-color:#fffdf5;}
+.pb-component-pop-box2 .pb-list-pop-box li a .pb-type-value {width:34px;}
+.pb-component-pop-box2 .pb-list-pop-box li a [class*="pb-icon-type-"]{ opacity:0.5; margin-left:10px;}
+.pb-component-pop-box2 .pb-list-pop-box li a .pb-data-column-name {flex:auto; padding:6px 0; color:#222; font-size:14px; line-height:20px;}
+.pb-component-pop-box2 .pb-list-pop-box li a .pb-data-column-name strong {font-weight:normal; color:#f37135;}
+.pb-component-pop-box2 .pb-list-pop-box li a .pb-icon-link {margin-right:10px;}
+.pb-component-pop-box2 .pb-data-nodata {padding:5px 0 0 0; }
+.pb-component-pop-box2 .pb-data-nodata > span {display:block; padding:6px 10px; color:#222; font-size:14px; line-height:20px;border-top:1px solid #dedede;}

@@ -772,3 +772,16 @@ ul.pb-list-tab-button li a em.pb-icon-listgrid {
 .pb-mar-5 {
   margin-top: 5px;
 }
+
+/***********************************************************************
+     Layout : Popup2
+ *************************************************************************/
+.pb-layout-popup2 {position:fixed; left:0; right:0; bottom:0; top:0; z-index:100;}
+.pb-layout-popup2:before {display:block; position:fixed; left:0; right:0; bottom:0; top:0; background-color:rgba(0,0,0,0.8); content:'';}
+.pb-box-popup2 {display:flex; flex-direction:column;position:relative; width:1040px; height:100%; margin:0 auto; background-color:#fff;}
+.pb-box-popup2 .pb-popup-top {height:71px; min-height:71px; border-bottom:1px solid #dedede;}
+.pb-box-popup2 .pb-popup-top .pb-txt-title {float:left; padding:29px 0 0 40px; color:#222; font-size:20px; font-weight:bold;}
+.pb-box-popup2 .pb-popup-top .pb-buttons {float:right; padding-right:40px;}
+.pb-box-popup2 .pb-popup-top .pb-buttons .pb-component-btn {margin:26px 0 0 0; float:left; margin-left:6px;}
+.pb-box-popup2 .pb-popup-top .pb-buttons .txt-info {float:left; margin:34px 4px 0 0; color:#a3a3a3; font-size:14px;}
+.pb-box-popup2 .pb-popup-contents {display:flex; flex-direction:column;flex:auto; height:100%; overflow:auto;}

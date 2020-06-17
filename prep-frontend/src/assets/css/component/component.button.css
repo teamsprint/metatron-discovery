@@ -46,6 +46,12 @@
   border: 1px solid #a3a3a3;
   color: #000;
 }
+.pb-component-btn.type-line.is-disabled,
+.pb-component-btn.type-line.is-disabled:hover{
+  border: 1px solid #f1f1ee;
+  background-color: #f1f1ee;
+  color:#c8c8c8;
+}
 
 .pb-component-btn.type-dark {
   border: 1px solid #71706d;
@@ -142,7 +148,9 @@
   border: 1px solid #b5b5b2;
   background-color: #fff;
 }
-
+.pb-component-btn-s.type-normal {
+  font-weight:normal;
+}
 .pb-component-btn-s:hover {
   background-color: #e4e3de;
 }
