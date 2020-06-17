@@ -25,7 +25,6 @@ export class LnbComponent {
               private readonly viewContainerRef: ViewContainerRef,
               private readonly router: Router) {
   }
-
   /**
    * Connection Pop
    */

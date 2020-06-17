@@ -33,12 +33,12 @@ export namespace Dataset {
     name: string;
     description: string;
     custom: string;
-    importType: Dataset.IMPORT_TYPE;
+    importType: IMPORT_TYPE;
     rsType: RS_TYPE;
     dbName: string;
     tblName: string;
     queryStmt: string;
-    fileFormat: Dataset.FILE_FORMAT;
+    fileFormat: FILE_FORMAT;
     filenameBeforeUpload: string;
     sheetName: string;
     storedUri: string;

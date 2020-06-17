@@ -1,4 +1,5 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
+import {Router} from '@angular/router';
 import {LocalStorageService} from '../../common/services/local-storage/local-storage.service';
 import {ViewMode} from '../../main/value-objects/view-mode';
 import {Page, PageResult} from '../../common/constants/page';
@@ -7,6 +8,7 @@ import {Dataflow} from '../domains/dataflow';
 import {DataflowService} from '../services/dataflow.service';
 import {LoadingService} from '../../common/services/loading/loading.service';
 import {LnbComponent} from '../../lnb/components/lnb.component';
+import {RouterUrls} from '../../common/constants/router.constant';
 import {finalize} from 'rxjs/operators';
 
 @Component({
@@ -14,6 +16,8 @@ import {finalize} from 'rxjs/operators';
   styleUrls: ['./dataflow-list.component.css']
 })
 export class DataflowListComponent implements OnInit{
+
+  public readonly ROUTER_URLS = RouterUrls;
 
   @ViewChild(LnbComponent)
   public lnbComponent: LnbComponent;
@@ -23,7 +27,8 @@ export class DataflowListComponent implements OnInit{
   public searchText = '';
   public dataflows: Array<Dataflow.ValueObjects.Select> = [];
 
-  constructor(private readonly dataflowService: DataflowService,
+  constructor(private readonly router: Router,
+              private readonly dataflowService: DataflowService,
               private readonly loadingService: LoadingService,
               public readonly localStorageService: LocalStorageService) {
   }
@@ -77,5 +82,9 @@ export class DataflowListComponent implements OnInit{
   public lnbOnPageRefresh() {
     this.initialize();
     this.getDataflows(this.page);
+  }
+
+  public goDataflowDetailView(id: string) {
+    this.router.navigate([RouterUrls.Managements.getFlowDetailUrl(id)]).then();
   }
 }

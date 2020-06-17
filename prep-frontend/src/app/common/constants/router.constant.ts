@@ -21,6 +21,10 @@ export namespace RouterUrls {
       return `/${Managements.ROOT}/${Managements.PREP_BOT}/${Managements.CONNECTION}`;
     }
 
+    public static getSetsUrl() {
+      return `/${Managements.ROOT}/${Managements.PREP_BOT}/${Managements.DATASETS}`;
+    }
+
     public static getFlowsUrl() {
       return `/${Managements.ROOT}/${Managements.PREP_BOT}/${Managements.FLOWS}`;
     }
