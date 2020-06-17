@@ -27,7 +27,8 @@
               "src/assets/css/import.prep.bot.css"
             ],
             "scripts": [
-              "node_modules/jquery/dist/jquery.min.js"
+              "node_modules/jquery/dist/jquery.min.js",
+              "src/library/plupload/plupload.full.min.js"
             ],
             "es5BrowserSupport": true
           },
