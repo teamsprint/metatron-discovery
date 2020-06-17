@@ -22,6 +22,7 @@ export class DatasetListComponent implements OnInit{
   private readonly page = new Page();
   private pageResult: PageResult = new PageResult();
   public searchText = '';
+  public datasets: Dataset.SimpleListEntity[] = []; // 화면에 보여지는 리스트
 
   @ViewChild(LnbComponent)
   public lnbComponent: LnbComponent;
@@ -45,7 +46,19 @@ export class DatasetListComponent implements OnInit{
 
   private getDatasets(page: Page) {
     const search: string = encodeURI(this.searchText);
-    // this.loadingService.show();
+    this.datasets = [];
+    this.loadingService.show();
+    this.datasetService
+      .getDatasets(search, page)
+      .pipe(finalize(() => this.loadingService.hide()))
+      .subscribe(datasets => {
+        if (!datasets) {
+          return;
+        }
+        this.datasets = datasets._embedded.datasets;
+        this.pageResult  = datasets.page;
+
+      });
   }
 
   /**
@@ -60,6 +73,14 @@ export class DatasetListComponent implements OnInit{
   public lnbOnPageRefresh() {
     this.initialize();
     this.getDatasets(this.page);
+  }
+
+  public returnListNumber(num: number): number {
+    let rtn = 0;
+    if (this.pageResult !== null) {
+      rtn = this.pageResult.totalElements - (this.pageResult.number * this.pageResult.size + num);
+    }
+    return rtn;
   }
 
   public openCreateDatasetPopup() {

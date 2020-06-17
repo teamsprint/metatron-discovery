@@ -171,14 +171,14 @@
       </tr>
       </thead>
       <tbody>
-      <!--<tr *ngFor="let dataset of datasets; let i=index">-->
-        <!--<td class="pb-txt-center">{{returnListNumber(i)}}</td>-->
-        <!--<td>{{dataset.name}}</td>-->
-        <!--<td>{{dataset.description}}</td>-->
-        <!--<td></td>-->
-        <!--<td></td>-->
-        <!--<td>{{dataset.modifiedTime | date: 'yyyy-MM-dd HH:mm'}} by {{dataset.modifiedBy.fullName}}</td>-->
-      <!--</tr>-->
+      <tr *ngFor="let dataset of datasets; let i=index">
+        <td class="pb-txt-center">{{returnListNumber(i)}}</td>
+        <td>{{dataset.name}}</td>
+        <td>{{dataset.description}}</td>
+        <td></td>
+        <td></td>
+        <td>{{dataset.modifiedTime | date: 'yyyy-MM-dd HH:mm'}} by {{dataset.modifiedBy.fullName}}</td>
+      </tr>
       </tbody>
     </table>
   </div>

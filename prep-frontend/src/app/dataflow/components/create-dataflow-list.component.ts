@@ -102,7 +102,6 @@ export class CreateDataflowListComponent implements OnInit {
 
   private getDatasets(): void {
     const search: string = encodeURI(this.searchText);
-
     this.datasets = [];
     this.selectedDatasets = [];
     this.loadingService.show();
