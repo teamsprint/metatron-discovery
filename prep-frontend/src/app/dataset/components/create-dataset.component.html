@@ -1,3 +1,5 @@
 <create-dataset-type *ngIf="step === 'create-dataset-type'" (onGotoStep)="typePageGotoStep($event)" (onClose)="onClose.emit()"></create-dataset-type>
 <create-dataset-file-upload *ngIf="step === 'create-dataset-file-upload'" (onGotoStep)="fileUploadPageGotoStep($event)" (onClose)="onClose.emit()"></create-dataset-file-upload>
 <create-dataset-file-select *ngIf="step === 'create-dataset-file-select'" (onClose)="onClose.emit()"></create-dataset-file-select>
+
+<create-dataset-database *ngIf="step === 'create-dataset-database'" (onClose)="onClose.emit()" (onGotoStep)="databasePageGotoStep($event)"></create-dataset-database>

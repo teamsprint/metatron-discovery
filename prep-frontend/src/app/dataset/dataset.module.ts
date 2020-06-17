@@ -7,14 +7,17 @@ import {CreateDatasetComponent} from './components/create-dataset.component';
 import {CreateDatasetTypeComponent} from './components/create-dataset-type.component';
 import {CreateDatasetFileUploadComponent} from './components/create-dataset-file-upload.component';
 import {CreateDatasetFileSelectComponent} from './components/create-dataset-file-select.component';
+import {CreateDatasetDatabaseComponent} from './components/create-dataset-database.component';
 import {DatasetsService} from './services/datasets.service';
+import {ConnectionService} from '../connection/services/connection.service';
 
 const COMPONENTS = [
   DatasetListComponent,
   CreateDatasetComponent,
   CreateDatasetTypeComponent,
   CreateDatasetFileUploadComponent,
-  CreateDatasetFileSelectComponent
+  CreateDatasetFileSelectComponent,
+  CreateDatasetDatabaseComponent
 ];
 
 
@@ -31,7 +34,8 @@ const COMPONENTS = [
     ...COMPONENTS
   ],
   providers: [
-    DatasetsService
+    DatasetsService,
+    ConnectionService
   ],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA

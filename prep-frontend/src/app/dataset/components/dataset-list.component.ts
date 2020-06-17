@@ -84,6 +84,7 @@ export class DatasetListComponent implements OnInit{
   }
 
   public openCreateDatasetPopup() {
+    this.lnbComponent.openCreateDatasetPopup();
     //
   }
 }

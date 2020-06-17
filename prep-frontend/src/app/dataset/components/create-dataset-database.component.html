@@ -1,0 +1,111 @@
+<!-- box popup -->
+<div class="pb-box-popup">
+  <a href="javascript:" class="pb-btn-pop-close" (click)="onClose.emit()"></a>
+  <!-- step -->
+  <div class="pb-ui-step">
+    <span class="pb-txt-step" (click)="onGotoStep.emit('create-dataset-type')" style="cursor: pointer;">1</span>
+    <span class="pb-txt-step is-selected">2</span>
+    <span class="pb-txt-step" style="cursor: pointer;">3</span>
+  </div>
+  <!-- //step -->
+  <!-- top -->
+  <div class="pb-popup-top pb-clear">
+    <div class="pb-txt-title">CREATE DATASET</div>
+
+  </div>
+  <!-- //top -->
+  <!-- contents -->
+  <div class="pb-popup-contents pb-pop-create">
+    <!-- option -->
+    <div class="pb-ui-data-option ">
+
+      <!-- form -->
+      <div class="pb-form-option pb-clear">
+
+        <!--Connection-->
+        <label class="pb-label-title" style="padding:0 10px 0 30px;">Connection</label>
+        <div class="pb-component-select-button" style="width:290px;">
+          <div class="pb-form-selectbox type-value" [ngClass]="{'is-selected': connectionListShow === true}"
+               (clickOutside)="connectionListShow = false">
+                            <span class="pb-txt-selectbox" (click)="toggleList('connection')">
+                                <span *ngIf="selectedConnection == null || selectedConnection.name == undefined">Load data connection</span>
+                                <span *ngIf="selectedConnection != null && selectedConnection.name != undefined">{{selectedConnection.name}}</span>
+                            </span>
+            <!-- popup -->
+            <div class="pb-select-popup" style="z-index: 10001;">
+              <ul class="pb-list-popup">
+                <li *ngFor="let connection of connectionList">
+                  <a href="javascript:;" (click)="changedConnection(connection)">
+                    {{connection.name}}
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <!-- //popup -->
+          </div>
+        </div>
+        <!-- //Connection-->
+
+        <!--Database Name-->
+        <label class="pb-label-title" style="padding:0 10px 0 30px;">Database</label>
+        <div class="pb-component-select-button" style="width:290px;">
+          <div class="pb-form-selectbox type-value" [ngClass]="{'is-selected': isDatabaseListShow === true}"
+               (clickOutside)="isDatabaseListShow =false">
+                            <span class="pb-txt-selectbox" (click)="toggleList('database')">
+                              <span *ngIf="selectedDatabase['name'] === null || selectedDatabase['name'] === undefined">Choose database</span>
+                              <span *ngIf="selectedDatabase['name'] !== null && selectedDatabase['name'] !== undefined">{{selectedDatabase['name']}}</span>
+                            </span>
+            <!-- popup -->
+            <div class="pb-select-popup" style="z-index: 10001;">
+              <ul class="pb-list-popup">
+                <li *ngFor="let database of databaseList">
+                  <a href="javascript:;" (click)="changedDatabase(database)">{{database}}
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <!-- //popup -->
+          </div>
+        </div>
+        <!-- //Database Name-->
+
+
+        <!--table Name-->
+        <label class="pb-label-title" style="padding:0 10px 0 30px;">Table</label>
+        <div class="pb-component-select-button" style="width:290px;">
+          <div class="pb-form-selectbox type-value" [ngClass]="{'is-selected': isTableListShow === true}"
+               (clickOutside)="isTableListShow =false">
+                            <span class="pb-txt-selectbox" (click)="toggleList('table')">
+                              <span *ngIf="selectedTable['name'] === null || selectedTable['name'] === undefined">Choose table</span>
+                              <span *ngIf="selectedTable['name'] !== null && selectedTable['name'] !== undefined">{{selectedTable['name']}}</span>
+                            </span>
+            <!-- popup -->
+            <div class="pb-select-popup" style="z-index: 10001;">
+              <ul class="pb-list-popup">
+                <li *ngFor="let table of tableList">
+                  <a href="javascript:;" (click)="changedDatabase(table)">{{table}}
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <!-- //popup -->
+          </div>
+        </div>
+        <!-- //Database Name-->
+
+
+
+
+      </div>
+      <!-- //form -->
+    </div>
+
+  </div>
+  <!-- //contents -->
+  <div class="pb-popup-bottom ">
+    <a href="javascript:;"  class="pb-component-btn-pop type-line" (click)="onGotoStep.emit('create-dataset-type')">PREV</a>
+    <a href="javascript:;" (click)="onClose.emit()" class="pb-component-btn-pop type-line">CANCEL</a>
+    <a href="javascript:;"  class="pb-component-btn-pop type-bg">NEXT</a>
+  </div>
+</div>
+<!-- //box popup -->

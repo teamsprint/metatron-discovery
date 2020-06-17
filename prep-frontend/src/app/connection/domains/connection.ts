@@ -44,6 +44,13 @@ export namespace Connection {
         };
       }
     }
+
+    export namespace GetDatabase {
+      export class SearchedData {
+        page: PageResult;
+        databases: string[];
+      }
+    }
   }
 
 }

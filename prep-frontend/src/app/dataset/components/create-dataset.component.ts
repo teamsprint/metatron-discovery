@@ -41,4 +41,8 @@ export class CreateDatasetComponent {
 
     this.step = step;
   }
+
+  public databasePageGotoStep(step: string) {
+    this.step = step;
+  }
 }

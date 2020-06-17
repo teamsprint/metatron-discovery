@@ -85,4 +85,32 @@ export class ConnectionService {
   deleteConnection(connId: string) {
     return this.http.delete(``);
   }
+
+  getDatabases(connectionParam: Connection.Entity) {
+    const url = `${CommonConstant.API_CONSTANT.API_URL}/connections/query/databases`;
+
+    if (!connectionParam) {
+      return of(new HttpErrorResponse({
+        url,
+        status: 400,
+        statusText: 'Invalid connection value'
+      }));
+    }
+    const param = {connection: connectionParam};
+    return this.http.post(url, JSON.stringify(param));
+  }
+
+  getTables(connectionParam: Connection.Entity, databaseName: string) {
+    const url = `${CommonConstant.API_CONSTANT.API_URL}/connections/query/tables`;
+
+    if (!connectionParam) {
+      return of(new HttpErrorResponse({
+        url,
+        status: 400,
+        statusText: 'Invalid connection value'
+      }));
+    }
+    const param = {connection: connectionParam, database: databaseName};
+    return this.http.post(url, JSON.stringify(param));
+  }
 }
