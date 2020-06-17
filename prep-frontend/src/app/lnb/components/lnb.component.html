@@ -124,7 +124,9 @@
 <hr class="pb-line">
 
 <div class="pb-ui-lnb" #typeSets
+     routerLinkActive="is-selected"
      [routerLink]="ROUTER_URLS.Managements.getSetsUrl()"
+     [routerLinkActiveOptions]="{exact:true}"
      (mouseover)="typeSets.setAttribute('aria-expanded', 'true')"
      (mouseleave)="typeSets.setAttribute('aria-expanded', 'false')">
   <!--suppress JSUnnecessarySemicolon -->
