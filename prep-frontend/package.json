@@ -41,7 +41,6 @@
     "ngx-cookie-service": "^3.0.4",
     "ngx-pipes": "^2.7.3",
     "rxjs": "~6.5.4",
-    "slickgrid": "^2.4.24",
     "tslib": "^1.10.0",
     "uuid": "^8.1.0",
     "zone.js": "~0.10.2"
@@ -57,7 +56,6 @@
     "@types/jquery": "^3.3.38",
     "@types/lodash": "^4.14.153",
     "@types/node": "^12.11.1",
-    "@types/slickgrid": "^2.1.30",
     "angular-http-server": "^1.9.0",
     "codelyzer": "^5.1.2",
     "gzipper": "^3.7.0",
