@@ -120,7 +120,7 @@ export class CreateDatasetDatabaseComponent implements OnInit{
     dataset.tblName = this.selectedTable['name'];
     dataset.dbName = this.selectedDatabase['name'];
     dataset.rsType = Dataset.RS_TYPE.TABLE;
-    dataset.queryStmt = this.selectedTable['name'];
+    dataset.queryStmt = 'select * from ' + this.selectedDatabase['name'] + '.' + this.selectedTable['name'];
     return dataset;
   }
 

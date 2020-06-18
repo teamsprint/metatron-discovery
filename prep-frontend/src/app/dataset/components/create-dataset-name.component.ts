@@ -49,7 +49,7 @@ export class CreateDatasetNameComponent implements OnInit{
     if (this.isNameError) {
       return;
     }
-    
+
     if (this.importType === this.importDBType) {
         this.dbTypeComplete();
     }
