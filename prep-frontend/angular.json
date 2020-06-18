@@ -26,7 +26,8 @@
             "styles": [
               "src/assets/css/import.prep.bot.css",
               "node_modules/angular-slickgrid/styles/css/slickgrid-theme-salesforce.css",
-              "node_modules/angular-slickgrid/lib/multiple-select/multiple-select.css"
+              "node_modules/angular-slickgrid/lib/multiple-select/multiple-select.css",
+              "src/assets/css/prep-bot-grid.css"
             ],
             "scripts": [
               "node_modules/jquery/dist/jquery.js",

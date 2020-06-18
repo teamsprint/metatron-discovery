@@ -1,0 +1,129 @@
+.slickgrid-container {
+  border-top: 2px solid #426895;
+}
+
+.slickgrid-container .slick-header-columns .slick-header-column {
+  height: 34px;
+  border-right: 1px solid #dedede;
+}
+
+.slickgrid-container .slick-header-columns .slick-header-column.ui-state-default {
+  display: flex;
+  align-items: center;
+  background-color: #eef3f6;
+  color: #4e4e4e;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 5px 10px;
+}
+
+body .slickgrid-container .grid-canvas .slick-cell {
+  padding: 5px 10px;
+  height: 26px;
+  border-right: 1px solid #dedede;
+  color: #4e4e4e;
+  font-size: 13px;
+  line-height: 1.2em;
+  box-shadow: none;
+}
+
+.slickgrid-container .slick-header-columns .slick-header-sortable .slick-column-name {
+  margin-bottom: 0;
+}
+
+.slickgrid-container .slick-header-columns .slick-header-sortable .slick-column-name .txt-sub {
+  font-size: 12px;
+  font-weight: normal;
+}
+
+.slickgrid-container .slick-header-columns .slick-header-sortable [class*="pb-icon-type"] {
+  margin-right: 4px;
+}
+
+.slick-header-column .slick-header-menubutton {
+  top: 50%;
+  right: 6px;
+  width: 16px;
+  height: 16px;
+  margin-top: -8px;
+}
+
+.slick-header-column .slick-header-menubutton:before {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  background: url(../images/icon_grid_more.png) no-repeat;
+  content: '';
+}
+
+.ui-widget-content.slick-row {
+  height: 26px !important;
+}
+
+.slickgrid-container .grid-canvas .slick-row.odd {
+  background-color: #fafafb;
+}
+
+.slickgrid-container .grid-canvas .slick-row.even:hover,
+.slickgrid-container .grid-canvas .slick-row.odd:hover {
+  background-color: #eef3f6;
+  box-shadow: none;
+}
+
+.slickgrid-container .grid-canvas .slick-cell.selected:first-of-type {
+  border-left: 1px solid #4483be;
+}
+
+.slickgrid-container .grid-canvas .slick-cell.selected:last-of-type {
+  border-right: 1px solid #4483be;
+}
+
+.slickgrid-container .grid-canvas .slick-cell.selected,
+.slickgrid-container .grid-canvas .slick-row.odd .slick-cell.selected {
+  padding: 4px 10px;
+  border-bottom: 1px solid #4483be;
+  border-top: 1px solid #4483be;
+  background-color: rgba(0, 168, 255, 0.07);
+}
+
+/*.slickgrid-container .slick-row .slick-cell.active {box-shadow:none;}*/
+.slickgrid-container .slick-row .slick-cell.active {
+  padding: 5px 10px;
+  box-shadow: none;
+  background-color: #fff9dd;
+  border-right: 1px solid #dedede;
+}
+
+.slickgrid-container .slick-row .slick-cell.active.selected {
+  padding: 4px 10px;
+  background-color: rgba(0, 168, 255, 0.07);
+}
+
+.slick-cell-checkboxsel input[type=checkbox] + label {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  background: url(../images/icon_checkbox.png) no-repeat;
+  background-position: left -13px;
+}
+
+.slick-cell-checkboxsel input[type=checkbox]:checked + label {
+  background-position-x: -68px;
+}
+
+.slick-cell-checkboxsel input[type=checkbox] + label:before,
+.slick-cell-checkboxsel input[type=checkbox]:checked + label:before {
+  display: none;
+}
+
+body .slickgrid-container .slick-header-columns .slick-header-column.ui-state-default.type-column-selected:after,
+body .slickgrid-container .grid-canvas .slick-cell.type-column-selected:after {
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 168, 255, 0.07);
+  content: '';
+}

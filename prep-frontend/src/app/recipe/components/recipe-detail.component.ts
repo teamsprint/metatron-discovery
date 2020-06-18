@@ -140,6 +140,7 @@ export class RecipeDetailComponent implements OnInit {
         // True (Single Selection), False (Multiple Selections)
         selectActiveRow: false
       },
+      rowHeight: 26,
       enableCheckboxSelector: true,
       enableRowSelection: true,
       enableAutoResize: true,
