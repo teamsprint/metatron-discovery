@@ -27,10 +27,8 @@ body .slickgrid-container .grid-canvas .slick-cell {
   box-shadow: none;
 }
 
-.slickgrid-container .slick-header-columns .slick-header-sortable .slick-column-name {
-  margin-bottom: 0;
-}
-
+.slickgrid-container .slick-header-columns .slick-header-sortable .slick-column-name {margin-bottom: 0;}
+.slick-column-name, .slick-sort-indicator {margin-bottom:0;}
 .slickgrid-container .slick-header-columns .slick-header-sortable .slick-column-name .txt-sub {
   font-size: 12px;
   font-weight: normal;
@@ -87,6 +85,7 @@ body .slickgrid-container .grid-canvas .slick-cell {
 }
 
 /*.slickgrid-container .slick-row .slick-cell.active {box-shadow:none;}*/
+.slickgrid-container .slick-row.odd .slick-cell.active,
 .slickgrid-container .slick-row .slick-cell.active {
   padding: 5px 10px;
   box-shadow: none;
@@ -98,7 +97,7 @@ body .slickgrid-container .grid-canvas .slick-cell {
   padding: 4px 10px;
   background-color: rgba(0, 168, 255, 0.07);
 }
-
+.slick-header-column.ui-state-default input[type=checkbox] + label,
 .slick-cell-checkboxsel input[type=checkbox] + label {
   display: inline-block;
   width: 16px;
@@ -107,10 +106,12 @@ body .slickgrid-container .grid-canvas .slick-cell {
   background-position: left -13px;
 }
 
+.slick-header-column.ui-state-default input[type=checkbox]:checked + label,
 .slick-cell-checkboxsel input[type=checkbox]:checked + label {
   background-position-x: -68px;
 }
-
+.slick-header-column.ui-state-default input[type=checkbox] + label:before,
+.slick-header-column.ui-state-default input[type=checkbox]:checked + label:before,
 .slick-cell-checkboxsel input[type=checkbox] + label:before,
 .slick-cell-checkboxsel input[type=checkbox]:checked + label:before {
   display: none;
