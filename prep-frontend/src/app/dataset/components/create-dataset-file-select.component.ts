@@ -1,7 +1,5 @@
 /* tslint:disable */
-import {ChangeDetectorRef, Injector, Component, ElementRef, EventEmitter, Output, Input, ViewChild, OnInit, OnDestroy} from '@angular/core';
-import {CookieService} from 'ngx-cookie-service';
-import {CookieConstant} from '../../common/constants/cookie.constant';
+import {Component, EventEmitter, Output, Input, OnInit, OnDestroy} from '@angular/core';
 import {Dataset} from '../domains/dataset';
 import {DatasetsService} from '../services/datasets.service';
 import {CommonConstant} from '../../common/constants/common.constant';
@@ -12,10 +10,15 @@ import {CommonConstant} from '../../common/constants/common.constant';
   templateUrl: './create-dataset-file-select.component.html'
 })
 
-
-export class CreateDatasetFileSelectComponent {
+export class CreateDatasetFileSelectComponent implements OnInit{
   @Output()
   public readonly onClose = new EventEmitter();
   @Output()
   public readonly onGotoStep = new EventEmitter();
+  @Input()
+  public datasetFiles: Dataset.DatasetFile[] = [];
+
+  ngOnInit(): void {
+    //
+  }
 }

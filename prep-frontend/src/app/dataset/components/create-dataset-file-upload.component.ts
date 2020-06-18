@@ -6,8 +6,6 @@ import {Dataset} from '../domains/dataset';
 import {DatasetsService} from '../services/datasets.service';
 import {CommonConstant} from '../../common/constants/common.constant';
 import * as _ from 'lodash';
-// import {isUndefined} from 'util';
-
 
 declare let plupload: any;
 
@@ -34,7 +32,7 @@ export class CreateDatasetFileUploadComponent implements OnInit, OnDestroy{
   @ViewChild('drop_container2')
   private drop_container2: ElementRef;
 
-  public datasetFiles: any = [];
+  public datasetFiles: Dataset.DatasetFile[] = [];
   // file uploader
   public chunk_uploader: any;
   public uploadNegoParams: UploadNegotitationParameters;
@@ -356,9 +354,7 @@ export class CreateDatasetFileUploadComponent implements OnInit, OnDestroy{
         // datasetFile.storageType = this._getStorageType(this.fileLocation);
         let fileFormat = this._getFileFormat(this.upFiles[i].fileExtension);
         // console.info('fileFormat', fileFormat);
-        // TODO.
-        datasetFile.fileFormat = Dataset.FILE_FORMAT['fileFormat'];
-        // console.info('fileFormat A', datasetFile.fileFormat);
+        datasetFile.fileFormat = Dataset.FILE_FORMAT[fileFormat];
 
         // Delimiter is , when fileFormat is csv or excel or txt
         const formatWithCommaDel = ['CSV','EXCEL', 'TXT'];
@@ -378,7 +374,6 @@ export class CreateDatasetFileUploadComponent implements OnInit, OnDestroy{
       }
     }
     this.isNext = ( !this.isUploading && this.sucessFileCount > 0) ;
-
     this.chunk_uploader.splice();
   }
 
@@ -497,6 +492,10 @@ export class CreateDatasetFileUploadComponent implements OnInit, OnDestroy{
     } else {
       return formats[0].fileFormat
     }
+  }
+
+  public returnDatasetFiles() {
+    return this.datasetFiles;
   }
 
   public next() {

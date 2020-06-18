@@ -118,7 +118,15 @@ export class LnbComponent {
     createDatasetComponentRef.instance.onDone.subscribe(() => {
       createDatasetComponentRef.destroy();
       // 현재 페이지가 main 또는 dataflow list 화면인 경우 리스트 갱신 필요
-      this.createDataflowAfterCheck();
+      this.createDatasetAfterCheck();
     });
+  }
+
+  private createDatasetAfterCheck() {
+    const url = this.router.url;
+    const datasetListPath = `${this.ROUTER_URLS.Managements.ROOT}/${this.ROUTER_URLS.Managements.PREP_BOT}/${this.ROUTER_URLS.Managements.DATASETS}`;
+    if (url.indexOf(datasetListPath) > -1) {
+      this.onPageRefresh.emit();
+    }
   }
 }

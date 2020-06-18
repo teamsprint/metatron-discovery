@@ -9,6 +9,7 @@ export namespace Dataset {
     description: string;
     custom: string;
     importType: IMPORT_TYPE;
+    connId: string;
     rsType: RS_TYPE;
     dbName: string;
     tblName: string;

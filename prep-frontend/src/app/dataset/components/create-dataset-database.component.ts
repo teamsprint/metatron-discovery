@@ -8,7 +8,6 @@ import {ConnectionService} from '../../connection/services/connection.service';
 import {LoadingService} from '../../common/services/loading/loading.service';
 import {Page, PageResult} from '../../common/constants/page';
 import {finalize} from 'rxjs/operators';
-import {isNullOrUndefined} from 'util';
 
 @Component({
   selector: 'create-dataset-database',
@@ -39,6 +38,9 @@ export class CreateDatasetDatabaseComponent implements OnInit{
   public tableList: string[] = [];
   public isTableListShow = false;
   public selectedTable: object = {name: null};
+
+  // Preview Data
+  public enableNextStep = false;
 
 
   constructor(private readonly datasetService: DatasetsService,
@@ -80,30 +82,56 @@ export class CreateDatasetDatabaseComponent implements OnInit{
 
   public changedConnection(temp: Connection.Entity) {
     this.connectionValidation = undefined;
+    this.enableNextStep = false;
     if (this.selectedConnection.connId !== temp.connId) {
       this.selectedDatabase['name'] = null;
       this.selectedTable['name'] = null;
+      this.databaseList = [];
+      this.tableList = [];
       this.checkConnection(temp);
     }
     this.connectionListShow = !this.connectionListShow;
   }
 
   public changedDatabase(database) {
+    this.enableNextStep = false;
     if (this.selectedDatabase['name'] !== database) {
       this.selectedTable['name'] = null;
       this.selectedDatabase['name'] = database;
+      this.tableList = [];
       this.getTables(database);
     }
     this.isDatabaseListShow = false;
   }
 
   public changedTable(table) {
+    this.enableNextStep = false;
     if (this.selectedTable['name'] !== table) {
       this.selectedTable['name'] = table;
       this.getPreviewData(this.selectedDatabase['name'], table);
     }
     this.isTableListShow = false;
   }
+
+
+  public returnDbTypeDataset() {
+    const dataset: Dataset.Entity = new Dataset.Entity();
+    dataset.connId = this.selectedConnection.connId;
+    dataset.tblName = this.selectedTable['name'];
+    dataset.dbName = this.selectedDatabase['name'];
+    dataset.rsType = Dataset.RS_TYPE.TABLE;
+    dataset.queryStmt = this.selectedTable['name'];
+    return dataset;
+  }
+
+  public next() {
+    if (this.connectionValidation !== Connection.ConnectionValid.ENABLE_CONNECTION) return;
+    if (this.selectedDatabase['name'] === null) return;
+    if (this.selectedTable['name'] === null) return;
+    if (!this.enableNextStep) return;
+    this.onGotoStep.emit('create-dataset-name');
+  }
+
 
   private getConnections(page: Page) {
     this.loadingService.show();
@@ -198,6 +226,7 @@ export class CreateDatasetDatabaseComponent implements OnInit{
         if (!result) {
           return;
         }
+        this.enableNextStep = true;
         // if (result && result.hasOwnProperty('tables')) {
         //   result['tables'].forEach((item) => {
         //     this.tableList.push(item['name']);
@@ -240,5 +269,5 @@ export class CreateDatasetDatabaseComponent implements OnInit{
     return false;
   }
 
-  
+
 }

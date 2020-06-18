@@ -1,9 +1,10 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {CommonConstant} from '../../common/constants/common.constant';
 import {Page} from '../../common/constants/page';
 import {CommonUtil} from '../../common/utils/common-util';
 import {Dataset} from '../domains/dataset';
+import {of} from 'rxjs';
 import * as _ from 'lodash';
 
 @Injectable()
@@ -12,8 +13,18 @@ export class DatasetsService {
   constructor(private readonly http: HttpClient) {
   }
 
-  createDataset() {
-    return this.http.post(``, {});
+  createDataset(dataset: Dataset.Entity) {
+    const url = `${CommonConstant.API_CONSTANT.API_URL}/datasets`;
+
+    if (!dataset) {
+      return of(new HttpErrorResponse({
+        url,
+        status: 400,
+        statusText: 'Invalid connection value'
+      }));
+    }
+
+    return this.http.post(url, JSON.stringify(dataset));
   }
 
   getDataset() {

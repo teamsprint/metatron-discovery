@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Output, Input} from '@angular/core';
+import {Component, EventEmitter, Output, Input, OnInit} from '@angular/core';
 
 @Component({
   selector: 'create-dataset-type',
@@ -11,4 +11,3 @@ export class CreateDatasetTypeComponent {
   @Output()
   public readonly onGotoStep = new EventEmitter();
 }
-

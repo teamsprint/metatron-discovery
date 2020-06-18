@@ -1,0 +1,69 @@
+<!-- box popup -->
+<div class="pb-box-popup">
+  <a href="javascript:" class="pb-btn-pop-close" (click)="onClose.emit()"></a>
+  <!-- step -->
+  <div class="pb-ui-step" *ngIf="importType === importDBType">
+    <span class="pb-txt-step" (click)="onGotoStep.emit('create-dataset-type')" style="cursor: pointer;">1</span>
+    <span class="pb-txt-step" (click)="onGotoStep.emit('create-dataset-database')" style="cursor: pointer;">2</span>
+    <span class="pb-txt-step is-selected">3</span>
+  </div>
+  <!-- //step -->
+  <!-- top -->
+  <div class="pb-popup-top pb-clear">
+    <div class="pb-txt-title">CREATE DATASET</div>
+
+  </div>
+  <!-- //top -->
+  <!-- contents -->
+  <div class="pb-popup-contents ">
+    <div class="pb-wrap-connect type-connect">
+      <!-- box file detail -->
+      <div class="pb-box-file-detail">
+        <table class="pb-table-det">
+          <colgroup>
+            <col width="125px">
+            <col width="*">
+          </colgroup>
+          <tbody>
+
+
+          </tbody>
+        </table>
+      </div>
+      <!-- //box file detail -->
+
+      <!-- create -->
+      <div class="pb-ui-create">
+        <!-- form create -->
+        <div class="pb-form-create">
+          <div class="pb-create-label">Name</div>
+          <div class="pb-form-edit">
+            <input type="text" class="pb-component-input" maxlength="50" placeholder="Please enter a name" [(ngModel)]="name" (ngModelChange)="name = $event; isNameError = undefined;">
+            <span class="pb-form-error" *ngIf="isNameError">Required</span>
+          </div>
+        </div>
+        <!-- //form create -->
+        <!-- form create -->
+        <div class="pb-form-create">
+          <div class="pb-create-label">Description</div>
+          <div class="pb-form-edit">
+            <input type="text" class="pb-component-input" maxlength="150" placeholder="Please enter a description" [(ngModel)]="description">
+          </div>
+        </div>
+        <!-- //form create -->
+
+      </div>
+      <!-- //create -->
+
+    </div>
+
+  </div>
+  <!-- //contents -->
+  <div class="pb-popup-bottom ">
+    <a href="javascript:" class="pb-component-btn-pop type-line" (click)="onGotoStep.emit('create-dataset-database')">PREV</a>
+    <a href="javascript:" class="pb-component-btn-pop type-line" (click)="onClose.emit()">CANCEL</a>
+    <a href="javascript:" class="pb-component-btn-pop type-bg" (click)="complete()">DONE</a>
+
+  </div>
+</div>
+<!-- //box popup -->
