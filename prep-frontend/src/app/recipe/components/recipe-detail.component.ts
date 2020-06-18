@@ -143,6 +143,7 @@ export class RecipeDetailComponent implements OnInit {
       rowHeight: 26,
       enableCheckboxSelector: true,
       enableRowSelection: true,
+      showCellSelection: false,
       enableAutoResize: true,
       enableCellNavigation: true,
       showCustomFooter: true, // display some metrics in the bottom custom footer
