@@ -5,7 +5,7 @@ const PROXY_CONFIG = [
       "/oauth",
       "/extensions"
     ],
-    target: "http://192.168.100.212:8180",
+    target: "http://localhost:8180",
     secure: false
   },
   {
