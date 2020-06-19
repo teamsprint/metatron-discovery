@@ -79,10 +79,9 @@
         <!-- //setting -->
         <div class="pb-wrap-grid">
           <angular-slickgrid
-            gridId="grid2"
+            [gridId]="COMMON_UTIL.Generate.makeUUID()"
             [columnDefinitions]="columnDefinitions"
             [gridOptions]="gridOptions"
-            [dataset]="dataset"
             (onAngularGridCreated)="angularGridReady($event)">
           </angular-slickgrid>
         </div>
