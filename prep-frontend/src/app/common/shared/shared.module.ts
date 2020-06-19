@@ -4,13 +4,18 @@ import {FormsModule} from '@angular/forms';
 import {NgPipesModule} from 'ngx-pipes';
 import {ClickOutsideModule} from 'ng-click-outside';
 import {DragulaModule, DragulaService} from 'ng2-dragula';
+import {NgxEchartsModule} from 'ngx-echarts';
+import * as echarts from 'echarts';
 
 const MODULES = [
   CommonModule,
   FormsModule,
   NgPipesModule,
   ClickOutsideModule,
-  DragulaModule
+  DragulaModule,
+  NgxEchartsModule.forRoot({
+    echarts
+  })
 ];
 
 const COMPONENTS = [];
