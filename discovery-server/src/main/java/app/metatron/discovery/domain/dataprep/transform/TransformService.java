@@ -6,6 +6,7 @@ import app.metatron.dataprep.PrepContext;
 
 import app.metatron.dataprep.teddy.exceptions.TeddyException;
 import app.metatron.discovery.domain.dataprep.PrepProperties;
+import app.metatron.discovery.domain.dataprep.SwapRequest;
 import app.metatron.discovery.domain.dataprep.PreviewLineService;
 import app.metatron.discovery.domain.dataprep.entity.*;
 import app.metatron.discovery.domain.dataprep.exceptions.PrepException;
@@ -20,6 +21,7 @@ import app.metatron.dataprep.teddy.DataFrame;
 import app.metatron.dataprep.teddy.exceptions.CannotSerializeIntoJsonException;
 //import app.metatron.discovery.domain.dataprep.teddy.DataFrame;
 //import app.metatron.discovery.domain.dataprep.teddy.exceptions.CannotSerializeIntoJsonException;
+import com.facebook.presto.jdbc.internal.guava.collect.Lists;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.hibernate.Hibernate;
 import org.hibernate.proxy.HibernateProxy;
@@ -382,6 +384,91 @@ public class TransformService {
         return new PrepHistogramResponse(colHists);
     }
 
+
+    @Transactional(rollbackFor = Exception.class)
+    public List<String> swap_upstream(Dataflow dataflow, SwapRequest swapRequest)
+            throws Exception {
+        String oldDsId = swapRequest.getOldDsId();
+        String newDsId = swapRequest.getNewDsId();
+        String recipeId = swapRequest.getRecipeId();
+
+        List<String> affectedDsIds = Lists.newArrayList();
+        List<String> dataflowDsIds = Lists.newArrayList();
+
+        if (recipeId != null) {         // if a single (downstream) dataset is specified
+            dataflowDsIds.add(recipeId);
+        } else {                            // else, all datasets in the dataflow become the targets
+            List<DataflowDiagram> diagrams = dataflow.getDiagrams();
+            for (DataflowDiagram diagram : diagrams) {
+                if(diagram.getRecipe()==null) {
+                    continue;
+                }
+                dataflowDsIds.add(diagram.getRecipe().getRecipeId());
+            }
+        }
+
+        // Replace all occurrence of oldDsid in whole rule strings in the targets.
+        for (RecipeRule rule : recipeRuleRepository.findAll()) {
+            if (!dataflowDsIds.contains(rule.getRecipe().getRecipeId())) {
+                continue;
+            }
+
+            String ruleString = rule.getRuleString();
+            if (!ruleString.contains(oldDsId)) {
+                continue;
+            }
+
+            String newRuleString = transformRuleService.getCreateRuleString(newDsId);
+            // String newJsonRuleString = rule.getJsonRuleString().replaceAll(oldDsId, newDsId);
+            String newJsonRuleString = rule.getUiContext().replaceAll(oldDsId, newDsId);
+            String newShortRuleString = transformRuleService.shortenRuleString(newRuleString);
+
+            rule.setRuleString(newRuleString);
+            // rule.setJsonRuleString(newJsonRuleString);
+            rule.setUiContext(newJsonRuleString);
+            rule.setShortRuleString(newShortRuleString);
+
+            // Uncache the affected target so that it can be reloaded
+            pc.remove(rule.getRecipe().getRecipeId());
+
+            if (!affectedDsIds.contains(rule.getRecipe().getRecipeId())) {
+                // It must be wrangled dataset, but not chaining wrangled
+                affectedDsIds.add(rule.getRecipe().getRecipeId());
+            }
+        }
+
+        // If a wrangled dataset is specified, rearranging datasets is not necessary.
+        // The UI adds the new dataset in advance (if needed).
+        // And, the UI will not specify a wrangled dataset if the old dataset is the last one, so that it can be removed.
+        if (recipeId != null) {
+            return affectedDsIds;
+        }
+
+//        Dataset newDataset = datasetRepository.findOne(newDsId);
+//
+//        List<PrDataset> datasets = dataflow.getDatasets();
+//        for (PrDataset dataset : datasets) {
+//            if (dataset.getDsId().equals(oldDsId)) {
+//                datasets.remove(dataset);
+//                if (!datasets.contains(newDataset)) {
+//                    datasets.add(newDataset);
+//                }
+//                dataflow.setDatasets(datasets);
+//                dataflowRepository.save(dataflow);
+//                break;
+//            }
+//        }
+//        dataflowRepository.flush();
+
+        return affectedDsIds;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void after_swap(List<String> affectedDsIds) throws Exception {
+        for (String affectedDsId : affectedDsIds) {
+            previewLineService.savePreviewLines(affectedDsId);
+        }
+    }
 
 
     private TransformResponse postTransform(String recipeId, TransformService.OP_TYPE op)

@@ -17,6 +17,7 @@ import app.metatron.dataprep.teddy.DataFrame;
 import app.metatron.discovery.domain.dataprep.PreviewLineService;
 import app.metatron.discovery.domain.dataprep.entity.Dataset;
 import app.metatron.discovery.domain.dataprep.entity.DatasetProjections;
+import app.metatron.discovery.domain.dataprep.entity.DatasetResponse;
 import app.metatron.discovery.domain.dataprep.exceptions.PrepMessageKey;
 import app.metatron.discovery.domain.dataprep.repository.DatasetRepository;
 
@@ -94,23 +95,19 @@ public class DatasetController {
             @RequestParam(value = "preview", required = false, defaultValue = "false") Boolean preview
     ) {
         Dataset dataset;
-        Resource<DatasetProjections.DefaultProjection> projectedDataset;
+        DatasetResponse datasetResponse = null;
         try {
             dataset = getDatasetEntity(dsId);
             if (preview) {
                 DataFrame dataFrame = previewLineService.getPreviewLines(dsId);
                 dataset.setGridResponse(dataFrame);
             }
-
-            DatasetProjections.DefaultProjection projection = projectionFactory
-                    .createProjection(DatasetProjections.DefaultProjection.class, dataset);
-            projectedDataset = new Resource<>(projection);
+            datasetResponse = this.datasetService.getDatasetFullInfo(dataset);
         } catch (Exception e) {
             LOGGER.error("getDataset(): caught an exception: ", e);
             throw datasetError(e);
         }
-
-        return ResponseEntity.status(HttpStatus.SC_OK).body(projectedDataset);
+        return ResponseEntity.status(HttpStatus.SC_OK).body(datasetResponse);
     }
 
     private Dataset getDatasetEntity(String dsId) {

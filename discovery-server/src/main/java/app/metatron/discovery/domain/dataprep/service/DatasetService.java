@@ -13,8 +13,10 @@
  */
 package app.metatron.discovery.domain.dataprep.service;
 
-import app.metatron.discovery.domain.dataprep.entity.Dataset;
+import app.metatron.discovery.domain.dataprep.entity.*;
 import app.metatron.discovery.domain.dataprep.DatasetFileService;
+import app.metatron.discovery.domain.dataprep.repository.ConnectionRepository;
+import app.metatron.discovery.domain.dataprep.repository.DataflowRepository;
 import app.metatron.dataprep.teddy.DataFrame;
 import app.metatron.dataprep.teddy.exceptions.TeddyException;
 
@@ -24,6 +26,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static app.metatron.discovery.domain.dataprep.exceptions.PrepMessageKey.MSG_DP_ALERT_FILE_KEY_MISSING;
 import static app.metatron.discovery.domain.dataprep.exceptions.PrepMessageKey.MSG_DP_ALERT_IMPORT_TYPE_IS_WRONG;
@@ -40,7 +44,74 @@ public class DatasetService {
     @Autowired
     private ConnectionService connectionService;
 
+    @Autowired
+    private ConnectionRepository connectionRepository;
+
+    @Autowired
+    private DataflowRepository dataflowRepository;
+
     private String previewSize = "50";
+
+    public DatasetResponse getDatasetFullInfo(Dataset dataset)  {
+        DatasetResponse datasetResponse = new DatasetResponse();
+        datasetResponse.setDsId(dataset.getDsId());
+        datasetResponse.setName(dataset.getName());
+        datasetResponse.setDescription(dataset.getDescription());
+        datasetResponse.setCustom(dataset.getCustom());
+        datasetResponse.setImportType(dataset.getImportType());
+        datasetResponse.setDbName(dataset.getDbName());
+        datasetResponse.setTblName(dataset.getTblName());
+        datasetResponse.setQueryStmt(dataset.getQueryStmt());
+        datasetResponse.setFileFormat(dataset.getFileFormat());
+        datasetResponse.setFilenameBeforeUpload(dataset.getFilenameBeforeUpload());
+        datasetResponse.setSheetName(dataset.getSheetName());
+        datasetResponse.setStoredUri(dataset.getStoredUri());
+        datasetResponse.setDelimiter(dataset.getDelimiter());
+        datasetResponse.setQuoteChar(dataset.getQuoteChar());
+        datasetResponse.setSerializedPreview(dataset.getSerializedPreview());
+        datasetResponse.setManualColumnCount(dataset.getManualColumnCount());
+        datasetResponse.setTotalLines(dataset.getTotalLines());
+        datasetResponse.setTotalBytes(dataset.getTotalBytes());
+        String connId = dataset.getConnId();
+        if(connId!=null && !connId.isEmpty()) {
+            Connection connection = connectionRepository.findOne(connId);
+            if(connection != null) {
+                datasetResponse.setImplementor(connection.getImplementor());
+                datasetResponse.setHostname(connection.getHostname());
+                datasetResponse.setPort(connection.getPort());
+                datasetResponse.setDatabase(connection.getDatabase());
+                datasetResponse.setCatalog(connection.getCatalog());
+                datasetResponse.setSid(connection.getSid());
+                datasetResponse.setUrl(connection.getUrl());
+                datasetResponse.setConnType(connection.getConnType());
+            }
+        }
+        List<Dataflow> dataflows = this.dataflowRepository.findByNameContainingOrderByCreatedTimeAsc("");
+        List<Dataflow> linkDataflows = new ArrayList<>();
+        if(dataflows!=null && dataflows.size()>0) {
+            for(Dataflow dataflow :dataflows) {
+                List<DataflowDiagram> diagrams = dataflow.getDiagrams();
+                if(diagrams != null) {
+                    for(int i=0; i< diagrams.size(); i++) {
+                        if(dataset.getDsId().equals(diagrams.get(i).getDataset().getDsId())) {
+                            linkDataflows.add(dataflow);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        // 불필요 데이터 제거
+        if(linkDataflows.size()>0) {
+            for(Dataflow dataflow :linkDataflows) {
+                dataflow.setDiagrams(null);
+            }
+        }
+        datasetResponse.setGridResponse(dataset.getGridResponse());
+        datasetResponse.setDataflows(linkDataflows);
+        return datasetResponse;
+    }
+
 
     public void changeFileFormatToCsv(Dataset dataset) throws Exception {
         String storedUri = dataset.getStoredUri();

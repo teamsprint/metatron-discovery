@@ -14,6 +14,7 @@
 package app.metatron.discovery.domain.dataprep.service;
 
 import app.metatron.discovery.domain.dataprep.PrepParamDatasetIdList;
+import app.metatron.discovery.domain.dataprep.SwapRequest;
 import app.metatron.discovery.domain.dataprep.Upstream;
 import app.metatron.discovery.domain.dataprep.entity.*;
 import app.metatron.discovery.domain.dataprep.exceptions.PrepErrorCodes;
@@ -294,4 +295,24 @@ public class DataflowController {
         }
         return ResponseEntity.status(HttpStatus.SC_OK).body(reponseDataflow);
     }
+
+//    @RequestMapping(value = "/{dfId}/swap_upstream", method = RequestMethod.POST, produces = "application/json")
+//    public
+//    @ResponseBody
+//    ResponseEntity<?> swapUpstream(
+//            @PathVariable("dfId") String dfId,
+//            @RequestBody SwapRequest swapRequest
+//    ) {
+//        Dataflow dataflow = dataflowRepository.findOne(dfId);
+//
+//        try {
+//            List<String> affectedDsIds = transformService.swap_upstream(dataflow, swapRequest);
+//            transformService.after_swap(affectedDsIds);
+//        } catch (Exception e) {
+//            LOGGER.error("swap_upstream(): caught an exception: ", e);
+//            throw PrepException.create(PrepErrorCodes.PREP_DATAFLOW_ERROR_CODE, e);
+//        }
+//
+//        return ResponseEntity.status(HttpStatus.SC_OK).body(dataflow);
+//    }
 }
