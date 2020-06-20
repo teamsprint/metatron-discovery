@@ -52,6 +52,10 @@ export class CreateDatasetComponent {
     }
     this.step = step;
   }
+  public fileSelectPageGotoStep(step: string) {
+
+    this.step = step;
+  }
 
   public databasePageGotoStep(step: string) {
     if (step === 'create-dataset-name') {

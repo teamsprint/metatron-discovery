@@ -40,7 +40,7 @@ export namespace Dataset {
   export class SheetInfo {
     selected: boolean;
     data: object;
-    fields: object;
+    fields: object[] = [];
     totalRows?: number;
     valid: boolean;
     sheetName?: string;
@@ -82,7 +82,8 @@ export namespace Dataset {
   export enum FILE_FORMAT {
     CSV = 'CSV',
     EXCEL = 'EXCEL',
-    JSON = 'JSON'
+    JSON = 'JSON',
+    TXT = 'TXT'
   }
 
   export enum RS_TYPE {

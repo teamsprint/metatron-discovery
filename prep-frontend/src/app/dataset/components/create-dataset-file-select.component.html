@@ -3,10 +3,10 @@
   <a href="javascript:" class="pb-btn-pop-close" (click)="onClose.emit()"></a>
   <!-- step -->
   <div class="pb-ui-step">
-    <span class="pb-txt-step">1</span>
-    <span class="pb-txt-step">2</span>
+    <span class="pb-txt-step" (click)="onGotoStep.emit('create-dataset-type')" style="cursor: pointer;">1</span>
+    <span class="pb-txt-step" (click)="onGotoStep.emit('create-dataset-file-upload')" style="cursor: pointer;">2</span>
     <span class="pb-txt-step is-selected">3</span>
-    <span class="pb-txt-step">4</span>
+    <span class="pb-txt-step" style="cursor: pointer;">4</span>
   </div>
   <!-- //step -->
   <!-- top -->
@@ -20,7 +20,52 @@
     <div class="pb-wrap-connect type-connect">
 
 
+      <!-- box select -->
+      <div class="pb-box-select">
+        <ul class="pb-list-select" *ngFor="let file of datasetFiles; let i = index">
+          <li [ngClass]="{'is-selected':currDSIndex === i && file.fileFormat !== 'EXCEL'}">
 
+            <!--<ng-container *ngIf="file.fileFormat !== fileFormat.EXCEL">-->
+            <div class="pb-ui-select " (click)="selectFile($event,i)" *ngIf="file.fileFormat !== 'EXCEL'">
+              <label class="pb-compomnent-checkbox type-checkbox" (click)="checkGroup($event, i)">
+                <input type="checkbox" [checked]="file.selected">
+                <i></i>
+              </label>
+              <span class="pb-txt-checkbox">({{file.fileExtension}}) {{file.fileName}}</span>
+              <em class="ddp-icon-error2" [ngStyle]="{'display': file.error?'':'none'}"></em>
+            </div>
+            <!--</ng-container>-->
+
+            <!--<ng-container *ngIf="file.fileFormat === fileFormat.EXCEL">-->
+            <div class="pb-ui-select " (click)="selectFile($event,i)" *ngIf="file.fileFormat === 'EXCEL'">
+              <label class="pb-compomnent-checkbox type-checkbox" (click)="checkGroup($event, i)">
+                <input type="checkbox" [checked]="file.selected">
+                <i></i>
+              </label>
+              <span class="pb-txt-checkbox">({{file.fileExtension}}) {{file.fileName}}</span>
+              <em class="ddp-icon-error2" [ngStyle]="{'display': file.error?'':'none'}"></em>
+            </div>
+            <!--</ng-container>-->
+
+
+            <ul class="pb-list-sub" *ngFor="let item of file.sheetInfo; let j = index">
+              <li class="" [ngClass]="{'is-selected':currSheetIndex===j && currDSIndex===i}" *ngIf="item.sheetName">
+
+                <div class="pb-ui-select " (click)="selectSheet($event, i, item.sheetName, j)">
+                  <label class="pb-compomnent-checkbox type-checkbox" (click)="checkSheet($event, i, j)">
+                    <input type="checkbox" [checked]="item.selected">
+                    <i></i>
+                  </label>
+                  <span class="pb-txt-checkbox">{{item.sheetName}}</span>
+                  <span class="pb-txt-checkbox">{{item.sheetName}}</span>
+                </div>
+              </li>
+            </ul>
+          </li>
+        </ul>
+
+      </div>
+      <!-- //box select -->
 
 
     </div>
@@ -28,7 +73,7 @@
     </div>
     <!-- //contents -->
     <div class="pb-popup-bottom ">
-      <a href="javascript:;"  class="pb-component-btn-pop type-line">PREV</a>
+      <a href="javascript:;"  class="pb-component-btn-pop type-line" (click)="onGotoStep.emit('create-dataset-file-upload')">PREV</a>
       <a href="javascript:;" (click)="onClose.emit()" class="pb-component-btn-pop type-line">CANCEL</a>
       <a href="javascript:;"  class="pb-component-btn-pop type-bg">NEXT</a>
     </div>
