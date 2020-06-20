@@ -83,6 +83,21 @@ export class DatasetListComponent implements OnInit{
     return rtn;
   }
 
+  public datasetDetalInfo(dsIs: string) {
+    // this.loadingService.show();
+    // this.datasetService
+    //   .getDataset(dsIs)
+    //   .pipe(finalize(() => this.loadingService.hide()))
+    //   .subscribe(dataset => {
+    //     if (!dataset) {
+    //       return;
+    //     }
+    //   });
+    this.router.navigate([RouterUrls.Managements.getSetDetailUrl(dsIs)]).then();
+
+  }
+
+
   public openCreateDatasetPopup() {
     this.lnbComponent.openCreateDatasetPopup();
     //

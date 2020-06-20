@@ -15,6 +15,7 @@ import {DataflowDetailComponent} from '../dataflow/components/dataflow-detail.co
 import {GnbComponent} from './components/gnb.component';
 import {ConnectionListComponent} from '../connection/components/connection-list.component';
 import {DatasetListComponent} from '../dataset/components/dataset-list.component';
+import {DatasetDetailComponent} from '../dataset/components/dataset-detail.component';
 import {LnbModule} from '../lnb/lnb.module';
 import {DataflowService} from '../dataflow/services/dataflow.service';
 import {RecipeDetailComponent} from '../recipe/components/recipe-detail.component';
@@ -56,9 +57,21 @@ import {RecipeModule} from '../recipe/recipe.module';
           },
           {
             path: `${RouterUrls.Managements.ROOT}/${RouterUrls.Managements.PREP_BOT}/${RouterUrls.Managements.DATASETS}`,
-            component: DatasetListComponent,
-            canActivate: [
-              UserVerifyGuard
+            children: [
+              {
+                path: '',
+                component: DatasetListComponent,
+                canActivate: [
+                  UserVerifyGuard
+                ]
+              },
+              {
+                path: ':id',
+                component: DatasetDetailComponent,
+                canActivate: [
+                  UserVerifyGuard
+                ]
+              }
             ]
           },
           {

@@ -7,7 +7,10 @@ import {Connection} from '../../connection/domains/connection';
 import {ConnectionService} from '../../connection/services/connection.service';
 import {LoadingService} from '../../common/services/loading/loading.service';
 import {Page, PageResult} from '../../common/constants/page';
+import {AngularGridInstance, Column, FieldType, Formatters, GridOption, SelectedRange} from 'angular-slickgrid';
 import {finalize} from 'rxjs/operators';
+import {CommonUtil} from '../../common/utils/common-util';
+
 
 @Component({
   selector: 'create-dataset-database',
@@ -22,6 +25,10 @@ export class CreateDatasetDatabaseComponent implements OnInit{
   public readonly onGotoStep = new EventEmitter();
   private readonly page = new Page();
   private pageResult: PageResult = new PageResult();
+
+
+  public readonly COMMON_UTIL = CommonUtil;
+
 
   // Connection
   public connectionList: Connection.Entity[] = [];
@@ -42,6 +49,33 @@ export class CreateDatasetDatabaseComponent implements OnInit{
   // Preview Data
   public enableNextStep = false;
 
+  columnDefinitions: Column[] = [];
+
+  gridOptions: GridOption = {
+    autoResize: {
+      containerId: 'connction-table-container',
+      sidePadding: 10
+    },
+    rowSelectionOptions: {
+      selectActiveRow: false
+    },
+    rowHeight: 26,
+    enableAutoResize: true,
+    enableCellNavigation: true,
+    showCustomFooter: true,
+    enableExcelCopyBuffer: true,
+    excelCopyBufferOptions: {
+      onCopyCells: (e, args: { ranges: SelectedRange[] }) => console.log('onCopyCells', args.ranges),
+      onPasteCells: (e, args: { ranges: SelectedRange[] }) => console.log('onPasteCells', args.ranges),
+      onCopyCancelled: (e, args: { ranges: SelectedRange[] }) => console.log('onCopyCancelled', args.ranges),
+    }
+  };
+
+  dataset: Array<object> = [];
+  gridInstance: AngularGridInstance;
+
+  private gridUseRowId: string = 'connectin_grid_id';
+
 
   constructor(private readonly datasetService: DatasetsService,
               private readonly loadingService: LoadingService,
@@ -52,10 +86,16 @@ export class CreateDatasetDatabaseComponent implements OnInit{
     this.initialize();
     this.getConnections(this.page);
   }
+
   private initialize() {
     this.page.page = 0;
     this.page.size = 100;
     this.page.sort = CommonConstant.API_CONSTANT.PAGE_SORT_MODIFIED_TIME_DESC;
+  }
+
+  private initializeGrid() {
+    this.columnDefinitions = [];
+    this.dataset = [];
   }
 
   public toggleList(target: string) {
@@ -91,6 +131,7 @@ export class CreateDatasetDatabaseComponent implements OnInit{
       this.checkConnection(temp);
     }
     this.connectionListShow = !this.connectionListShow;
+    this.initializeGrid();
   }
 
   public changedDatabase(database) {
@@ -102,6 +143,7 @@ export class CreateDatasetDatabaseComponent implements OnInit{
       this.getTables(database);
     }
     this.isDatabaseListShow = false;
+    this.initializeGrid();
   }
 
   public changedTable(table) {
@@ -111,6 +153,7 @@ export class CreateDatasetDatabaseComponent implements OnInit{
       this.getPreviewData(this.selectedDatabase['name'], table);
     }
     this.isTableListShow = false;
+    this.initializeGrid();
   }
 
 
@@ -226,16 +269,33 @@ export class CreateDatasetDatabaseComponent implements OnInit{
         if (!result) {
           return;
         }
+
+        this.initializeGrid();
+        if (result && result.hasOwnProperty('fields')) {
+          result['fields'].forEach((item) => {
+            const columnValue = {};
+            columnValue['id']= item['name'];
+            columnValue['name']= item['name'];
+            columnValue['field']= item['name'];
+            columnValue['sortable'] = false;
+            columnValue['type'] = FieldType.string;
+            columnValue['minWidth'] = 100;
+            this.columnDefinitions.push(columnValue as Column);
+          });
+        }
+
+        if (result && result.hasOwnProperty('data')) {
+          let idnum = 0;
+          result['data'].forEach((item) => {
+            item['connectin_grid_id'] = this.gridUseRowId + '_' + idnum;
+            idnum++;
+            this.dataset.push(item);
+          });
+        }
+
         this.enableNextStep = true;
-        // if (result && result.hasOwnProperty('tables')) {
-        //   result['tables'].forEach((item) => {
-        //     this.tableList.push(item['name']);
-        //   });
-        // }
       });
   }
-
-
 
   private getConnectionParams(temp: Connection.Entity): Connection.Entity {
     const connectionParam: Connection.Entity = new Connection.Entity();
@@ -267,6 +327,11 @@ export class CreateDatasetDatabaseComponent implements OnInit{
       return true;
     }
     return false;
+  }
+
+  angularGridReady(gridInstance: AngularGridInstance) {
+    this.gridInstance = gridInstance;
+    this.gridInstance.dataView.setItems(this.dataset, this.gridUseRowId);
   }
 
 

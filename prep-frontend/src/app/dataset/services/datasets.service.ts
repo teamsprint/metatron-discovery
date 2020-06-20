@@ -27,8 +27,21 @@ export class DatasetsService {
     return this.http.post(url, JSON.stringify(dataset));
   }
 
-  getDataset() {
-    return this.http.get(``);
+  getDataset(dsId: string, preview = 'true') {
+    const url = `${CommonConstant.API_CONSTANT.API_URL}/datasets/${dsId}`;
+
+    if (!dsId) {
+      return of(new HttpErrorResponse({
+        url,
+        status: 400,
+        statusText: 'Invalid connectionId value'
+      }));
+    }
+    let params = {};
+    if (preview) {
+      params = _.merge({ preview }, params);
+    }
+    return this.http.get(url, { params: CommonUtil.Http.makeQueryString(params) });
   }
 
 
@@ -66,7 +79,6 @@ export class DatasetsService {
    */
   public getFileUploadNegotiation() {
     const url = `${CommonConstant.API_CONSTANT.API_URL}/preparationdatasets/file_upload`;
-    // let url = this.API_URL + 'preparationdatasets/file_upload';
     return this.http.get(url);
   }
 }

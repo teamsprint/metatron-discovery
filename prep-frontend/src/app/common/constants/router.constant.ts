@@ -24,6 +24,9 @@ export namespace RouterUrls {
     public static getSetsUrl() {
       return `/${Managements.ROOT}/${Managements.PREP_BOT}/${Managements.DATASETS}`;
     }
+    public static getSetDetailUrl(id: string) {
+      return `/${Managements.ROOT}/${Managements.PREP_BOT}/${Managements.DATASETS}/${id}`;
+    }
 
     public static getFlowsUrl() {
       return `/${Managements.ROOT}/${Managements.PREP_BOT}/${Managements.FLOWS}`;

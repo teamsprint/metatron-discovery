@@ -9,8 +9,10 @@ import {CreateDatasetFileUploadComponent} from './components/create-dataset-file
 import {CreateDatasetFileSelectComponent} from './components/create-dataset-file-select.component';
 import {CreateDatasetDatabaseComponent} from './components/create-dataset-database.component';
 import {CreateDatasetNameComponent} from './components/create-dataset-name.component';
+import {DatasetDetailComponent} from './components/dataset-detail.component';
 import {DatasetsService} from './services/datasets.service';
 import {ConnectionService} from '../connection/services/connection.service';
+import {AngularSlickgridModule} from 'angular-slickgrid';
 
 const COMPONENTS = [
   DatasetListComponent,
@@ -19,7 +21,8 @@ const COMPONENTS = [
   CreateDatasetFileUploadComponent,
   CreateDatasetFileSelectComponent,
   CreateDatasetDatabaseComponent,
-  CreateDatasetNameComponent
+  CreateDatasetNameComponent,
+  DatasetDetailComponent
 ];
 
 
@@ -27,7 +30,8 @@ const COMPONENTS = [
   imports: [
     SharedModule,
     RouterModule,
-    LnbModule
+    LnbModule,
+    AngularSlickgridModule.forRoot({})
   ],
   declarations: [
     ...COMPONENTS
