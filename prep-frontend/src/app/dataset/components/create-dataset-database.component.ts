@@ -1,34 +1,26 @@
 /* tslint:disable */
-import {ChangeDetectorRef, Injector, Component, ElementRef, EventEmitter, Output, Input, ViewChild, OnInit, OnDestroy} from '@angular/core';
+import {Component, EventEmitter, Output, OnInit, OnDestroy} from '@angular/core';
 import {Dataset} from '../domains/dataset';
-import {DatasetsService} from '../services/datasets.service';
 import {CommonConstant} from '../../common/constants/common.constant';
 import {Connection} from '../../connection/domains/connection';
 import {ConnectionService} from '../../connection/services/connection.service';
 import {LoadingService} from '../../common/services/loading/loading.service';
 import {Page, PageResult} from '../../common/constants/page';
-import {AngularGridInstance, Column, FieldType, Formatters, GridOption, SelectedRange} from 'angular-slickgrid';
+import {AngularGridInstance, Column, FieldType, GridOption, SelectedRange} from 'angular-slickgrid';
 import {finalize} from 'rxjs/operators';
-import {CommonUtil} from '../../common/utils/common-util';
-
 
 @Component({
   selector: 'create-dataset-database',
   templateUrl: './create-dataset-database.component.html'
 })
 
-
-export class CreateDatasetDatabaseComponent implements OnInit{
+export class CreateDatasetDatabaseComponent implements OnInit, OnDestroy{
   @Output()
   public readonly onClose = new EventEmitter();
   @Output()
   public readonly onGotoStep = new EventEmitter();
   private readonly page = new Page();
   private pageResult: PageResult = new PageResult();
-
-
-  public readonly COMMON_UTIL = CommonUtil;
-
 
   // Connection
   public connectionList: Connection.Entity[] = [];
@@ -73,12 +65,9 @@ export class CreateDatasetDatabaseComponent implements OnInit{
 
   dataset: Array<object> = [];
   gridInstance: AngularGridInstance;
-
   private gridUseRowId: string = 'connectin_grid_id';
 
-
-  constructor(private readonly datasetService: DatasetsService,
-              private readonly loadingService: LoadingService,
+  constructor(private readonly loadingService: LoadingService,
               public readonly connectionService: ConnectionService) {
   }
 
@@ -86,6 +75,14 @@ export class CreateDatasetDatabaseComponent implements OnInit{
     this.initialize();
     this.getConnections(this.page);
   }
+
+  ngOnDestroy() : void {
+    if (this.gridInstance !== null) {
+      this.gridInstance.destroy();
+      this.gridInstance  = null;
+    }
+  }
+
 
   private initialize() {
     this.page.page = 0;
@@ -119,7 +116,6 @@ export class CreateDatasetDatabaseComponent implements OnInit{
     }
   }
 
-
   public changedConnection(temp: Connection.Entity) {
     this.connectionValidation = undefined;
     this.enableNextStep = false;
@@ -137,8 +133,8 @@ export class CreateDatasetDatabaseComponent implements OnInit{
   public changedDatabase(database) {
     this.enableNextStep = false;
     if (this.selectedDatabase['name'] !== database) {
-      this.selectedTable['name'] = null;
       this.selectedDatabase['name'] = database;
+      this.selectedTable['name'] = null;
       this.tableList = [];
       this.getTables(database);
     }
@@ -155,7 +151,6 @@ export class CreateDatasetDatabaseComponent implements OnInit{
     this.isTableListShow = false;
     this.initializeGrid();
   }
-
 
   public returnDbTypeDataset() {
     const dataset: Dataset.Entity = new Dataset.Entity();
@@ -174,7 +169,6 @@ export class CreateDatasetDatabaseComponent implements OnInit{
     if (!this.enableNextStep) return;
     this.onGotoStep.emit('create-dataset-name');
   }
-
 
   private getConnections(page: Page) {
     this.loadingService.show();
@@ -269,7 +263,6 @@ export class CreateDatasetDatabaseComponent implements OnInit{
         if (!result) {
           return;
         }
-
         this.initializeGrid();
         if (result && result.hasOwnProperty('fields')) {
           result['fields'].forEach((item) => {
@@ -278,7 +271,13 @@ export class CreateDatasetDatabaseComponent implements OnInit{
             columnValue['name']= item['name'];
             columnValue['field']= item['name'];
             columnValue['sortable'] = false;
-            columnValue['type'] = FieldType.string;
+            if(columnValue['type'] === 'STRING') {
+              columnValue['type'] = FieldType.string;
+            } else if (columnValue['type'] === 'TIMESTAMP') {
+              columnValue['type'] = FieldType.dateTime;
+            } else {
+              columnValue['type'] = FieldType.number;
+            }
             columnValue['minWidth'] = 100;
             this.columnDefinitions.push(columnValue as Column);
           });
@@ -333,6 +332,4 @@ export class CreateDatasetDatabaseComponent implements OnInit{
     this.gridInstance = gridInstance;
     this.gridInstance.dataView.setItems(this.dataset, this.gridUseRowId);
   }
-
-
 }
