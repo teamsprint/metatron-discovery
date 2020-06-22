@@ -28,7 +28,7 @@
         <!-- main summary -->
         <div class="pb-ui-main-summary">
           <!-- tag -->
-          <div class="pb-ui-tags">
+          <div class="pb-ui-tags" *ngIf="checkNewTag(dataflow.createdTime)">
             <span class="pb-component-tag type-new">NEW</span>
           </div>
           <!-- // tag -->
@@ -55,7 +55,7 @@
         <span class="pb-data-name">
             <em class="pb-img-photo">
               <img [src]="IMAGE_CONSTANT.DEFAULT_PROFILE_IMAGE_SRC">
-            </em>Admin
+            </em>{{dataflow.createdBy.fullName}}
         </span>
           <span class="pb-data-calen">
             {{ dataflow.createdTime | date: 'yyyy-MM-dd HH:mm' }}

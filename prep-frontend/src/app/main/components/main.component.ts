@@ -27,14 +27,26 @@ export class MainComponent implements OnInit {
   private readonly page = new Page();
   public dataflows: Array<Dataflow.ValueObjects.Select> = [];
 
+  public isNewTagDate: Date;
+  private newTagDay = 5;
   constructor(private readonly router: Router,
               private readonly loadingService: LoadingService,
               private readonly dataflowService: DataflowService) {
   }
 
   ngOnInit(): void {
+    const todate: Date = new Date();
+    this.isNewTagDate = new Date();
+    this.isNewTagDate.setDate(todate.getDate() - this.newTagDay);
     this.initialize();
     this.getDataflows(this.page);
+  }
+  public checkNewTag(createdTime: Date) {
+    const date = new Date(createdTime);
+    if (this.isNewTagDate < date) {
+      return true;
+    }
+    return false;
   }
 
   private initialize() {
@@ -52,9 +64,7 @@ export class MainComponent implements OnInit {
   }
 
   public getDataflows(page: Page) {
-
     this.loadingService.show();
-
     this.dataflowService
       .getDataflows(this.SEARCH_TEXT, page)
       .pipe(finalize(() => this.loadingService.hide()))
