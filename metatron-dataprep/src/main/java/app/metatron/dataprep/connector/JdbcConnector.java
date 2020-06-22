@@ -52,6 +52,7 @@ public class JdbcConnector {
 
   private char quote;
   private String dbTblName;
+  private boolean append;
 
   Connection conn;
   DataFrame df;
@@ -86,6 +87,7 @@ public class JdbcConnector {
     tblName = target.getTblName();
     quote = getIdentifierQuoteChar(driver);
     dbTblName = q(dbName) + "." + q(tblName);
+    append = target.isAppend();
   }
 
   private String q(String str) {
@@ -188,7 +190,7 @@ public class JdbcConnector {
     return df;
   }
 
-  public void save(DataFrame df, boolean append) throws SQLException {
+  public void save(DataFrame df) throws SQLException {
     this.df = df;
     if (append) {
       insertIntoTbl(dbTblName);

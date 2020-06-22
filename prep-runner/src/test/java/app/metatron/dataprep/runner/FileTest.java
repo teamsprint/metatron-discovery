@@ -12,11 +12,10 @@
  * limitations under the License.
  */
 
-package app.metatron.dataprep;
+package app.metatron.dataprep.runner;
 
-import static app.metatron.dataprep.TestUtil.getResourceUrl;
+import static app.metatron.dataprep.runner.TestUtil.getResourceUrl;
 
-import app.metatron.dataprep.runner.PrepRunner;
 import app.metatron.dataprep.teddy.exceptions.TeddyException;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -29,14 +28,23 @@ public class FileTest {
 
   @Test
   public void testBasic() throws URISyntaxException, IOException, TeddyException {
-    List<String> ruleStrs = new ArrayList<>();
-    ruleStrs.add("header rownum: 1");
-    ruleStrs.add("drop col: due");
+    List<String> args = new ArrayList<>();
+    args.addAll(Arrays.asList("--job-spec-file", TestUtil.getResourceUrl("jobspec/file.json")));
+    args.addAll(Arrays.asList("--src-type", "URI", "--src-uri", getResourceUrl("csv/sales_named.csv")));
+    args.addAll(Arrays.asList("--target-type", "URI", "--target-uri", "file:///tmp/test_output.csv", "-v"));
+    PrepRunner.run(args.toArray(new String[0]));
+  }
+
+//  @Test
+  public void testHdfs() throws URISyntaxException, IOException, TeddyException {
+    // Prepare this manually before the test.
+    String srcUri = "hdfs://localhost/tmp/sales_named.csv";
+    String targetUri = "hdfs://localhost/tmp/test_output.csv";
 
     List<String> args = new ArrayList<>();
-    args.addAll(Arrays.asList("--src-type", "URI", "--src-uri", getResourceUrl("csv/sales_named.csv")));
-    args.addAll(Arrays.asList("--target-type", "URI", "--target-uri", "file:///tmp/test_output", "-v"));
-    args.addAll(ruleStrs);
+    args.addAll(Arrays.asList("--job-spec-file", TestUtil.getResourceUrl("jobspec/hdfs.json")));
+    args.addAll(Arrays.asList("--src-type", "URI", "--src-uri", srcUri));
+    args.addAll(Arrays.asList("--target-type", "URI", "--target-uri", targetUri, "-v"));
     PrepRunner.run(args.toArray(new String[0]));
   }
 }

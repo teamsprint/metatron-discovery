@@ -1,0 +1,14 @@
+{
+  "src": {
+    "type": "URI",
+    "limit": 1000000,
+    "ruleStrs": [
+      "header rownum: 1",
+      "drop col: `due`"
+    ]
+  },
+  "target": {
+    "type": "URI",
+    "limit": 1000000
+  }
+}

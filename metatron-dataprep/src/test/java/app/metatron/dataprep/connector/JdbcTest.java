@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-package app.metatron.dataprep.db;
+package app.metatron.dataprep.connector;
 
 import static app.metatron.dataprep.SourceDesc.Type.DATABASE;
 import static app.metatron.dataprep.SourceDesc.Type.URI;
