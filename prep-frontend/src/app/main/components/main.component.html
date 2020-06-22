@@ -11,8 +11,17 @@
          (click)="$event.stopPropagation(); $event.preventDefault(); goDataflowsView()">View more >
       </a>
     </div>
+
+
+    <!-- no data -->
+    <div class="pb-box-nodata" *ngIf="dataflows === null || dataflows.length === 0 " (click)="openCreateDataflowPopup()">
+      새로운 데이터플로우를 생성합니다.
+    </div>
+    <!-- //no data -->
+
+
     <!-- Wrap Main -->
-    <div class="pb-wrap-box">
+    <div class="pb-wrap-box" *ngIf="dataflows !== null && dataflows.length > 0 ">
       <div class="pb-box-main"
            *ngFor="let dataflow of dataflows"
            (click)="$event.stopPropagation(); $event.preventDefault(); goDataflowDetailView(dataflow.dfId)">
@@ -20,9 +29,7 @@
         <div class="pb-ui-main-summary">
           <!-- tag -->
           <div class="pb-ui-tags">
-            <span class="pb-component-tag type-dataflow">Dataflow</span>
-            <!--            <span class="pb-component-tag type-new">NEW</span>-->
-            <!--<span class="pb-component-tag type-wrangled">Wrangled</span>-->
+            <span class="pb-component-tag type-new">NEW</span>
           </div>
           <!-- // tag -->
           <div class="pb-ui-name">
@@ -59,6 +66,10 @@
       <a href="javascript:" class="pb-btn-create" (click)="openCreateDataflowPopup()"></a>
     </div>
     <!-- //Wrap Main -->
+
+
+
+
   </div>
   <!-- //wrap group -->
   <!-- wrap group -->
