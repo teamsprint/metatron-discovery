@@ -1,0 +1,16 @@
+{
+  "src": {
+    "type": "URI",
+    "limit": 1000000,
+    "hadoopConfDir": "/Users/jhkim/opt/hadoop/etc/hadoop",
+    "ruleStrs": [
+      "header rownum: 1",
+      "drop col: `due`"
+    ]
+  },
+  "target": {
+    "type": "URI",
+    "limit": 1000000,
+    "hadoopConfDir": "/Users/jhkim/opt/hadoop/etc/hadoop"
+  }
+}

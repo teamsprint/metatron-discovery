@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-package app.metatron.dataprep;
+package app.metatron.dataprep.runner;
 
 import java.net.URL;
 

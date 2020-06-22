@@ -98,8 +98,18 @@ public class PrepRunner {
       job.getTarget().setAppend(Boolean.valueOf(append));
     }
 
+    String srcUri = cmd.getOptionValue("src-uri");
+    if (srcUri != null) {
+      job.getSrc().setStrUri(srcUri);
+    }
+
+    String targetUri = cmd.getOptionValue("target-uri");
+    if (targetUri != null) {
+      job.getTarget().setStrUri(targetUri);
+    }
+
     if (verbose) {
-      System.out.println("Job Spec: " + job);
+      System.out.println("Final Job Spec: " + job);
     }
 
     // Load & Transform

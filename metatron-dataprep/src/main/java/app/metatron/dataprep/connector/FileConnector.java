@@ -33,13 +33,7 @@ import org.apache.hadoop.fs.Path;
 
 public class FileConnector {
 
-  String strUri;
-
   public FileConnector() {
-  }
-
-  public FileConnector(TargetDesc target) {
-    strUri = target.getStrUri();
   }
 
   private static boolean exists(String path) {
@@ -97,9 +91,13 @@ public class FileConnector {
     return df;
   }
 
-  public void save(DataFrame df) {
+  public static void save(DataFrame df, TargetDesc target) {
+    String strUri = target.getStrUri();
+    String hadoopConfDir = target.getHadoopConfDir();
+
     try {
-      CSVPrinter printer = PrepCsvUtil.DEFAULT.getPrinter(strUri);
+      Configuration hadoopConf = getHadoopConf(hadoopConfDir);
+      CSVPrinter printer = PrepCsvUtil.DEFAULT.withHadoopConf(hadoopConf).getPrinter(strUri);
 
       for (int colno = 0; colno < df.getColCnt(); colno++) {
         printer.print(df.getColName(colno));

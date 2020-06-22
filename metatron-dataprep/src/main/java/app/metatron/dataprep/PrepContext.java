@@ -166,13 +166,12 @@ public class PrepContext {
     String status = "SUCCEEDED";
     switch (target.getType()) {
       case URI:
-        FileConnector fileConnector = new FileConnector(target);
-        fileConnector.save(df);
+        FileConnector.save(df, target);
         break;
       case DATABASE:
         try {
           JdbcConnector jdbcConnector = new JdbcConnector(target);
-          jdbcConnector.save(df, target.isAppend());
+          jdbcConnector.save(df);
         } catch (SQLException e) {
           e.printStackTrace();
           status = "FAILED";
