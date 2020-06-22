@@ -697,7 +697,7 @@ ul.pb-list-tab-button li a em.pb-icon-listgrid {
 }
 
 .pb-layout-popup.type-small .pb-pop-title {
-  padding: 0 30px 0 30px;
+  padding: 0 30px 50px 30px;
   font-size: 18px;
   text-align: left;
   line-height: 1.3em;

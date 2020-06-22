@@ -68,11 +68,32 @@
 .pb-pop-create .pb-ui-data-expression {
   padding: 15px 38px 0 39px;
   flex:auto;
+  overflow:auto;
+  position:relative;
 }
 .pb-pop-create .pb-ui-data-expression .pb-ui-grid {
+  width:100%;
   height:100%;
-}
+  overflow:hidden;
 
+}
+.pb-pop-create .pb-ui-data-expression .pb-ui-grid angular-slickgrid {
+  display:block;
+  width:100%; height:100%;
+}
+.pb-pop-create .pb-ui-data-expression .pb-ui-grid angular-slickgrid .gridPane {
+  width:100% !important;
+  height:100% !important;
+  padding-bottom:30px;
+}
+.pb-pop-create .pb-ui-data-expression .pb-ui-grid angular-slickgrid .slickgrid-container {
+  width:100% !important;
+  height:100% !important;
+}
+.pb-pop-create .pb-ui-data-expression .pb-ui-grid angular-slickgrid .slickgrid-container .slick-viewport {
+  width:100% !important;
+  height:100% !important;
+}
 .pb-ui-data-expression .pb-ui-grid-option .pb-grid-input {
   display: inline-block;
   position: relative;

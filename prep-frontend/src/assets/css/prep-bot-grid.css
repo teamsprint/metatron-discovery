@@ -128,3 +128,26 @@ body .slickgrid-container .grid-canvas .slick-cell.type-column-selected:after {
   background-color: rgba(0, 168, 255, 0.07);
   content: '';
 }
+.pb-ui-grid {
+  width:100%;
+  height:100%;
+  overflow:hidden;
+
+}
+.pb-ui-grid angular-slickgrid {
+  display:block;
+  width:100%; height:100%;
+}
+.pb-ui-grid angular-slickgrid .gridPane {
+  width:100% !important;
+  height:100% !important;
+  padding-bottom:30px;
+}
+.pb-ui-grid angular-slickgrid .slickgrid-container {
+  width:100% !important;
+  height:100% !important;
+}
+.pb-ui-grid angular-slickgrid .slickgrid-container .slick-viewport {
+  width:100% !important;
+  height:100% !important;
+}

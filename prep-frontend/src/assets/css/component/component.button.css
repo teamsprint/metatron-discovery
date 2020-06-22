@@ -5,7 +5,7 @@
  *************************************************************************/
 .pb-component-btn {
   display: inline-block;
-  min-width: 83px;
+  min-width: 80px;
   height: 30px;
   padding: 5px 10px;
   border-radius: 3px;
@@ -130,9 +130,9 @@
 .pb-component-btn.is-disabled:hover {
   opacity: 0.4;
   cursor: no-drop;
-  color: #fff;
-  background-color: #f77115;
-  border: 1px solid #f77115;
+  color: #c8c8c8;
+  background-color: #f1f1ee;
+  border: 1px solid #f1f1ee;
 }
 
 .pb-component-btn-s {
@@ -147,6 +147,12 @@
   text-align: center;
   border: 1px solid #b5b5b2;
   background-color: #fff;
+}
+.pb-component-btn-s.is-disabled {
+  background-color: #f1f1ee !important;
+  color:#c8c8c8 !important;
+  border:1px solid #f1f1ee !important;
+  cursor:no-drop;
 }
 .pb-component-btn-s.type-normal {
   font-weight:normal;

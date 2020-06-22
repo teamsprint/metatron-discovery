@@ -18,6 +18,12 @@
 .pb-page-main .pb-wrap-filter .pb-form-option {display:flex; margin-right:30px;align-items: center;}
 .pb-page-main .pb-wrap-filter .pb-form-option .pb-label-title {padding-right:6px; color:#4e4e4e; font-size:14px; font-weight:600;}
 .pb-page-main .pb-wrap-filter .pb-form-option .pb-form-selectbox {width:240px;}
+
+
+.pb-page-main .pb-box-nodata {position:Relative;display:flex; align-items:center; justify-content: center; height:180px; border-radius:5px; border:1px dotted #bbbbbb; background-color:#fafafb; color:#a09e9b; font-size:16px; cursor:pointer;}
+.pb-page-main .pb-box-nodata:before  {display:inline-block;width:22px; height:23px; margin-right:9px; background:url(../../images/icon_add.png) no-repeat; background-position:left -89px; content:'';}
+.pb-page-main .pb-box-nodata:hover {border-color:#a3a3a3; background-color:#f4f4f4; color:#a09e9b;}
+.pb-page-main .pb-box-nodata:hover:before {background-position-x:-23px;}
 .pb-page-main .pb-btn-create {position:Relative;display:inline-block; width:50px; height:180px; border-radius:5px; border:1px dotted #bbbbbb; background-color:#fafafb;}
 .pb-page-main .pb-btn-create:hover {border-color:#a3a3a3; background-color:#f4f4f4;}
 .pb-page-main .pb-btn-create:before {display:inline-block; position:absolute; top:50%; left:50%; margin:-11px 0 0 -11px; width:22px; height:23px; background:url(../../images/icon_add.png) no-repeat; background-position:left -89px; content:'';}
