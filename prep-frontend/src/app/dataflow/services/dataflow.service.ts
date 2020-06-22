@@ -29,9 +29,22 @@ export class DataflowService {
     return this.http.post(url, JSON.stringify(dataflow));
   }
 
-  getDataflow() {
-    return this.http.get(``);
+
+  getDataflow(dfId: string) {
+    const url = `${CommonConstant.API_CONSTANT.API_URL}/dataflows/${dfId}`;
+    const params = {};
+    if (!dfId) {
+      return of(new HttpErrorResponse({
+        url,
+        status: 400,
+        statusText: 'Invalid connectionId value'
+      }));
+    }
+    return this.http.get(url,  {
+      params: CommonUtil.Http.makeQueryString(params)
+    });
   }
+
 
   getDataflows(searchText: string,
                page: Page,

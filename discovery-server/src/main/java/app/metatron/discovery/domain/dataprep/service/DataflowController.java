@@ -145,8 +145,8 @@ public class DataflowController {
                                 for (String upstreamDsId : upstreamDsIds) {
                                     Upstream upstream = new Upstream();
                                     upstream.setDfId(dfId);
-                                    upstream.setReId(recipeId);
-                                    upstream.setUpstreamDsId(upstreamDsId);
+                                    upstream.setRecipeId(recipeId);
+                                    upstream.setUpstreamId(upstreamDsId);
                                     upstreams.add(upstream);
                                 }
                             }
@@ -247,8 +247,8 @@ public class DataflowController {
                                 for (String upstreamDsId : upstreamDsIds) {
                                     Upstream upstream = new Upstream();
                                     upstream.setDfId(dfId);
-                                    upstream.setReId(recipeId);
-                                    upstream.setUpstreamDsId(upstreamDsId);
+                                    upstream.setRecipeId(recipeId);
+                                    upstream.setUpstreamId(upstreamDsId);
                                     upstreams.add(upstream);
                                 }
                             }

@@ -1,44 +1,13 @@
 /* tslint:disable */
 import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Router, ActivatedRoute} from '@angular/router';
 import {RouterUrls} from '../../common/constants/router.constant';
 import {CommonUtil} from '../../common/utils/common-util';
-
-// import interact from 'interactjs';
-
-// const dragMoveListener = (event) => {
-//
-//   const target = event.target;
-//   const x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
-//   const y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
-//
-//   target.style.webkitTransform =
-//     target.style.transform =
-//       'translate(' + x + 'px, ' + y + 'px)';
-//
-//   target.setAttribute('data-x', x);
-//   target.setAttribute('data-y', y);
-// };
-//
-// const resizeListener = (event) => {
-//
-//   const target = event.target;
-//   let x = (parseFloat(target.getAttribute('data-x')) || 0);
-//   let y = (parseFloat(target.getAttribute('data-y')) || 0);
-//
-//   // update the element's style
-//   target.style.width = event.rect.width + 'px';
-//   target.style.height = event.rect.height + 'px';
-//
-//   // translate when resizing from top or left edges
-//   x += event.deltaRect.left;
-//   y += event.deltaRect.top;
-//
-//   target.style.webkitTransform = target.style.transform =
-//     'translate(' + x + 'px,' + y + 'px)';
-//
-//   target.setAttribute('data-x', x);
-//   target.setAttribute('data-y', y);
-// };
+import {DataflowService} from '../services/dataflow.service';
+import {LoadingService} from '../../common/services/loading/loading.service';
+import {LocalStorageService} from '../../common/services/local-storage/local-storage.service';
+import {finalize} from 'rxjs/operators';
+import {Dataflow} from '../domains/dataflow';
 
 @Component({
   templateUrl: './dataflow-detail.component.html',
@@ -51,6 +20,36 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
   public readonly UUID = this.COMMON_UTIL.Generate.makeUUID();
 
   // public readonly LAYER_POPUP = interact('#' + this.UUID);
+  public expanded: boolean = false;
+  public dataflow: Dataflow.ValueObjects.Select;
+  private dataflowId: string;
+  // 차트를 그리기 위한 기반 데이터
+  public dataSetList: any[] = [];
+  private upstreamList:Dataflow.Upstream[] = [];
+
+  // 루트 데이터셋 개수
+  private rootCount: number = 0;
+
+  // depth 개수
+  private depthCount: number = 0;
+
+  // 노드 리스트
+  private chartNodes: any[] = [];
+
+  // 노드간 링크 리스트
+  private chartLinks: any[] = [];
+
+  // 타입별 아이콘 정보
+  private symbolInfo: any;
+
+  // 차트 기본 옵션
+  private chartOptions: any;
+
+  // 노드 라벨 속성
+  private label: any;
+
+  // 룰 리스트에서 필요한 변수
+  public commandList: any[];
 
   public readonly options = {
     'backgroundColor': '#ffffff',
@@ -417,42 +416,354 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
     'animation': false
   };
 
-  ngOnInit(): void {
-    // this.LAYER_POPUP
-    //   .resizable({
-    //     edges: {
-    //       left: true,
-    //       right: true,
-    //       bottom: true,
-    //       top: true
-    //     },
-    //     listeners: {
-    //       move: resizeListener
-    //     },
-    //     modifiers: [
-    //       // minimum size
-    //       interact.modifiers.restrictSize({
-    //         min: { width: 100, height: 100 }
-    //       })
-    //     ],
-    //
-    //     inertia: true
-    //   })
-    //   .draggable({
-    //     listeners: {
-    //       move: dragMoveListener
-    //     },
-    //     inertia: true,
-    //     modifiers: [
-    //       interact.modifiers.restrictRect({
-    //         restriction: 'parent',
-    //         endOnly: true
-    //       })
-    //     ]
-    //   });
+
+  constructor(private readonly router: Router,
+              private activatedRoute: ActivatedRoute,
+              private readonly dataflowService: DataflowService,
+              private readonly loadingService: LoadingService,
+              public readonly localStorageService: LocalStorageService) {
   }
+
+
+  ngOnInit(): void {
+
+    this.activatedRoute.params.subscribe((params) => {
+      if (params['id']) {
+        this.dataflowId = params['id'];
+      }
+    });
+
+    // 초기 세팅
+    this.initViewPage();
+
+    if (this.dataflowId !== null || this.dataflowId !== undefined) {
+      this.getDataflow();
+    }
+  }
+
+
+  private getDataflow() {
+    this.loadingService.show();
+    this.dataflowService
+      .getDataflow(this.dataflowId)
+      .pipe(finalize(() => this.loadingService.hide()))
+      .subscribe(dataflows => {
+        if (!dataflows) {
+          return;
+        }
+        this.dataflow = dataflows as Dataflow.ValueObjects.Select;
+        this.dataSetList = [];
+        this.upstreamList = [];
+        if (this.dataflow.diagramData !== null && this.dataflow.upstreams) { // if dataflow has diagramData
+          this.makeDataSetList()
+        }
+
+      });
+  }
+
+  private initViewPage() {
+    this.symbolInfo = {
+      DATASET: {
+        UPLOAD: {
+          DEFAULT: 'image://' + window.location.origin + '/assets/images/dataflow/img_db.png',
+        },
+        DATABASE: {
+          DEFAULT: 'image://' + window.location.origin + '/assets/images/dataflow/img_db.png',
+        }
+      },
+      RECIPE: {
+        DEFAULT: 'image://' + window.location.origin + '/assets/images/dataflow/img_dataset.png',
+      },
+      SELECTED: {
+        DATASET: 'image://' + window.location.origin + '/assets/images/dataflow/img_db_focus.png',
+        RECIPE: 'image://' + window.location.origin + '/assets/images/dataflow/img_dataset_focus.png'
+      }
+    };
+
+
+
+    this.label = {
+      normal: {
+        show: true,
+        position: 'bottom',
+        textStyle: { color: '#000000', fontWeight: 'bold' },
+        formatter(params) {
+          if (params.data.dsName.length > 20) {
+            return params.data.dsName.slice(0,20) + ' ...'
+          } else {
+            return params.data.dsName;
+          }
+        }
+      },
+      emphasis: {
+        show: true,
+        position: 'bottom',
+        textStyle: { color: '#000000', fontWeight: 'bold' },
+        formatter(params) {
+          if (params.data.dsName.length > 20) {
+            return params.data.dsName.slice(0,20) + ' ...'
+          } else {
+            return params.data.dsName;
+          }
+        }
+      }
+    };
+
+    this.chartOptions = {
+      backgroundColor: '#ffffff',
+      tooltip: { show: false },
+      xAxis: {
+        type: 'value',
+        max: null,
+        interval: 1,
+        splitLine: { show: false },
+        axisLabel: { show: false },
+        axisLine: { show: false },
+        axisTick: { show: false }
+      },
+      yAxis: {
+        type: 'value',
+        max: null,
+        interval: 1,
+        inverse: true,
+        splitLine: { show: false },
+        axisLabel: { show: false },
+        axisLine: { show: false },
+        axisTick: { show: false }
+      },
+      series: [
+        {
+          type: 'graph',
+          legendHoverLink: false,
+          layout: 'none',
+          coordinateSystem: 'cartesian2d',
+          focusNodeAdjacency: false,
+          symbolSize: 50,
+          hoverAnimation: true,
+          roam: false,
+          // edgeSymbol: ['none', 'arrow'],
+          draggable: true,
+          itemStyle: { normal: { color: '#aaa', borderColor: '#1af' } },
+          nodes: null,
+          links: null,
+          lineStyle: { normal: { opacity: 0.3, width: 4 } }
+        }
+      ], animation: false
+    };
+
+    // lineStyle: { normal: { opacity: 0.3, width: 4 } }
+
+
+    this.commandList = [
+      { command: 'create', alias: 'Cr' },
+      { command: 'header', alias: 'He' },
+      { command: 'keep', alias: 'Ke' },
+      { command: 'replace', alias: 'Rp' },
+      { command: 'rename', alias: 'Rm' },
+      { command: 'set', alias: 'Se' },
+      { command: 'settype', alias: 'St' },
+      { command: 'countpattern', alias: 'Co' },
+      { command: 'split', alias: 'Sp' },
+      { command: 'derive', alias: 'Dr' },
+      { command: 'delete', alias: 'De' },
+      { command: 'drop', alias: 'Dp' },
+      { command: 'pivot', alias: 'Pv' },
+      { command: 'unpivot', alias: 'Up' },
+      { command: 'join', alias: 'Jo' },
+      { command: 'extract', alias: 'Ex' },
+      { command: 'flatten', alias: 'Fl' },
+      { command: 'merge', alias: 'Me' },
+      { command: 'nest', alias: 'Ne' },
+      { command: 'unnest', alias: 'Un' },
+      { command: 'aggregate', alias: 'Ag' },
+      { command: 'sort', alias: 'So' },
+      { command: 'move', alias: 'Mv' },
+      { command: 'union', alias: 'Ui' }
+    ];
+  }
+
+  private makeDataSetList() {
+    this.dataSetList = this.dataflow.diagramData;
+    this.upstreamList = this.dataflow.upstreams;
+
+    if (this.dataSetList && 1 < this.dataSetList.length) {
+      this.dataSetList.sort(function (left, right) {
+        const leftTime = Date.parse(left.createdTime);
+        const rightTime = Date.parse(right.createdTime);
+        if (NaN == rightTime) {
+          return -1;
+        } else if (NaN == leftTime) {
+          return 1;
+        }
+        return leftTime < rightTime ? -1 : leftTime > rightTime ? 1 : 0;
+      });
+    }
+
+    console.info('this.upstreamList', this.upstreamList);
+
+    for (let ds of this.dataSetList) {
+      ds.upstreamIds = [];
+      for (let upstream of this.upstreamList) {
+        if (upstream.recipeId === ds.objId) {
+          ds.upstreamIds.push(upstream.upstreamId);
+        }
+      }
+    }
+
+    console.info('this.dataSetList', this.dataSetList);
+
+    this.makeChartData();
+
+  }
+
+  private makeChartData() {
+    // 최상위 노드 탐색
+    this.dataSetList.forEach(item => {
+      const rootDataset = this.findRootDataset(item, this.dataSetList);
+      if (rootDataset.objId !== item.objId) {
+        item.rootDataset = rootDataset;
+      }
+    });
+
+    // this.createNodeTree(this.dataSetList);
+
+    // 중복 제거 - 원래 생성되는 배열을 보존하기 위해서 createNodeTree()는 원형대로 놓아둠
+    this.chartNodes = this.chartNodes.filter(function (elem, index, self) {
+      for (let dsIdx in self) {
+        if (self[dsIdx].objId === elem.objId) {
+          if (dsIdx === index.toString()) {
+            return true;
+          }
+          break;
+        }
+      }
+      return false;
+    });
+
+    console.info('this.dataSetList', this.dataSetList);
+  }
+
+  private findRootDataset(node: any, nodeList: any[]) {
+    if (0 === node.upstreamIds.length && node.objType === Dataflow.DataflowDiagram.ObjectType.DATASET) {
+      return node;
+    } else {
+      const result = nodeList
+        .filter(item => -1 !== node.upstreamIds.indexOf(item.objId))
+        .map(item => this.findRootDataset(item, nodeList));
+      return (result && 0 < result.length) ? result[0] : node;
+    }
+  } // function - findRootDataset
+
+
+  /**
+   * 차트 전체 노드 구조 생성
+   * @param nodeList
+   */
+  // private createNodeTree(nodeList) {
+  //   // root노드
+  //   const rootNodeList = nodeList.filter(node => (node.upstreamIds.length === 0));
+  //
+  //   const recipeRootNodeList = nodeList.filter((node) => {
+  //     return _.eq(node.objType, Dataflow.DataflowDiagram.ObjectType.RECIPE) && !_.eq(node.creatorDfId, this.dataflow.dfId);
+  //   });
+  //
+  //   // 각 root로 부터 파생되는 노드를 순차적으로 생성
+  //   _.concat(rootNodeList, recipeRootNodeList).map((node) => {
+  //     const rootNode = this.createNode(node, 0, this.rootCount);
+  //     this.rootCount += 1;
+  //     this.setChildNode(nodeList, rootNode, rootNode);
+  //   });
+  //
+  // } // function - createNodeTree
+
+
+
+  //
+  // private createNode(dataset: PrDataset, depth: number, position: number, rootNode?: any) {
+  //   let importType: ImportType = null;
+  //   let detailType = null;
+  //   let flowName = null;
+  //
+  //   flowName = dataset.creatorDfId;
+  //   importType = dataset.importType;
+  //   detailType = 'DEFAULT';
+  //
+  //   const nodeSymbol = DsType.IMPORTED === dataset.dsType ? this.symbolInfo[dataset.dsType][importType][detailType] : this.symbolInfo[dataset.dsType][detailType];
+  //
+  //   const node = {
+  //     dsId: dataset.dsId,
+  //     dsName: dataset.dsName,
+  //     name: dataset.dsId,
+  //     dsType: dataset.dsType,
+  //     importType: importType != null ? importType : undefined,
+  //     detailType: detailType != null ? detailType : undefined,
+  //     flowName: flowName != null ? flowName : undefined,
+  //     upstream: dataset.upstreamDsIds,
+  //     children: [],
+  //     value: [depth, position],
+  //     symbol: nodeSymbol,
+  //     originSymbol: _.cloneDeep(nodeSymbol),
+  //     label: this.label
+  //   };
+  //   if (rootNode) {
+  //     node['rootDataset'] = dataset['rootDataset'];
+  //     node['rootValue'] = rootNode['value'];
+  //   }
+  //
+  //   // 차트 정보에 들어갈 노드 추가
+  //   this.chartNodes.push(node);
+  //
+  //   return node;
+  // } // function - createNode
+
+
+  // /**
+  //  * 하위 노드 설정
+  //  * @param nodeList
+  //  * @param parent
+  //  * @param rootNode
+  //  */
+  // private setChildNode(nodeList, parent, rootNode) {
+  //   const childNodeList = nodeList.filter((node) => {
+  //     return node.upstreamDsIds.indexOf(parent.dsId) > -1 && _.eq(node.creatorDfId, this.dataflow.dfId);
+  //   });
+  //   childNodeList.map((child, idx) => {
+  //     const depth = parent.value[0] + 1;
+  //     const position = parent.value[1] + idx;
+  //     this.rootCount = this.rootCount <= position ? position + 1 : this.rootCount;
+  //
+  //     // 차트 정보에 들어갈 노드 추가
+  //     const childData = this.createNode(child, depth, position, rootNode);
+  //
+  //     // 차트 정보에 들어갈 링크 추가
+  //     const link = {
+  //       source: parent.dsId,
+  //       target: childData.dsId
+  //     };
+  //     if (parent.value[1] !== position) {
+  //       link['lineStyle'] = {
+  //         normal: {
+  //           curveness: -0.2
+  //         }
+  //       };
+  //     }
+  //     this.chartLinks.push(link);
+  //     this.setChildNode(nodeList, childData, rootNode);
+  //   });
+  // } // function - setChildNode
+  //
 
   ngOnDestroy(): void {
     // this.LAYER_POPUP.unset();
+  }
+
+  public expandedClose(event) {
+    event.preventDefault();
+    this.expanded = false;
+  }
+
+  public expandedStatus() {
+    return this.expanded;
+
   }
 }

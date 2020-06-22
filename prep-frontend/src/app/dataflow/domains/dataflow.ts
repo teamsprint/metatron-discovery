@@ -17,10 +17,7 @@ export namespace Dataflow {
       name: string;
       description: string;
       custom: string;
-
-      // TODO: 무시. 화면에서 사용 불필요
-      // diagrams: Array<DataflowDiagram.Entity>;
-
+      diagrams: object[];
       diagramData: Array<DataflowDiagramResponse>;
       upstreams: Array<Upstream>;
       datasetCount: number;
@@ -58,8 +55,8 @@ export namespace Dataflow {
 
   export class Upstream {
     dfId: string;
-    upstreamDsId: string;
-    reId: string;
+    recipeId: string;
+    upstreamId: string;
   }
 
   export class PrepParamDatasetIdList {

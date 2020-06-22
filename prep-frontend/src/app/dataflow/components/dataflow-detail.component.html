@@ -3,26 +3,22 @@
 <!-- //lnb -->
 
 <!-- wrap contents -->
-<div class="pb-wrap-contents">
+<div class="pb-wrap-contents" *ngIf="dataflow !== null && dataflow !== undefined">
   <!-- top -->
   <div class="pb-contents-top">
     <!-- right -->
     <div class="pb-ui-buttons">
 
-      <a href="javascript:" class="pb-component-btn type-bg"><em class="pb-icon-add-r"></em> CREATE DATASET</a>
+      <a href="javascript:" class="pb-component-btn type-bg"><em class="pb-icon-add-r"></em> ADD DATASET</a>
 
-      <!-- more -->
-      <!--
-        area-expandede 가 true 일때 popup show
-      -->
-      <div class="pb-ui-more" aria-expanded="false">
+      <div class="pb-ui-more" aria-expanded="true" (click)="expanded = false" *ngIf="expanded == true">
         <a href="javascript:" class="pb-box-more"></a>
-
-        <!-- popup -->
         <div class="pb-component-pop-box">
           <a href="javascript:"><em class="pb-icon-pop-del"></em>Delete this flow</a>
         </div>
-        <!-- //popup -->
+      </div>
+      <div class="pb-ui-more" aria-expanded="false" (click)="expanded = true;" *ngIf="expanded == false">
+        <a href="javascript:" class="pb-box-more"></a>
       </div>
       <!-- //more -->
 
@@ -34,9 +30,9 @@
       <a class="pb-btn-back"
          [routerLink]="ROUTER_URLS.Managements.getFlowsUrl()">
       </a>
-      Data Flow 01 > Dataset 01
-      <span class="pb-txt-data"><em class="pb-icon-dataset"></em>Dataset <strong>7</strong></span>
-      <span class="pb-txt-data"><em class="pb-icon-recipe"></em>Recipe<strong>7</strong></span>
+      {{dataflow.name}}
+      <span class="pb-txt-data"><em class="pb-icon-dataset"></em>Dataset <strong>{{dataflow.datasetCount}}</strong></span>
+      <span class="pb-txt-data"><em class="pb-icon-recipe"></em>Recipe<strong>{{dataflow.recipeCount}}</strong></span>
 
     </div>
     <!-- //txt navi -->
@@ -49,7 +45,7 @@
     <!-- box -->
     <div class="pb-box-contents">
 
-      <div echarts [options]="options" class="demo-chart"></div>
+      <div echarts [options]="options" class="demo-chart" style="width:100%; height:100%;"></div>
 
       <!--      <div class="pb-box-dataflow-empty">-->
       <!--        <em class="pb-img-dataflow"></em>-->

@@ -2,8 +2,8 @@ package app.metatron.discovery.domain.dataprep;
 
 public class Upstream {
     private String dfId;
-    private String upstreamDsId;
-    private String reId;
+    private String upstreamId;
+    private String recipeId;
 
     public String getDfId() {
         return dfId;
@@ -13,19 +13,19 @@ public class Upstream {
         this.dfId = dfId;
     }
 
-    public String getUpstreamDsId() {
-        return upstreamDsId;
+    public String getUpstreamId() {
+        return upstreamId;
     }
 
-    public void setUpstreamDsId(String upstreamDsId) {
-        this.upstreamDsId = upstreamDsId;
+    public void setUpstreamId(String upstreamId) {
+        this.upstreamId = upstreamId;
     }
 
-    public String getReId() {
-        return reId;
+    public String getRecipeId() {
+        return recipeId;
     }
 
-    public void setReId(String reId) {
-        this.reId = reId;
+    public void setRecipeId(String recipeId) {
+        this.recipeId = recipeId;
     }
 }
