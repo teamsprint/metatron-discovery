@@ -37,9 +37,16 @@ export namespace Dataset {
     public error: object;
   }
 
+  export class DatasetDatabase extends Entity {
+    public connectionName: string;
+    public implementor: string;
+
+  }
+
+
   export class SheetInfo {
     selected: boolean;
-    data: object;
+    data: object[];
     fields: object[] = [];
     totalRows?: number;
     valid: boolean;
@@ -72,6 +79,7 @@ export namespace Dataset {
   }
 
 
+
   export enum IMPORT_TYPE {
     UPLOAD = 'UPLOAD',
     URI = 'URI',
@@ -91,12 +99,8 @@ export namespace Dataset {
     QUERY = 'QUERY'
   }
 
-  export enum FileFormat {
-    CSV = 'CSV',
-    EXCEL = 'EXCEL',
-    JSON = 'JSON',
-    TXT= 'TXT'
-  }
+
+
 
   export namespace Result {
     export namespace GetDatasets {

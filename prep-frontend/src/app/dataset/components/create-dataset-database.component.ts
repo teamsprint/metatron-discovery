@@ -153,7 +153,10 @@ export class CreateDatasetDatabaseComponent implements OnInit, OnDestroy{
   }
 
   public returnDbTypeDataset() {
-    const dataset: Dataset.Entity = new Dataset.Entity();
+    const dataset: Dataset.DatasetDatabase = new Dataset.DatasetDatabase;
+    dataset.connectionName = this.selectedConnection.name;
+    dataset.implementor = this.selectedConnection.implementor;
+    dataset.importType = Dataset.IMPORT_TYPE.DATABASE;
     dataset.connId = this.selectedConnection.connId;
     dataset.tblName = this.selectedTable['name'];
     dataset.dbName = this.selectedDatabase['name'];

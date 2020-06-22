@@ -2,8 +2,9 @@
 import {Component, ChangeDetectorRef, EventEmitter, Output, Input, OnInit, OnDestroy} from '@angular/core';
 import {Dataset} from '../domains/dataset';
 import {DatasetsService} from '../services/datasets.service';
-import {CommonConstant} from '../../common/constants/common.constant';
-
+import {LoadingService} from '../../common/services/loading/loading.service';
+import {finalize} from 'rxjs/operators';
+import {CommonUtil} from '../../common/utils/common-util';
 
 @Component({
   selector: 'create-dataset-file-select',
@@ -46,6 +47,10 @@ export class CreateDatasetFileSelectComponent implements OnInit{
   public fileFormat = Dataset.FILE_FORMAT;
 
 
+  constructor(private readonly datasetService: DatasetsService,
+              private readonly loadingService: LoadingService) {
+  }
+
 
   ngOnInit(): void {
     this.currDetail = {fileFormat: null, detailName: null, columns: null, fileExtension: null, uploadLocation: null};
@@ -72,7 +77,8 @@ export class CreateDatasetFileSelectComponent implements OnInit{
       }
 
       // FIXME : UI에서 각자 따로 오는 response를 어떻게 처리할지
-      // this._getGridInformation(index, this._getParamForGrid(dsFile), index === 0 ? 'draw' : '');
+      this._getGridInformation(index, this._getParamForGrid(dsFile), index === 0 ? 'draw' : '');
+      // console.info('this.datasetFiles', this.datasetFiles);
     });
   }
 
@@ -203,15 +209,126 @@ export class CreateDatasetFileSelectComponent implements OnInit{
       this.currSheetIndex = 0;
       this.datasetFiles[dsIdx].sheetIndex = 0;
       this.datasetFiles[dsIdx].sheetName = this.datasetFiles[dsIdx].sheetInfo[0].sheetName;
-
-      // if grid info is valid show grid else clear grid
-      // if (!isNullOrUndefined(this.datasetFiles[dsIdx]) && this.datasetFiles[dsIdx].sheetInfo[0]) {
-      //   this._updateGrid(this.datasetFiles[dsIdx].sheetInfo[0].data, this.datasetFiles[dsIdx].sheetInfo[0].fields);
-      // } else {
-      //   this.clearGrid = true;
-      // }
     }
   }
+
+  private _getGridInformation(idx: number, param : any, option: string ) {
+    // this.loadingService.show();
+    // this.datasetService.getFileGridInfo(param)
+    //   .pipe(finalize(() => this.loadingService.hide()))
+    //   .subscribe(result => {
+    //     if (result.gridResponses) {
+    //
+    //       if( option && option === 'draw') this.clearGrid = false;
+    //
+    //       this.datasetFiles[idx].error = null;
+    //       this.previewErrorMsg = '';
+    //
+    //       this._setSheetInformation(idx, result.gridResponses, result.sheetNames);
+    //
+    //       // 첫번째 시트로 그리드를 그린다.
+    //       const sheet = this.datasetFiles[idx].sheetInfo[this.currSheetIndex];
+    //
+    //       // Update grid
+    //       // TODO. 임시 주석
+    //       // if( option && option === 'draw') this._updateGrid(sheet['data'], sheet['fields']);
+    //       //
+    //       // if (result.sheetNames) {
+    //       //   // Select first sheet in the list
+    //       //   this.datasetFiles[idx]['sheetName'] = sheet['sheetName'] ? sheet['sheetName'] : undefined;
+    //       // }
+    //
+    //     } else {
+    //
+    //       // no result from server
+    //       if( option && option === 'draw') this.clearGrid = true;
+    //       this.datasetFiles[idx].error = result;
+    //       // this.previewErrorMsg = (this.datasetFiles[idx].error? this.translateService.instant(this.datasetFiles[idx].error.message) : '');
+    //
+    //     }
+    //
+    //     // 다음 버튼 활성화 여부 확인
+    //     this._checkNextBtn();
+    //   });
+  }
+  private _updateGrid(data: any, fields: Field[]) {
+    if (data.length > 0 && fields.length > 0) {
+      this.clearGrid = false;
+      // const headers: header[] = this._getHeaders(fields);
+      // const rows: any[] = PreparationCommonUtil.getRows(data);
+      // this._drawGrid(headers, rows);
+    } else {
+      //this.loadingHide();
+      this.clearGrid = true;
+    }
+  }
+  private _drawGrid(headers: any[], rows: any[]) {
+    this.safelyDetectChanges();
+    // this.gridComponent.create(headers, rows, new GridOption()
+    //   .SyncColumnCellResize(true)
+    //   .MultiColumnSort(true)
+    //   .RowHeight(32)
+    //   .build()
+    // );
+    //
+    // // slick-viewport - Custom Top
+    // $('.slick-viewport').css('top', 50 + 'px');
+    //
+    // this.loadingHide();
+  }
+
+
+  private _setSheetInformation(idx: number, gridInfo: any, sheetNames: string[]) {
+    if (gridInfo && gridInfo.length > 0) {
+      this.datasetFiles[idx].sheetInfo = [];
+      gridInfo.forEach((item, index) => {
+        const gridData = this._getGridDataFromGridResponse(item);
+
+        let info : Dataset.SheetInfo = {selected : true, data : gridData.data, fields : gridData.fields, totalRows : 0, valid : true, columnCount : gridData.fields.length} as Dataset.SheetInfo;
+
+        if (sheetNames) info.sheetName = sheetNames[index];
+
+        this.datasetFiles[idx].sheetInfo.push(info);
+
+        if ( this.currDSIndex === 0 ) this._setDetailInformation(0, 0);
+
+      });
+
+      // set current column count
+      if( idx === this.currDSIndex ) this.currColumnCount = (this.datasetFiles[this.currDSIndex].sheetInfo? this.datasetFiles[this.currDSIndex].sheetInfo[this.currSheetIndex].columnCount: null);
+
+      this.datasetFiles[idx].selected = true;
+      this.isNext = true;
+    }
+  }
+
+  private _getGridDataFromGridResponse(gridResponse: any): GridData {
+    let colCnt = gridResponse.colCnt;
+    let colNames = gridResponse.colNames;
+    let colTypes = gridResponse.colDescs;
+
+    const gridData: GridData = new GridData();
+
+    for (let idx = 0; idx < colCnt; idx++) {
+      gridData.fields.push({
+        name: colNames[idx],
+        type: colTypes[idx].type,
+        seq: idx,
+        uuid : CommonUtil.Generate.makeUUID()
+      });
+    }
+
+    gridResponse.rows.forEach((row) => {
+      const obj = {};
+      for (let idx = 0; idx < colCnt; idx++) {
+        obj[colNames[idx]] = row.objCols[idx];
+      }
+      gridData.data.push(obj);
+    });
+
+    return gridData;
+  }
+
 
   private _setFileFormat(fileFormat : Dataset.FILE_FORMAT){
     this.isCSV = (fileFormat === Dataset.FILE_FORMAT.CSV) || fileFormat === Dataset.FILE_FORMAT.TXT;

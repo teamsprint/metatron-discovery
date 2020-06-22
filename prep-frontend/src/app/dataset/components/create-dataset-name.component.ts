@@ -21,7 +21,7 @@ export class CreateDatasetNameComponent implements OnInit{
   @Input()
   public importType: Dataset.IMPORT_TYPE;
   @Input()
-  public dbTypeDataset: Dataset.Entity;
+  public dbTypeDataset: Dataset.DatasetDatabase;
   @Input()
   public fileTypeDatasets: Dataset.Entity[];
 
@@ -30,6 +30,7 @@ export class CreateDatasetNameComponent implements OnInit{
   public isNameError = false;
   public name = '';
   public description = '';
+  public datasetInfo: DatasetInfo[] = [];
 
   constructor(private readonly datasetService: DatasetsService,
               private readonly loadingService: LoadingService) {
@@ -37,8 +38,39 @@ export class CreateDatasetNameComponent implements OnInit{
 
 
   ngOnInit(): void {
-    //
-    // console.info('======', this.importType);
+    if (this.importType === this.importDBType) {
+      this.makeDatasetInfoForDb();
+    }
+  }
+
+  private makeDatasetInfoForDb() {
+    this.datasetInfo = [];
+    if (this.dbTypeDataset != null) {
+      const info1: DatasetInfo = new DatasetInfo();
+      info1.svg = this.dbTypeDataset.implementor.toUpperCase();
+      info1.name = 'ImportType';
+      info1.value = this.dbTypeDataset.implementor;
+
+      const info2: DatasetInfo = new DatasetInfo();
+      info2.svg = '';
+      info2.name = 'Connection';
+      info2.value = this.dbTypeDataset.connectionName;
+
+      const info3: DatasetInfo = new DatasetInfo();
+      info3.svg = '';
+      info3.name = 'Database';
+      info3.value = this.dbTypeDataset.dbName;
+
+      const info4: DatasetInfo = new DatasetInfo();
+      info4.svg = '';
+      info4.name = 'Table';
+      info4.value = this.dbTypeDataset.tblName;
+
+      this.datasetInfo.push(info1);
+      this.datasetInfo.push(info2);
+      this.datasetInfo.push(info3);
+      this.datasetInfo.push(info4);
+    }
   }
 
   public complete() {
@@ -60,11 +92,22 @@ export class CreateDatasetNameComponent implements OnInit{
     if (this.dbTypeDataset === null) {
       return;
     }
+
+    const dataset: Dataset.Entity = new Dataset.Entity();
+    dataset.name = this.name;
+    dataset.description = this.description;
+    dataset.importType = this.importDBType;
+    dataset.connId = this.dbTypeDataset.connId;
+    dataset.rsType = Dataset.RS_TYPE.TABLE;
+    dataset.dbName = this.dbTypeDataset.dbName;
+    dataset.tblName = this.dbTypeDataset.tblName;
+    dataset.queryStmt = this.dbTypeDataset.queryStmt;
+
     this.dbTypeDataset.name = this.name;
     this.dbTypeDataset.description = this.description;
     this.dbTypeDataset.importType = this.importDBType;
     this.loadingService.show();
-    this.datasetService.createDataset(this.dbTypeDataset)
+    this.datasetService.createDataset(dataset)
       .pipe(finalize(() => this.loadingService.hide()))
       .subscribe(result => {
         if (result !== null) {
@@ -72,5 +115,10 @@ export class CreateDatasetNameComponent implements OnInit{
         }
       });
   }
+}
 
+class DatasetInfo {
+  name: string;
+  value: string;
+  svg?: string;
 }

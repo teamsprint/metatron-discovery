@@ -20,7 +20,7 @@ export class CreateDatasetComponent {
   public step = '';
   public datasetFiles: Dataset.DatasetFile[] = [];
   public importType: Dataset.IMPORT_TYPE;
-  public dbTypeDataset: Dataset.Entity;
+  public dbTypeDataset: Dataset.DatasetDatabase;
   public fileTypeDatasets: Dataset.Entity[] = [];
 
   @ViewChild(CreateDatasetFileUploadComponent)

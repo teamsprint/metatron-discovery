@@ -81,4 +81,21 @@ export class DatasetsService {
     const url = `${CommonConstant.API_CONSTANT.API_URL}/preparationdatasets/file_upload`;
     return this.http.get(url);
   }
+
+  public getFileGridInfo(param: {storedUri: string, delimiter?: string, quoteChar?: string, manualColumnCount?: number}) {
+
+    let url = `${CommonConstant.API_CONSTANT.API_URL}/preparationdatasets/file_grid?storedUri=` + encodeURI(param.storedUri);
+
+    if (param.delimiter) {
+      url += `&delimiterCol=${encodeURI(param.delimiter)}`;
+    }
+    if (param.quoteChar !== undefined) {
+      url += `&quoteChar=${encodeURI(param.quoteChar)}`;
+    }
+    if (param.manualColumnCount){
+      url += `&manualColumnCount=${param.manualColumnCount}`;
+    }
+
+    return this.http.get(url);
+  }
 }

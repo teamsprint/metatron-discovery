@@ -420,9 +420,9 @@ export class CreateDatasetFileUploadComponent implements OnInit, OnDestroy{
     let fileType : string = fileExtension.toUpperCase();
 
     const formats = [
-      {extension:'CSV', fileFormat:Dataset.FileFormat.CSV},
-      {extension:'TXT', fileFormat:Dataset.FileFormat.TXT},
-      {extension:'JSON', fileFormat:Dataset.FileFormat.JSON},
+      {extension:'CSV', fileFormat:Dataset.FILE_FORMAT.CSV},
+      {extension:'TXT', fileFormat:Dataset.FILE_FORMAT.TXT},
+      {extension:'JSON', fileFormat:Dataset.FILE_FORMAT.JSON},
       {extension:'XLSX', fileFormat:'xlsx'},
       {extension:'XLS', fileFormat:'xls'},
     ];
@@ -478,11 +478,11 @@ export class CreateDatasetFileUploadComponent implements OnInit, OnDestroy{
     let fileType : string = fileExtension.toUpperCase();
 
     const formats = [
-      {extension:'CSV', fileFormat:Dataset.FileFormat.CSV},
-      {extension:'TXT', fileFormat:Dataset.FileFormat.TXT},
-      {extension:'JSON', fileFormat:Dataset.FileFormat.JSON},
-      {extension:'XLSX', fileFormat:Dataset.FileFormat.EXCEL},
-      {extension:'XLS', fileFormat:Dataset.FileFormat.EXCEL},
+      {extension:'CSV', fileFormat:Dataset.FILE_FORMAT.CSV},
+      {extension:'TXT', fileFormat:Dataset.FILE_FORMAT.TXT},
+      {extension:'JSON', fileFormat:Dataset.FILE_FORMAT.JSON},
+      {extension:'XLSX', fileFormat:Dataset.FILE_FORMAT.EXCEL},
+      {extension:'XLS', fileFormat:Dataset.FILE_FORMAT.EXCEL},
     ];
 
     const idx = _.findIndex(formats, {extension: fileType});
