@@ -7,6 +7,14 @@
     <span class="pb-txt-step" (click)="onGotoStep.emit('create-dataset-database')" style="cursor: pointer;">2</span>
     <span class="pb-txt-step is-selected">3</span>
   </div>
+
+  <div class="pb-ui-step" *ngIf="importType === importUploadType">
+    <span class="pb-txt-step" (click)="onGotoStep.emit('create-dataset-type')" style="cursor: pointer;">1</span>
+    <span class="pb-txt-step" (click)="onGotoStep.emit('create-dataset-file-upload')" style="cursor: pointer;">2</span>
+    <span class="pb-txt-step" (click)="onGotoStep.emit('create-dataset-file-select')" style="cursor: pointer;">3</span>
+    <span class="pb-txt-step is-selected">4</span>
+  </div>
+
   <!-- //step -->
   <!-- top -->
   <div class="pb-popup-top pb-clear">
@@ -20,7 +28,7 @@
 
 
       <!-- box file detail -->
-      <div class="pb-box-file-detail">
+      <div class="pb-box-file-detail" *ngIf="datasetInfo !== null && datasetInfo.length > 0">
         <table class="pb-table-det">
           <colgroup>
             <col width="125px">
@@ -51,8 +59,9 @@
       </div>
       <!-- //box file detail -->
 
+
       <!-- create -->
-      <div class="pb-ui-create">
+      <div class="pb-ui-create" *ngIf="importType === importDBType">
         <!-- form create -->
         <div class="pb-form-create">
           <div class="pb-create-label">Name</div>
@@ -70,19 +79,89 @@
           </div>
         </div>
         <!-- //form create -->
-
       </div>
       <!-- //create -->
+
+
+      <!-- create -->
+      <div class="pb-ui-create" *ngIf="importType === importUploadType && fileTypeDatasets.length == 1 ">
+        <!-- form create -->
+        <div class="pb-form-create">
+          <div class="pb-create-label">Name</div>
+          <div class="pb-form-edit">
+            <input type="text" class="pb-component-input" maxlength="50" placeholder="Please enter a name" [(ngModel)]="fileTypeDatasets[0].name" (ngModelChange)="fileTypeDatasets[0].name = $event; nameErrors[0] = '';">
+            <span class="pb-form-error" *ngIf="nameErrors[0] !== ''">Required</span>
+          </div>
+        </div>
+        <!-- //form create -->
+        <!-- form create -->
+        <div class="pb-form-create">
+          <div class="pb-create-label">Description</div>
+          <div class="pb-form-edit">
+            <input type="text" class="pb-component-input" maxlength="150" placeholder="Please enter a description" [(ngModel)]="fileTypeDatasets[0].description">
+          </div>
+        </div>
+        <!-- //form create -->
+      </div>
+      <!-- //create -->
+
+
+
+      <!-- data grid -->
+      <div class="pb-wrap-data-grid" *ngIf="importType === importUploadType && fileTypeDatasets.length > 1 ">
+        <div class="pb-wrap-table">
+          <table class="pb-component-table type-cursor">
+            <colgroup>
+              <col width="33%">
+              <col width="33%">
+              <col width="33%">
+            </colgroup>
+            <thead>
+            <tr>
+              <th>Dataset</th>
+              <th>Name</th>
+              <th>Description</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let dataset of fileTypeDatasets; let index = index">
+              <td>
+                <em class="pb-img-file" [ngClass]="getFileItemIconClassName(dataset.filenameBeforeUpload).trim()"></em>
+                {{dataset.name}}
+              </td>
+              <td>
+                <input type="text" class="pb-component-input" placeholder="Placeholder" [(ngModel)]="names[index]" (ngModelChange)="names[index] = $event; nameErrors[index] = '';">
+                <span class="pb-form-error" *ngIf="nameErrors[index] !== ''">Required</span>
+              </td>
+              <td>
+                <textarea class="pb-component-textarea-auto" placeholder="Please enter a description" [(ngModel)]="dataset.descriptions"></textarea>
+              </td>
+            </tr>
+
+
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <!-- //data grid -->
+
+
 
     </div>
 
   </div>
   <!-- //contents -->
-  <div class="pb-popup-bottom ">
+  <div class="pb-popup-bottom" *ngIf="importType === importDBType">
     <a href="javascript:" class="pb-component-btn-pop type-line" (click)="onGotoStep.emit('create-dataset-database')">PREV</a>
     <a href="javascript:" class="pb-component-btn-pop type-line" (click)="onClose.emit()">CANCEL</a>
     <a href="javascript:" class="pb-component-btn-pop type-bg" (click)="complete()">DONE</a>
-
   </div>
+
+  <div class="pb-popup-bottom" *ngIf="importType === importUploadType">
+    <a href="javascript:" class="pb-component-btn-pop type-line" (click)="onGotoStep.emit('create-dataset-file-select')">PREV</a>
+    <a href="javascript:" class="pb-component-btn-pop type-line" (click)="onClose.emit()">CANCEL</a>
+    <a href="javascript:" class="pb-component-btn-pop type-bg" (click)="complete()">DONE</a>
+  </div>
+
 </div>
 <!-- //box popup -->

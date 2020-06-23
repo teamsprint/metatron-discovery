@@ -7,6 +7,7 @@ import {finalize} from 'rxjs/operators';
 import {CommonUtil} from '../../common/utils/common-util';
 import {AngularGridInstance, Column, FieldType, GridOption, SelectedRange} from 'angular-slickgrid';
 import * as _ from 'lodash';
+import {Data} from "@angular/router";
 
 @Component({
   selector: 'create-dataset-file-select',
@@ -20,8 +21,8 @@ export class CreateDatasetFileSelectComponent implements OnInit{
   public readonly onGotoStep = new EventEmitter();
   @Input()
   public datasetFiles: Dataset.DatasetFile[] = [];
-  // Change Detect
-  // public changeDetect: ChangeDetectorRef;
+  public fileTypeDatasets: Dataset.Entity[];
+
 
   public isCSV: boolean = false;
   public isEXCEL: boolean = false;
@@ -242,6 +243,56 @@ export class CreateDatasetFileSelectComponent implements OnInit{
         this.clearGrid = true;
       }
     }
+  }
+
+
+  public next() {
+    if (!this.isNext)  return;
+    this.datasetFiles.forEach((dsFile,idx) => {
+      if(dsFile.sheetInfo && dsFile.fileFormat === Dataset.FILE_FORMAT.EXCEL){
+        dsFile.selectedSheets = [];
+        dsFile.sheetInfo.forEach((sheet)=>{
+          if( sheet.selected ) dsFile.selectedSheets.push(sheet.sheetName);
+        });
+      }
+    });
+    this.fileTypeDatasets = [];
+    this.datasetFiles.forEach((dsFile) => {
+      const dataset: Dataset.Entity = new Dataset.Entity();
+      dataset.name = '';
+      dataset.description = '';
+      dataset.fileFormat = dsFile.fileFormat;
+      dataset.importType = Dataset.IMPORT_TYPE.UPLOAD;
+      dataset.storedUri = dsFile.storedUri;
+      dataset.delimiter = dsFile.delimiter;
+      dataset.filenameBeforeUpload = dsFile.filenameBeforeUpload;
+      if(dsFile.sheetInfo && dsFile.fileFormat === Dataset.FILE_FORMAT.EXCEL) {
+        if(dsFile.selectedSheets !== null && dsFile.selectedSheets.length > 0) {
+          dsFile.selectedSheets.forEach((selectedSheet)=>{
+            dataset.name = dsFile.fileName +'-' + selectedSheet;
+            dataset.sheetName = selectedSheet;
+            if (dsFile.quoteChar !== null && dsFile.quoteChar !== undefined) {
+              dataset.quoteChar = dsFile.quoteChar;
+            }
+            this.fileTypeDatasets.push(dataset);
+          });
+        }
+      } else {
+        if (dsFile.selected) {
+          dataset.name = dsFile.fileName;
+          if (dsFile.quoteChar !== null && dsFile.quoteChar !== undefined) {
+            dataset.quoteChar = dsFile.quoteChar;
+          }
+          this.fileTypeDatasets.push(dataset);
+        }
+      }
+    });
+
+    this.onGotoStep.emit('create-dataset-name');
+  }
+
+  public returnDatasetFiles() {
+    return this.fileTypeDatasets;
   }
 
   public getFileItemIconClassName(fileExtension: string ): string {

@@ -1,10 +1,10 @@
 import {Component, EventEmitter, Output, Input, OnInit} from '@angular/core';
 import {Dataset} from '../domains/dataset';
 import {DatasetsService} from '../services/datasets.service';
-import {CommonConstant} from '../../common/constants/common.constant';
 import {ConnectionService} from '../../connection/services/connection.service';
 import {LoadingService} from '../../common/services/loading/loading.service';
 import {finalize} from 'rxjs/operators';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'create-dataset-name',
@@ -32,6 +32,11 @@ export class CreateDatasetNameComponent implements OnInit{
   public description = '';
   public datasetInfo: DatasetInfo[] = [];
 
+  public nameErrors: string[] = [];
+  public names: string[] = [];
+  private fileTypeSaveCount  = 0;
+
+
   constructor(private readonly datasetService: DatasetsService,
               private readonly loadingService: LoadingService) {
   }
@@ -40,6 +45,16 @@ export class CreateDatasetNameComponent implements OnInit{
   ngOnInit(): void {
     if (this.importType === this.importDBType) {
       this.makeDatasetInfoForDb();
+    }else if (this.importType === this.importUploadType) {
+      if (this.fileTypeDatasets !== null && this.fileTypeDatasets.length > 0) {
+        this.fileTypeDatasets.forEach((item) => {
+          this.nameErrors.push('');
+          this.names.push(item.name);
+        });
+      }
+      if (this.fileTypeDatasets !== null && this.fileTypeDatasets.length === 1) {
+        this.makeDatasetInfoForUpload();
+      }
     }
   }
 
@@ -48,7 +63,7 @@ export class CreateDatasetNameComponent implements OnInit{
     if (this.dbTypeDataset != null) {
       const info1: DatasetInfo = new DatasetInfo();
       info1.svg = this.dbTypeDataset.implementor.toUpperCase();
-      info1.name = 'ImportType';
+      info1.name = 'Import Type';
       info1.value = this.dbTypeDataset.implementor;
 
       const info2: DatasetInfo = new DatasetInfo();
@@ -73,18 +88,86 @@ export class CreateDatasetNameComponent implements OnInit{
     }
   }
 
-  public complete() {
-    this.isNameError = false;
-    if (this.name === '' || this.name.length === 0) {
-      this.isNameError = true;
-    }
-    if (this.isNameError) {
-      return;
+  private makeDatasetInfoForUpload() {
+    this.datasetInfo = [];
+    if (this.fileTypeDatasets[0].filenameBeforeUpload !== null && this.fileTypeDatasets[0].filenameBeforeUpload !== undefined) {
+      const info1: DatasetInfo = new DatasetInfo();
+      info1.svg = this.getFileItemIconName(this.fileTypeDatasets[0].filenameBeforeUpload).trim();
+      info1.name = 'File Name';
+      info1.value = this.fileTypeDatasets[0].filenameBeforeUpload as string;
+      this.datasetInfo.push(info1);
     }
 
-    if (this.importType === this.importDBType) {
-        this.dbTypeComplete();
+    if (this.fileTypeDatasets[0].sheetName !== null && this.fileTypeDatasets[0].sheetName !== undefined) {
+      const info2: DatasetInfo = new DatasetInfo();
+      info2.svg = '';
+      info2.name = 'Sheet Name';
+      info2.value = this.fileTypeDatasets[0].sheetName;
+      this.datasetInfo.push(info2);
     }
+
+    if (this.fileTypeDatasets[0].delimiter !== null && this.fileTypeDatasets[0].delimiter !== undefined) {
+      const info3: DatasetInfo = new DatasetInfo();
+      info3.svg = '';
+      info3.name = 'Delimiter';
+      info3.value = this.fileTypeDatasets[0].delimiter;
+      this.datasetInfo.push(info3);
+    }
+  }
+
+  public complete() {
+    if (this.importType === this.importDBType) {
+      this.isNameError = false;
+      if (this.name === '' || this.name.length === 0) {
+        this.isNameError = true;
+      }
+      if (this.isNameError) {
+        return;
+      }
+
+      if (this.importType === this.importDBType) {
+        this.dbTypeComplete();
+      }
+    } else if (this.importType === this.importUploadType) {
+      this.nameErrors.forEach((nerror, idx) => {
+        this.nameErrors[idx] = '';
+      });
+
+      let errorNumber = -1;
+      this.names.forEach((name, idx) => {
+        if (errorNumber < 0) {
+          if (name === null || name.trim() === '') {
+            errorNumber = idx;
+          }
+        };
+      });
+      if (errorNumber > -1) {
+        this.nameErrors[errorNumber] = 'error';
+        return;
+      }
+
+      this.names.forEach((name, idx) => {
+        this.fileTypeDatasets[idx].name = name;
+      });
+      this.fileTypeSaveCount = 0;
+      this.fileTypeComplete();
+    }
+  }
+
+  private fileTypeComplete() {
+    this.loadingService.show();
+    this.datasetService.createDataset(this.fileTypeDatasets[this.fileTypeSaveCount])
+      .pipe(finalize(() => this.loadingService.hide()))
+      .subscribe(result => {
+        if (result !== null) {
+          this.fileTypeSaveCount++;
+          if (this.fileTypeSaveCount < this.fileTypeDatasets.length) {
+            this.fileTypeComplete();
+          } else {
+            this.onDone.emit();
+          }
+        }
+      });
   }
 
   private dbTypeComplete() {
@@ -115,6 +198,36 @@ export class CreateDatasetNameComponent implements OnInit{
         }
       });
   }
+
+  private getFileItemIconName(filenameBeforeUpload: string ): string {
+    const className: string = this._getFileFormatForIcon(filenameBeforeUpload).toString();
+    return className.toUpperCase();
+  }
+
+  public getFileItemIconClassName(filenameBeforeUpload: string ): string {
+    const className: string = this._getFileFormatForIcon(filenameBeforeUpload).toString();
+    return 'type-' + className.toLowerCase();
+  }
+
+  private _getFileFormatForIcon(fileName) {
+    const fileTypeArray: string[] = fileName.toUpperCase().split('.');
+    const fileType: string = fileTypeArray[fileTypeArray.length - 1];
+
+    const formats = [
+      {extension: 'CSV', fileFormat: Dataset.FILE_FORMAT.CSV},
+      {extension: 'TXT', fileFormat: Dataset.FILE_FORMAT.TXT},
+      {extension: 'JSON', fileFormat: Dataset.FILE_FORMAT.JSON},
+      {extension: 'XLSX', fileFormat: 'xlsx'},
+      {extension: 'XLS', fileFormat: 'xls'},
+    ];
+    const idx = _.findIndex(formats, {extension: fileType});
+    if (idx !== -1) {
+      return formats[idx].fileFormat;
+    } else {
+      return formats[0].fileFormat;
+    }
+  }
+
 }
 
 class DatasetInfo {

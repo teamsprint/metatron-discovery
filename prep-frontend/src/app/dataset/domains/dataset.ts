@@ -29,7 +29,7 @@ export namespace Dataset {
   export class DatasetFile extends Entity {
     public sheets: string[];
     public sheetIndex: number;
-    public selectedSheets: object[] = [];
+    public selectedSheets: string[] = [];
     public sheetInfo: SheetInfo[];
     public fileName: string;
     public fileExtension: string;

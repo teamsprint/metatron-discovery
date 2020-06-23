@@ -1,5 +1,6 @@
 import {Component, EventEmitter, HostBinding, Output, ViewChild} from '@angular/core';
 import {CreateDatasetFileUploadComponent} from './create-dataset-file-upload.component';
+import {CreateDatasetFileSelectComponent} from './create-dataset-file-select.component';
 import {CreateDatasetDatabaseComponent} from './create-dataset-database.component';
 import {Dataset} from '../domains/dataset';
 
@@ -19,12 +20,18 @@ export class CreateDatasetComponent {
   public readonly onDone = new EventEmitter();
   public step = '';
   public datasetFiles: Dataset.DatasetFile[] = [];
+  public finalDataset: Dataset.Entity[] = [];
+
   public importType: Dataset.IMPORT_TYPE;
   public dbTypeDataset: Dataset.DatasetDatabase;
   public fileTypeDatasets: Dataset.Entity[] = [];
 
   @ViewChild(CreateDatasetFileUploadComponent)
   public fileUploadComponent: CreateDatasetFileUploadComponent;
+
+  @ViewChild(CreateDatasetFileSelectComponent)
+  public fileSelectComponent: CreateDatasetFileSelectComponent;
+
 
   @ViewChild(CreateDatasetDatabaseComponent)
   public databaseComponent: CreateDatasetDatabaseComponent;
@@ -54,7 +61,8 @@ export class CreateDatasetComponent {
   }
   public fileSelectPageGotoStep(step: string) {
     if (step === 'create-dataset-name') {
-      //
+      this.importType = Dataset.IMPORT_TYPE.UPLOAD;
+      this.finalDataset = this.fileSelectComponent.returnDatasetFiles();
     }
     this.step = step;
   }
