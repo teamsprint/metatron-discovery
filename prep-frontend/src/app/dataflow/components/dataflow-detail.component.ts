@@ -5,9 +5,9 @@ import {RouterUrls} from '../../common/constants/router.constant';
 import {CommonUtil} from '../../common/utils/common-util';
 import {DataflowService} from '../services/dataflow.service';
 import {LoadingService} from '../../common/services/loading/loading.service';
-import {LocalStorageService} from '../../common/services/local-storage/local-storage.service';
 import {finalize} from 'rxjs/operators';
 import {Dataflow} from '../domains/dataflow';
+import {NGXLogger} from 'ngx-logger';
 
 @Component({
   templateUrl: './dataflow-detail.component.html',
@@ -421,7 +421,7 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
               private activatedRoute: ActivatedRoute,
               private readonly dataflowService: DataflowService,
               private readonly loadingService: LoadingService,
-              public readonly localStorageService: LocalStorageService) {
+              private readonly logger: NGXLogger) {
   }
 
 
@@ -600,7 +600,7 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
       });
     }
 
-    console.info('this.upstreamList', this.upstreamList);
+    this.logger.info('this.upstreamList', this.upstreamList);
 
     for (let ds of this.dataSetList) {
       ds.upstreamIds = [];
@@ -611,7 +611,7 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
       }
     }
 
-    console.info('this.dataSetList', this.dataSetList);
+    this.logger.info('this.dataSetList', this.dataSetList);
 
     this.makeChartData();
 
@@ -641,7 +641,7 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
       return false;
     });
 
-    console.info('this.dataSetList', this.dataSetList);
+    this.logger.info('this.dataSetList', this.dataSetList);
   }
 
   private findRootDataset(node: any, nodeList: any[]) {
