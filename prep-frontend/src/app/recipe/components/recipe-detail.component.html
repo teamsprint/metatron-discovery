@@ -82,7 +82,7 @@
             [gridId]="COMMON_UTIL.Generate.makeUUID()"
             [columnDefinitions]="columnDefinitions"
             [gridOptions]="gridOptions"
-            (onAngularGridCreated)="angularGridReady($event)">
+            (onAngularGridCreated)="gridInstanceReady($event)">
           </angular-slickgrid>
         </div>
       </div>
