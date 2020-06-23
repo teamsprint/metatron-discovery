@@ -11,6 +11,7 @@ import {LoadingComponent} from './common/components/loading/loading.component';
 import {NgxsModule} from '@ngxs/store';
 import {stateList} from './state-list';
 import {BrowserModule} from '@angular/platform-browser';
+import {LoggerModule, NgxLoggerLevel} from 'ngx-logger';
 
 @NgModule({
   imports: [
@@ -18,7 +19,11 @@ import {BrowserModule} from '@angular/platform-browser';
     SharedModule,
     HttpClientModule,
     AppRoutingModule,
-    NgxsModule.forRoot([...stateList])
+    NgxsModule.forRoot([...stateList]),
+    LoggerModule.forRoot({
+      level: NgxLoggerLevel.TRACE,
+      colorScheme: ['purple', 'teal', 'gray', 'gray', 'red', 'red', 'red']
+    })
   ],
   declarations: [
     AppComponent,

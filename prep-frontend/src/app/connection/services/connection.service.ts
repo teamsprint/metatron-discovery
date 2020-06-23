@@ -1,12 +1,12 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {of} from 'rxjs';
-import {ConnectionModule} from '../connection.module';
 import {CommonConstant} from '../../common/constants/common.constant';
 import {Connection} from '../domains/connection';
 import {Page} from '../../common/constants/page';
 import {CommonUtil} from '../../common/utils/common-util';
 import * as _ from 'lodash';
+import {HTTPStatusCode} from '../../common/domain/http-status-code';
 
 @Injectable()
 export class ConnectionService {
@@ -15,15 +15,19 @@ export class ConnectionService {
   }
 
   checkConnection(connectionParam: Connection.Entity) {
+
     const url = `${CommonConstant.API_CONSTANT.API_URL}/connections/query/check`;
+
     if (!connectionParam) {
       return of(new HttpErrorResponse({
         url,
-        status: 400,
+        status: HTTPStatusCode.BadRequest,
         statusText: 'Invalid connection value'
       }));
     }
-    const param = {connection: connectionParam};
+
+    const param = { connection: connectionParam };
+
     return this.http.post(url, JSON.stringify(param));
   }
 
@@ -34,7 +38,7 @@ export class ConnectionService {
     if (!connection) {
       return of(new HttpErrorResponse({
         url,
-        status: 400,
+        status: HTTPStatusCode.BadRequest,
         statusText: 'Invalid connection value'
       }));
     }
@@ -49,7 +53,7 @@ export class ConnectionService {
     if (!connId) {
       return of(new HttpErrorResponse({
         url,
-        status: 400,
+        status: HTTPStatusCode.BadRequest,
         statusText: 'Invalid connectionId value'
       }));
     }
@@ -75,7 +79,10 @@ export class ConnectionService {
       params = _.merge({ projection }, params);
     }
     return this.http.get<Connection.Result.GetConnections.SearchedData>(`${CommonConstant.API_CONSTANT.API_URL}/connections/search/findByNameContaining`,
-      {params: CommonUtil.Http.makeQueryString(params)});
+      {
+        params: CommonUtil.Http.makeQueryString(params)
+      }
+    );
   }
 
   updateConnection(connId: string, connectionParam: Connection.Entity) {
@@ -87,43 +94,53 @@ export class ConnectionService {
   }
 
   getDatabases(connectionParam: Connection.Entity) {
+
     const url = `${CommonConstant.API_CONSTANT.API_URL}/connections/query/databases`;
 
     if (!connectionParam) {
       return of(new HttpErrorResponse({
         url,
-        status: 400,
+        status: HTTPStatusCode.BadRequest,
         statusText: 'Invalid connection value'
       }));
     }
-    const param = {connection: connectionParam};
+
+    const param = { connection: connectionParam };
+
     return this.http.post(url, JSON.stringify(param));
   }
 
   getTables(connectionParam: Connection.Entity, databaseName: string) {
+
     const url = `${CommonConstant.API_CONSTANT.API_URL}/connections/query/tables`;
 
     if (!connectionParam || !databaseName) {
       return of(new HttpErrorResponse({
         url,
-        status: 400,
+        status: HTTPStatusCode.BadRequest,
         statusText: 'Invalid connection value'
       }));
     }
-    const param = {connection: connectionParam, database: databaseName};
+
+    const param = { connection: connectionParam, database: databaseName };
+
     return this.http.post(url, JSON.stringify(param));
   }
 
   getPreviewData(connectionParam: Connection.Entity, databaseName: string, tableName: string) {
+
     const url = `${CommonConstant.API_CONSTANT.API_URL}/connections/query/data?extractColumnName=false&limit=50`;
+
     if (!connectionParam || !databaseName || !tableName) {
       return of(new HttpErrorResponse({
         url,
-        status: 400,
+        status: HTTPStatusCode.BadRequest,
         statusText: 'Invalid connection value'
       }));
     }
-    const param = {connection: connectionParam, database: databaseName, query: tableName, type: 'TABLE'};
+
+    const param = { connection: connectionParam, database: databaseName, query: tableName, type: 'TABLE' };
+
     return this.http.post(url, JSON.stringify(param));
   }
 

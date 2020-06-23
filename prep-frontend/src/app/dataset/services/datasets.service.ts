@@ -6,6 +6,7 @@ import {CommonUtil} from '../../common/utils/common-util';
 import {Dataset} from '../domains/dataset';
 import {of} from 'rxjs';
 import * as _ from 'lodash';
+import {HTTPStatusCode} from '../../common/domain/http-status-code';
 
 @Injectable()
 export class DatasetsService {
@@ -19,7 +20,7 @@ export class DatasetsService {
     if (!dataset) {
       return of(new HttpErrorResponse({
         url,
-        status: 400,
+        status: HTTPStatusCode.BadRequest,
         statusText: 'Invalid connection value'
       }));
     }
@@ -33,7 +34,7 @@ export class DatasetsService {
     if (!dsId) {
       return of(new HttpErrorResponse({
         url,
-        status: 400,
+        status: HTTPStatusCode.BadRequest,
         statusText: 'Invalid connectionId value'
       }));
     }

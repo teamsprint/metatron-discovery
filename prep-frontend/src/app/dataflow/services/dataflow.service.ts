@@ -3,16 +3,15 @@ import {of} from 'rxjs';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {CommonConstant} from '../../common/constants/common.constant';
 import {Page} from '../../common/constants/page';
-import {CookieService} from 'ngx-cookie-service';
 import * as _ from 'lodash';
 import {Dataflow} from '../domains/dataflow';
 import {CommonUtil} from '../../common/utils/common-util';
+import {HTTPStatusCode} from '../../common/domain/http-status-code';
 
 @Injectable()
 export class DataflowService {
 
-  constructor(private readonly http: HttpClient,
-              private readonly cookieService: CookieService) {
+  constructor(private readonly http: HttpClient) {
   }
 
   createDataflow(dataflow: Dataflow.ValueObjects.Create) {
@@ -21,7 +20,7 @@ export class DataflowService {
     if (!dataflow) {
       return of(new HttpErrorResponse({
         url,
-        status: 400,
+        status: HTTPStatusCode.BadRequest,
         statusText: 'Invalid connection value'
       }));
     }
@@ -31,16 +30,20 @@ export class DataflowService {
 
 
   getDataflow(dfId: string) {
+
     const url = `${CommonConstant.API_CONSTANT.API_URL}/dataflows/${dfId}`;
+
     const params = {};
+
     if (!dfId) {
       return of(new HttpErrorResponse({
         url,
-        status: 400,
+        status: HTTPStatusCode.BadRequest,
         statusText: 'Invalid connectionId value'
       }));
     }
-    return this.http.get(url,  {
+
+    return this.http.get(url, {
       params: CommonUtil.Http.makeQueryString(params)
     });
   }

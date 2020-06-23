@@ -1,13 +1,12 @@
-/* tslint:disable */
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Router, ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {RouterUrls} from '../../common/constants/router.constant';
 import {CommonUtil} from '../../common/utils/common-util';
 import {DataflowService} from '../services/dataflow.service';
 import {LoadingService} from '../../common/services/loading/loading.service';
-import {LocalStorageService} from '../../common/services/local-storage/local-storage.service';
 import {finalize} from 'rxjs/operators';
 import {Dataflow} from '../domains/dataflow';
+import {NGXLogger} from 'ngx-logger';
 
 @Component({
   templateUrl: './dataflow-detail.component.html',
@@ -25,7 +24,7 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
   private dataflowId: string;
   // 차트를 그리기 위한 기반 데이터
   public dataSetList: any[] = [];
-  private upstreamList:Dataflow.Upstream[] = [];
+  private upstreamList: Dataflow.Upstream[] = [];
 
   // 루트 데이터셋 개수
   private rootCount: number = 0;
@@ -421,17 +420,20 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
               private activatedRoute: ActivatedRoute,
               private readonly dataflowService: DataflowService,
               private readonly loadingService: LoadingService,
-              public readonly localStorageService: LocalStorageService) {
+              private readonly logger: NGXLogger) {
   }
 
 
   ngOnInit(): void {
 
-    this.activatedRoute.params.subscribe((params) => {
-      if (params['id']) {
-        this.dataflowId = params['id'];
-      }
-    });
+    this.activatedRoute
+      .paramMap
+      .subscribe((params) => {
+        const dfId = params.get(RouterUrls.Managements.getFlowDetailPathVariableKey());
+        if (dfId) {
+          this.dataflowId = dfId;
+        }
+      });
 
     // 초기 세팅
     this.initViewPage();
@@ -455,7 +457,7 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
         this.dataSetList = [];
         this.upstreamList = [];
         if (this.dataflow.diagramData !== null && this.dataflow.upstreams) { // if dataflow has diagramData
-          this.makeDataSetList()
+          this.makeDataSetList();
         }
 
       });
@@ -480,8 +482,6 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
       }
     };
 
-
-
     this.label = {
       normal: {
         show: true,
@@ -489,7 +489,7 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
         textStyle: { color: '#000000', fontWeight: 'bold' },
         formatter(params) {
           if (params.data.dsName.length > 20) {
-            return params.data.dsName.slice(0,20) + ' ...'
+            return params.data.dsName.slice(0, 20) + ' ...';
           } else {
             return params.data.dsName;
           }
@@ -501,7 +501,7 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
         textStyle: { color: '#000000', fontWeight: 'bold' },
         formatter(params) {
           if (params.data.dsName.length > 20) {
-            return params.data.dsName.slice(0,20) + ' ...'
+            return params.data.dsName.slice(0, 20) + ' ...';
           } else {
             return params.data.dsName;
           }
@@ -587,7 +587,7 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
     this.upstreamList = this.dataflow.upstreams;
 
     if (this.dataSetList && 1 < this.dataSetList.length) {
-      this.dataSetList.sort(function (left, right) {
+      this.dataSetList.sort(function(left, right) {
         const leftTime = Date.parse(left.createdTime);
         const rightTime = Date.parse(right.createdTime);
         if (NaN == rightTime) {
@@ -599,7 +599,7 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
       });
     }
 
-    console.info('this.upstreamList', this.upstreamList);
+    this.logger.info('this.upstreamList', this.upstreamList);
 
     for (let ds of this.dataSetList) {
       ds.upstreamIds = [];
@@ -610,7 +610,7 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
       }
     }
 
-    console.info('this.dataSetList', this.dataSetList);
+    this.logger.info('this.dataSetList', this.dataSetList);
 
     this.makeChartData();
 
@@ -628,9 +628,9 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
     // this.createNodeTree(this.dataSetList);
 
     // 중복 제거 - 원래 생성되는 배열을 보존하기 위해서 createNodeTree()는 원형대로 놓아둠
-    this.chartNodes = this.chartNodes.filter(function (elem, index, self) {
+    this.chartNodes = this.chartNodes.filter(function(elem, index, self) {
       for (let dsIdx in self) {
-        if (self[dsIdx].objId === elem.objId) {
+        if (self[ dsIdx ].objId === elem.objId) {
           if (dsIdx === index.toString()) {
             return true;
           }
@@ -640,7 +640,7 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
       return false;
     });
 
-    console.info('this.dataSetList', this.dataSetList);
+    this.logger.info('this.dataSetList', this.dataSetList);
   }
 
   private findRootDataset(node: any, nodeList: any[]) {
@@ -650,7 +650,7 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
       const result = nodeList
         .filter(item => -1 !== node.upstreamIds.indexOf(item.objId))
         .map(item => this.findRootDataset(item, nodeList));
-      return (result && 0 < result.length) ? result[0] : node;
+      return (result && 0 < result.length) ? result[ 0 ] : node;
     }
   } // function - findRootDataset
 
@@ -675,7 +675,6 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
   //   });
   //
   // } // function - createNodeTree
-
 
 
   //

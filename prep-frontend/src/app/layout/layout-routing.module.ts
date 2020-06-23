@@ -21,6 +21,10 @@ import {DataflowService} from '../dataflow/services/dataflow.service';
 import {RecipeDetailComponent} from '../recipe/components/recipe-detail.component';
 import {RecipeModule} from '../recipe/recipe.module';
 
+const GUARDS = [
+  PreMainGuard,
+  PreFlowGuard
+];
 
 @NgModule({
   imports: [
@@ -85,7 +89,7 @@ import {RecipeModule} from '../recipe/recipe.module';
                 ]
               },
               {
-                path: ':id',
+                path: `:${RouterUrls.Managements.getFlowDetailPathVariableKey()}`,
                 component: DataflowDetailComponent,
                 canActivate: [
                   UserVerifyGuard
@@ -111,8 +115,7 @@ import {RecipeModule} from '../recipe/recipe.module';
   ],
   providers: [
     DataflowService,
-    PreMainGuard,
-    PreFlowGuard
+    ...GUARDS
   ],
   exports: [
     RouterModule
