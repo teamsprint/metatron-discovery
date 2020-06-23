@@ -1,12 +1,12 @@
 <!-- box popup -->
 <div class="pb-box-popup">
-  <a href="javascript:" class="pb-btn-pop-close"></a>
+  <a href="javascript:" class="pb-btn-pop-close" (click)="onClose.emit()"></a>
   <!-- step -->
   <div class="pb-ui-step">
-    <span class="pb-txt-step ">1</span>
-    <span class="pb-txt-step ">2</span>
+    <span class="pb-txt-step" (click)="onGotoStep.emit('create-dataset-type')" style="cursor: pointer;">1</span>
+    <span class="pb-txt-step" (click)="onGotoStep.emit('create-dataset-file-upload')" style="cursor: pointer;">2</span>
     <span class="pb-txt-step is-selected">3</span>
-    <span class="pb-txt-step">4</span>
+    <span class="pb-txt-step" style="cursor: pointer;">4</span>
   </div>
   <!-- //step -->
   <!-- top -->
@@ -22,24 +22,24 @@
       <div class="pb-box-select">
         <ul class="pb-list-select">
 
-          <li *ngFor="let file of datasetFiles; let i = index">
+          <li *ngFor="let file of datasetFiles; let i = index" [ngClass]="{'is-selected':currDSIndex=== i && file.fileFormat !== fileFormat.EXCEL}">
 
-            <div class="pb-ui-select ">
-              <label class="pb-compomnent-checkbox type-checkbox">
-                <input type="checkbox">
+            <div class="pb-ui-select" (click)="selectFile($event,i)">
+              <label class="pb-compomnent-checkbox type-checkbox" (click)="checkGroup($event, i)">
+                <input type="checkbox" [checked]="file.selected">
                 <i></i>
               </label>
-              <span class="pb-txt-checkbox">checcheckedcheckedcheckedcheckedcheckedcheckedcheckedcheckedcheckedked</span>
+              <span class="pb-txt-checkbox">({{file.fileExtension}}) {{file.fileName}}</span>
             </div>
 
             <ul class="pb-list-sub" *ngIf="file.fileFormat === fileFormat.EXCEL && file.sheetInfo !== null">
-              <li class="" *ngFor="let item of file.sheetInfo; let j = index">
-                <div class="pb-ui-select">
-                  <label class="pb-compomnent-checkbox type-checkbox">
-                    <input type="checkbox">
+              <li class="" *ngFor="let item of file.sheetInfo; let j = index" [ngClass]="{'is-selected':currSheetIndex === j && currDSIndex === i}">
+                <div class="pb-ui-select" (click)="selectSheet($event, i, item.sheetName, j)">
+                  <label class="pb-compomnent-checkbox type-checkbox" (click)="checkSheet($event, i, j)">
+                    <input type="checkbox" [checked]="item.selected">
                     <i></i>
                   </label>
-                  <span class="pb-txt-checkbox">checked</span>
+                  <span class="pb-txt-checkbox">{{item.sheetName}}</span>
                 </div>
               </li>
             </ul>
@@ -50,19 +50,27 @@
       <!-- //box select -->
 
       <!-- upload -->
-      <div class="pb-wrap-upload">
+      <div class="pb-wrap-upload type-flex">
         <!-- top -->
         <div class="pb-grid-top">
           <div class="pb-grid-name">
-            <em class="pb-img-file type-xls"></em>
-            로봇데이터-Sheet1
+            <!--<em class="pb-img-file type-xls"></em>-->
+            <em class="pb-img-file" [ngClass]="getFileItemIconClassName(currDetail.fileExtension).trim()"></em>
+            {{currDetail.detailName}}
           </div>
 
-          <div class="pb-grid-total"><strong>23</strong>Columns</div>
+
+          <div class="pb-grid-total" *ngIf="(currDetail.columns)"><strong>{{currDetail.columns}}</strong>Columns</div>
         </div>
         <!--//top -->
         <!-- grid area -->
-        <div class="pb-grid-area">
+        <div class="pb-ui-grid" [hidden]="gridEnable == false || clearGrid === true">
+          <angular-slickgrid
+            [gridId]="'dataset-file-container'"
+            [columnDefinitions]="columnDefinitions"
+            [gridOptions]="gridOptions"
+            (onAngularGridCreated)="angularGridReady($event)">
+          </angular-slickgrid>
 
         </div>
         <!-- //grid area -->
@@ -70,77 +78,36 @@
         <!--
            클릭시 is-selected 추가
         -->
-        <div class="pb-box-setting is-selected">
+        <div class="pb-box-setting is-selected" [ngClass]="{'is-selected':settingFoldFlag}">
           <div class="pb-box-fold pb-clear">
             <!-- setting edit -->
-            <div class="pb-setting-edit">
+            <div class="pb-setting-edit" *ngIf="settingFoldFlag">
               <div class="pb-edit-label">Upload Location</div>
               <div class="pb-form-edit">
-                <input type="text" class="pb-component-input">
+                <input type="text" class="pb-component-input" [(ngModel)]="currDetail.uploadLocation" readonly>
               </div>
             </div>
             <!-- //setting edit -->
 
-            <a href="javascript:" class="pb-btn-setting">
+            <a href="javascript:" class="pb-btn-setting" (click)="settingFold()">
               Advanced setting
             </a>
           </div>
           <!-- setting sub -->
           <div class="pb-setting-sub pb-clear">
             <!-- setting edit -->
-            <div class="pb-setting-edit">
+            <div class="pb-setting-edit" *ngIf="isCSV">
               <div class="pb-edit-label">Column delimiter</div>
               <div class="pb-form-edit">
-                <input type="text" class="pb-component-input" placeholder="Enter column delimiter">
+                <input type="text" class="pb-component-input" placeholder="Enter column delimiter" [(ngModel)]="currDelimiter">
               </div>
             </div>
             <!-- //setting edit -->
             <!-- setting edit -->
-            <div class="pb-setting-edit">
+            <div class="pb-setting-edit" [ngClass]="{'is-disabled': isJSON}">
               <div class="pb-edit-label">Manual Column count</div>
               <div class="pb-form-edit">
-                <input type="text" class="pb-component-input" placeholder="Enter column delimiter">
-              </div>
-            </div>
-            <!-- //setting edit -->
-          </div>
-          <!-- //setting sub -->
-        </div>
-        <!-- //box setting -->
-        <!-- box setting -->
-        <!--
-           클릭시 is-selected 추가
-        -->
-        <div class="pb-box-setting">
-          <div class="pb-box-fold pb-clear">
-            <!-- setting edit -->
-            <div class="pb-setting-edit">
-              <div class="pb-edit-label">Upload Location</div>
-              <div class="pb-form-edit">
-                <input type="text" class="pb-component-input">
-              </div>
-            </div>
-            <!-- //setting edit -->
-
-            <a href="javascript:" class="pb-btn-setting">
-              Advanced setting
-            </a>
-          </div>
-          <!-- setting sub -->
-          <div class="pb-setting-sub pb-clear">
-            <!-- setting edit -->
-            <div class="pb-setting-edit">
-              <div class="pb-edit-label">Column delimiter</div>
-              <div class="pb-form-edit">
-                <input type="text" class="pb-component-input">
-              </div>
-            </div>
-            <!-- //setting edit -->
-            <!-- setting edit -->
-            <div class="pb-setting-edit">
-              <div class="pb-edit-label">Manual Column count</div>
-              <div class="pb-form-edit">
-                <input type="text" class="pb-component-input">
+                <input type="text" class="pb-component-input" [(ngModel)]="currColumnCount" readonly>
               </div>
             </div>
             <!-- //setting edit -->
@@ -150,15 +117,14 @@
         <!-- //box setting -->
       </div>
       <!--//upload -->
-
-
     </div>
 
   </div>
   <!-- //contents -->
   <div class="pb-popup-bottom ">
-    <a href="javascript:" class="pb-component-btn-pop type-bg">NEXT</a>
-    <a href="javascript:" class="pb-component-btn-pop type-line">SKIP</a>
+    <a href="javascript:;" class="pb-component-btn-pop type-line" (click)="onGotoStep.emit('create-dataset-file-upload')">PREV</a>
+    <a href="javascript:;" class="pb-component-btn-pop type-line" (click)="onClose.emit()">CANCEL</a>
+    <a href="javascript:;" class="pb-component-btn-pop type-bg">NEXT</a>
   </div>
 </div>
 <!-- //box popup -->

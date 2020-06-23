@@ -5,6 +5,8 @@ import {DatasetsService} from '../services/datasets.service';
 import {LoadingService} from '../../common/services/loading/loading.service';
 import {finalize} from 'rxjs/operators';
 import {CommonUtil} from '../../common/utils/common-util';
+import {AngularGridInstance, Column, FieldType, GridOption, SelectedRange} from 'angular-slickgrid';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'create-dataset-file-select',
@@ -19,7 +21,7 @@ export class CreateDatasetFileSelectComponent implements OnInit{
   @Input()
   public datasetFiles: Dataset.DatasetFile[] = [];
   // Change Detect
-  public changeDetect: ChangeDetectorRef;
+  // public changeDetect: ChangeDetectorRef;
 
   public isCSV: boolean = false;
   public isEXCEL: boolean = false;
@@ -27,6 +29,7 @@ export class CreateDatasetFileSelectComponent implements OnInit{
 
   // grid hide
   public clearGrid : boolean = false;
+  public settingFoldFlag: boolean = false;
 
   public isNext: boolean = false;
   private _isInit: boolean = true;
@@ -43,8 +46,32 @@ export class CreateDatasetFileSelectComponent implements OnInit{
   public prevColumnCount: number;
 
   public previewErrorMsg : string = '';
-
   public fileFormat = Dataset.FILE_FORMAT;
+  private gridUseRowId: string = 'file_grid_id';
+
+
+  columnDefinitions: Column[] = [];
+
+  gridOptions: GridOption = {
+    autoResize: {
+      containerId: 'dataset-file-container',
+      sidePadding: 10
+    },
+    rowSelectionOptions: {
+      selectActiveRow: false
+    },
+    rowHeight: 26,
+    enableAutoResize: true,
+    enableCellNavigation: true,
+    showCustomFooter: false,
+    showFooterRow: false,
+    enableExcelCopyBuffer: true
+  };
+
+  gridDataset: Array<object> = [];
+  gridInstance: AngularGridInstance;
+
+  public gridEnable: boolean = false;
 
 
   constructor(private readonly datasetService: DatasetsService,
@@ -78,7 +105,6 @@ export class CreateDatasetFileSelectComponent implements OnInit{
 
       // FIXME : UI에서 각자 따로 오는 response를 어떻게 처리할지
       this._getGridInformation(index, this._getParamForGrid(dsFile), index === 0 ? 'draw' : '');
-      // console.info('this.datasetFiles', this.datasetFiles);
     });
   }
 
@@ -124,9 +150,9 @@ export class CreateDatasetFileSelectComponent implements OnInit{
   }
 
   public safelyDetectChanges() {
-    if (!this.changeDetect['destroyed']) {
-      this.changeDetect.detectChanges();
-    }
+    // if (!this.changeDetect['destroyed']) {
+    //   this.changeDetect.detectChanges();
+    // }
   } // function - safelyDetectChanges
 
 
@@ -166,11 +192,11 @@ export class CreateDatasetFileSelectComponent implements OnInit{
     this.datasetFiles[dsIdx].sheetName = sheetName;
 
     // if grid info is valid show grid else clear grid
-    // if (!isNullOrUndefined(this.datasetFiles[dsIdx]) && this.datasetFiles[dsIdx].sheetInfo[sheetIdx]) {
-    //   this._updateGrid(this.datasetFiles[dsIdx].sheetInfo[sheetIdx].data, this.datasetFiles[dsIdx].sheetInfo[sheetIdx].fields);
-    // } else {
-    //   this.clearGrid = true;
-    // }
+    if (this.datasetFiles[dsIdx] !== null && this.datasetFiles[dsIdx] !== undefined && this.datasetFiles[dsIdx].sheetInfo[sheetIdx]) {
+      this._updateGrid(this.datasetFiles[dsIdx].sheetInfo[sheetIdx].data, this.datasetFiles[dsIdx].sheetInfo[sheetIdx].fields as Field[]);
+    } else {
+      this.clearGrid = true;
+    }
   }
 
   /**
@@ -209,73 +235,135 @@ export class CreateDatasetFileSelectComponent implements OnInit{
       this.currSheetIndex = 0;
       this.datasetFiles[dsIdx].sheetIndex = 0;
       this.datasetFiles[dsIdx].sheetName = this.datasetFiles[dsIdx].sheetInfo[0].sheetName;
+
+      if (this.datasetFiles[dsIdx] !== null && this.datasetFiles[dsIdx] !== undefined && this.datasetFiles[dsIdx].sheetInfo[0]) {
+        this._updateGrid(this.datasetFiles[dsIdx].sheetInfo[0].data, this.datasetFiles[dsIdx].sheetInfo[0].fields as Field[]);
+      } else {
+        this.clearGrid = true;
+      }
+    }
+  }
+
+  public getFileItemIconClassName(fileExtension: string ): string {
+    if(fileExtension == null || fileExtension == undefined) return '';
+    const className: string = this._getFileFormatForIcon(fileExtension).toString();
+    return "type-" + className.toLowerCase();
+  }
+
+  /**
+   * Advanced setting toggle
+   * @returns {boolean}
+   */
+  public settingFold(){
+    this.settingFoldFlag = !this.settingFoldFlag;
+    return this.settingFoldFlag;
+  }
+
+  private _getFileFormatForIcon(fileExtension) {
+    let fileType : string = fileExtension.toUpperCase();
+
+    const formats = [
+      {extension:'CSV', fileFormat:Dataset.FILE_FORMAT.CSV},
+      {extension:'TXT', fileFormat:Dataset.FILE_FORMAT.TXT},
+      {extension:'JSON', fileFormat:Dataset.FILE_FORMAT.JSON},
+      {extension:'XLSX', fileFormat:'xlsx'},
+      {extension:'XLS', fileFormat:'xls'},
+    ];
+
+    const idx = _.findIndex(formats, {extension: fileType});
+
+    if (idx !== -1) {
+      return formats[idx].fileFormat
+    } else {
+      return formats[0].fileFormat
     }
   }
 
   private _getGridInformation(idx: number, param : any, option: string ) {
-    // this.loadingService.show();
-    // this.datasetService.getFileGridInfo(param)
-    //   .pipe(finalize(() => this.loadingService.hide()))
-    //   .subscribe(result => {
-    //     if (result.gridResponses) {
-    //
-    //       if( option && option === 'draw') this.clearGrid = false;
-    //
-    //       this.datasetFiles[idx].error = null;
-    //       this.previewErrorMsg = '';
-    //
-    //       this._setSheetInformation(idx, result.gridResponses, result.sheetNames);
-    //
-    //       // 첫번째 시트로 그리드를 그린다.
-    //       const sheet = this.datasetFiles[idx].sheetInfo[this.currSheetIndex];
-    //
-    //       // Update grid
-    //       // TODO. 임시 주석
-    //       // if( option && option === 'draw') this._updateGrid(sheet['data'], sheet['fields']);
-    //       //
-    //       // if (result.sheetNames) {
-    //       //   // Select first sheet in the list
-    //       //   this.datasetFiles[idx]['sheetName'] = sheet['sheetName'] ? sheet['sheetName'] : undefined;
-    //       // }
-    //
-    //     } else {
-    //
-    //       // no result from server
-    //       if( option && option === 'draw') this.clearGrid = true;
-    //       this.datasetFiles[idx].error = result;
-    //       // this.previewErrorMsg = (this.datasetFiles[idx].error? this.translateService.instant(this.datasetFiles[idx].error.message) : '');
-    //
-    //     }
-    //
-    //     // 다음 버튼 활성화 여부 확인
-    //     this._checkNextBtn();
-    //   });
+    this.loadingService.show();
+    this.datasetService.getFileGridInfo(param)
+      .pipe(finalize(() => this.loadingService.hide()))
+      .subscribe(result => {
+        if (result['gridResponses']) {
+
+          if( option && option === 'draw') this.clearGrid = false;
+
+          this.datasetFiles[idx].error = null;
+          this.previewErrorMsg = '';
+
+          this._setSheetInformation(idx, result['gridResponses'], result['sheetNames']);
+
+          // 첫번째 시트로 그리드를 그린다.
+          const sheet = this.datasetFiles[idx].sheetInfo[this.currSheetIndex];
+
+          // Update grid
+          // TODO. 임시 주석
+          if( option && option === 'draw') this._updateGrid(sheet['data'], sheet['fields'] as Field[]);
+
+          if (result['sheetNames']) {
+            // Select first sheet in the list
+            this.datasetFiles[idx]['sheetName'] = sheet['sheetName'] ? sheet['sheetName'] : undefined;
+          }
+
+        } else {
+
+          // no result from server
+          if( option && option === 'draw') this.clearGrid = true;
+          this.datasetFiles[idx].error = result;
+        }
+
+        // 다음 버튼 활성화 여부 확인
+        this._checkNextBtn();
+      });
   }
   private _updateGrid(data: any, fields: Field[]) {
+    this.gridEnable = false;
+    this.columnDefinitions = [];
+    this.gridDataset = [];
     if (data.length > 0 && fields.length > 0) {
-      this.clearGrid = false;
-      // const headers: header[] = this._getHeaders(fields);
-      // const rows: any[] = PreparationCommonUtil.getRows(data);
-      // this._drawGrid(headers, rows);
+      if (fields !== null && fields.length > 0) {
+        fields.forEach((item) => {
+          const columnValue = {};
+          columnValue['id'] = item['name'];
+          columnValue['name'] = item['name'];
+          columnValue['field'] = item['name'];
+          columnValue['sortable'] = false;
+          if (columnValue['type'] === 'STRING') {
+            columnValue['type'] = FieldType.string;
+          } else if (columnValue['type'] === 'TIMESTAMP') {
+            columnValue['type'] = FieldType.dateTime;
+          } else {
+            columnValue['type'] = FieldType.number;
+          }
+          columnValue['minWidth'] = 100;
+          this.columnDefinitions.push(columnValue as Column);
+        });
+      }
+
+      if (data !== null && data.length > 0 ) {
+        let idnum = 0;
+        data.forEach((item) => {
+          item['file_grid_id'] = this.gridUseRowId + '_' + idnum;
+          idnum++;
+          this.gridDataset.push(item);
+        });
+      }
+
+      this.gridEnable = true;
+      if (this.gridInstance !== null && this.gridInstance !== undefined) {
+        this.gridInstance.dataView.setItems(this.gridDataset, this.gridUseRowId);
+      }
     } else {
       //this.loadingHide();
       this.clearGrid = true;
     }
   }
-  private _drawGrid(headers: any[], rows: any[]) {
-    this.safelyDetectChanges();
-    // this.gridComponent.create(headers, rows, new GridOption()
-    //   .SyncColumnCellResize(true)
-    //   .MultiColumnSort(true)
-    //   .RowHeight(32)
-    //   .build()
-    // );
-    //
-    // // slick-viewport - Custom Top
-    // $('.slick-viewport').css('top', 50 + 'px');
-    //
-    // this.loadingHide();
+
+  angularGridReady(gridInstance: AngularGridInstance) {
+    this.gridInstance = gridInstance;
+    this.gridInstance.dataView.setItems(this.gridDataset, this.gridUseRowId);
   }
+
 
 
   private _setSheetInformation(idx: number, gridInfo: any, sheetNames: string[]) {
@@ -368,7 +456,7 @@ export class CreateDatasetFileSelectComponent implements OnInit{
     this.currDetail.fileFormat = this.datasetFiles[dsIdx].fileFormat;
     this.currDetail.columns = ( (this.datasetFiles[dsIdx].sheetInfo)?this.datasetFiles[dsIdx].sheetInfo[sheetIdx].fields.length : null );
     this.currDetail.fileExtension = this.datasetFiles[dsIdx].fileExtension;
-    // this.currDetail.uploadLocation  = this.datasetFiles[dsIdx].storageType;
+    this.currDetail.uploadLocation  = this.datasetFiles[dsIdx].storedUri;
   }
 
 

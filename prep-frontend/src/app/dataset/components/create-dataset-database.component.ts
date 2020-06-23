@@ -78,7 +78,6 @@ export class CreateDatasetDatabaseComponent implements OnInit, OnDestroy{
 
   ngOnDestroy() : void {
     if (this.gridInstance !== null) {
-      this.gridInstance.destroy();
       this.gridInstance  = null;
     }
   }

@@ -39,13 +39,13 @@ export class CreateDatasetFileUploadComponent implements OnInit, OnDestroy{
 
   public isUploading : boolean = false;
   public changeDetect: ChangeDetectorRef;
-  public fileLocations: any[];
-  public fileLocation: string;
   public fileLocationDefaultIdx : number = 0;
   // public isLocationListShow1: boolean = false;
   // public isLocationListShow2: boolean = false;
   public limitSize : number;
   public upFiles : any[];
+  public fileLocations: any[];
+  public fileLocation: string;
   public sucessFileCount : number = 0;
   public supportedFileCount : number = 0;
   public unsupportedFileCount : number = 0;
@@ -351,7 +351,7 @@ export class CreateDatasetFileUploadComponent implements OnInit, OnDestroy{
 
         datasetFile.filenameBeforeUpload = this.upFiles[i].name;
         datasetFile.storedUri = this.upFiles[i].storedUri;
-        // datasetFile.storageType = this._getStorageType(this.fileLocation);
+        datasetFile.storageType = this._getStorageType(this.fileLocation as Dataset.StorageType);
         let fileFormat = this._getFileFormat(this.upFiles[i].fileExtension);
         // console.info('fileFormat', fileFormat);
         datasetFile.fileFormat = Dataset.FILE_FORMAT[fileFormat];
@@ -377,6 +377,15 @@ export class CreateDatasetFileUploadComponent implements OnInit, OnDestroy{
     this.chunk_uploader.splice();
   }
 
+  private _getStorageType(location){
+    for (let sType in Dataset.StorageType) {
+      if (Dataset.StorageType[sType] == location) {
+        let enumType :Dataset.StorageType = Dataset.StorageType["" + sType];
+        return enumType;
+      }
+    }
+    return Dataset.StorageType.LOCAL;
+  }
 
   /**
    * Disable Drag and Drop in File list area

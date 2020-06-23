@@ -35,6 +35,7 @@ export namespace Dataset {
     public fileExtension: string;
     public selected = false;
     public error: object;
+    public storageType: StorageType;
   }
 
   export class DatasetDatabase extends Entity {
@@ -97,6 +98,13 @@ export namespace Dataset {
   export enum RS_TYPE {
     TABLE = 'TABLE',
     QUERY = 'QUERY'
+  }
+  export enum StorageType {
+    LOCAL = 'LOCAL',
+    HDFS = 'HDFS',
+    S3 = 'S3',
+    BLOB = 'BLOB',
+    FTP = 'FTP',
   }
 
 
