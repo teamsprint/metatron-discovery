@@ -17,7 +17,7 @@ export namespace Dataflow {
       name: string;
       description: string;
       custom: string;
-      diagrams: object[];
+      diagrams: Array<DataflowDiagram.Entity>;
       diagramData: Array<DataflowDiagramResponse>;
       upstreams: Array<Upstream>;
       datasetCount: number;
@@ -35,7 +35,7 @@ export namespace Dataflow {
       // dataflow: Dataflow;
       // dataset: Dataset;
       // recipe: Recipe;
-      // objType: DataflowDiagram.ObjectType;
+      objType: DataflowDiagram.ObjectType;
     }
 
     export enum ObjectType {
@@ -65,6 +65,11 @@ export namespace Dataflow {
   }
 
   export namespace Result {
+
+    export namespace GetDataflow {
+      export class Entity extends Dataflow.ValueObjects.Select {
+      }
+    }
 
     export namespace GetDataflows {
 
