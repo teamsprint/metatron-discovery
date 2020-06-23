@@ -146,5 +146,10 @@
     "no-namespace": false,
     "no-bitwise": false
   },
-  "rulesDirectory": []
+  "rulesDirectory": [],
+  "linterOptions": {
+    "exclude": [
+      "src/app/dataflow/components/dataflow-detail.component.ts"
+    ]
+  }
 }
