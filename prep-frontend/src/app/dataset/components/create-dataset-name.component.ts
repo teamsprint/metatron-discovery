@@ -139,7 +139,7 @@ export class CreateDatasetNameComponent implements OnInit{
           if (name === null || name.trim() === '') {
             errorNumber = idx;
           }
-        };
+        }
       });
       if (errorNumber > -1) {
         this.nameErrors[errorNumber] = 'error';
