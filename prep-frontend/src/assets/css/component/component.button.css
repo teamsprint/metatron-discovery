@@ -408,4 +408,28 @@
   color: #ff465c;
 }
 
+/***********************************************************************
+     Compontent : action button
+ *************************************************************************/
+.pb-component-btn-action {display:inline-block; background:url(../../images/btn_action.png) no-repeat;}
+.pb-component-btn-action.type-stop {width:9px; height:10px;}
+.pb-component-btn-action.type-play {width:9px; height:10px;}
+.pb-component-btn-action.type-stop {width:9px; height:10px;}
+.pb-component-btn-action.type-stop {width:9px; height:10px;}
+
+
+.svg-sample {display:inline-block; width:17px; height:17px;background:url(../../images/stop.svg) no-repeat; background-size:100% 100%;}
+.svg-sample-action {display:inline-block; width:17px; height:17px;background:url(../../images/stop_action.svg) no-repeat; background-size:100% 100%;}
+
+
+
+
+
+
+
+
+
+
+
+
 
