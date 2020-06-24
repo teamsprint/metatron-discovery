@@ -36,7 +36,9 @@ export namespace RouterUrls {
     public static getFlowDetailUrl(id: string) {
       return `/${Managements.ROOT}/${Managements.PREP_BOT}/${Managements.FLOWS}/${id}`;
     }
-
+    public static getSetDetailPathVariableKey() {
+      return 'id';
+    }
     public static getFlowDetailPathVariableKey() {
       return 'id';
     }

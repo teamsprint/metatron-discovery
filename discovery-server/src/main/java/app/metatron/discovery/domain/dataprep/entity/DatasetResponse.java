@@ -1,6 +1,8 @@
 package app.metatron.discovery.domain.dataprep.entity;
 
 import app.metatron.dataprep.teddy.DataFrame;
+import org.springframework.hateoas.Resource;
+
 import java.util.List;
 public class DatasetResponse {
 
@@ -32,7 +34,7 @@ public class DatasetResponse {
     private Long totalLines;
     private Long totalBytes;
     private DataFrame gridResponse;
-    private List<Dataflow> dataflows;
+    private List<Resource<DataflowProjections.DefaultProjection>> dataflows;
 
 
     public String getDsId() {
@@ -259,11 +261,11 @@ public class DatasetResponse {
         this.gridResponse = gridResponse;
     }
 
-    public List<Dataflow> getDataflows() {
+    public List<Resource<DataflowProjections.DefaultProjection>> getDataflows() {
         return dataflows;
     }
 
-    public void setDataflows(List<Dataflow> dataflows) {
+    public void setDataflows(List<Resource<DataflowProjections.DefaultProjection>> dataflows) {
         this.dataflows = dataflows;
     }
 }

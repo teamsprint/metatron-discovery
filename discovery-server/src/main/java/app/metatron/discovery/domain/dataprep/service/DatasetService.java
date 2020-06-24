@@ -21,6 +21,8 @@ import app.metatron.dataprep.teddy.DataFrame;
 import app.metatron.dataprep.teddy.exceptions.TeddyException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.projection.ProjectionFactory;
+import org.springframework.hateoas.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,6 +53,9 @@ public class DatasetService {
     private DataflowRepository dataflowRepository;
 
     private String previewSize = "50";
+
+    @Autowired
+    ProjectionFactory projectionFactory;
 
     public DatasetResponse getDatasetFullInfo(Dataset dataset)  {
         DatasetResponse datasetResponse = new DatasetResponse();
@@ -87,24 +92,24 @@ public class DatasetService {
             }
         }
         List<Dataflow> dataflows = this.dataflowRepository.findByNameContainingOrderByCreatedTimeAsc("");
-        List<Dataflow> linkDataflows = new ArrayList<>();
+        List<Resource<DataflowProjections.DefaultProjection>> linkDataflows = new ArrayList<>();
+        Resource<DataflowProjections.DefaultProjection> projectedDataflow;
+
         if(dataflows!=null && dataflows.size()>0) {
             for(Dataflow dataflow :dataflows) {
                 List<DataflowDiagram> diagrams = dataflow.getDiagrams();
                 if(diagrams != null) {
                     for(int i=0; i< diagrams.size(); i++) {
                         if(dataset.getDsId().equals(diagrams.get(i).getDataset().getDsId())) {
-                            linkDataflows.add(dataflow);
+                            DataflowProjections.DefaultProjection projection = projectionFactory
+                                    .createProjection(DataflowProjections.DefaultProjection.class, dataflow);
+                            projectedDataflow = new Resource<>(projection);
+
+                            linkDataflows.add(projectedDataflow);
                             break;
                         }
                     }
                 }
-            }
-        }
-        // 불필요 데이터 제거
-        if(linkDataflows.size()>0) {
-            for(Dataflow dataflow :linkDataflows) {
-                dataflow.setDiagrams(null);
             }
         }
         datasetResponse.setGridResponse(dataset.getGridResponse());

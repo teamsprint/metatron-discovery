@@ -1,5 +1,7 @@
+/* tslint:disable */
 import {AbstractHistory} from '../../common/domain/abstract-history-entity';
 import {PageResult} from '../../common/constants/page';
+import {Connection} from '../../connection/domains/connection';
 
 export namespace Dataset {
 
@@ -24,6 +26,19 @@ export namespace Dataset {
     manualColumnCount: number;
     totalLines: number;
     totalBytes: number;
+  }
+
+  export class Select extends Entity {
+    implementor: string;
+    hostname: string;
+    port: string;
+    database: string;
+    catalog: string;
+    sid: string;
+    url: string;
+    connType: Connection.ConnType;
+    gridResponse: any;
+
   }
 
   export class DatasetFile extends Entity {

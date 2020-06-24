@@ -2,25 +2,181 @@
 <div lnb (onPageRefresh)="lnbOnPageRefresh()"></div>
 <!-- //lnb -->
 
- <!--top -->
-<div class="pb-contents-top">
-  <!-- right -->
-  <div class="pb-ui-buttons">
-    <a href="javascript:;" class="pb-component-btn type-line">DOWNLOAD</a>
-    <div class="pb-ui-part">
-      <a href="javascript:;" class="pb-component-btn type-bg"><em class="pb-icon-add-r"></em>CREATE DATASET</a>
+<div class="pb-wrap-contents" *ngIf="dataset !== null && dataset !== undefined">
+   <!--top -->
+  <div class="pb-contents-top">
+    <!-- right -->
+    <div class="pb-ui-buttons">
+      <a href="javascript:;" class="pb-component-btn type-line">DOWNLOAD</a>
+      <div class="pb-ui-part">
+        <a href="javascript:;" class="pb-component-btn type-bg" (click)="openCreateDatasetPopup()"><em class="pb-icon-add-r"></em>CREATE DATASET</a>
+      </div>
     </div>
-  </div>
-  <!-- //right -->
+    <!-- //right -->
 
-  <!-- txt navi -->
-  <div class="pb-txt-navi">
-    <a href="javascript:" class="pb-btn-back"></a>
-    Dataset 01
+    <!-- txt navi -->
+    <div class="pb-txt-navi">
+      <a href="javascript:" class="pb-btn-back"
+         [routerLink]="ROUTER_URLS.Managements.getSetsUrl()"></a>
+      {{dataset.name}}
+    </div>
+    <!-- //txt navi -->
   </div>
-  <!-- //txt navi -->
+   <!--//top -->
+
+  <!-- contents -->
+  <div class="pb-wrap-box-contents">
+    <!-- box -->
+    <div class="pb-box-contents dataset-type">
+
+      <div class="ddp-wrap-datadetail">
+        <!-- left -->
+        <div class="ddp-info-left">
+          <!-- datadetail -->
+          <div class="ddp-ui-datadetail">
+            <label class="ddp-label-detail">INFORMATION</label>
+            <table class="ddp-table-detail ">
+              <colgroup>
+                <col width="92px">
+                <col width="*">
+              </colgroup>
+              <tbody>
+              <tr>
+                <th>
+                  타입
+                </th>
+                <td>
+                  <div class="ddp-txt-cut">DB (MySQL)</div>
+                </td>
+
+              </tr>
+              <tr>
+                <th>
+                  용량
+                </th>
+                <td>
+                  569.46 KB
+                </td>
+
+              </tr>
+              <tr>
+                <th>
+                  사이즈
+                </th>
+                <td>
+                  2열 / 2타입
+
+                </td>
+
+              </tr>
+              <tr>
+                <th>
+                  HOST
+                </th>
+                <td>
+                  51.22.22.22
+                </td>
+
+              </tr>
+              <tr>
+                <th>
+                  PORT
+                </th>
+                <td>
+                  808080
+                </td>
+
+              </tr>
+              <tr>
+                <th>
+                  DATABASE
+                </th>
+                <td class="ddp-link-url">
+                  <a href="javascript:">DATABASE</a>
+                </td>
+
+              </tr>
+              <tr>
+                <th>
+                  Table/SQL
+                </th>
+                <td>
+                  DATABASE
+                </td>
+              </tr>
+
+              </tbody>
+
+            </table>
+          </div>
+          <!-- //datadetail -->
+
+        </div>
+        <!-- //left -->
+        <!-- right -->
+        <div class="ddp-info-right">
+          <!-- datadetail -->
+          <div class="ddp-ui-datadetail">
+            <label class="ddp-label-detail">DATA</label>
+            <div class="ddp-form-box">
+              <!-- grid area -->
+              <div class="pb-ui-grid" *ngIf="gridEnable">
+                <angular-slickgrid
+                  [gridId]="'dataset-detail-container'"
+                  [columnDefinitions]="columnDefinitions"
+                  [gridOptions]="gridOptions"
+                  (onAngularGridCreated)="angularGridReady($event)">
+                </angular-slickgrid>
+
+              </div>
+              <!-- //grid area -->
+
+            </div>
+          </div>
+          <!-- //datadetail -->
+          <!-- datadetail -->
+          <div class="ddp-ui-datadetail">
+            <label class="ddp-label-detail">
+              USED IN
+            </label>
+            <div class="ddp-data-none" *ngIf="dataflowList === null || dataflowList === undefined">No log</div>
+            <ul class="ddp-list-detail" *ngIf="dataflowList !== null && dataflowList !== undefined">
+              <li *ngFor="let dataflow of dataflowList">
+                <!--<span class="ddp-box-tag2">Created in</span>-->
+
+                <!-- data -->
+                <div class="ddp-wrap-detailinfo">
+                  <div class="ddp-wrap-detaildata">
+                    <span class="ddp-data-num"><em class="ddp-icon-dbdata-s"></em>{{dataflow.datasetCount}}</span>
+                    <span class="ddp-data-num"><em class="ddp-icon-imported-s"></em>{{dataflow.recipeCount}}</span>
+                  </div>
+
+                  <div class="ddp-data-by2">
+                    <!--{{dataset.createdBy.fullName}}-->
+                    {{dataflow.createdTime | date: 'yyyy-MM-dd HH:mm'}} <em class="ddp-icon-by">by</em> {{dataflow.createdBy.fullName}}
+                  </div>
+                </div>
+                <!-- //data -->
+                <!-- 플로우 설명 이름 -->
+                <div class="ddp-wrap-detailname">
+                  <span class="ddp-data-detailname">{{dataflow.name}}</span> <span class="ddp-data-summary" *ngIf="dataflow.description !== null && dataflow.description !==''">- {{dataflow.description}}</span>
+                </div>
+                <!-- //플로우 설명 이름 -->
+                <div class="pb-wrap-button"><a href="javascript:" class="pb-component-btn type-dark"><em class="pb-icon-move"></em></a></div>
+              </li>
+            </ul>
+          </div>
+          <!-- //datadetail -->
+
+        </div>
+        <!-- //right -->
+
+      </div>
+    </div>
+    <!-- //box -->
+
+  </div>
 </div>
- <!--//top -->
 
 
 
