@@ -413,13 +413,37 @@
  *************************************************************************/
 .pb-component-btn-action {display:inline-block; background:url(../../images/btn_action.png) no-repeat;}
 .pb-component-btn-action.type-stop {width:9px; height:10px;}
-.pb-component-btn-action.type-play {width:9px; height:10px;}
-.pb-component-btn-action.type-stop {width:9px; height:10px;}
-.pb-component-btn-action.type-stop {width:9px; height:10px;}
+.pb-component-btn-action.type-stop:hover {background-position-x:-10px;}
+.pb-component-btn-action.type-play {width:8px; height:10px; background-position:left -11px;}
+.pb-component-btn-action.type-play:hover {background-position-x:-9px;}
+.pb-component-btn-action.type-pause {width:9px; height:10px; background-position:left -22px;}
+.pb-component-btn-action.type-pause:hover {background-position-x:-10px;}
+.pb-component-btn-action.type-refresh {width:12px; height:12px;background-position:left -33px;}
+.pb-component-btn-action.type-refresh:hover {background-position-x:-13px;}
 
+
+/***********************************************************************
+     Compontent : link button
+ *************************************************************************/
+.pb-component-link {color:#4584be; font-size:14px; text-decoration: underline;}
+.pb-component-link:hover {color:#51677f; text-decoration: underline;}
+
+
+/***********************************************************************
+     Compontent : view more button
+ *************************************************************************/
+.pb-component-btn-more {font-size:13px; font-weight:600; color:#a3a3a3;text-decoration: underline;}
+.pb-component-btn-more:after {display:inline-block; width:7px; height:12px; margin-left:6px; background:url(../../images/icon_arrow.png) no-repeat; background-position:left -28px; content:''; vertical-align: middle;}
+.pb-component-btn-more:hover {color:#737373; text-decoration: underline;}
+.pb-component-btn-more:hover:after {background-position-x:-8px;}
+  /***********************************************************************
+       sample
+   *************************************************************************/
 
 .svg-sample {display:inline-block; width:17px; height:17px;background:url(../../images/stop.svg) no-repeat; background-size:100% 100%;}
 .svg-sample-action {display:inline-block; width:17px; height:17px;background:url(../../images/stop_action.svg) no-repeat; background-size:100% 100%;}
+
+
 
 
 

@@ -27,7 +27,7 @@ body .slickgrid-container .grid-canvas .slick-cell {
   box-shadow: none;
 }
 
-.slickgrid-container .slick-header-columns .slick-header-sortable .slick-column-name {margin-bottom: 0;}
+.slickgrid-container .slick-header-columns .slick-header-sortable .slick-column-name {flex:auto; margin-bottom: 0;}
 .slick-column-name, .slick-sort-indicator {margin-bottom:0;}
 .slickgrid-container .slick-header-columns .slick-header-sortable .slick-column-name .txt-sub {
   font-size: 12px;
@@ -116,9 +116,12 @@ body .slickgrid-container .grid-canvas .slick-cell {
 .slick-cell-checkboxsel input[type=checkbox]:checked + label:before {
   display: none;
 }
+.slickgrid-container .slick-row.odd .slick-cell.active, .slickgrid-container .slick-row .slick-cell.active {padding:0;}
+body .slickgrid-container .grid-canvas .slick-cell {padding:0;}
+body .slickgrid-container .grid-canvas .slick-cell .type-column {display:block; position:relative; padding:5px 10px; white-space:nowrap;text-overflow:ellipsis; overflow:hidden;}
 
-body .slickgrid-container .slick-header-columns .slick-header-column.ui-state-default.type-column-selected:after,
-body .slickgrid-container .grid-canvas .slick-cell.type-column-selected:after {
+body .slickgrid-container .slick-header-columns .slick-header-column.ui-state-default .type-column-selected:after,
+body .slickgrid-container .grid-canvas .slick-cell .type-column-selected:after {
   display: inline-block;
   position: absolute;
   top: 0;
@@ -151,3 +154,4 @@ body .slickgrid-container .grid-canvas .slick-cell.type-column-selected:after {
   width:100% !important;
   height:100% !important;
 }
+.slick-header-button {margin-bottom:0; margin-top:-10px;}
