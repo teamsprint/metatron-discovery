@@ -79,9 +79,10 @@
         <!-- //setting -->
         <div class="pb-ui-grid">
           <angular-slickgrid
-            [gridId]="COMMON_UTIL.Generate.makeUUID()"
+            [gridId]="UUID"
             [columnDefinitions]="columnDefinitions"
             [gridOptions]="gridOptions"
+            (onGridCreated)="gridCreated($event)"
             (onAngularGridCreated)="gridInstanceReady($event)">
           </angular-slickgrid>
         </div>

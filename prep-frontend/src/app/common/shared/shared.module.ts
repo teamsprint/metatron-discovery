@@ -6,6 +6,7 @@ import {ClickOutsideModule} from 'ng-click-outside';
 import {DragulaModule, DragulaService} from 'ng2-dragula';
 import {NgxEchartsModule} from 'ngx-echarts';
 import * as echarts from 'echarts';
+import {AngularSlickgridModule} from 'angular-slickgrid';
 
 const MODULES = [
   CommonModule,
@@ -15,7 +16,8 @@ const MODULES = [
   DragulaModule,
   NgxEchartsModule.forRoot({
     echarts
-  })
+  }),
+  AngularSlickgridModule.forRoot({})
 ];
 
 const COMPONENTS = [];

@@ -2,8 +2,10 @@ import {Component, OnInit} from '@angular/core';
 import {Location} from '@angular/common';
 import {ViewMode} from '../../main/value-objects/view-mode';
 import {LocalStorageService} from '../../common/services/local-storage/local-storage.service';
-import {AngularGridInstance, Column, FieldType, Formatters, GridOption} from 'angular-slickgrid';
+import {AngularGridInstance, Column, FieldType, GridOption} from 'angular-slickgrid';
 import {CommonUtil} from '../../common/utils/common-util';
+import * as _ from 'lodash';
+import {SlickgridRuleEditSupportService} from '../../common/services/slickgrid/slickgrid-rule-edit-support-service';
 
 @Component({
   templateUrl: './recipe-detail.component.html',
@@ -13,26 +15,47 @@ export class RecipeDetailComponent implements OnInit {
 
   public readonly VIEW_MODE = ViewMode;
   public readonly COMMON_UTIL = CommonUtil;
+  public readonly UUID = this.COMMON_UTIL.Generate.makeUUID();
+
+  private readonly slickgridRuleEditSupportUtil = new SlickgridRuleEditSupportService();
 
   public readonly gridOptions: GridOption = {
+    enableAutoResize: true,
+    enableHeaderButton: true,
+    enableHeaderMenu: false,
     autoResize: {
       containerId: 'demo-container',
       sidePadding: 10
     },
-    rowSelectionOptions: {
-      selectActiveRow: false
-    },
     rowHeight: 26,
-    enableCheckboxSelector: true,
-    enableRowSelection: true,
-    showCellSelection: false,
-    enableAutoResize: true,
+    enableFiltering: false,
     enableCellNavigation: true,
-    showCustomFooter: true,
-    enableExcelCopyBuffer: true
+    headerButton: {
+      onCommand: (e, args) => {
+        this.slickgridRuleEditSupportUtil
+          .commandRegister(e, args, this.gridObj, [
+              this.slickgridRuleEditSupportUtil.colSelectionCommand,
+              this.slickgridRuleEditSupportUtil.customContextCommand
+            ]
+          );
+      }
+    }
   };
+
+  private readonly _header = {
+    buttons: [
+      _.cloneDeep(this.slickgridRuleEditSupportUtil.customContextMenu),
+      _.cloneDeep(this.slickgridRuleEditSupportUtil.colSelectionHeader)
+    ]
+  };
+
+  get header() {
+    return _.cloneDeep(this._header);
+  }
+
   public columnDefinitions: Column[] = [];
-  private gridInstance: AngularGridInstance;
+  private gridInstance;
+  private gridObj;
 
   public dataset: Array<object> = [];
 
@@ -49,7 +72,10 @@ export class RecipeDetailComponent implements OnInit {
         field: 'df_id',
         sortable: true,
         type: FieldType.string,
-        width: 100
+        width: 100,
+        cssClass: 'type-column',
+        formatter: this.slickgridRuleEditSupportUtil.colSelectionFormatter,
+        header: this.header
       },
       {
         id: 'df_name',
@@ -57,7 +83,10 @@ export class RecipeDetailComponent implements OnInit {
         field: 'df_name',
         type: FieldType.string,
         sortable: true,
-        minWidth: 100
+        width: 100,
+        cssClass: 'type-column',
+        formatter: this.slickgridRuleEditSupportUtil.colSelectionFormatter,
+        header: this.header
       },
       {
         id: 'created_by',
@@ -65,18 +94,21 @@ export class RecipeDetailComponent implements OnInit {
         field: 'created_by',
         sortable: true,
         type: FieldType.string,
-        minWidth: 100,
+        width: 100,
+        cssClass: 'type-column',
+        formatter: this.slickgridRuleEditSupportUtil.colSelectionFormatter,
+        header: this.header
       },
       {
         id: 'created_time',
         name: 'created_time',
         field: 'created_time',
-        formatter: Formatters.decimal,
-        params: { minDecimal: 1, maxDecimal: 2 },
         sortable: true,
         type: FieldType.date,
         minWidth: 90,
-        exportWithFormatter: true
+        cssClass: 'type-column',
+        formatter: this.slickgridRuleEditSupportUtil.colSelectionFormatter,
+        header: this.header
       },
       {
         id: 'modified_by',
@@ -84,7 +116,10 @@ export class RecipeDetailComponent implements OnInit {
         field: 'modified_by',
         type: FieldType.string,
         sortable: true,
-        minWidth: 100
+        width: 100,
+        cssClass: 'type-column',
+        formatter: this.slickgridRuleEditSupportUtil.colSelectionFormatter,
+        header: this.header
       },
       {
         id: 'modified_time',
@@ -92,7 +127,10 @@ export class RecipeDetailComponent implements OnInit {
         field: 'modified_time',
         type: FieldType.date,
         sortable: true,
-        minWidth: 100
+        width: 100,
+        cssClass: 'type-column',
+        formatter: this.slickgridRuleEditSupportUtil.colSelectionFormatter,
+        header: this.header
       },
       {
         id: 'version',
@@ -101,7 +139,9 @@ export class RecipeDetailComponent implements OnInit {
         sortable: true,
         type: FieldType.string,
         minWidth: 90,
-        exportWithFormatter: true
+        cssClass: 'type-column',
+        formatter: this.slickgridRuleEditSupportUtil.colSelectionFormatter,
+        header: this.header
       },
       {
         id: 'custom',
@@ -110,7 +150,9 @@ export class RecipeDetailComponent implements OnInit {
         sortable: true,
         type: FieldType.string,
         minWidth: 90,
-        exportWithFormatter: true
+        cssClass: 'type-column',
+        formatter: this.slickgridRuleEditSupportUtil.colSelectionFormatter,
+        header: this.header
       }
     ];
 
@@ -141,5 +183,9 @@ export class RecipeDetailComponent implements OnInit {
   public gridInstanceReady(gridInstance: AngularGridInstance) {
     this.gridInstance = gridInstance;
     this.gridInstance.dataView.setItems(this.dataset, 'df_id');
+  }
+
+  public gridCreated($event) {
+    this.gridObj = $event;
   }
 }

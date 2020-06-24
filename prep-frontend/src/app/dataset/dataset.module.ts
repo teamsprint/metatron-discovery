@@ -12,7 +12,6 @@ import {CreateDatasetNameComponent} from './components/create-dataset-name.compo
 import {DatasetDetailComponent} from './components/dataset-detail.component';
 import {DatasetsService} from './services/datasets.service';
 import {ConnectionService} from '../connection/services/connection.service';
-import {AngularSlickgridModule} from 'angular-slickgrid';
 
 const COMPONENTS = [
   DatasetListComponent,
@@ -30,8 +29,7 @@ const COMPONENTS = [
   imports: [
     SharedModule,
     RouterModule,
-    LnbModule,
-    AngularSlickgridModule.forRoot({})
+    LnbModule
   ],
   declarations: [
     ...COMPONENTS
