@@ -73,7 +73,12 @@ public class JdbcConnector {
     quote = getIdentifierQuoteChar(driver);
 
     if (queryStmt == null) {
-      dbTblName = q(dbName) + "." + q(tblName);
+      if (connStr.startsWith("jdbc:awsathena://")) {
+        dbTblName = dbName + "." + tblName;
+      } else {
+        dbTblName = q(dbName) + "." + q(tblName);
+      }
+
       queryStmt = "SELECT * FROM " + dbTblName;
     }
   }
