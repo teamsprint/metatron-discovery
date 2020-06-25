@@ -16,7 +16,7 @@
 
     <!-- txt navi -->
     <div class="pb-txt-navi">
-      <a href="javascript:;" class="pb-btn-back"></a>
+      <a href="javascript:;" class="pb-btn-back" [routerLink]="ROUTER_URLS.Managements.getSetsUrl()"></a>
       <span class="pb-txt-edit" [ngClass]="{'is-selected': nameTextInputEnable === true}"
             (click)="!nameTextInputEnable ? onDataflowNameEdit($event):$event.stopPropagation();">
             {{datasetName}}
