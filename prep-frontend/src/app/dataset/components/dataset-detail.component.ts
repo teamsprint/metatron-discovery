@@ -48,6 +48,7 @@ export class DatasetDetailComponent implements OnInit, OnDestroy{
       onCopyCancelled: (e, args: { ranges: SelectedRange[] }) => console.log('onCopyCancelled', args.ranges),
     }
   };
+  public informatationList: object[] = [];
   gridInstance: AngularGridInstance;
   private gridUseRowId: string = 'dataset_grid_id';
 
@@ -90,6 +91,7 @@ export class DatasetDetailComponent implements OnInit, OnDestroy{
         if (dataset['gridResponse']) {
           this.makeDatagrid(dataset['gridResponse']);
         }
+        this.makeInformation();
       });
   }
 
@@ -131,14 +133,105 @@ export class DatasetDetailComponent implements OnInit, OnDestroy{
       if(this.columnDefinitions.length > 0 && this.gridDataset.length > 0) {
         this.gridEnable = true;
       }
+    }
+  }
 
-      // console.info('this.gridDataset', this.gridDataset);
+  private makeInformation() {
+    this.informatationList = [];
+    const info1 = {};
+    info1['name'] = 'Import Type';
+    info1['value'] = this.dataset.importType;
+    this.informatationList.push(info1);
 
+    if(this.dataset.importType === Dataset.IMPORT_TYPE.UPLOAD) {
+
+      if (this.dataset.filenameBeforeUpload !== null && this.dataset.filenameBeforeUpload !== undefined) {
+        const fileup1 = {};
+        fileup1['name'] = 'File Name';
+        fileup1['value'] = this.dataset.filenameBeforeUpload;
+        this.informatationList.push(fileup1);
+      }
+
+      if (this.dataset.sheetName !== null && this.dataset.sheetName !== undefined && this.dataset.sheetName !== '') {
+        const fileup2 = {};
+        fileup2['name'] = 'Sheet Name';
+        fileup2['value'] = this.dataset.sheetName;
+        this.informatationList.push(fileup2);
+      }
+
+      if (this.dataset.totalLines !== null && this.dataset.totalLines !== undefined) {
+        const fileup3 = {};
+        fileup3['name'] = 'Total Line';
+        fileup3['value'] = this.dataset.totalLines;
+        this.informatationList.push(fileup3);
+      }
+
+      if (this.dataset.totalBytes !== null && this.dataset.totalBytes !== undefined) {
+        const fileup4 = {};
+        fileup4['name'] = 'Total Bytes';
+        fileup4['value'] = this.dataset.totalBytes;
+        this.informatationList.push(fileup4);
+      }
+
+      if (this.dataset.storedUri !== null && this.dataset.storedUri !== undefined) {
+        const fileup5 = {};
+        fileup5['name'] = 'Stored Uri';
+        fileup5['value'] = this.dataset.storedUri;
+        this.informatationList.push(fileup5);
+      }
+    }
+
+
+
+    if(this.dataset.importType === Dataset.IMPORT_TYPE.DATABASE) {
+      const conn1 = {};
+      conn1['name'] = 'Connection';
+      conn1['value'] = this.dataset.connName;
+      this.informatationList.push(conn1);
+
+      const conn2 = {};
+      conn2['name'] = 'Implementor';
+      conn2['value'] = this.dataset.implementor;
+      this.informatationList.push(conn2);
+
+      if (this.dataset.hostname !== null && this.dataset.hostname !== undefined) {
+        const conn3 = {};
+        conn3['name'] = 'Host';
+        conn3['value'] = this.dataset.hostname;
+        this.informatationList.push(conn3);
+
+        const conn4 = {};
+        conn4['name'] = 'Port';
+        conn4['value'] = this.dataset.port;
+        this.informatationList.push(conn4);
+      }
+      if (this.dataset.url !== null && this.dataset.url !== undefined) {
+        const conn5 = {};
+        conn5['name'] = 'Url';
+        conn5['value'] = this.dataset.url;
+        this.informatationList.push(conn5);
+      }
+
+      const conn6 = {};
+      conn6['name'] = 'Type';
+      conn6['value'] = this.dataset.rsType;
+      this.informatationList.push(conn6);
+
+      const conn7 = {};
+      conn7['name'] = 'Database';
+      conn7['value'] = this.dataset.dbName;
+      this.informatationList.push(conn7);
+      const conn8 = {};
+      conn8['name'] = 'Table';
+      conn8['value'] = this.dataset.tblName;
+      this.informatationList.push(conn8);
     }
   }
 
   ngOnDestroy(): void {
-    // this.LAYER_POPUP.unset();
+    if(this.gridInstance) {
+      this.gridInstance = null;
+    }
   }
   public lnbOnPageRefresh() {
   }

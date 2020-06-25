@@ -77,10 +77,12 @@ public class DatasetService {
         datasetResponse.setManualColumnCount(dataset.getManualColumnCount());
         datasetResponse.setTotalLines(dataset.getTotalLines());
         datasetResponse.setTotalBytes(dataset.getTotalBytes());
+        datasetResponse.setRsType(dataset.getRsType());
         String connId = dataset.getConnId();
         if(connId!=null && !connId.isEmpty()) {
             Connection connection = connectionRepository.findOne(connId);
             if(connection != null) {
+                datasetResponse.setConnName(connection.getName());
                 datasetResponse.setImplementor(connection.getImplementor());
                 datasetResponse.setHostname(connection.getHostname());
                 datasetResponse.setPort(connection.getPort());

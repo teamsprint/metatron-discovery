@@ -41,72 +41,11 @@
                 <col width="*">
               </colgroup>
               <tbody>
-              <tr>
-                <th>
-                  타입
-                </th>
-                <td>
-                  <div class="ddp-txt-cut">DB (MySQL)</div>
-                </td>
-
+              <tr *ngFor="let info of informatationList">
+                <th>{{info.name}}</th>
+                <td><div class="ddp-txt-cut">{{info.value}}</div></td>
               </tr>
-              <tr>
-                <th>
-                  용량
-                </th>
-                <td>
-                  569.46 KB
-                </td>
-
-              </tr>
-              <tr>
-                <th>
-                  사이즈
-                </th>
-                <td>
-                  2열 / 2타입
-
-                </td>
-
-              </tr>
-              <tr>
-                <th>
-                  HOST
-                </th>
-                <td>
-                  51.22.22.22
-                </td>
-
-              </tr>
-              <tr>
-                <th>
-                  PORT
-                </th>
-                <td>
-                  808080
-                </td>
-
-              </tr>
-              <tr>
-                <th>
-                  DATABASE
-                </th>
-                <td class="ddp-link-url">
-                  <a href="javascript:">DATABASE</a>
-                </td>
-
-              </tr>
-              <tr>
-                <th>
-                  Table/SQL
-                </th>
-                <td>
-                  DATABASE
-                </td>
-              </tr>
-
               </tbody>
-
             </table>
           </div>
           <!-- //datadetail -->

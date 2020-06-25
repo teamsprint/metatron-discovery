@@ -29,6 +29,7 @@ export namespace Dataset {
   }
 
   export class Select extends Entity {
+    connName: string;
     implementor: string;
     hostname: string;
     port: string;

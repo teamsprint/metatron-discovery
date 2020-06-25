@@ -12,6 +12,7 @@ public class DatasetResponse {
     private String custom;
     private Dataset.IMPORT_TYPE importType;
     private String connId;
+    private String connName;
     private String implementor;
     private String hostname;
     private Integer port;
@@ -20,6 +21,7 @@ public class DatasetResponse {
     private String sid;
     private String url;
     private Connection.ConnType connType;
+    private Dataset.RS_TYPE rsType;
     private String dbName;
     private String tblName;
     private String queryStmt;
@@ -35,7 +37,6 @@ public class DatasetResponse {
     private Long totalBytes;
     private DataFrame gridResponse;
     private List<Resource<DataflowProjections.DefaultProjection>> dataflows;
-
 
     public String getDsId() {
         return dsId;
@@ -83,6 +84,14 @@ public class DatasetResponse {
 
     public void setConnId(String connId) {
         this.connId = connId;
+    }
+
+    public String getConnName() {
+        return connName;
+    }
+
+    public void setConnName(String connName) {
+        this.connName = connName;
     }
 
     public String getImplementor() {
@@ -147,6 +156,14 @@ public class DatasetResponse {
 
     public void setConnType(Connection.ConnType connType) {
         this.connType = connType;
+    }
+
+    public Dataset.RS_TYPE getRsType() {
+        return rsType;
+    }
+
+    public void setRsType(Dataset.RS_TYPE rsType) {
+        this.rsType = rsType;
     }
 
     public String getDbName() {
