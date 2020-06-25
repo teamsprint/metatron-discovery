@@ -13,6 +13,7 @@
  */
 package app.metatron.discovery.domain.dataprep.service;
 
+import app.metatron.discovery.common.GlobalObjectMapper;
 import app.metatron.discovery.domain.dataprep.entity.*;
 import app.metatron.discovery.domain.dataprep.DatasetFileService;
 import app.metatron.discovery.domain.dataprep.repository.ConnectionRepository;
@@ -20,6 +21,8 @@ import app.metatron.discovery.domain.dataprep.repository.DataflowRepository;
 import app.metatron.dataprep.teddy.DataFrame;
 import app.metatron.dataprep.teddy.exceptions.TeddyException;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.hateoas.Resource;
@@ -30,6 +33,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static app.metatron.discovery.domain.dataprep.exceptions.PrepMessageKey.MSG_DP_ALERT_FILE_KEY_MISSING;
 import static app.metatron.discovery.domain.dataprep.exceptions.PrepMessageKey.MSG_DP_ALERT_IMPORT_TYPE_IS_WRONG;
@@ -160,5 +164,46 @@ public class DatasetService {
         }
 
         return dataFrame;
+    }
+
+    public void patchAllowedOnly(Dataset dataset, Dataset patchDataset) {
+        // Dataset editing is not yet supported.
+        // Only a few fields are allowed to be changed.
+        // It can be changed.
+
+        List<String> allowKeys = Lists.newArrayList();
+        allowKeys.add("name");
+        allowKeys.add("dsDesc");
+        allowKeys.add("totalLines");
+        allowKeys.add("totalBytes");
+
+        List<String> ignoreKeys = Lists.newArrayList();
+        ignoreKeys.add("dsId");
+        // ignoreKeys.add("refDfCount");
+
+        if (patchDataset.getName() != null) {
+            dataset.setName(patchDataset.getName());
+        }
+        if (patchDataset.getDescription() != null) {
+            dataset.setDescription(patchDataset.getDescription());
+        }
+        if (patchDataset.getTotalBytes() != null) {
+            dataset.setTotalBytes(patchDataset.getTotalBytes());
+        }
+        if (patchDataset.getTotalLines() != null) {
+            dataset.setTotalLines(patchDataset.getTotalLines());
+        }
+
+        ObjectMapper objectMapper = GlobalObjectMapper.getDefaultMapper();
+        Map<String, Object> mapDataset = objectMapper.convertValue(patchDataset, Map.class);
+        for (String key : mapDataset.keySet()) {
+            if (!ignoreKeys.contains(key)) {
+                continue;
+            }
+
+            if (!allowKeys.contains(key)) {
+                // LOGGER.debug("'" + key + "' of pr-dataset is an attribute to which patch is not applied");
+            }
+        }
     }
 }

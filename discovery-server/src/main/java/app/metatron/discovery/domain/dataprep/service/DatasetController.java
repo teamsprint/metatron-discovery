@@ -16,9 +16,7 @@ package app.metatron.discovery.domain.dataprep.service;
 import app.metatron.dataprep.teddy.DataFrame;
 import app.metatron.discovery.domain.dataprep.PreviewLineService;
 import app.metatron.discovery.domain.dataprep.DatasetFileService;
-import app.metatron.discovery.domain.dataprep.entity.Dataset;
-import app.metatron.discovery.domain.dataprep.entity.DatasetProjections;
-import app.metatron.discovery.domain.dataprep.entity.DatasetResponse;
+import app.metatron.discovery.domain.dataprep.entity.*;
 import app.metatron.discovery.domain.dataprep.exceptions.PrepMessageKey;
 import app.metatron.discovery.domain.dataprep.repository.DatasetRepository;
 
@@ -118,6 +116,43 @@ public class DatasetController {
         }
         return ResponseEntity.status(HttpStatus.SC_OK).body(datasetResponse);
     }
+
+
+    @RequestMapping(value = "/{dsId}", method = RequestMethod.PATCH)
+    @ResponseBody
+    public ResponseEntity<?> patchDataset(
+            @PathVariable("dsId") String dsId,
+            @RequestBody Resource<Dataset> datasetResource,
+            PersistentEntityResourceAssembler persistentEntityResourceAssembler
+    ) {
+
+        Dataset dataset;
+        Dataset patchDataset;
+        Dataset savedDataset;
+        Resource<DatasetProjections.DefaultProjection> projectedDataset;
+
+        try {
+            dataset = datasetRepository.findOne(dsId);
+            patchDataset = datasetResource.getContent();
+
+            datasetService.patchAllowedOnly(dataset, patchDataset);
+
+            savedDataset = datasetRepository.save(dataset);
+            LOGGER.debug(savedDataset.toString());
+
+            datasetRepository.flush();
+        } catch (Exception e) {
+            LOGGER.error("postDataset(): caught an exception: ", e);
+            throw datasetError(e);
+        }
+
+        DatasetProjections.DefaultProjection projection = projectionFactory
+                .createProjection(DatasetProjections.DefaultProjection.class, savedDataset);
+        projectedDataset = new Resource<>(projection);
+        return ResponseEntity.status(HttpStatus.SC_OK).body(projectedDataset);
+    }
+
+
 
     @RequestMapping(value = "/{dsId}/download", method = RequestMethod.GET)
     public

@@ -15,22 +15,14 @@
     <!-- //right -->
 
     <!-- txt navi -->
-    <div class="pb-txt-navi" *ngIf="nameTextInputEnable === false">
-      <a href="javascript:" class="pb-btn-back"
-         [routerLink]="ROUTER_URLS.Managements.getSetsUrl()"></a>
-      <span style="cursor: pointer;" (click)="nameTextInputEnable = true">{{dataset.name}}</span>
-    </div>
-    <!-- //txt navi -->
-
-
-    <!-- txt navi -->
-    <div class="pb-txt-navi" *ngIf="nameTextInputEnable === true">
+    <div class="pb-txt-navi">
       <a href="javascript:;" class="pb-btn-back"></a>
-      <span class="pb-txt-edit" [ngClass]="{'is-selected': nameTextInputEnable === true}">
-      {{datasetName}}
+      <span class="pb-txt-edit" [ngClass]="{'is-selected': nameTextInputEnable === true}"
+            (click)="!nameTextInputEnable ? onDataflowNameEdit($event):$event.stopPropagation();">
+            {{datasetName}}
        <div class="pb-form-input" style="display:;">
-          <input type="text" class="pb-input-edit" [(ngModel)]="datasetName">
-          <a href="javascript:;" class="pb-btn-box-icons type-bg type-check" (click)="datasetNameChange($event)"></a>
+          <input #nameInput type="text" class="pb-input-edit" [(ngModel)]="datasetName" (keypress)="enterDatasetName($event);" (clickOutside)="datasetNameChange()">
+          <a href="javascript:;" class="pb-btn-box-icons type-bg type-check" (click)="$event.stopPropagation(); datasetNameChange()"></a>
         </div>
     </span>
     </div>

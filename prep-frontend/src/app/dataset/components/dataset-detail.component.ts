@@ -1,5 +1,5 @@
 /* tslint:disable */
-import {Component, OnInit, OnDestroy, ViewChild} from '@angular/core';
+import {Component, OnInit, OnDestroy, ViewChild, ElementRef, ChangeDetectorRef, Injector} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {LocalStorageService} from '../../common/services/local-storage/local-storage.service';
 import {Dataset} from '../domains/dataset';
@@ -23,6 +23,9 @@ export class DatasetDetailComponent implements OnInit, OnDestroy{
 
   @ViewChild(LnbComponent)
   public lnbComponent: LnbComponent;
+  @ViewChild('nameInput', {static: false})
+  private nameInput: ElementRef;
+
   public readonly ROUTER_URLS = RouterUrls;
   public datasetId: string;
   public dataset: Dataset.Select;
@@ -56,12 +59,16 @@ export class DatasetDetailComponent implements OnInit, OnDestroy{
   private gridUseRowId: string = 'dataset_grid_id';
   public nameTextInputEnable: boolean =false;
   public datasetName: string = '';
+  // Change Detect
+  public changeDetect: ChangeDetectorRef;
 
-  constructor(private activatedRoute: ActivatedRoute,
+  constructor(protected injector: Injector,
+              private activatedRoute: ActivatedRoute,
               private readonly router: Router,
               private readonly datasetService: DatasetsService,
               private readonly loadingService: LoadingService,
               public readonly localStorageService: LocalStorageService) {
+    this.changeDetect = injector.get(ChangeDetectorRef);
   }
 
 
@@ -345,15 +352,43 @@ export class DatasetDetailComponent implements OnInit, OnDestroy{
     this.router.navigate([RouterUrls.Managements.getFlowDetailUrl(id)]).then();
   }
 
-  public datasetNameChange($event) {
-    $event.preventDefault();
-    console.info('datasetNameChange', $event);
-    if(this.datasetName !== this.dataset.name) {
 
+  public enterDatasetName($event) {
+    if (13 === $event.keyCode) {
+      this.datasetNameChange();
+    }
+  }
+
+  public onDataflowNameEdit($event) {
+    $event.stopPropagation();
+    this.nameTextInputEnable = true;
+    this.changeDetect.detectChanges();
+    this.nameInput.nativeElement.focus();
+  }
+
+  public datasetNameChange() {
+    if(this.datasetName !== this.dataset.name) {
+      this.updateDataset();
     }else{
       this.nameTextInputEnable = false;
     }
+  }
 
+  private updateDataset() {
+    this.nameTextInputEnable = false;
+    this.loadingService.show();
+    const datasetEn: Dataset.Entity = new Dataset.Entity();
+    datasetEn.dsId = this.datasetId;
+    datasetEn.name = this.datasetName;
+    this.datasetService
+      .updateDataset(this.datasetId, datasetEn)
+      .pipe(finalize(() => this.loadingService.hide()))
+      .subscribe(dataset => {
+        if (!dataset) {
+          return;
+        }
+        this.dataset.name = dataset['name'];
+      });
   }
 
 

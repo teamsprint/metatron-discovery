@@ -72,8 +72,13 @@ export class DatasetsService {
   }
 
 
-  updateDataset() {
-    return this.http.patch(``, {});
+  updateDataset(dsId: string, dataset: Dataset.Entity) {
+    const url = `${CommonConstant.API_CONSTANT.API_URL}/datasets/${dsId}`;
+    let params = {};
+    if (dataset) {
+      params = _.merge(dataset, params);
+    }
+    return this.http.patch(url, params);
   }
 
   deleteDataset() {
