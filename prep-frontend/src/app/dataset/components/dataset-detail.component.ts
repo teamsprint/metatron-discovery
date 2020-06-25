@@ -10,6 +10,8 @@ import {RouterUrls} from '../../common/constants/router.constant';
 import {finalize} from 'rxjs/operators';
 import {LnbComponent} from '../../lnb/components/lnb.component';
 import {AngularGridInstance, Column, FieldType, GridOption, SelectedRange} from 'angular-slickgrid';
+import {saveAs} from 'file-saver';
+import * as _ from 'lodash';
 
 @Component({
   templateUrl: './dataset-detail.component.html',
@@ -53,6 +55,7 @@ export class DatasetDetailComponent implements OnInit, OnDestroy{
   private gridUseRowId: string = 'dataset_grid_id';
 
   constructor(private activatedRoute: ActivatedRoute,
+              private readonly router: Router,
               private readonly datasetService: DatasetsService,
               private readonly loadingService: LoadingService,
               public readonly localStorageService: LocalStorageService) {
@@ -181,8 +184,6 @@ export class DatasetDetailComponent implements OnInit, OnDestroy{
       }
     }
 
-
-
     if(this.dataset.importType === Dataset.IMPORT_TYPE.DATABASE) {
       const conn1 = {};
       conn1['name'] = 'Connection';
@@ -228,6 +229,104 @@ export class DatasetDetailComponent implements OnInit, OnDestroy{
     }
   }
 
+  public downloadDataset() {
+    if (this.dataset.importType === Dataset.IMPORT_TYPE.UPLOAD) {
+      this.downloadDatasetForFile();
+    }else{
+      this.downloadDatasetNotFile();
+    }
+  }
+
+  private downloadDatasetForFile() {
+    let fileFormat: string;
+    let downloadFileName: string;
+
+    let ext = this.getFileFormatWithExtension( this.dataset.filenameBeforeUpload );
+    if (ext.toString().toLowerCase() === 'xls' || ext.toString().toLowerCase() === 'xlsx' || ext.toString().toLowerCase() === 'csv') {
+      fileFormat = 'csv';
+      downloadFileName = this.dataset.name + '.csv';
+    } else {
+      fileFormat = ext.toString().toLowerCase();
+      downloadFileName = this.dataset.filenameBeforeUpload;
+    }
+
+    this.datasetService.downloadDataset(this.dataset.dsId, fileFormat).subscribe((datasetFile) => {
+      saveAs(datasetFile, downloadFileName);
+    });
+  }
+
+  private getFileFormatWithExtension(fileExtension: string) {
+    let fileType: string = fileExtension.toUpperCase();
+
+    const formats = [
+      {extension: 'CSV', fileFormat: Dataset.FILE_FORMAT.CSV},
+      {extension: 'TXT', fileFormat: Dataset.FILE_FORMAT.TXT},
+      {extension: 'JSON', fileFormat: Dataset.FILE_FORMAT.JSON},
+      {extension: 'XLSX', fileFormat: "XLSX"},
+      {extension: 'XLS', fileFormat: "XLS"},
+    ];
+
+    const idx = _.findIndex(formats, {extension: fileType});
+
+    if (idx !== -1) {
+      return formats[idx].fileFormat
+    } else {
+      return formats[0].fileFormat
+    }
+  }
+
+  private downloadDatasetNotFile() {
+    console.info('this.dataset ', this.dataset );
+    if(this.dataset.gridResponse == null) return;
+    const exceldata: any = [];
+    const headerdata: string[] = [];
+    for (let i = 0; i < this.dataset.gridResponse.colNames.length; i = i + 1) {
+      headerdata.push(this.dataset.gridResponse.colNames[i]);
+    }
+
+    let jsonHeader: string = JSON.stringify(headerdata);
+    jsonHeader = jsonHeader.substr(1, jsonHeader.length - 2);
+    exceldata.push(jsonHeader);
+
+
+    for (let i = 0; i < this.dataset.gridResponse.rows.length; i = i + 1) {
+      const rowdata: string[] = [];
+      for (let j = 0; j < this.dataset.gridResponse.rows[i].objCols.length; j = j + 1) {
+        const rowdatastring:string = this.dataset.gridResponse.rows[i].objCols[j];
+        if (rowdatastring === null) {
+          rowdata.push('');
+        }else {
+          const type: string = this.dataset.gridResponse.colDescs[j].type;
+          if(type=='STRING' || type=='TIMESTAMP') {
+            rowdata.push('"' + rowdatastring + '"');
+          }else{
+            rowdata.push(rowdatastring);
+          }
+
+        }
+      }
+      exceldata.push(rowdata);
+    }
+
+    let label: string = this.deleteSpeCharacter(this.dataset.name);
+    let total_count: number = 0;
+    if(this.dataset.totalLines != null) {
+      total_count = this.dataset.totalLines;
+    }
+    label += "_" + total_count
+    saveAs(new Blob(['\ufeff' + exceldata.join('\n')], { type: 'application/csv;charset=utf-8' }), label + '.csv');
+  }
+
+  private deleteSpeCharacter(name: string): string {
+    if (name === null || name === undefined) return name;
+    let label: string = name;
+    const regExp:any = /[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/gi;
+    label = label.replace(/ /g,'');
+    label = label.replace(regExp,'');
+    return label;
+  }
+
+
   ngOnDestroy(): void {
     if(this.gridInstance) {
       this.gridInstance = null;
@@ -238,6 +337,12 @@ export class DatasetDetailComponent implements OnInit, OnDestroy{
   public openCreateDatasetPopup() {
     this.lnbComponent.openCreateDatasetPopup();
   }
+
+  public goDataflow(id: string) {
+    this.router.navigate([RouterUrls.Managements.getFlowDetailUrl(id)]).then();
+  }
+
+
   angularGridReady(gridInstance: AngularGridInstance) {
     this.gridInstance = gridInstance;
     this.gridInstance.dataView.setItems(this.gridDataset, this.gridUseRowId);

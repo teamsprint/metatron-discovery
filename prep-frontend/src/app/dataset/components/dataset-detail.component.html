@@ -7,7 +7,7 @@
   <div class="pb-contents-top">
     <!-- right -->
     <div class="pb-ui-buttons">
-      <a href="javascript:;" class="pb-component-btn type-line">DOWNLOAD</a>
+      <a href="javascript:;" class="pb-component-btn type-line" (click)="downloadDataset()">DOWNLOAD</a>
       <div class="pb-ui-part">
         <a href="javascript:;" class="pb-component-btn type-bg" (click)="openCreateDatasetPopup()"><em class="pb-icon-add-r"></em>CREATE DATASET</a>
       </div>
@@ -101,7 +101,7 @@
                   <span class="ddp-data-detailname">{{dataflow.name}}</span> <span class="ddp-data-summary" *ngIf="dataflow.description !== null && dataflow.description !==''">- {{dataflow.description}}</span>
                 </div>
                 <!-- //플로우 설명 이름 -->
-                <div class="pb-wrap-button"><a href="javascript:" class="pb-component-btn type-dark"><em class="pb-icon-move"></em></a></div>
+                <div class="pb-wrap-button"><a href="javascript:;" class="pb-component-btn type-dark" (click)="goDataflow(dataflow.dfId)"><em class="pb-icon-move"></em></a></div>
               </li>
             </ul>
           </div>

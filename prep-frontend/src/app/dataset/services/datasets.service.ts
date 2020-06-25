@@ -1,17 +1,22 @@
+/* tslint:disable */
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {CommonConstant} from '../../common/constants/common.constant';
+import {CookieConstant} from '../../common/constants/cookie.constant';
 import {Page} from '../../common/constants/page';
 import {CommonUtil} from '../../common/utils/common-util';
 import {Dataset} from '../domains/dataset';
-import {of} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import * as _ from 'lodash';
 import {HTTPStatusCode} from '../../common/domain/http-status-code';
+import {HttpHeaders} from "@angular/common/http";
+import {CookieService} from 'ngx-cookie-service';
 
 @Injectable()
 export class DatasetsService {
 
-  constructor(private readonly http: HttpClient) {
+  constructor(private readonly http: HttpClient,
+              private readonly cookieService: CookieService) {
   }
 
   createDataset(dataset: Dataset.Entity) {
@@ -98,5 +103,26 @@ export class DatasetsService {
     }
 
     return this.http.get(url);
+  }
+
+  public downloadDataset(dsId: string, fileFormat: string): Observable<any> {
+    let mineType: string;
+    if (fileFormat === 'csv') {
+      mineType = 'application/csv';
+    } else if (fileFormat === 'json') {
+      mineType = 'application/json';
+    }
+    let headers = new HttpHeaders({
+      'Accept': mineType,
+      'Content-Type': 'application/octet-binary',
+      'Authorization': this.cookieService.get(CookieConstant.KEY.LOGIN_TOKEN_TYPE) + ' ' + this.cookieService.get(CookieConstant.KEY.LOGIN_TOKEN)
+    });
+
+    let option: Object = {
+      headers: headers,
+      responseType: 'blob'
+    };
+
+    return this.http.get(`${CommonConstant.API_CONSTANT.API_URL}/datasets/${dsId}/download?fileType=`+fileFormat, option)
   }
 }

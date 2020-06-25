@@ -15,12 +15,14 @@ package app.metatron.discovery.domain.dataprep.service;
 
 import app.metatron.dataprep.teddy.DataFrame;
 import app.metatron.discovery.domain.dataprep.PreviewLineService;
+import app.metatron.discovery.domain.dataprep.DatasetFileService;
 import app.metatron.discovery.domain.dataprep.entity.Dataset;
 import app.metatron.discovery.domain.dataprep.entity.DatasetProjections;
 import app.metatron.discovery.domain.dataprep.entity.DatasetResponse;
 import app.metatron.discovery.domain.dataprep.exceptions.PrepMessageKey;
 import app.metatron.discovery.domain.dataprep.repository.DatasetRepository;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +34,10 @@ import org.springframework.data.rest.webmvc.RepositoryRestController;
 import org.springframework.hateoas.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.InputStream;
 
 import static app.metatron.discovery.domain.dataprep.exceptions.PrepMessageKey.MSG_DP_ALERT_NO_DATASET;
 import static app.metatron.discovery.domain.dataprep.util.PrepUtil.datasetError;
@@ -50,6 +56,9 @@ public class DatasetController {
 
     @Autowired
     private DatasetRepository datasetRepository;
+
+    @Autowired
+    private DatasetFileService datasetFileService;
 
     @Autowired
     PreviewLineService previewLineService;
@@ -109,6 +118,40 @@ public class DatasetController {
         }
         return ResponseEntity.status(HttpStatus.SC_OK).body(datasetResponse);
     }
+
+    @RequestMapping(value = "/{dsId}/download", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    ResponseEntity<?> getDownload(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            @PathVariable("dsId") String dsId,
+            @RequestParam(value = "fileType", required = false, defaultValue = "0") String fileType
+    ) {
+        Dataset dataset;
+        try {
+            dataset = getDatasetEntity(dsId);
+            String storedUri = dataset.getStoredUri();
+            String downloadFileName = FilenameUtils.getName(storedUri);
+            InputStream is = datasetFileService.getStream(storedUri);
+
+            int len;
+            byte[] buf = new byte[8192];
+            while ((len = is.read(buf)) != -1) {
+                response.getOutputStream().write(buf, 0, len);
+            }
+            is.close();
+
+            response.setHeader("Content-Disposition", String.format("attachment; filename=\"%s\"", downloadFileName));
+        } catch (Exception e) {
+            LOGGER.error("getDownload(): caught an exception: ", e);
+            throw datasetError(e);
+        }
+
+        return null;
+    }
+
+
 
     private Dataset getDatasetEntity(String dsId) {
         Dataset dataset = datasetRepository.findOne(dsId);
