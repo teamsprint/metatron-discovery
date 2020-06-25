@@ -50,9 +50,12 @@ export class DatasetDetailComponent implements OnInit, OnDestroy{
       onCopyCancelled: (e, args: { ranges: SelectedRange[] }) => console.log('onCopyCancelled', args.ranges),
     }
   };
+
   public informatationList: object[] = [];
   gridInstance: AngularGridInstance;
   private gridUseRowId: string = 'dataset_grid_id';
+  public nameTextInputEnable: boolean =false;
+  public datasetName: string = '';
 
   constructor(private activatedRoute: ActivatedRoute,
               private readonly router: Router,
@@ -89,6 +92,7 @@ export class DatasetDetailComponent implements OnInit, OnDestroy{
       .subscribe(dataset => {
         if (!dataset) {return;}
         this.dataset = dataset as Dataset.Select;
+        this.datasetName = this.dataset.name;
         if (dataset['dataflows']) {this.dataflowList = dataset['dataflows'];}
         if (this.dataflowList !== null && this.dataflowList.length === 0) {this.dataflowList = null;}
         if (dataset['gridResponse']) {
@@ -276,7 +280,6 @@ export class DatasetDetailComponent implements OnInit, OnDestroy{
   }
 
   private downloadDatasetNotFile() {
-    console.info('this.dataset ', this.dataset );
     if(this.dataset.gridResponse == null) return;
     const exceldata: any = [];
     const headerdata: string[] = [];
@@ -340,6 +343,17 @@ export class DatasetDetailComponent implements OnInit, OnDestroy{
 
   public goDataflow(id: string) {
     this.router.navigate([RouterUrls.Managements.getFlowDetailUrl(id)]).then();
+  }
+
+  public datasetNameChange($event) {
+    $event.preventDefault();
+    console.info('datasetNameChange', $event);
+    if(this.datasetName !== this.dataset.name) {
+
+    }else{
+      this.nameTextInputEnable = false;
+    }
+
   }
 
 

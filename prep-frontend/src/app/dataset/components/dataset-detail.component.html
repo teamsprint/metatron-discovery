@@ -15,12 +15,29 @@
     <!-- //right -->
 
     <!-- txt navi -->
-    <div class="pb-txt-navi">
+    <div class="pb-txt-navi" *ngIf="nameTextInputEnable === false">
       <a href="javascript:" class="pb-btn-back"
          [routerLink]="ROUTER_URLS.Managements.getSetsUrl()"></a>
-      {{dataset.name}}
+      <span style="cursor: pointer;" (click)="nameTextInputEnable = true">{{dataset.name}}</span>
     </div>
     <!-- //txt navi -->
+
+
+    <!-- txt navi -->
+    <div class="pb-txt-navi" *ngIf="nameTextInputEnable === true">
+      <a href="javascript:;" class="pb-btn-back"></a>
+      <span class="pb-txt-edit" [ngClass]="{'is-selected': nameTextInputEnable === true}">
+      {{datasetName}}
+       <div class="pb-form-input" style="display:;">
+          <input type="text" class="pb-input-edit" [(ngModel)]="datasetName">
+          <a href="javascript:;" class="pb-btn-box-icons type-bg type-check" (click)="datasetNameChange($event)"></a>
+        </div>
+    </span>
+    </div>
+    <!-- //txt navi -->
+
+
+
   </div>
    <!--//top -->
 
