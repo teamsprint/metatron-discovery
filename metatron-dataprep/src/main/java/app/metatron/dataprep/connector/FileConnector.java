@@ -60,6 +60,9 @@ public class FileConnector {
     hadoopConf.addResource(new Path(coreSite));
     hadoopConf.addResource(new Path(hdfsSite));
 
+    hadoopConf.set("fs.hdfs.impl", org.apache.hadoop.hdfs.DistributedFileSystem.class.getName());
+    hadoopConf.set("fs.file.impl", org.apache.hadoop.fs.LocalFileSystem.class.getName() );
+
     return hadoopConf;
   }
 
