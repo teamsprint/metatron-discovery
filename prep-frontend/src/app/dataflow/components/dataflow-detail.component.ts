@@ -6,7 +6,9 @@ import {DataflowService} from '../services/dataflow.service';
 import {LoadingService} from '../../common/services/loading/loading.service';
 import {finalize} from 'rxjs/operators';
 import {Dataflow} from '../domains/dataflow';
+import {Dataset} from '../../dataset/domains/dataset';
 import {NGXLogger} from 'ngx-logger';
+import * as _ from 'lodash';
 
 @Component({
   templateUrl: './dataflow-detail.component.html',
@@ -59,368 +61,45 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
 
 
   public readonly options = {
-    'backgroundColor': '#ffffff',
-    'tooltip': {
-      'show': false
+    backgroundColor: '#ffffff',
+    tooltip: { show: false },
+    xAxis: {
+      type: 'value',
+      max: null,
+      interval: 1,
+      splitLine: { show: false },
+      axisLabel: { show: false },
+      axisLine: { show: false },
+      axisTick: { show: false }
     },
-    'xAxis': {
-      'type': 'value',
-      'max': 5,
-      'interval': 1,
-      'splitLine': {
-        'show': false
-      },
-      'axisLabel': {
-        'show': false
-      },
-      'axisLine': {
-        'show': false
-      },
-      'axisTick': {
-        'show': false
-      }
+    yAxis: {
+      type: 'value',
+      max: null,
+      interval: 1,
+      inverse: true,
+      splitLine: { show: false },
+      axisLabel: { show: false },
+      axisLine: { show: false },
+      axisTick: { show: false }
     },
-    'yAxis': {
-      'type': 'value',
-      'max': 5,
-      'interval': 1,
-      'inverse': true,
-      'splitLine': {
-        'show': false
-      },
-      'axisLabel': {
-        'show': false
-      },
-      'axisLine': {
-        'show': false
-      },
-      'axisTick': {
-        'show': false
-      }
-    },
-    'series': [
+    series: [
       {
-        'type': 'graph',
-        'legendHoverLink': false,
-        'layout': 'none',
-        'coordinateSystem': 'cartesian2d',
-        'focusNodeAdjacency': false,
-        'symbolSize': 50,
-        'hoverAnimation': true,
-        'roam': false,
-        'draggable': true,
-        'itemStyle': {
-          'normal': {
-            'color': '#aaa',
-            'borderColor': '#1af'
-          }
-        },
-        'nodes': [
-          {
-            'dsId': '12fa7a34-c50e-4919-9ce6-c3df5e1a0721',
-            'dsName': 'SKT 갤럭시 A80 디지털 영상 캠페인_Daily Report_191215_Final_Raw - Rawdata',
-            'name': '12fa7a34-c50e-4919-9ce6-c3df5e1a0721',
-            'dsType': 'IMPORTED',
-            'importType': 'UPLOAD',
-            'detailType': 'DEFAULT',
-            'upstream': [],
-            'children': [],
-            'value': [
-              0,
-              0
-            ],
-            'symbol': 'image://http://52.141.2.109:8180/assets/images/dataflow/img_db.png',
-            'originSymbol': 'image://http://52.141.2.109:8180/assets/images/dataflow/img_db.png',
-            'label': {
-              'normal': {
-                'show': true,
-                'position': 'bottom',
-                'textStyle': {
-                  'color': '#000000',
-                  'fontWeight': 'bold'
-                }
-              },
-              'emphasis': {
-                'show': true,
-                'position': 'bottom',
-                'textStyle': {
-                  'color': '#000000',
-                  'fontWeight': 'bold'
-                }
-              }
-            }
-          },
-          {
-            'dsId': '7a711f7b-b368-490d-8fce-3dc3ea13497f',
-            'dsName': 'SKT 갤럭시 A80 디지털 영상 캠페인_Daily Report_191215_Final_Raw - Rawdata',
-            'name': '7a711f7b-b368-490d-8fce-3dc3ea13497f',
-            'dsType': 'WRANGLED',
-            'detailType': 'DEFAULT',
-            'flowName': '99d6f24e-c5fb-410b-ab21-550c336defda',
-            'upstream': [
-              '12fa7a34-c50e-4919-9ce6-c3df5e1a0721'
-            ],
-            'children': [],
-            'value': [
-              1,
-              0
-            ],
-            'symbol': 'image://http://52.141.2.109:8180/assets/images/dataflow/img_dataset.png',
-            'originSymbol': 'image://http://52.141.2.109:8180/assets/images/dataflow/img_dataset.png',
-            'label': {
-              'normal': {
-                'show': true,
-                'position': 'bottom',
-                'textStyle': {
-                  'color': '#000000',
-                  'fontWeight': 'bold'
-                }
-              },
-              'emphasis': {
-                'show': true,
-                'position': 'bottom',
-                'textStyle': {
-                  'color': '#000000',
-                  'fontWeight': 'bold'
-                }
-              }
-            },
-            'rootDataset': {
-              'createdBy': 'admin',
-              'createdTime': '2020-05-16T12:03:36.000Z',
-              'modifiedBy': 'admin',
-              'modifiedTime': '2020-05-16T12:03:38.000Z',
-              'dsId': '12fa7a34-c50e-4919-9ce6-c3df5e1a0721',
-              'dsName': 'SKT 갤럭시 A80 디지털 영상 캠페인_Daily Report_191215_Final_Raw - Rawdata',
-              'dsDesc': '',
-              'dsType': 'IMPORTED',
-              'importType': 'UPLOAD',
-              'storedUri': 'file:///home/metatron/servers/metatron-discovery/dataprep/uploads/c3b7e346-5e18-4ea8-914d-7fc4171df054csv',
-              'filenameBeforeUpload': 'SKT 갤럭시 A80 디지털 영상 캠페인_Daily Report_191215_Final_Raw.xlsx',
-              'totalLines': 1231,
-              'totalBytes': 143741,
-              'sheetName': 'Rawdata',
-              'delimiter': ',',
-              'manualColumnCount': 12,
-              'refDfCount': 2,
-              'upstreamDsIds': []
-            },
-            'rootValue': [
-              0,
-              0
-            ]
-          },
-          {
-            'dsId': '88d5ee96-5d02-4ccf-ab40-2bcb9fad49e3',
-            'dsName': 'accounts_POSTGRESQL (1)',
-            'name': '88d5ee96-5d02-4ccf-ab40-2bcb9fad49e3',
-            'dsType': 'WRANGLED',
-            'detailType': 'DEFAULT',
-            'flowName': '99d6f24e-c5fb-410b-ab21-550c336defda',
-            'upstream': [
-              '0e8c28c1-61fb-4896-82bb-a4c5e10bcdb8',
-              'caa0bd33-6f66-4d70-a753-1e705d842635',
-              '7a711f7b-b368-490d-8fce-3dc3ea13497f'
-            ],
-            'children': [],
-            'value': [
-              2,
-              1
-            ],
-            'symbol': 'image://http://52.141.2.109:8180/assets/images/dataflow/img_dataset.png',
-            'originSymbol': 'image://http://52.141.2.109:8180/assets/images/dataflow/img_dataset.png',
-            'label': {
-              'normal': {
-                'show': true,
-                'position': 'bottom',
-                'textStyle': {
-                  'color': '#000000',
-                  'fontWeight': 'bold'
-                }
-              },
-              'emphasis': {
-                'show': true,
-                'position': 'bottom',
-                'textStyle': {
-                  'color': '#000000',
-                  'fontWeight': 'bold'
-                }
-              }
-            },
-            'rootDataset': {
-              'createdBy': 'admin',
-              'createdTime': '2020-05-21T02:30:03.000Z',
-              'modifiedBy': 'admin',
-              'modifiedTime': '2020-05-21T02:30:06.000Z',
-              'dsId': '0e8c28c1-61fb-4896-82bb-a4c5e10bcdb8',
-              'dsName': 'accounts_POSTGRESQL',
-              'dsDesc': '설명 테스트',
-              'dsType': 'IMPORTED',
-              'importType': 'DATABASE',
-              'totalLines': 110,
-              'totalBytes': -1,
-              'dcId': 'a1d0fcbb-5996-4fda-bade-0887158e1aa3',
-              'dcImplementor': 'POSTGRESQL',
-              'dcName': 'PostgreSQL-sql.improvado.io-5432',
-              'dcType': 'JDBC',
-              'dcHostname': 'sql.improvado.io',
-              'dcPort': 5432,
-              'dcUsername': 'agency_3756',
-              'dcPassword': 'xXD5d4q8saLmuofH2WUp9SRXd4kkvZ',
-              'dcAuthenticationType': 'MANUAL',
-              'dcPublished': true,
-              'rsType': 'TABLE',
-              'dbName': 'public',
-              'tblName': 'accounts',
-              'queryStmt': 'select * from public.accounts',
-              'refDfCount': 2,
-              'upstreamDsIds': []
-            },
-            'rootValue': [
-              0,
-              0
-            ]
-          },
-          {
-            'dsId': '0e8c28c1-61fb-4896-82bb-a4c5e10bcdb8',
-            'dsName': 'accounts_POSTGRESQL',
-            'name': '0e8c28c1-61fb-4896-82bb-a4c5e10bcdb8',
-            'dsType': 'IMPORTED',
-            'importType': 'DATABASE',
-            'detailType': 'DEFAULT',
-            'upstream': [],
-            'children': [],
-            'value': [
-              0,
-              1
-            ],
-            'symbol': 'image://http://52.141.2.109:8180/assets/images/dataflow/img_db.png',
-            'originSymbol': 'image://http://52.141.2.109:8180/assets/images/dataflow/img_db.png',
-            'label': {
-              'normal': {
-                'show': true,
-                'position': 'bottom',
-                'textStyle': {
-                  'color': '#000000',
-                  'fontWeight': 'bold'
-                }
-              },
-              'emphasis': {
-                'show': true,
-                'position': 'bottom',
-                'textStyle': {
-                  'color': '#000000',
-                  'fontWeight': 'bold'
-                }
-              }
-            }
-          },
-          {
-            'dsId': 'caa0bd33-6f66-4d70-a753-1e705d842635',
-            'dsName': 'accounts_POSTGRESQL',
-            'name': 'caa0bd33-6f66-4d70-a753-1e705d842635',
-            'dsType': 'WRANGLED',
-            'detailType': 'DEFAULT',
-            'flowName': '99d6f24e-c5fb-410b-ab21-550c336defda',
-            'upstream': [
-              '0e8c28c1-61fb-4896-82bb-a4c5e10bcdb8'
-            ],
-            'children': [],
-            'value': [
-              1,
-              2
-            ],
-            'symbol': 'image://http://52.141.2.109:8180/assets/images/dataflow/img_dataset.png',
-            'originSymbol': 'image://http://52.141.2.109:8180/assets/images/dataflow/img_dataset.png',
-            'label': {
-              'normal': {
-                'show': true,
-                'position': 'bottom',
-                'textStyle': {
-                  'color': '#000000',
-                  'fontWeight': 'bold'
-                }
-              },
-              'emphasis': {
-                'show': true,
-                'position': 'bottom',
-                'textStyle': {
-                  'color': '#000000',
-                  'fontWeight': 'bold'
-                }
-              }
-            },
-            'rootDataset': {
-              'createdBy': 'admin',
-              'createdTime': '2020-05-21T02:30:03.000Z',
-              'modifiedBy': 'admin',
-              'modifiedTime': '2020-05-21T02:30:06.000Z',
-              'dsId': '0e8c28c1-61fb-4896-82bb-a4c5e10bcdb8',
-              'dsName': 'accounts_POSTGRESQL',
-              'dsDesc': '설명 테스트',
-              'dsType': 'IMPORTED',
-              'importType': 'DATABASE',
-              'totalLines': 110,
-              'totalBytes': -1,
-              'dcId': 'a1d0fcbb-5996-4fda-bade-0887158e1aa3',
-              'dcImplementor': 'POSTGRESQL',
-              'dcName': 'PostgreSQL-sql.improvado.io-5432',
-              'dcType': 'JDBC',
-              'dcHostname': 'sql.improvado.io',
-              'dcPort': 5432,
-              'dcUsername': 'agency_3756',
-              'dcPassword': 'xXD5d4q8saLmuofH2WUp9SRXd4kkvZ',
-              'dcAuthenticationType': 'MANUAL',
-              'dcPublished': true,
-              'rsType': 'TABLE',
-              'dbName': 'public',
-              'tblName': 'accounts',
-              'queryStmt': 'select * from public.accounts',
-              'refDfCount': 2,
-              'upstreamDsIds': []
-            },
-            'rootValue': [
-              0,
-              1
-            ]
-          }
-        ],
-        'links': [
-          {
-            'source': '12fa7a34-c50e-4919-9ce6-c3df5e1a0721',
-            'target': '7a711f7b-b368-490d-8fce-3dc3ea13497f'
-          },
-          {
-            'source': '7a711f7b-b368-490d-8fce-3dc3ea13497f',
-            'target': '88d5ee96-5d02-4ccf-ab40-2bcb9fad49e3'
-          },
-          {
-            'source': '0e8c28c1-61fb-4896-82bb-a4c5e10bcdb8',
-            'target': '88d5ee96-5d02-4ccf-ab40-2bcb9fad49e3'
-          },
-          {
-            'source': '0e8c28c1-61fb-4896-82bb-a4c5e10bcdb8',
-            'target': 'caa0bd33-6f66-4d70-a753-1e705d842635',
-            'lineStyle': {
-              'normal': {
-                'curveness': -0.2
-              }
-            }
-          },
-          {
-            'source': 'caa0bd33-6f66-4d70-a753-1e705d842635',
-            'target': '88d5ee96-5d02-4ccf-ab40-2bcb9fad49e3'
-          }
-        ],
-        'lineStyle': {
-          'normal': {
-            'opacity': 0.3,
-            'width': 4
-          }
-        }
+        type: 'graph',
+        legendHoverLink: false,
+        layout: 'none',
+        coordinateSystem: 'cartesian2d',
+        focusNodeAdjacency: false,
+        symbolSize: 50,
+        hoverAnimation: true,
+        roam: false,
+        // edgeSymbol: ['none', 'arrow'],
+        draggable: true,
+        itemStyle: { normal: { color: '#aaa', borderColor: '#1af' } },
+        nodes: null,
+        links: null,
+        lineStyle: { normal: { opacity: 0.3, width: 4 } }
       }
-    ],
-    'animation': false
+    ], animation: false
   };
 
 
@@ -603,9 +282,6 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
       ], animation: false
     };
 
-    // lineStyle: { normal: { opacity: 0.3, width: 4 } }
-
-
     this.commandList = [
       { command: 'create', alias: 'Cr' },
       { command: 'header', alias: 'He' },
@@ -637,6 +313,7 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
   private makeDataSetList() {
     this.dataSetList = this.dataflow.diagramData;
     this.upstreamList = this.dataflow.upstreams;
+    this.logger.info('this.upstreamList', this.upstreamList);
 
     if (this.dataSetList && 1 < this.dataSetList.length) {
       this.dataSetList.sort(function(left, right) {
@@ -651,24 +328,30 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
       });
     }
 
-    this.logger.info('this.upstreamList', this.upstreamList);
+    // this.logger.info('this.dataSetList A', this.dataSetList);
 
-    for (let ds of this.dataSetList) {
-      ds.upstreamIds = [];
-      for (let upstream of this.upstreamList) {
-        if (upstream.recipeId === ds.objId) {
-          ds.upstreamIds.push(upstream.upstreamId);
+    if (this.dataSetList !== null && this.dataSetList.length > 0 ) {
+      for (let ds of this.dataSetList) {
+        ds.upstreamIds = [];
+        for (let upstream of this.upstreamList) {
+          if (upstream.recipeId === ds.objId) {
+            ds.upstreamIds.push(upstream.upstreamId);
+          }
         }
       }
+
+      // this.logger.info('this.dataSetList B', this.dataSetList);
+      this.makeChartData();
     }
-
-    this.logger.info('this.dataSetList', this.dataSetList);
-
-    this.makeChartData();
-
   }
 
   private makeChartData() {
+    this.chartNodes = [];
+    this.chartLinks = [];
+    this.depthCount = 0;
+    this.rootCount = 0;
+
+
     // 최상위 노드 탐색
     this.dataSetList.forEach(item => {
       const rootDataset = this.findRootDataset(item, this.dataSetList);
@@ -677,7 +360,8 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
       }
     });
 
-    // this.createNodeTree(this.dataSetList);
+    this.createNodeTree(this.dataSetList);
+    // this.logger.info('this.chartNodes C', this.chartNodes);
 
     // 중복 제거 - 원래 생성되는 배열을 보존하기 위해서 createNodeTree()는 원형대로 놓아둠
     this.chartNodes = this.chartNodes.filter(function(elem, index, self) {
@@ -692,8 +376,67 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
       return false;
     });
 
-    this.logger.info('this.dataSetList', this.dataSetList);
+    this.chartSpacing(this.chartNodes, this.chartLinks);
+
+    // 하위 노드 위치 조정 ( 최상위 노드에 맞춰 정렬되도록 변경 )
+    this.chartNodes.forEach(item1 => {
+      if (item1.rootValue) {
+        const rootDsNode = this.chartNodes.filter(item2 => item2.objId === item1.rootDataset.objId)[0];
+        if (item1.value[1] < rootDsNode.value[1]) {
+          const itemIdx = this.chartNodes
+            .filter(item2 => item2.rootDataset && item2.rootDataset.objId === item1.rootDataset.objId)
+            .findIndex(item2 => item2.objId === item1.objId);
+          item1.value[1] = rootDsNode.value[1] + itemIdx;
+        }
+      }
+    });
+
+    this.options.xAxis.max = this.depthCount > 5 ? 5 + (this.depthCount - 5) : 5;
+    this.options.yAxis.max = this.rootCount > 5 ? 5 + (this.rootCount - 5) : 5;
+    this.options.series[0].nodes = this.chartNodes;
+    this.options.series[0].links = this.chartLinks;
+
+
   }
+
+  private chartSpacing(chartNodes, chartLinks) {
+    // this.logger.info('chartSpacing', chartNodes);
+    for (let idx in chartNodes) {
+      let node = chartNodes[idx];
+
+      let upstreams = chartLinks.filter(function (l) {
+        if (l.target === node.objId) {
+          return true;
+        }
+      });
+
+      if (0 < upstreams.length) {
+        let maxDepth = 0;
+        upstreams.forEach(function (l) {
+          let n = chartNodes.find(function (n) {
+            if (n.objId === l.source) {
+              return true;
+            }
+          });
+          if (maxDepth < n.value[0]) {
+            maxDepth = n.value[0];
+          }
+        });
+        let diffDepth = maxDepth - node.value[0] + 1;
+        if (0 < diffDepth) {
+          let depth = node.value[0];
+          let position = node.value[1];
+          chartNodes.forEach(function (n) {
+            if (position == n.value[1] && depth <= n.value[0]) {
+              n.value[0] += diffDepth;
+            }
+          });
+        }
+      }
+    }
+  } // function - chartSpacing
+
+
 
   private findRootDataset(node: any, nodeList: any[]) {
     if (0 === node.upstreamIds.length && node.objType === Dataflow.DataflowDiagram.ObjectType.DATASET) {
@@ -711,61 +454,63 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
    * 차트 전체 노드 구조 생성
    * @param nodeList
    */
-  // private createNodeTree(nodeList) {
-  //   // root노드
-  //   const rootNodeList = nodeList.filter(node => (node.upstreamIds.length === 0));
-  //
-  //   const recipeRootNodeList = nodeList.filter((node) => {
-  //     return _.eq(node.objType, Dataflow.DataflowDiagram.ObjectType.RECIPE) && !_.eq(node.creatorDfId, this.dataflow.dfId);
-  //   });
-  //
-  //   // 각 root로 부터 파생되는 노드를 순차적으로 생성
-  //   _.concat(rootNodeList, recipeRootNodeList).map((node) => {
-  //     const rootNode = this.createNode(node, 0, this.rootCount);
-  //     this.rootCount += 1;
-  //     this.setChildNode(nodeList, rootNode, rootNode);
-  //   });
-  //
-  // } // function - createNodeTree
+  private createNodeTree(nodeList) {
+    this.logger.info('createNodeTree', nodeList);
+
+    // root노드
+    const rootNodeList = nodeList.filter(node => (node.upstreamIds.length === 0));
+
+    const recipeRootNodeList = nodeList.filter((node) => {
+      return _.eq(node.objType, Dataflow.DataflowDiagram.ObjectType.RECIPE);
+    });
+
+    // 각 root로 부터 파생되는 노드를 순차적으로 생성
+    _.concat(rootNodeList, recipeRootNodeList).map((node) => {
+      const rootNode = this.createNode(node, 0, this.rootCount);
+      this.rootCount += 1;
+      this.setChildNode(nodeList, rootNode, rootNode);
+    });
+
+  } // function - createNodeTree
 
 
-  //
-  // private createNode(dataset: PrDataset, depth: number, position: number, rootNode?: any) {
-  //   let importType: ImportType = null;
-  //   let detailType = null;
-  //   let flowName = null;
-  //
-  //   flowName = dataset.creatorDfId;
-  //   importType = dataset.importType;
-  //   detailType = 'DEFAULT';
-  //
-  //   const nodeSymbol = DsType.IMPORTED === dataset.dsType ? this.symbolInfo[dataset.dsType][importType][detailType] : this.symbolInfo[dataset.dsType][detailType];
-  //
-  //   const node = {
-  //     dsId: dataset.dsId,
-  //     dsName: dataset.dsName,
-  //     name: dataset.dsId,
-  //     dsType: dataset.dsType,
-  //     importType: importType != null ? importType : undefined,
-  //     detailType: detailType != null ? detailType : undefined,
-  //     flowName: flowName != null ? flowName : undefined,
-  //     upstream: dataset.upstreamDsIds,
-  //     children: [],
-  //     value: [depth, position],
-  //     symbol: nodeSymbol,
-  //     originSymbol: _.cloneDeep(nodeSymbol),
-  //     label: this.label
-  //   };
-  //   if (rootNode) {
-  //     node['rootDataset'] = dataset['rootDataset'];
-  //     node['rootValue'] = rootNode['value'];
-  //   }
-  //
-  //   // 차트 정보에 들어갈 노드 추가
-  //   this.chartNodes.push(node);
-  //
-  //   return node;
-  // } // function - createNode
+
+  private createNode(diagram: Dataflow.DataflowDiagram.Diagram, depth: number, position: number, rootNode?: any) {
+    let importType: Dataset.IMPORT_TYPE = null;
+    let detailType = null;
+    let flowName = null;
+
+    flowName = diagram.creatorDfId;
+    importType = Dataset.IMPORT_TYPE.DATABASE;
+    detailType = 'DEFAULT';
+
+    const nodeSymbol = Dataflow.DataflowDiagram.ObjectType.DATASET === diagram.objType ? this.symbolInfo[diagram.objType][importType][detailType] : this.symbolInfo[diagram.objType][detailType];
+
+    const node = {
+      objId: diagram.objId,
+      dsName: diagram.objName,
+      name: diagram.objId,
+      dsType: diagram.objType,
+      importType: importType != null ? importType : undefined,
+      detailType: detailType != null ? detailType : undefined,
+      flowName: flowName != null ? flowName : undefined,
+      upstream: diagram.upstreamIds,
+      children: [],
+      value: [depth, position],
+      symbol: nodeSymbol,
+      originSymbol: _.cloneDeep(nodeSymbol),
+      label: this.label
+    };
+    if (rootNode) {
+      node['rootDataset'] = diagram.rootDataset;
+      node['rootValue'] = rootNode['value'];
+    }
+
+    // 차트 정보에 들어갈 노드 추가
+    this.chartNodes.push(node);
+
+    return node;
+  } // function - createNode
 
 
   // /**
@@ -774,35 +519,35 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
   //  * @param parent
   //  * @param rootNode
   //  */
-  // private setChildNode(nodeList, parent, rootNode) {
-  //   const childNodeList = nodeList.filter((node) => {
-  //     return node.upstreamDsIds.indexOf(parent.dsId) > -1 && _.eq(node.creatorDfId, this.dataflow.dfId);
-  //   });
-  //   childNodeList.map((child, idx) => {
-  //     const depth = parent.value[0] + 1;
-  //     const position = parent.value[1] + idx;
-  //     this.rootCount = this.rootCount <= position ? position + 1 : this.rootCount;
-  //
-  //     // 차트 정보에 들어갈 노드 추가
-  //     const childData = this.createNode(child, depth, position, rootNode);
-  //
-  //     // 차트 정보에 들어갈 링크 추가
-  //     const link = {
-  //       source: parent.dsId,
-  //       target: childData.dsId
-  //     };
-  //     if (parent.value[1] !== position) {
-  //       link['lineStyle'] = {
-  //         normal: {
-  //           curveness: -0.2
-  //         }
-  //       };
-  //     }
-  //     this.chartLinks.push(link);
-  //     this.setChildNode(nodeList, childData, rootNode);
-  //   });
-  // } // function - setChildNode
-  //
+  private setChildNode(nodeList, parent, rootNode) {
+    const childNodeList = nodeList.filter((node) => {
+      return node.upstreamIds.indexOf(parent.objId) > -1 && _.eq(node.creatorDfId, this.dataflow.dfId);
+    });
+    childNodeList.map((child, idx) => {
+      const depth = parent.value[0] + 1;
+      const position = parent.value[1] + idx;
+      this.rootCount = this.rootCount <= position ? position + 1 : this.rootCount;
+
+      // 차트 정보에 들어갈 노드 추가
+      const childData = this.createNode(child, depth, position, rootNode);
+
+      // 차트 정보에 들어갈 링크 추가
+      const link = {
+        source: parent.objId,
+        target: childData.objId
+      };
+      if (parent.value[1] !== position) {
+        link['lineStyle'] = {
+          normal: {
+            curveness: -0.2
+          }
+        };
+      }
+      this.chartLinks.push(link);
+      this.setChildNode(nodeList, childData, rootNode);
+    });
+  } // function - setChildNode
+
 
   ngOnDestroy(): void {
     // this.LAYER_POPUP.unset();

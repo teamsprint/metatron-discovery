@@ -1,5 +1,6 @@
 import {PageResult} from '../../common/constants/page';
 import {UserProfile} from '../../user/domains/user';
+import {Dataset} from '../../dataset/domains/dataset';
 
 export namespace Dataflow {
 
@@ -31,11 +32,17 @@ export namespace Dataflow {
 
   export namespace DataflowDiagram {
     export class Entity {
-      // orderNo: number;
-      // dataflow: Dataflow;
-      // dataset: Dataset;
-      // recipe: Recipe;
+      creatorDfId: string;
+      creatorDfName: string;
+      objId: string;
+      objName: string;
       objType: DataflowDiagram.ObjectType;
+      createdTime: Date;
+    }
+
+    export class Diagram extends DataflowDiagram.Entity {
+      upstreamIds: string[];
+      rootDataset: Dataset.Entity;
     }
 
     export enum ObjectType {
