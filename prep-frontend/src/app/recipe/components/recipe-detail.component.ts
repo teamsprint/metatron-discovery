@@ -45,7 +45,15 @@ export class RecipeDetailComponent implements OnInit {
     Item.of('Drop', false, null, null, []),
     Item.ofDivider(),
     Item.of('Alter', false, null, null, [
-      Item.of('Column type', false, IconClass.AB, null, []),
+      Item.of('Column type', false, null, null, [
+        Item.of('Long', false, IconClass.INT, null, []),
+        Item.of('Double', false, IconClass.INT, null, []),
+        Item.of('Boolean', false, IconClass.SHARP, null, []),
+        Item.of('Timestamp', false, IconClass.TF, null, []),
+        Item.of('String', false, IconClass.AB, null, []),
+        Item.of('Map', false, null, null, []),
+        Item.of('Array', false, IconClass.ARRAY, null, [])
+      ]),
       Item.of('Set format', true, IconClass.ARRAY, null, []),
       Item.of('Column name', false, IconClass.CALEN, null, []),
     ]),
