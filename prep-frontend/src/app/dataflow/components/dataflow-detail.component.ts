@@ -1,3 +1,4 @@
+/* tslint:disable */
 import {Component, OnDestroy, OnInit, ChangeDetectorRef, Injector, ViewChild, ElementRef} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {RouterUrls} from '../../common/constants/router.constant';
@@ -9,6 +10,8 @@ import {Dataflow} from '../domains/dataflow';
 import {Dataset} from '../../dataset/domains/dataset';
 import {NGXLogger} from 'ngx-logger';
 import * as _ from 'lodash';
+import * as $ from 'jquery';
+import interact from 'interactjs';
 
 @Component({
   templateUrl: './dataflow-detail.component.html',
@@ -20,10 +23,7 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
   private nameInput: ElementRef;
 
   public readonly ROUTER_URLS = RouterUrls;
-  public readonly COMMON_UTIL = CommonUtil;
-  public readonly UUID = this.COMMON_UTIL.Generate.makeUUID();
-
-  // public readonly LAYER_POPUP = interact('#' + this.UUID);
+  public readonly LAYER_POPUP = interact('.pb-box-dataflow');
   public expanded: boolean = false;
   public dataflow: Dataflow.ValueObjects.Select;
   private dataflowId: string;
@@ -58,8 +58,6 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
   public dataflowName: string = '';
   // Change Detect
   public changeDetect: ChangeDetectorRef;
-
-
   public readonly options = {
     backgroundColor: '#ffffff',
     tooltip: { show: false },
@@ -112,8 +110,80 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
     this.changeDetect = injector.get(ChangeDetectorRef);
   }
 
+  private LAYER_POPUP_POS = {x:0, y:0};
+  public detailBoxOpen = false;
+  public detailBoxDataset = false;
+  public detailBoxRecipe = false;
 
   ngOnInit(): void {
+    const dragMoveListener = (event) => {
+      const target = event.target;
+      const x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
+      const y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+
+      target.style.webkitTransform =
+        target.style.transform =
+          'translate(' + x + 'px, ' + y + 'px)';
+
+      target.setAttribute('data-x', x);
+      target.setAttribute('data-y', y);
+      this.LAYER_POPUP_POS.x = x;
+      this.LAYER_POPUP_POS.y = y;
+
+    };
+
+    const resizeListener = (event) => {
+      const target = event.target;
+      let x = (parseFloat(target.getAttribute('data-x')) || 0);
+      let y = (parseFloat(target.getAttribute('data-y')) || 0);
+
+      // update the element's style
+      target.style.width = event.rect.width + 'px';
+      target.style.height = event.rect.height + 'px';
+
+      // translate when resizing from top or left edges
+      x += event.deltaRect.left;
+      y += event.deltaRect.top;
+
+      target.style.webkitTransform = target.style.transform =
+        'translate(' + x + 'px,' + y + 'px)';
+
+      target.setAttribute('data-x', x);
+      target.setAttribute('data-y', y);
+    };
+
+    this.LAYER_POPUP
+      .resizable({
+        edges: {
+          left: true,
+          right: true,
+          bottom: true,
+          top: true
+        },
+        listeners: {
+          move: resizeListener
+        },
+        modifiers: [
+          interact.modifiers.restrictSize({
+            min: { width: 180, height: 200 }
+          })
+        ],
+
+        inertia: true
+      })
+      .draggable({
+        listeners: {
+          move: dragMoveListener
+        },
+        inertia: true,
+        modifiers: [
+          interact.modifiers.restrictRect({
+            restriction: 'parent',
+            endOnly: true
+          })
+        ]
+      });
+
 
     this.activatedRoute
       .paramMap
@@ -137,7 +207,35 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
     if (graphData['data'] === null || graphData['data'] === undefined) return;
     if (graphData['data']['objId'] === null || graphData['data']['objId'] === undefined) return;
     this.logger.info('this.chartClickEvent', $event);
+    this.detailBoxOpen = true;
+    this.detailBoxOpenSetting();
   }
+
+  private detailBoxOpenSetting() {
+    // 좌표 정보가 있다면 그 정보 로 연다.
+    this.logger.info('this.LAYER_POPUP_POS', this.LAYER_POPUP_POS);
+    const xpos: number = this.LAYER_POPUP_POS.x;
+    const ypos: number = this.LAYER_POPUP_POS.y;
+    const parantWidth = $( window ).width();
+    const lnbWidth = $('.pb-layout-lnb').width();
+    const paddindGap: number = 54;
+    const boxflowWidth = Math.floor($('.pb-box-dataflow').width());
+
+    let targetPosX: number = xpos;
+    let targetPosY: number = ypos;
+    const minValue = 50;
+    if(targetPosX < minValue) {
+      targetPosX = parantWidth - (lnbWidth + paddindGap + boxflowWidth);
+    }
+    if(targetPosY < 0) {
+      targetPosY = 0;
+    }
+    this.LAYER_POPUP_POS.x = targetPosX;
+    this.LAYER_POPUP_POS.y = targetPosY;
+    $('.pb-box-dataflow').css('left', targetPosX+'px');
+    // $('.pb-box-dataflow').css('top', targetPosY+'px');
+  }
+
 
 
   public onDataflowNameEdit($event) {

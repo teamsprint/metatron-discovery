@@ -1,3 +1,5 @@
+
+
 <!-- lnb -->
 <div lnb [is2DepthEnable]="true"></div>
 <!-- //lnb -->
@@ -86,122 +88,111 @@
 
 
     <!-- box -->
-    <div class="pb-box-contents" *ngIf="this.dataSetList !== null || this.dataSetList.length > 0">
+    <!--*ngIf="this.dataSetList !== null || this.dataSetList.length > 0"-->
+    <div class="pb-box-contents">
+
+      <div class="pb-box-dataflow" style="position: absolute; z-index: 1001;" [hidden]="detailBoxOpen === false">
+        <div class="pb-dataflow-top">
+          <div class="pb-label-title">로봇데이터(1)</div>
+          <div class="pb-ui-buttons">
+            <a href="javascript:" class="pb-btn-icons-type type-del"></a>
+            <a href="javascript:" class="pb-btn-icons-type type-close-b"></a>
+          </div>
+          <!-- 설명 -->
+          <div class="pb-txt-detail">
+            설명 ...
+          </div>
+          <!-- //설명 -->
+        </div>
+
+        <div class="pb-dataflow-bottom">
+          <div class="pb-col-5">
+            <a href="javascript:" class="pb-component-btn type-line"><em class="pb-icon-refresh"></em>Replace
+              dataset</a>
+          </div>
+          <div class="pb-col-7">
+            <a href="javascript:" class="pb-component-btn type-dark"><em class="pb-icon-add-r"></em>Generate new dataset</a>
+          </div>
+        </div>
+
+        <!-- part -->
+        <div class="pb-ui-part">
+          <div class="pb-label-part">DATA PREVIEW</div>
+          <!-- box table -->
+          <div class="pb-box-table">
+            <table class="pb-table-grid">
+              <thead>
+              <tr>
+                <th>
+                  <span class="pb-data-txt">ab text</span>
+                  <span class="pb-data-txt2">sale02</span>
+                  <span class="pb-data-name">Category</span>
+                </th>
+                <th>
+                  <span class="pb-data-txt">ab text</span>
+                  <span class="pb-data-txt2">sale02</span>
+                  <span class="pb-data-name">Category</span>
+                </th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr>
+                <td>Office Supplies</td>
+                <td>Office Supplies</td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+          <!-- //box table -->
+
+          <table class="pb-table-data">
+            <colgroup>
+              <col width="30%">
+              <col width="*">
+            </colgroup>
+            <tbody>
+            <tr>
+              <th>Type</th>
+              <td>WRANGLED</td>
+            </tr>
+            <tr>
+              <th>Summary</th>
+              <td>27 row(s) / 3 column(s)</td>
+            </tr>
+            <tr>
+              <th>Used in</th>
+              <td>1 dataflow</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+        <!-- //part -->
+        <!-- part -->
+        <div class="pb-ui-part">
+          <div class="pb-label-part">Rule list</div>
+          <!-- rule list -->
+          <div class="pb-ui-rule-list">
+            <span class="pb-data-num">4개의 룰 적용</span>
+            <div class="pb-box-rule-list"><span class="pb-txt-type">Header</span> abcd efgh ijkl mlop qwer</div>
+            <div class="pb-box-rule-list"><span class="pb-txt-type">Header</span> abcd efgh ijkl mlop qwer</div>
+            <div class="pb-box-rule-list"><span class="pb-txt-type">Header</span> abcd efgh ijkl mlop qwer</div>
+          </div>
+          <!-- //rule list -->
+        </div>
+        <!-- //part -->
+        <!-- part -->
+        <div class="pb-ui-part">
+          <div class="pb-data-day">
+            Created on <span class="pb-txt-day">2020.01.01 12:00</span> by admin
+          </div>
+          <div class="pb-data-day">
+            Updated on <span class="pb-txt-day">2020.01.01 12:00</span> by admin
+          </div>
+        </div>
+        <!-- //part -->
+      </div>
 
       <div echarts [options]="options" class="demo-chart" style="width:100%; height:100%;" (chartClick)="chartClickEvent($event)"></div>
-
-      <!--      <div class="pb-box-dataflow-empty">-->
-      <!--        <em class="pb-img-dataflow"></em>-->
-      <!--        <div class="pb-txt-title">Get started with your dataflow</div>-->
-      <!--        <div class="pb-txt-det">-->
-      <!--          Add dataset to your dataflow from your local file, database or staging database like HIVE-->
-      <!--        </div>-->
-      <!--        <a href="javascript:" class="pb-component-btn type-bg tpye-normal"><em class="pb-icon-add-r"></em>Create Dataset</a>-->
-      <!--      </div>-->
-
-      <!-------------------------------------------------------------------------------------------------------------------------------->
-
-      <!--      <div class="pb-box-dataflow" id="{{UUID}}">-->
-      <!--        <div class="pb-dataflow-top">-->
-      <!--          <div class="pb-label-title">로봇데이터(1)</div>-->
-      <!--          <div class="pb-ui-buttons">-->
-      <!--            <a href="javascript:" class="pb-btn-icons-type type-del"></a>-->
-      <!--            <a href="javascript:" class="pb-btn-icons-type type-close-b"></a>-->
-      <!--          </div>-->
-      <!--          &lt;!&ndash; 설명 &ndash;&gt;-->
-      <!--          <div class="pb-txt-detail">-->
-      <!--            설명 ...-->
-      <!--          </div>-->
-      <!--          &lt;!&ndash; //설명 &ndash;&gt;-->
-      <!--        </div>-->
-
-      <!--        <div class="pb-dataflow-bottom">-->
-      <!--          <div class="pb-col-5">-->
-      <!--            <a href="javascript:" class="pb-component-btn type-line"><em class="pb-icon-refresh"></em>Replace-->
-      <!--              dataset</a>-->
-      <!--          </div>-->
-      <!--          <div class="pb-col-7">-->
-      <!--            <a href="javascript:" class="pb-component-btn type-dark" [routerLink]="[ROUTER_URLS.Managements.RECIPES, UUID]"><em class="pb-icon-add-r"></em>Generate new dataset</a>-->
-      <!--          </div>-->
-      <!--        </div>-->
-
-      <!--        &lt;!&ndash; part &ndash;&gt;-->
-      <!--        <div class="pb-ui-part">-->
-      <!--          <div class="pb-label-part">DATA PREVIEW</div>-->
-      <!--          &lt;!&ndash; box table &ndash;&gt;-->
-      <!--          <div class="pb-box-table">-->
-      <!--            <table class="pb-table-grid">-->
-      <!--              <thead>-->
-      <!--              <tr>-->
-      <!--                <th>-->
-      <!--                  <span class="pb-data-txt">ab text</span>-->
-      <!--                  <span class="pb-data-txt2">sale02</span>-->
-      <!--                  <span class="pb-data-name">Category</span>-->
-      <!--                </th>-->
-      <!--                <th>-->
-      <!--                  <span class="pb-data-txt">ab text</span>-->
-      <!--                  <span class="pb-data-txt2">sale02</span>-->
-      <!--                  <span class="pb-data-name">Category</span>-->
-      <!--                </th>-->
-      <!--              </tr>-->
-      <!--              </thead>-->
-      <!--              <tbody>-->
-      <!--              <tr>-->
-      <!--                <td>Office Supplies</td>-->
-      <!--                <td>Office Supplies</td>-->
-      <!--              </tr>-->
-      <!--              </tbody>-->
-      <!--            </table>-->
-      <!--          </div>-->
-      <!--          &lt;!&ndash; //box table &ndash;&gt;-->
-
-      <!--          <table class="pb-table-data">-->
-      <!--            <colgroup>-->
-      <!--              <col width="30%">-->
-      <!--              <col width="*">-->
-      <!--            </colgroup>-->
-      <!--            <tbody>-->
-      <!--            <tr>-->
-      <!--              <th>Type</th>-->
-      <!--              <td>WRANGLED</td>-->
-      <!--            </tr>-->
-      <!--            <tr>-->
-      <!--              <th>Summary</th>-->
-      <!--              <td>27 row(s) / 3 column(s)</td>-->
-      <!--            </tr>-->
-      <!--            <tr>-->
-      <!--              <th>Used in</th>-->
-      <!--              <td>1 dataflow</td>-->
-      <!--            </tr>-->
-      <!--            </tbody>-->
-      <!--          </table>-->
-      <!--        </div>-->
-      <!--        &lt;!&ndash; //part &ndash;&gt;-->
-      <!--        &lt;!&ndash; part &ndash;&gt;-->
-      <!--        <div class="pb-ui-part">-->
-      <!--          <div class="pb-label-part">Rule list</div>-->
-      <!--          &lt;!&ndash; rule list &ndash;&gt;-->
-      <!--          <div class="pb-ui-rule-list">-->
-      <!--            <span class="pb-data-num">4개의 룰 적용</span>-->
-      <!--            <div class="pb-box-rule-list"><span class="pb-txt-type">Header</span> abcd efgh ijkl mlop qwer</div>-->
-      <!--            <div class="pb-box-rule-list"><span class="pb-txt-type">Header</span> abcd efgh ijkl mlop qwer</div>-->
-      <!--            <div class="pb-box-rule-list"><span class="pb-txt-type">Header</span> abcd efgh ijkl mlop qwer</div>-->
-      <!--          </div>-->
-      <!--          &lt;!&ndash; //rule list &ndash;&gt;-->
-      <!--        </div>-->
-      <!--        &lt;!&ndash; //part &ndash;&gt;-->
-      <!--        &lt;!&ndash; part &ndash;&gt;-->
-      <!--        <div class="pb-ui-part">-->
-      <!--          <div class="pb-data-day">-->
-      <!--            Created on <span class="pb-txt-day">2020.01.01 12:00</span> by admin-->
-      <!--          </div>-->
-      <!--          <div class="pb-data-day">-->
-      <!--            Updated on <span class="pb-txt-day">2020.01.01 12:00</span> by admin-->
-      <!--          </div>-->
-      <!--        </div>-->
-      <!--        &lt;!&ndash; //part &ndash;&gt;-->
-      <!--      </div>-->
-
     </div>
     <!-- //box navi -->
 
