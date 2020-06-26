@@ -18,6 +18,9 @@ export class CreateDatasetComponent {
   public readonly onClose = new EventEmitter();
   @Output()
   public readonly onDone = new EventEmitter();
+  @Output()
+  public readonly onGotoDataflow = new EventEmitter();
+
   public step = '';
   public datasetFiles: Dataset.DatasetFile[] = [];
   public finalDataset: Dataset.Entity[] = [];
@@ -73,5 +76,8 @@ export class CreateDatasetComponent {
       this.dbTypeDataset = this.databaseComponent.returnDbTypeDataset();
     }
     this.step = step;
+  }
+  public onGotoDataflowEvent($event) {
+    this.onGotoDataflow.emit($event);
   }
 }

@@ -1,8 +1,10 @@
+/* tslint:disable */
 import {Component, EventEmitter, Output, Input, OnInit} from '@angular/core';
 import {Dataset} from '../domains/dataset';
 import {DatasetsService} from '../services/datasets.service';
-import {ConnectionService} from '../../connection/services/connection.service';
 import {LoadingService} from '../../common/services/loading/loading.service';
+import {Dataflow} from '../../dataflow/domains/dataflow';
+import {DataflowService} from '../../dataflow/services/dataflow.service';
 import {finalize} from 'rxjs/operators';
 import * as _ from 'lodash';
 
@@ -18,6 +20,9 @@ export class CreateDatasetNameComponent implements OnInit{
   public readonly onGotoStep = new EventEmitter();
   @Output()
   public readonly onDone = new EventEmitter();
+  @Output()
+  public readonly onGotoDataflow = new EventEmitter();
+
   @Input()
   public importType: Dataset.IMPORT_TYPE;
   @Input()
@@ -35,9 +40,11 @@ export class CreateDatasetNameComponent implements OnInit{
   public nameErrors: string[] = [];
   public names: string[] = [];
   private fileTypeSaveCount  = 0;
+  public isChecked = true; // jump to dataflow main grid
 
 
   constructor(private readonly datasetService: DatasetsService,
+              private readonly dataflowService: DataflowService,
               private readonly loadingService: LoadingService) {
   }
 
@@ -54,6 +61,8 @@ export class CreateDatasetNameComponent implements OnInit{
       }
       if (this.fileTypeDatasets !== null && this.fileTypeDatasets.length === 1) {
         this.makeDatasetInfoForUpload();
+      }else{
+        this.isChecked = false;
       }
     }
   }
@@ -194,7 +203,31 @@ export class CreateDatasetNameComponent implements OnInit{
       .pipe(finalize(() => this.loadingService.hide()))
       .subscribe(result => {
         if (result !== null) {
-          this.onDone.emit();
+          if (this.isChecked) {
+            this.makeDataflow(result['dsId'], result['name']);
+          } else {
+            this.onDone.emit();
+          }
+        }
+      });
+  }
+
+  private makeDataflow(dsId: string, name: string) {
+    const today = new Date();
+    let fileSurfix: string = today.toISOString();
+    fileSurfix = fileSurfix.replace(/[^0-9]/g,'');
+
+    const dataflow: Dataflow.ValueObjects.Create = new Dataflow.ValueObjects.Create();
+    dataflow.name = `${name}_${fileSurfix}` ;
+    dataflow.dataset = [];
+    dataflow.dataset.push(dsId);
+
+    this.loadingService.show();
+    this.dataflowService.createDataflow(dataflow)
+      .pipe(finalize(() => this.loadingService.hide()))
+      .subscribe(result => {
+        if (result !== null) {
+          this.onGotoDataflow.emit(result['dfId']);
         }
       });
   }

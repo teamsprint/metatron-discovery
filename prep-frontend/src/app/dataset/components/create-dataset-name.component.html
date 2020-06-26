@@ -79,6 +79,16 @@
           </div>
         </div>
         <!-- //form create -->
+
+        <!-- form create -->
+        <div class="pb-form-create">
+          <label class="pb-compomnent-checkbox">
+            <input type="checkbox" [(ngModel)]="isChecked" [checked]="isChecked">
+            <i></i>
+            <span class="pb-txt-checkbox">Continue to edit rules with this dataset in a new dataflow</span>
+          </label>
+        </div>
+        <!-- //form create -->
       </div>
       <!-- //create -->
 
@@ -100,6 +110,16 @@
           <div class="pb-form-edit">
             <input type="text" class="pb-component-input" maxlength="150" placeholder="Please enter a description" [(ngModel)]="fileTypeDatasets[0].description">
           </div>
+        </div>
+        <!-- //form create -->
+
+        <!-- form create -->
+        <div class="pb-form-create">
+          <label class="pb-compomnent-checkbox">
+            <input type="checkbox" [(ngModel)]="isChecked" [checked]="isChecked">
+            <i></i>
+            <span class="pb-txt-checkbox">Continue to edit rules with this dataset in a new dataflow</span>
+          </label>
         </div>
         <!-- //form create -->
       </div>

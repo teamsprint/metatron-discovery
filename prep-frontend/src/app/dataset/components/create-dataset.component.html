@@ -11,4 +11,4 @@
                          (onClose)="onClose.emit()" (onGotoStep)="databasePageGotoStep($event)"></create-dataset-database>
 
 <create-dataset-name *ngIf="step === 'create-dataset-name'" [importType]="importType" [fileTypeDatasets]="finalDataset" [dbTypeDataset]="dbTypeDataset"
-                     (onGotoStep)="commonPageGotoStep($event)" (onDone)="onDone.emit()"></create-dataset-name>
+                     (onGotoStep)="commonPageGotoStep($event)" (onGotoDataflow)="onGotoDataflowEvent($event)" (onDone)="onDone.emit()"></create-dataset-name>

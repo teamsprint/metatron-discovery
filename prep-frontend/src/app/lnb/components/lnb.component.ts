@@ -120,6 +120,12 @@ export class LnbComponent {
       // 현재 페이지가 main 또는 dataflow list 화면인 경우 리스트 갱신 필요
       this.createDatasetAfterCheck();
     });
+
+    createDatasetComponentRef.instance.onGotoDataflow.subscribe($event => {
+      createDatasetComponentRef.destroy();
+      // gotoDataflow
+      this.router.navigate([RouterUrls.Managements.getFlowDetailUrl($event)]).then();
+    });
   }
 
   private createDatasetAfterCheck() {
