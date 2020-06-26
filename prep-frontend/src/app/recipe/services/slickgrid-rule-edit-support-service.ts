@@ -20,7 +20,7 @@ export class SlickgridRuleEditSupportService {
   }
 
   private _customContextMenu = {
-    cssClass: _.cloneDeep(this.unSelectionCssClass),
+    cssClass: _.cloneDeep(this.unSelectionCssClass) + _.cloneDeep(' ' + this.unSelectionCssClass) + '-context',
     command: 'custom-context-menu',
   };
 
@@ -80,7 +80,8 @@ export class SlickgridRuleEditSupportService {
       return;
     }
 
-    gridObj.invalidate();
+    console.log('customContextCommand', e);
+
     // tslint:disable-next-line:semicolon
   };
 }

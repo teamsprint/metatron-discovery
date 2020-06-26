@@ -5,7 +5,10 @@ import {LocalStorageService} from '../../common/services/local-storage/local-sto
 import {AngularGridInstance, Column, FieldType, GridOption} from 'angular-slickgrid';
 import {CommonUtil} from '../../common/utils/common-util';
 import * as _ from 'lodash';
-import {SlickgridRuleEditSupportService} from '../../common/services/slickgrid/slickgrid-rule-edit-support-service';
+import {SlickgridRuleEditSupportService} from '../services/slickgrid-rule-edit-support-service';
+import {IconClass, Item, SlickGridCustomContextMenu} from '../domain/slickgrid-custom-context-menu';
+
+declare const Slick;
 
 @Component({
   templateUrl: './recipe-detail.component.html',
@@ -17,9 +20,7 @@ export class RecipeDetailComponent implements OnInit {
   public readonly COMMON_UTIL = CommonUtil;
   public readonly UUID = this.COMMON_UTIL.Generate.makeUUID();
 
-  private readonly slickgridRuleEditSupportUtil = new SlickgridRuleEditSupportService();
-
-  public readonly gridOptions: GridOption = {
+  public readonly GRID_OPTIONS: GridOption = {
     enableAutoResize: true,
     enableHeaderButton: true,
     enableHeaderMenu: false,
@@ -34,17 +35,54 @@ export class RecipeDetailComponent implements OnInit {
       onCommand: (e, args) => {
         this.slickgridRuleEditSupportUtil
           .commandRegister(e, args, this.gridObj, [
-              this.slickgridRuleEditSupportUtil.colSelectionCommand,
-              this.slickgridRuleEditSupportUtil.customContextCommand
+              this.slickgridRuleEditSupportUtil.colSelectionCommand
             ]
           );
       }
     }
   };
+  private readonly SLICK_GRID_CUSTOM_CONTEXT_MENU = new SlickGridCustomContextMenu([
+    Item.of('Drop', false, null, null, []),
+    Item.ofDivider(),
+    Item.of('Alter', false, null, null, [
+      Item.of('Column type', false, IconClass.AB, null, []),
+      Item.of('Set format', true, IconClass.ARRAY, null, []),
+      Item.of('Column name', false, IconClass.CALEN, null, []),
+    ]),
+    Item.of('Edit', false, null, null, [
+      Item.of('Replace', false, IconClass.INT, null, []),
+      Item.of('Set', false, IconClass.LOCAL, null, []),
+      Item.of('Keep', true, IconClass.SHARP, null, []),
+      Item.of('Delete', true, IconClass.TF, null, [])
+    ]),
+    Item.of('Generate', false, null, null, [
+      Item.of('Duplicate', false, null, null, []),
+      Item.of('Derive', false, null, null, []),
+      Item.of('Split', false, null, null, []),
+      Item.of('Extract', false, null, null, []),
+      Item.of('Count pattern', false, null, null, []),
+      Item.of('Merge', false, null, null, []),
+      Item.of('Nest', false, null, null, []),
+      Item.of('Unnest', true, null, null, []),
+      Item.of('Flatten', true, null, null, [])
+    ]),
+    Item.of('Sort', false, null, null, [
+      Item.of('Ascending', false, null, null, []),
+      Item.of('Descending', false, null, null, []),
+    ]),
+    Item.of('Move', false, null, null, [
+      Item.of('First', false, null, null, []),
+      Item.of('Last', false, null, null, []),
+      Item.of('Before ..', false, null, null, []),
+      Item.of('After ..', false, null, null, [])
+    ]),
+    Item.of('Clean', true, null, null, [])
+  ]);
+
+  private readonly slickgridRuleEditSupportUtil = new SlickgridRuleEditSupportService();
 
   private readonly _header = {
     buttons: [
-      _.cloneDeep(this.slickgridRuleEditSupportUtil.customContextMenu),
       _.cloneDeep(this.slickgridRuleEditSupportUtil.colSelectionHeader)
     ]
   };
@@ -54,7 +92,7 @@ export class RecipeDetailComponent implements OnInit {
   }
 
   public columnDefinitions: Column[] = [];
-  private gridInstance;
+  private gridInstance: AngularGridInstance;
   private gridObj;
 
   public dataset: Array<object> = [];
@@ -183,6 +221,7 @@ export class RecipeDetailComponent implements OnInit {
   public gridInstanceReady(gridInstance: AngularGridInstance) {
     this.gridInstance = gridInstance;
     this.gridInstance.dataView.setItems(this.dataset, 'df_id');
+    this.gridObj.registerPlugin(new Slick.Plugins.HeaderMenu({}, this.SLICK_GRID_CUSTOM_CONTEXT_MENU));
   }
 
   public gridCreated($event) {
