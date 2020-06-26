@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit, ChangeDetectorRef, Injector, ViewChild, ElementRef} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {RouterUrls} from '../../common/constants/router.constant';
 import {CommonUtil} from '../../common/utils/common-util';
@@ -13,6 +13,9 @@ import {NGXLogger} from 'ngx-logger';
   styleUrls: ['./dataflow-detail.component.css']
 })
 export class DataflowDetailComponent implements OnInit, OnDestroy {
+
+  @ViewChild('nameInput', {static: false})
+  private nameInput: ElementRef;
 
   public readonly ROUTER_URLS = RouterUrls;
   public readonly COMMON_UTIL = CommonUtil;
@@ -49,6 +52,11 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
 
   // 룰 리스트에서 필요한 변수
   public commandList: any[];
+  public nameTextInputEnable =false;
+  public dataflowName: string = '';
+  // Change Detect
+  public changeDetect: ChangeDetectorRef;
+
 
   public readonly options = {
     'backgroundColor': '#ffffff',
@@ -416,11 +424,13 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
   };
 
 
-  constructor(private readonly router: Router,
+  constructor(protected injector: Injector,
+              private readonly router: Router,
               private activatedRoute: ActivatedRoute,
               private readonly dataflowService: DataflowService,
               private readonly loadingService: LoadingService,
               private readonly logger: NGXLogger) {
+    this.changeDetect = injector.get(ChangeDetectorRef);
   }
 
 
@@ -444,6 +454,47 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
   }
 
 
+  public onDataflowNameEdit($event) {
+    $event.stopPropagation();
+    this.nameTextInputEnable = true;
+    this.changeDetect.detectChanges();
+    this.nameInput.nativeElement.focus();
+  }
+
+
+  public enterDataflowName($event) {
+    if (13 === $event.keyCode) {
+      this.dataflowNameChange();
+    }
+  }
+
+
+  public dataflowNameChange() {
+    if(this.dataflowName !== this.dataflow.name) {
+      this.updateDataflow();
+    }else{
+      this.nameTextInputEnable = false;
+    }
+  }
+
+  private updateDataflow() {
+    this.nameTextInputEnable = false;
+    this.loadingService.show();
+    const dataflowEn: Dataflow.ValueObjects.Create = new Dataflow.ValueObjects.Create;
+    dataflowEn.dfId = this.dataflowId;
+    dataflowEn.name = this.dataflowName;
+    this.dataflowService
+      .updateDataflow(this.dataflowId, dataflowEn)
+      .pipe(finalize(() => this.loadingService.hide()))
+      .subscribe(dataflow => {
+        if (!dataflow) {
+          return;
+        }
+        this.dataflow.name = dataflow['name'];
+      });
+  }
+
+
   private getDataflow() {
     this.loadingService.show();
     this.dataflowService
@@ -454,6 +505,7 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
           return;
         }
         this.dataflow = dataflows as Dataflow.ValueObjects.Select;
+        this.dataflowName = this.dataflow.name;
         this.dataSetList = [];
         this.upstreamList = [];
         if (this.dataflow.diagramData !== null && this.dataflow.upstreams) { // if dataflow has diagramData

@@ -57,7 +57,7 @@ export class DatasetDetailComponent implements OnInit, OnDestroy{
   public informatationList: object[] = [];
   gridInstance: AngularGridInstance;
   private gridUseRowId: string = 'dataset_grid_id';
-  public nameTextInputEnable: boolean =false;
+  public nameTextInputEnable =false;
   public datasetName: string = '';
   // Change Detect
   public changeDetect: ChangeDetectorRef;
@@ -359,7 +359,7 @@ export class DatasetDetailComponent implements OnInit, OnDestroy{
     }
   }
 
-  public onDataflowNameEdit($event) {
+  public onDatasetNameEdit($event) {
     $event.stopPropagation();
     this.nameTextInputEnable = true;
     this.changeDetect.detectChanges();

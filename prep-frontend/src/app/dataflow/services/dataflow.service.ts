@@ -78,8 +78,13 @@ export class DataflowService {
       });
   }
 
-  updateDataflow() {
-    return this.http.patch(``, {});
+  updateDataflow(dfId: string, dataflow: Dataflow.ValueObjects.Create) {
+    const url = `${CommonConstant.API_CONSTANT.API_URL}/dataflows/${dfId}`;
+    let params = {};
+    if (dataflow) {
+      params = _.merge(dataflow, params);
+    }
+    return this.http.patch(url, params);
   }
 
   deleteDataflow() {

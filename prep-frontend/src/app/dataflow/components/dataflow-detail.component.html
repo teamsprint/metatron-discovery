@@ -26,24 +26,67 @@
     </div>
     <!-- //right -->
     <!-- txt navi -->
+    <!--<div class="pb-txt-navi">-->
+      <!--<a class="pb-btn-back"-->
+         <!--[routerLink]="ROUTER_URLS.Managements.getFlowsUrl()">-->
+      <!--</a>-->
+      <!--{{dataflow.name}}-->
+      <!--<span class="pb-txt-data"><em class="pb-icon-dataset"></em>Dataset <strong>{{dataflow.datasetCount}}</strong></span>-->
+      <!--<span class="pb-txt-data"><em class="pb-icon-recipe"></em>Recipe<strong>{{dataflow.recipeCount}}</strong></span>-->
+
+    <!--</div>-->
+    <!-- //txt navi -->
+
+
+    <!-- txt navi -->
     <div class="pb-txt-navi">
-      <a class="pb-btn-back"
-         [routerLink]="ROUTER_URLS.Managements.getFlowsUrl()">
-      </a>
-      {{dataflow.name}}
+      <a href="javascript:" class="pb-btn-back" [routerLink]="ROUTER_URLS.Managements.getFlowsUrl()"></a>
+      <!-- edit -->
+      <!-- 클릭시 is-selected 추가 -->
+      <span class="pb-txt-edit" [ngClass]="{'is-selected': nameTextInputEnable === true}"
+            (click)="!nameTextInputEnable ? onDataflowNameEdit($event):$event.stopPropagation();">
+            {{dataflowName}}
+           <div class="pb-form-input" style="display:;">
+              <input #nameInput type="text" class="pb-input-edit" [(ngModel)]="dataflowName" (keypress)="enterDataflowName($event);" (clickOutside)="dataflowNameChange()">
+              <a href="javascript:" class="pb-btn-box-icons type-bg type-check" (click)="$event.stopPropagation(); dataflowNameChange()"></a>
+            </div>
+          </span>
+      <!-- //edit -->
       <span class="pb-txt-data"><em class="pb-icon-dataset"></em>Dataset <strong>{{dataflow.datasetCount}}</strong></span>
       <span class="pb-txt-data"><em class="pb-icon-recipe"></em>Recipe<strong>{{dataflow.recipeCount}}</strong></span>
 
     </div>
     <!-- //txt navi -->
 
+
+
+
   </div>
   <!-- //top -->
 
   <!-- contents -->
   <div class="pb-wrap-box-contents">
+
     <!-- box -->
-    <div class="pb-box-contents">
+    <div class="pb-box-contents" *ngIf="this.dataSetList === null || this.dataSetList.length === 0">
+      <div class=""></div>
+      <div class="pb-box-dataflow-empty">
+
+        <em class="pb-img-dataflow"></em>
+        <div class="pb-txt-title">Get started with your dataflow</div>
+        <div class="pb-txt-det">
+          Add dataset to your flow from your local file, database like Mysql
+        </div>
+        <a href="javascript:" class="pb-component-btn type-bg tpye-normal"><em class="pb-icon-add-r"></em>ADD DATASET</a>
+
+      </div>
+
+    </div>
+    <!-- //box navi -->
+
+
+    <!-- box -->
+    <div class="pb-box-contents" *ngIf="this.dataSetList !== null || this.dataSetList.length > 0">
 
       <div echarts [options]="options" class="demo-chart" style="width:100%; height:100%;"></div>
 
