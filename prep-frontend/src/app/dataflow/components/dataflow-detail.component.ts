@@ -132,6 +132,13 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
     }
   }
 
+  public chartClickEvent($event) {
+    const graphData = $event;
+    if (graphData['data'] === null || graphData['data'] === undefined) return;
+    if (graphData['data']['objId'] === null || graphData['data']['objId'] === undefined) return;
+    this.logger.info('this.chartClickEvent', $event);
+  }
+
 
   public onDataflowNameEdit($event) {
     $event.stopPropagation();
