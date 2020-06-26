@@ -124,7 +124,9 @@ export class LnbComponent {
     createDatasetComponentRef.instance.onGotoDataflow.subscribe($event => {
       createDatasetComponentRef.destroy();
       // gotoDataflow
-      this.router.navigate([RouterUrls.Managements.getFlowDetailUrl($event)]).then();
+      const dfId: string = $event['dfId'];
+      const recipeId: string = $event['recipeId'];
+      this.router.navigate([RouterUrls.Managements.getRecipeDetailUrl(dfId, recipeId)]).then();
     });
   }
 

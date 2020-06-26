@@ -227,10 +227,44 @@ export class CreateDatasetNameComponent implements OnInit{
       .pipe(finalize(() => this.loadingService.hide()))
       .subscribe(result => {
         if (result !== null) {
-          this.onGotoDataflow.emit(result['dfId']);
+          this.detailDataflow(result['dfId']);
         }
       });
   }
+
+  private detailDataflow(dfId: string) {
+    let recipeId = null;
+    this.loadingService.show();
+    this.dataflowService
+      .getDataflow(dfId)
+      .pipe(finalize(() => this.loadingService.hide()))
+      .subscribe(dataflows => {
+        if (!dataflows) {
+          return;
+        }
+        const newDataflow: Dataflow.ValueObjects.Select = dataflows as Dataflow.ValueObjects.Select;
+        if (newDataflow.diagramData !== null && newDataflow.diagramData.length > 1) {
+          for (let i = 0; i < newDataflow.diagramData.length; i = i + 1) {
+            if (newDataflow.diagramData[i].objType === Dataflow.DataflowDiagram.ObjectType.RECIPE) {
+              recipeId = newDataflow.diagramData[i].objId;
+              break;
+            }
+          }
+        }
+        if (recipeId !== null) {
+          const param = {};
+          param['dfId'] = dfId;
+          param['recipeId'] = recipeId;
+          this.onGotoDataflow.emit(param);
+        }else{
+          this.onDone.emit();
+        }
+
+      });
+  }
+
+
+
 
   private getFileItemIconName(filenameBeforeUpload: string ): string {
     const className: string = this._getFileFormatForIcon(filenameBeforeUpload).toString();
