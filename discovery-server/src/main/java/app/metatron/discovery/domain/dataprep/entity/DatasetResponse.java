@@ -1,11 +1,12 @@
 package app.metatron.discovery.domain.dataprep.entity;
 
 import app.metatron.dataprep.teddy.DataFrame;
+import org.joda.time.DateTime;
 import org.springframework.hateoas.Resource;
+import app.metatron.discovery.domain.user.UserProjections;
 
 import java.util.List;
 public class DatasetResponse {
-
     private String dsId;
     private String name;
     private String description;
@@ -37,6 +38,10 @@ public class DatasetResponse {
     private Long totalBytes;
     private DataFrame gridResponse;
     private List<Resource<DataflowProjections.DefaultProjection>> dataflows;
+    private UserProjections.DefaultUserProjection createdBy;
+    private DateTime createdTime;
+    private UserProjections.DefaultUserProjection modifiedBy;
+    private DateTime modifiedTime;
 
     public String getDsId() {
         return dsId;
@@ -284,5 +289,37 @@ public class DatasetResponse {
 
     public void setDataflows(List<Resource<DataflowProjections.DefaultProjection>> dataflows) {
         this.dataflows = dataflows;
+    }
+
+    public UserProjections.DefaultUserProjection getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(UserProjections.DefaultUserProjection createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public DateTime getCreatedTime() {
+        return createdTime;
+    }
+
+    public void setCreatedTime(DateTime createdTime) {
+        this.createdTime = createdTime;
+    }
+
+    public UserProjections.DefaultUserProjection getModifiedBy() {
+        return modifiedBy;
+    }
+
+    public void setModifiedBy(UserProjections.DefaultUserProjection modifiedBy) {
+        this.modifiedBy = modifiedBy;
+    }
+
+    public DateTime getModifiedTime() {
+        return modifiedTime;
+    }
+
+    public void setModifiedTime(DateTime modifiedTime) {
+        this.modifiedTime = modifiedTime;
     }
 }

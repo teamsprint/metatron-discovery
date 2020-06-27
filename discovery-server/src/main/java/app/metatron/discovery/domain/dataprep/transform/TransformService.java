@@ -220,6 +220,9 @@ public class TransformService {
             e.printStackTrace();
             throw PrepException.fromTeddyException(e);
         }
+        System.out.println("==== recipeId :" + recipeId);
+        System.out.println("==== stageIdx :" + stageIdx);
+
 
         response.setRecipeRules(getRulesInOrder(recipeId), false, false);
         response.setRuleCurIdx(stageIdx != null ? stageIdx : pc.getCurStageIdx(recipeId));
@@ -713,6 +716,7 @@ public class TransformService {
                 rules.add(rule);
             }
         }
+        System.out.println("================ :" + rules);
         return rules;
     }
 

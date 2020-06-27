@@ -169,7 +169,7 @@
       </tr>
       </thead>
       <tbody>
-      <tr *ngFor="let dataset of datasets; let i=index" (click)="datasetDetalInfo(dataset.dsId)">
+      <tr *ngFor="let dataset of datasets; let i=index" (click)="goDatasetDetailPage(dataset.dsId)">
         <td class="pb-txt-center">{{returnListNumber(i)}}</td>
         <td>{{dataset.name}}</td>
         <td>{{dataset.description}}</td>

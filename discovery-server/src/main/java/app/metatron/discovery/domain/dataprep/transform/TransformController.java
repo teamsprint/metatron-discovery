@@ -52,16 +52,16 @@ public class TransformController {
     }
 
     // 대상 wrangled dataset과 똑같은 dataset을 생성 (rule도 모두 적용)
-    @RequestMapping(value = "/recipes/{recipedId}/clone", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = "/recipes/{recipeId}/clone", method = RequestMethod.POST, produces = "application/json")
     public
     @ResponseBody
     ResponseEntity<?> clone(
-            @PathVariable("recipedId") String recipedId) throws IOException {
+            @PathVariable("recipeId") String recipeId) throws IOException {
 
         TransformResponse response;
 
         try {
-            response = transformService.clone(recipedId);
+            response = transformService.clone(recipeId);
         } catch (Exception e) {
             LOGGER.error("clone(): caught an exception: ", e);
             throw PrepException.create(PrepErrorCodes.PREP_TRANSFORM_ERROR_CODE, e);
@@ -101,11 +101,11 @@ public class TransformController {
     }
 
     /* column 기준 데이터라서 컨트롤러에서 서치하면 성능에 골치아픔. 우선 통짜로 구현함 */
-    @RequestMapping(value = "/recipes/{recipedId}/transform", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "/recipes/{recipeId}/transform", method = RequestMethod.GET, produces = "application/json")
     public
     @ResponseBody
     ResponseEntity<?> fetch(
-            @PathVariable("recipedId") String recipedId,
+            @PathVariable("recipeId") String recipeId,
             @RequestParam(value = "ruleIdx") Integer stageIdx,
             @RequestParam(value = "offset") int offset,
             @RequestParam(value = "count") int count
@@ -117,7 +117,7 @@ public class TransformController {
             // stageIdx should be 0 or positive or null.
             assert stageIdx == null || stageIdx >= 0 : stageIdx;
 
-            response = transformService.fetch(recipedId, stageIdx);
+            response = transformService.fetch(recipeId, stageIdx);
             Integer totalRowCnt = response.getGridResponse().rows != null ? response.getGridResponse().rows.size() : 0;
             response.setGridResponse(getSubGrid(response.getGridResponse(), offset, count));
             response.setTotalRowCnt(totalRowCnt);
@@ -130,11 +130,11 @@ public class TransformController {
         return ResponseEntity.ok(response);
     }
 
-    @RequestMapping(value = "/recipes/{recipedId}/transform", method = RequestMethod.PUT, produces = "application/json")
+    @RequestMapping(value = "/recipes/{recipeId}/transform", method = RequestMethod.PUT, produces = "application/json")
     public
     @ResponseBody
     ResponseEntity<?> transform(
-            @PathVariable("recipedId") String recipedId,
+            @PathVariable("recipedId") String recipeId,
             @RequestBody TransformRequest request) throws IOException {
 
         TransformResponse response;
@@ -148,7 +148,7 @@ public class TransformController {
             assert stageIdx == null || stageIdx >= 0 : stageIdx;
 
             response = transformService
-                    .transform(recipedId, request.getOp(), stageIdx, request.getRuleString(), request.getUiRuleString(),
+                    .transform(recipeId, request.getOp(), stageIdx, request.getRuleString(), request.getUiRuleString(),
                             false);
         } catch (Exception e) {
             LOGGER.error("transform(): caught an exception: ", e);
@@ -164,11 +164,11 @@ public class TransformController {
         return ResponseEntity.ok(response);
     }
 
-    @RequestMapping(value = "/recipes/{recipedId}/transform/histogram", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = "/recipes/{recipeId}/transform/histogram", method = RequestMethod.POST, produces = "application/json")
     public
     @ResponseBody
     ResponseEntity<?> transform_histogram(
-            @PathVariable("recipedId") String recipedId,
+            @PathVariable("recipeId") String recipeId,
             @RequestBody PrepHistogramRequest request) throws IOException {
 
         PrepHistogramResponse response;
@@ -176,7 +176,7 @@ public class TransformController {
 
         try {
             response = transformService
-                    .transform_histogram(recipedId, request.getRuleIdx(), request.getColnos(), request.getColWidths());
+                    .transform_histogram(recipeId, request.getRuleIdx(), request.getColnos(), request.getColWidths());
         } catch (Exception e) {
             LOGGER.error("transform_histogram(): caught an exception: ", e);
             throw PrepException.create(PrepErrorCodes.PREP_TRANSFORM_ERROR_CODE, e);
@@ -186,11 +186,11 @@ public class TransformController {
         return ResponseEntity.ok(response);
     }
 
-    @RequestMapping(value = "/recipes/{recipedId}/transform/timestampFormat", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = "/recipes/{recipeId}/transform/timestampFormat", method = RequestMethod.POST, produces = "application/json")
     public
     @ResponseBody
     ResponseEntity<?> transform_timestampFormat(
-            @PathVariable("recipedId") String recipedId,
+            @PathVariable("recipeId") String recipeId,
             @RequestBody Map<String, Object> params) throws IOException {
 
         Map<String, Object> response;
@@ -198,7 +198,7 @@ public class TransformController {
         LOGGER.trace("transform_timestampFormat(): start");
 
         try {
-            response = transformService.transform_timestampFormat(recipedId, colNames);
+            response = transformService.transform_timestampFormat(recipeId, colNames);
         } catch (Exception e) {
             LOGGER.error("transform_timestampFormat(): caught an exception: ", e);
             throw PrepException.create(PrepErrorCodes.PREP_TRANSFORM_ERROR_CODE, e);

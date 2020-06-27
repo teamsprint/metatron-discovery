@@ -13,6 +13,9 @@
  */
 package app.metatron.discovery.domain.dataprep.service;
 
+import app.metatron.discovery.domain.user.User;
+import app.metatron.discovery.domain.user.UserRepository;
+import app.metatron.discovery.domain.user.UserProjections;
 import app.metatron.discovery.common.GlobalObjectMapper;
 import app.metatron.discovery.domain.dataprep.entity.*;
 import app.metatron.discovery.domain.dataprep.DatasetFileService;
@@ -41,8 +44,10 @@ import static app.metatron.discovery.domain.dataprep.util.PrepUtil.datasetError;
 import static org.apache.commons.io.FilenameUtils.getExtension;
 
 @Service
-@Transactional
 public class DatasetService {
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private DatasetFileService datasetFileService;
@@ -63,6 +68,31 @@ public class DatasetService {
 
     public DatasetResponse getDatasetFullInfo(Dataset dataset)  {
         DatasetResponse datasetResponse = new DatasetResponse();
+
+        Resource<UserProjections.DefaultUserProjection> projectedCUser = null;
+        Resource<UserProjections.DefaultUserProjection> projectedMUser = null;
+
+        if(dataset.getCreatedBy() != null) {
+            User cUser = userRepository.findByUsername(dataset.getCreatedBy());
+            if(cUser != null) {
+                UserProjections.DefaultUserProjection projectionC = projectionFactory
+                        .createProjection(UserProjections.DefaultUserProjection.class, cUser);
+                projectedCUser = new Resource<>(projectionC);
+                datasetResponse.setCreatedBy(projectionC);
+            }
+        }
+        if(dataset.getModifiedBy() != null) {
+            User mUser = userRepository.findByUsername(dataset.getModifiedBy());
+            if(mUser != null) {
+                UserProjections.DefaultUserProjection projectionM = projectionFactory
+                        .createProjection(UserProjections.DefaultUserProjection.class, mUser);
+                projectedMUser = new Resource<>(projectionM);
+                datasetResponse.setModifiedBy(projectionM);
+            }
+        }
+        datasetResponse.setCreatedTime(dataset.getCreatedTime());
+        datasetResponse.setModifiedTime(dataset.getModifiedTime());
+
         datasetResponse.setDsId(dataset.getDsId());
         datasetResponse.setName(dataset.getName());
         datasetResponse.setDescription(dataset.getDescription());

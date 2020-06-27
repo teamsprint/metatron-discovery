@@ -9,6 +9,7 @@ import {CreateDataflowNameComponent} from './components/create-dataflow-name.com
 import {DatasetsService} from '../dataset/services/datasets.service';
 import {LnbModule} from '../lnb/lnb.module';
 import {DataflowService} from './services/dataflow.service';
+import {RecipeService} from '../recipe/services/recipe.service';
 
 const COMPONENTS = [
   DataflowDetailComponent,
@@ -32,7 +33,8 @@ const COMPONENTS = [
   ],
   providers: [
     DatasetsService,
-    DataflowService
+    DataflowService,
+    RecipeService
   ],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA

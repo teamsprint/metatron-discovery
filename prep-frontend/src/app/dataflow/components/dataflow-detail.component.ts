@@ -2,8 +2,9 @@
 import {Component, OnDestroy, OnInit, ChangeDetectorRef, Injector, ViewChild, ElementRef} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {RouterUrls} from '../../common/constants/router.constant';
-import {CommonUtil} from '../../common/utils/common-util';
 import {DataflowService} from '../services/dataflow.service';
+import {DatasetsService} from '../../dataset/services/datasets.service';
+import {RecipeService} from '../../recipe/services/recipe.service';
 import {LoadingService} from '../../common/services/loading/loading.service';
 import {finalize} from 'rxjs/operators';
 import {Dataflow} from '../domains/dataflow';
@@ -104,6 +105,8 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
   constructor(protected injector: Injector,
               private readonly router: Router,
               private activatedRoute: ActivatedRoute,
+              private readonly recipeService: RecipeService,
+              private readonly datasetService: DatasetsService,
               private readonly dataflowService: DataflowService,
               private readonly loadingService: LoadingService,
               private readonly logger: NGXLogger) {
@@ -111,9 +114,12 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
   }
 
   private LAYER_POPUP_POS = {x:0, y:0};
+  private detailBoxSelectedId: string;
   public detailBoxOpen = false;
-  public detailBoxDataset = false;
+  public detailBoxDataset: Dataset.Select = null;
+  public detailBoxDatasetName: string = '';
   public detailBoxRecipe = false;
+  public detailBoxRecipeName: string = '';
 
   ngOnInit(): void {
     const dragMoveListener = (event) => {
@@ -194,49 +200,16 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
         }
       });
 
-    // 초기 세팅
     this.initViewPage();
+    this.refreshDataflowData();
+  }
 
-    if (this.dataflowId !== null || this.dataflowId !== undefined) {
+  private refreshDataflowData() {
+    this.detailBoxReset();
+    if (this.dataflowId !== null && this.dataflowId !== undefined) {
       this.getDataflow();
     }
   }
-
-  public chartClickEvent($event) {
-    const graphData = $event;
-    if (graphData['data'] === null || graphData['data'] === undefined) return;
-    if (graphData['data']['objId'] === null || graphData['data']['objId'] === undefined) return;
-    this.logger.info('this.chartClickEvent', $event);
-    this.detailBoxOpen = true;
-    this.detailBoxOpenSetting();
-  }
-
-  private detailBoxOpenSetting() {
-    // 좌표 정보가 있다면 그 정보 로 연다.
-    this.logger.info('this.LAYER_POPUP_POS', this.LAYER_POPUP_POS);
-    const xpos: number = this.LAYER_POPUP_POS.x;
-    const ypos: number = this.LAYER_POPUP_POS.y;
-    const parantWidth = $( window ).width();
-    const lnbWidth = $('.pb-layout-lnb').width();
-    const paddindGap: number = 54;
-    const boxflowWidth = Math.floor($('.pb-box-dataflow').width());
-
-    let targetPosX: number = xpos;
-    let targetPosY: number = ypos;
-    const minValue = 50;
-    if(targetPosX < minValue) {
-      targetPosX = parantWidth - (lnbWidth + paddindGap + boxflowWidth);
-    }
-    if(targetPosY < 0) {
-      targetPosY = 0;
-    }
-    this.LAYER_POPUP_POS.x = targetPosX;
-    this.LAYER_POPUP_POS.y = targetPosY;
-    $('.pb-box-dataflow').css('left', targetPosX+'px');
-    // $('.pb-box-dataflow').css('top', targetPosY+'px');
-  }
-
-
 
   public onDataflowNameEdit($event) {
     $event.stopPropagation();
@@ -245,13 +218,11 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
     this.nameInput.nativeElement.focus();
   }
 
-
   public enterDataflowName($event) {
     if (13 === $event.keyCode) {
       this.dataflowNameChange();
     }
   }
-
 
   public dataflowNameChange() {
     if(this.dataflowName !== this.dataflow.name) {
@@ -500,8 +471,7 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
     this.options.yAxis.max = this.rootCount > 5 ? 5 + (this.rootCount - 5) : 5;
     this.options.series[0].nodes = this.chartNodes;
     this.options.series[0].links = this.chartLinks;
-
-
+    // this.changeDetect.detectChanges();
   }
 
   private chartSpacing(chartNodes, chartLinks) {
@@ -652,6 +622,115 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
       this.setChildNode(nodeList, childData, rootNode);
     });
   } // function - setChildNode
+
+
+  public chartClickEvent($event) {
+    const graphData = $event;
+    if (graphData['data'] === null || graphData['data'] === undefined) return;
+    if (graphData['data']['objId'] === null || graphData['data']['objId'] === undefined) return;
+    this.logger.info('this.chartClickEvent', $event);
+    if (this.detailBoxSelectedId === graphData['data']['objId']) return;
+
+    if (graphData['data']['dsType'] === Dataflow.DataflowDiagram.ObjectType.DATASET) {
+      this.getDatasetInfomation(graphData['data']['objId']);
+      return;
+    }
+    if (graphData['data']['dsType'] === Dataflow.DataflowDiagram.ObjectType.RECIPE) {
+      this.getRecipeInfomation(graphData['data']['objId']);
+      return;
+    }
+  }
+
+  private getDatasetInfomation(dsId: string) {
+    this.detailBoxReset();
+    this.detailBoxOpenSetting();
+    this.loadingService.show();
+    this.datasetService
+      .getDataset(dsId)
+      .pipe(finalize(() => this.loadingService.hide()))
+      .subscribe(dataset => {
+        if (!dataset) {return;}
+        this.detailBoxSelectedId = dsId;
+        this.detailBoxDataset  = dataset as Dataset.Select;
+        this.detailBoxDatasetName = this.detailBoxDataset.name;
+        this.detailBoxOpen = true;
+      });
+  }
+
+  private getRecipeInfomation(recipeId: string) {
+    this.detailBoxReset();
+    this.detailBoxOpenSetting();
+    this.loadingService.show();
+    this.recipeService
+      .getRecipe(recipeId)
+      .pipe(finalize(() => this.loadingService.hide()))
+      .subscribe(recipe => {
+        if (!recipe) {return;}
+        this.detailBoxSelectedId = recipeId;
+        // this.detailBoxDataset  = dataset as Dataset.Select;
+        // this.detailBoxDatasetName = this.detailBoxDataset.name;
+        this.detailBoxOpen = true;
+      });
+  }
+
+  private detailBoxReset() {
+    this.detailBoxOpen = false;
+    this.detailBoxSelectedId = null;
+    this.detailBoxDataset  = null;
+    this.detailBoxRecipe = null;
+    this.detailBoxDatasetName  = '';
+    this.detailBoxRecipeName  = '';
+  }
+
+  private detailBoxOpenSetting() {
+    // 좌표 정보가 있다면 그 정보 로 연다.
+    this.logger.info('this.LAYER_POPUP_POS', this.LAYER_POPUP_POS);
+    const xpos: number = this.LAYER_POPUP_POS.x;
+    const ypos: number = this.LAYER_POPUP_POS.y;
+    const parantWidth = $( window ).width();
+    const lnbWidth = $('.pb-layout-lnb').width();
+    const paddindGap: number = 54;
+    const boxflowWidth = Math.floor($('.pb-box-dataflow').width());
+
+    let targetPosX: number = xpos;
+    let targetPosY: number = ypos;
+    const minValue = 50;
+    if(targetPosX < minValue) {
+      targetPosX = parantWidth - (lnbWidth + paddindGap + boxflowWidth);
+    }
+    if(targetPosY < 0) {
+      targetPosY = 0;
+    }
+    this.LAYER_POPUP_POS.x = targetPosX;
+    this.LAYER_POPUP_POS.y = targetPosY;
+    $('.pb-box-dataflow').css('left', targetPosX+'px');
+
+  }
+
+  public generateNewDataset(dsId: string) {
+    this.loadingService.show();
+    this.datasetService
+      .generateNewDataset(dsId, this.dataflow.dfId)
+      .pipe(finalize(() => this.loadingService.hide()))
+      .subscribe(result => {
+        if (!result) {
+          return;
+        }
+        // 임시
+        this.documentLocationReload();
+      });
+  }
+
+  private documentLocationReload () {
+    location.reload();
+  }
+
+
+
+  public detailBoxClose() {
+    this.detailBoxReset();
+  }
+
 
 
   ngOnDestroy(): void {

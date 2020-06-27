@@ -11,6 +11,17 @@
       <div class="pb-ui-part">
         <a href="javascript:;" class="pb-component-btn type-bg" (click)="openCreateDatasetPopup()"><em class="pb-icon-add-r"></em>CREATE DATASET</a>
       </div>
+      <!-- more -->
+      <div class="pb-ui-more" aria-expanded="true" (click)="$event.stopPropagation(); expanded = false" *ngIf="expanded == true">
+        <a href="javascript:" class="pb-box-more"></a>
+        <div class="pb-component-pop-box">
+          <a href="javascript:;" (clickOutside)="$event.stopPropagation(); expanded = false"><em class="pb-icon-pop-del"></em>Delete this dataset</a>
+        </div>
+      </div>
+      <div class="pb-ui-more" aria-expanded="false" (click)="$event.stopPropagation(); expanded = true;" *ngIf="expanded == false">
+        <a href="javascript:" class="pb-box-more"></a>
+      </div>
+      <!-- //more -->
     </div>
     <!-- //right -->
 
@@ -21,7 +32,7 @@
             (click)="!nameTextInputEnable ? onDatasetNameEdit($event):$event.stopPropagation();">
             {{datasetName}}
        <div class="pb-form-input" style="display:;">
-          <input #nameInput type="text" class="pb-input-edit" [(ngModel)]="datasetName" (keypress)="enterDatasetName($event);" (clickOutside)="datasetNameChange()">
+          <input #nameInput type="text" class="pb-input-edit" maxlength="50" [(ngModel)]="datasetName" (keypress)="enterDatasetName($event);" (clickOutside)="datasetNameChange()">
           <a href="javascript:;" class="pb-btn-box-icons type-bg type-check" (click)="$event.stopPropagation(); datasetNameChange()"></a>
         </div>
     </span>

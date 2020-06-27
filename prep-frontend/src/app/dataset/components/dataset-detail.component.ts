@@ -31,6 +31,8 @@ export class DatasetDetailComponent implements OnInit, OnDestroy{
   public dataset: Dataset.Select;
   public dataflowList: Dataflow.ValueObjects.Select[]=[];
   public gridEnable = false;
+  public expanded = false;
+
   gridDataset: Array<object> = [];
 
   columnDefinitions: Column[] = [];

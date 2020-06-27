@@ -276,7 +276,7 @@ public class DataflowController {
             @PathVariable("dfId") String dfId,
             @RequestBody PrepParamDatasetIdList dsIds
     ) {
-        // If an I.DS is new to the dataflow, we create a corresponding W.DS, except the case of dataset swapping.
+        // If an I.DS is new to the dataflow, we create a corresponding transformW.DS, except the case of dataset swapping.
         boolean autoCreate = (dsIds.getForSwap() != null && dsIds.getForSwap() == true) ? false : true;
         Dataflow dataflow = dataflowRepository.findOne(dfId);
         Dataflow reponseDataflow = null;

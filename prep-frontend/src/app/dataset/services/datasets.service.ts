@@ -127,7 +127,15 @@ export class DatasetsService {
       headers: headers,
       responseType: 'blob'
     };
-
-    return this.http.get(`${CommonConstant.API_CONSTANT.API_URL}/datasets/${dsId}/download?fileType=`+fileFormat, option)
+    return this.http.get(`${CommonConstant.API_CONSTANT.API_URL}/datasets/${dsId}/download?fileType=`+fileFormat, option);
   }
+
+
+  public generateNewDataset(dsId: string, dfId: string) {
+    const params = {};
+    params['dfId'] = dfId;
+    const url = `${CommonConstant.API_CONSTANT.API_URL}/datasets/${dsId}/transform`;
+    return this.http.post(url, params);
+  }
+
 }

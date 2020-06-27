@@ -1,5 +1,3 @@
-
-
 <!-- lnb -->
 <div lnb [is2DepthEnable]="true"></div>
 <!-- //lnb -->
@@ -10,35 +8,20 @@
   <div class="pb-contents-top">
     <!-- right -->
     <div class="pb-ui-buttons">
-
       <a href="javascript:" class="pb-component-btn type-bg"><em class="pb-icon-add-r"></em> ADD DATASET</a>
-
-      <div class="pb-ui-more" aria-expanded="true" (click)="expanded = false" *ngIf="expanded == true">
+      <!-- more -->
+      <div class="pb-ui-more" aria-expanded="true" (click)="$event.stopPropagation(); expanded = false" *ngIf="expanded == true">
         <a href="javascript:" class="pb-box-more"></a>
         <div class="pb-component-pop-box">
-          <a href="javascript:"><em class="pb-icon-pop-del"></em>Delete this flow</a>
+          <a href="javascript:;" (clickOutside)="$event.stopPropagation(); expanded = false"><em class="pb-icon-pop-del"></em>Delete this dataflow</a>
         </div>
       </div>
-      <div class="pb-ui-more" aria-expanded="false" (click)="expanded = true;" *ngIf="expanded == false">
+      <div class="pb-ui-more" aria-expanded="false" (click)="$event.stopPropagation(); expanded = true;" *ngIf="expanded == false">
         <a href="javascript:" class="pb-box-more"></a>
       </div>
       <!-- //more -->
-
-
     </div>
     <!-- //right -->
-    <!-- txt navi -->
-    <!--<div class="pb-txt-navi">-->
-      <!--<a class="pb-btn-back"-->
-         <!--[routerLink]="ROUTER_URLS.Managements.getFlowsUrl()">-->
-      <!--</a>-->
-      <!--{{dataflow.name}}-->
-      <!--<span class="pb-txt-data"><em class="pb-icon-dataset"></em>Dataset <strong>{{dataflow.datasetCount}}</strong></span>-->
-      <!--<span class="pb-txt-data"><em class="pb-icon-recipe"></em>Recipe<strong>{{dataflow.recipeCount}}</strong></span>-->
-
-    <!--</div>-->
-    <!-- //txt navi -->
-
 
     <!-- txt navi -->
     <div class="pb-txt-navi">
@@ -92,28 +75,42 @@
     <div class="pb-box-contents">
 
       <div class="pb-box-dataflow" style="position: absolute; z-index: 1001;" [hidden]="detailBoxOpen === false">
-        <div class="pb-dataflow-top">
-          <div class="pb-label-title">로봇데이터(1)</div>
+
+        <div class="pb-dataflow-top" *ngIf="detailBoxDataset !== null">
+          <div class="pb-label-title">{{detailBoxDatasetName}}</div>
           <div class="pb-ui-buttons">
             <a href="javascript:" class="pb-btn-icons-type type-del"></a>
-            <a href="javascript:" class="pb-btn-icons-type type-close-b"></a>
+            <a href="javascript:" class="pb-btn-icons-type type-close-b" (click)="detailBoxClose()"></a>
           </div>
           <!-- 설명 -->
           <div class="pb-txt-detail">
-            설명 ...
+            {{detailBoxDataset.description}}
           </div>
           <!-- //설명 -->
         </div>
 
-        <div class="pb-dataflow-bottom">
+        <!--<div class="pb-dataflow-top" *ngIf="detailBoxRecipe !== null">-->
+          <!--<div class="pb-label-title">{{detailBoxRecipeName}}</div>-->
+          <!--<div class="pb-ui-buttons">-->
+            <!--<a href="javascript:" class="pb-btn-icons-type type-del"></a>-->
+            <!--<a href="javascript:" class="pb-btn-icons-type type-close-b" (click)="detailBoxClose()"></a>-->
+          <!--</div>-->
+          <!--&lt;!&ndash; 설명 &ndash;&gt;-->
+          <!--<div class="pb-txt-detail">-->
+            <!--{{detailBoxRecipe.description}}-->
+          <!--</div>-->
+          <!--&lt;!&ndash; //설명 &ndash;&gt;-->
+        <!--</div>-->
+
+        <div class="pb-dataflow-bottom" *ngIf="detailBoxDataset !== null">
           <div class="pb-col-5">
-            <a href="javascript:" class="pb-component-btn type-line"><em class="pb-icon-refresh"></em>Replace
-              dataset</a>
+            <a href="javascript:;" class="pb-component-btn type-line"><em class="pb-icon-refresh"></em>Replace dataset</a>
           </div>
           <div class="pb-col-7">
-            <a href="javascript:" class="pb-component-btn type-dark"><em class="pb-icon-add-r"></em>Generate new dataset</a>
+            <a href="javascript:;" class="pb-component-btn type-dark" (click)="generateNewDataset(detailBoxDataset.dsId)"><em class="pb-icon-add-r"></em>Generate new dataset</a>
           </div>
         </div>
+
 
         <!-- part -->
         <div class="pb-ui-part">
@@ -181,12 +178,12 @@
         </div>
         <!-- //part -->
         <!-- part -->
-        <div class="pb-ui-part">
+        <div class="pb-ui-part" *ngIf="detailBoxDataset !== null">
           <div class="pb-data-day">
-            Created on <span class="pb-txt-day">2020.01.01 12:00</span> by admin
+            Created on <span class="pb-txt-day">{{detailBoxDataset.createdTime | date: 'yyyy-MM-dd HH:mm'}}</span> by {{detailBoxDataset.createdBy.fullName}}
           </div>
           <div class="pb-data-day">
-            Updated on <span class="pb-txt-day">2020.01.01 12:00</span> by admin
+            Updated on <span class="pb-txt-day">{{detailBoxDataset.modifiedTime | date: 'yyyy-MM-dd HH:mm'}}</span> by {{detailBoxDataset.modifiedBy.fullName}}
           </div>
         </div>
         <!-- //part -->

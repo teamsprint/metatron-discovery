@@ -60,7 +60,6 @@ export namespace Dataset {
 
   }
 
-
   export class SheetInfo {
     selected: boolean;
     data: object[];
@@ -95,7 +94,15 @@ export namespace Dataset {
     totalBytes: number;
   }
 
-
+  export class TransformRequest {
+    dfId: string;
+    op: OP_TYPE;
+    ruleIdx: number;
+    ruleString: string;
+    uiRuleString: string;
+    predefinedDsName: string;
+    count: number;
+  }
 
   export enum IMPORT_TYPE {
     UPLOAD = 'UPLOAD',
@@ -115,6 +122,20 @@ export namespace Dataset {
     TABLE = 'TABLE',
     QUERY = 'QUERY'
   }
+
+  export enum OP_TYPE {
+    CREATE = 'CREATE',
+    APPEND = 'APPEND',
+    UPDATE = 'UPDATE',
+    DELETE = 'DELETE',
+    JUMP = 'JUMP',
+    UNDO = 'UNDO',
+    REDO = 'REDO',
+    PREVIEW = 'PREVIEW',
+    NOT_USED = 'NOT_USED'
+  }
+
+
   export enum StorageType {
     LOCAL = 'LOCAL',
     HDFS = 'HDFS',

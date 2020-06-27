@@ -14,16 +14,66 @@
 
 package app.metatron.discovery.domain.dataprep.service;
 
+import app.metatron.discovery.domain.user.User;
+import app.metatron.discovery.domain.user.UserRepository;
+import app.metatron.discovery.domain.user.UserProjections;
+import app.metatron.discovery.domain.dataprep.entity.RecipeResponse;
 import app.metatron.discovery.domain.dataprep.entity.Recipe;
 import app.metatron.discovery.domain.dataprep.repository.RecipeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.projection.ProjectionFactory;
+import org.springframework.hateoas.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional
 public class RecipeService {
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     RecipeRepository recipeRepository;
+
+    @Autowired
+    ProjectionFactory projectionFactory;
+
+    public RecipeResponse getRecipeFullInfo(Recipe recipe)  {
+        RecipeResponse recipeResponse = new RecipeResponse();
+        Resource<UserProjections.DefaultUserProjection> projectedCUser = null;
+        Resource<UserProjections.DefaultUserProjection> projectedMUser = null;
+
+        if(recipe.getCreatedBy() != null) {
+            User cUser = userRepository.findByUsername(recipe.getCreatedBy());
+            if(cUser != null) {
+                UserProjections.DefaultUserProjection projectionC = projectionFactory
+                        .createProjection(UserProjections.DefaultUserProjection.class, cUser);
+                projectedCUser = new Resource<>(projectionC);
+                recipeResponse.setCreatedBy(projectionC);
+            }
+        }
+        if(recipe.getModifiedBy() != null) {
+            User mUser = userRepository.findByUsername(recipe.getModifiedBy());
+            if(mUser != null) {
+                UserProjections.DefaultUserProjection projectionM = projectionFactory
+                        .createProjection(UserProjections.DefaultUserProjection.class, mUser);
+                projectedMUser = new Resource<>(projectionM);
+                recipeResponse.setModifiedBy(projectionM);
+            }
+        }
+        recipeResponse.setRecipeId(recipe.getRecipeId());
+        recipeResponse.setName(recipe.getName());
+        recipeResponse.setDescription(recipe.getDescription());
+        recipeResponse.setCustom(recipe.getCustom());
+        recipeResponse.setCreatorDfId(recipe.getCreatorDfId());
+        recipeResponse.setCreatorDsId(recipe.getCreatorDfId());
+        recipeResponse.setRecipeRules(recipe.getRecipeRules());
+        recipeResponse.setRuleCurIdx(recipe.getRuleCurIdx());
+        recipeResponse.setTotalLines(recipe.getTotalLines());
+        recipeResponse.setTotalBytes(recipe.getTotalBytes());
+        recipeResponse.setGridResponse(recipe.getGridResponse());
+
+
+        return recipeResponse;
+    }
 }

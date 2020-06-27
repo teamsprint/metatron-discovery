@@ -18,7 +18,9 @@ import app.metatron.discovery.domain.dataprep.PreviewLineService;
 import app.metatron.discovery.domain.dataprep.entity.Dataset;
 import app.metatron.discovery.domain.dataprep.entity.Recipe;
 import app.metatron.discovery.domain.dataprep.entity.RecipeProjections;
+import app.metatron.discovery.domain.dataprep.entity.RecipeResponse;
 import app.metatron.discovery.domain.dataprep.repository.RecipeRepository;
+
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,23 +58,19 @@ public class RecipeController {
             @RequestParam(value = "preview", required = false, defaultValue = "false") Boolean preview
     ) {
         Recipe recipe;
-        Resource<RecipeProjections.DefaultProjection> projectedDRecipe;
+        RecipeResponse recipeResponse =  null;
         try {
             recipe = getRecipeEntity(recipeId);
             if (preview) {
                 DataFrame dataFrame = previewLineService.getPreviewLinesOnlyRecipe(recipeId);
                 recipe.setGridResponse(dataFrame);
             }
-
-            RecipeProjections.DefaultProjection projection = projectionFactory
-                    .createProjection(RecipeProjections.DefaultProjection.class, recipe);
-            projectedDRecipe = new Resource<>(projection);
+            recipeResponse = this.recipeService.getRecipeFullInfo(recipe);
         } catch (Exception e) {
-            LOGGER.error("getDataset(): caught an exception: ", e);
+            LOGGER.error("getRecipe(): caught an exception: ", e);
             throw datasetError(e);
         }
-
-        return ResponseEntity.status(HttpStatus.SC_OK).body(projectedDRecipe);
+        return ResponseEntity.status(HttpStatus.SC_OK).body(recipeResponse);
     }
 
     private Recipe getRecipeEntity(String recipeId) {
