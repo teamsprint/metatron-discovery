@@ -179,9 +179,7 @@
           <!-- rule list -->
           <div class="pb-ui-rule-list">
             <span class="pb-data-num">{{recipeRulesSize}}개의 룰 적용</span>
-            <div class="pb-box-rule-list"><span class="pb-txt-type">Header</span> abcd efgh ijkl mlop qwer</div>
-            <div class="pb-box-rule-list"><span class="pb-txt-type">Header</span> abcd efgh ijkl mlop qwer</div>
-            <div class="pb-box-rule-list"><span class="pb-txt-type">Header</span> abcd efgh ijkl mlop qwer</div>
+            <div class="pb-box-rule-list" *ngFor="let rule of ruleList; let idx = index"><span class="pb-txt-type">{{rule.alias}}</span>  {{rule.shortRuleString}}</div>
           </div>
           <!-- //rule list -->
         </div>

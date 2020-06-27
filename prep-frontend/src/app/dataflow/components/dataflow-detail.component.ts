@@ -55,6 +55,7 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
   private label: any;
 
   // 룰 리스트에서 필요한 변수
+  public ruleList: Command[];
   public commandList: any[];
   public nameTextInputEnable =false;
   public dataflowName: string = '';
@@ -674,6 +675,7 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
         this.detailBoxRecipe  = recipe as Recipe.Select;
         if (this.detailBoxRecipe.recipeRules !== null) {
           this.recipeRulesSize  = this.detailBoxRecipe.recipeRules.length;
+          this._setRuleList(this.detailBoxRecipe.recipeRules);
         }
         this.detailBoxRecipeName = this.detailBoxRecipe.name;
         this.detailBoxOpen = true;
@@ -689,6 +691,7 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
     this.detailBoxDatasetName  = '';
     this.detailBoxRecipeName  = '';
     this.recipeRulesSize = 0;
+    this.ruleList = [];
   }
 
   private detailBoxOpenSetting() {
@@ -715,6 +718,39 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
     $('.pb-box-dataflow').css('left', targetPosX+'px');
 
   }
+
+
+  private _setRuleList(rules: any) {
+    this.ruleList = [];
+    const commandNames = this.commandList.map((command) => {
+      return command.command;
+    });
+
+    // ruleStringInfos
+    rules.forEach((rule) => {
+
+      let ruleInfo: Command = new Command();
+      let ruleVO = JSON.parse(rule['uiContext']);
+      ruleInfo.command = ruleVO['name'];
+
+      const idx = commandNames.indexOf(ruleInfo.command);
+
+      if (idx > -1) {
+        ruleInfo.alias = this.commandList[idx].alias;
+        ruleInfo.shortRuleString = rule.shortRuleString || rule.ruleString
+        ruleInfo.ruleString = rule.ruleString;
+
+      } else {
+        ruleInfo.shortRuleString = rule.shortRuleString ? rule.shortRuleString : rule.ruleString;
+        ruleInfo.command = 'Create';
+        ruleInfo.alias = 'Cr';
+      }
+
+      this.ruleList.push(ruleInfo);
+
+    });
+  }
+
 
   public generateNewDataset(dsId: string) {
     this.loadingService.show();
@@ -759,4 +795,10 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
     return this.expanded;
 
   }
+}
+class Command {
+  command : string;
+  alias : string;
+  shortRuleString?: string;
+  ruleString?: string;
 }
