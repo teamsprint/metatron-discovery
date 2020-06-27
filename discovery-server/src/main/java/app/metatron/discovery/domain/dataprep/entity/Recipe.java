@@ -47,7 +47,7 @@ public class Recipe extends AbstractHistoryEntity {
 
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "recipe", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "recipe", fetch = FetchType.EAGER)
     private List<RecipeRule> recipeRules;
 
     @Column(name = "rule_cur_idx")

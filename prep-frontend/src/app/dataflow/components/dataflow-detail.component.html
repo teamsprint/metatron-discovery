@@ -89,18 +89,18 @@
           <!-- //설명 -->
         </div>
 
-        <!--<div class="pb-dataflow-top" *ngIf="detailBoxRecipe !== null">-->
-          <!--<div class="pb-label-title">{{detailBoxRecipeName}}</div>-->
-          <!--<div class="pb-ui-buttons">-->
-            <!--<a href="javascript:" class="pb-btn-icons-type type-del"></a>-->
-            <!--<a href="javascript:" class="pb-btn-icons-type type-close-b" (click)="detailBoxClose()"></a>-->
-          <!--</div>-->
-          <!--&lt;!&ndash; 설명 &ndash;&gt;-->
-          <!--<div class="pb-txt-detail">-->
-            <!--{{detailBoxRecipe.description}}-->
-          <!--</div>-->
-          <!--&lt;!&ndash; //설명 &ndash;&gt;-->
-        <!--</div>-->
+        <div class="pb-dataflow-top" *ngIf="detailBoxRecipe !== null">
+          <div class="pb-label-title">{{detailBoxRecipeName}}</div>
+          <div class="pb-ui-buttons">
+            <a href="javascript:" class="pb-btn-icons-type type-del"></a>
+            <a href="javascript:" class="pb-btn-icons-type type-close-b" (click)="detailBoxClose()"></a>
+          </div>
+          <!-- 설명 -->
+          <div class="pb-txt-detail">
+            {{detailBoxRecipe.description}}
+          </div>
+          <!-- //설명 -->
+        </div>
 
         <div class="pb-dataflow-bottom" *ngIf="detailBoxDataset !== null">
           <div class="pb-col-5">
@@ -108,6 +108,13 @@
           </div>
           <div class="pb-col-7">
             <a href="javascript:;" class="pb-component-btn type-dark" (click)="generateNewDataset(detailBoxDataset.dsId)"><em class="pb-icon-add-r"></em>Generate new dataset</a>
+          </div>
+        </div>
+
+
+        <div class="pb-dataflow-bottom" *ngIf="detailBoxRecipe !== null">
+          <div class="pb-col-12">
+            <a href="javascript:;" class="pb-component-btn type-dark" (click)="editRules(detailBoxRecipe.recipeId)"><em class="pb-icon-add-r"></em>Edit rules</a>
           </div>
         </div>
 
@@ -165,11 +172,13 @@
         </div>
         <!-- //part -->
         <!-- part -->
-        <div class="pb-ui-part">
+
+
+        <div class="pb-ui-part" *ngIf="detailBoxRecipe !== null">
           <div class="pb-label-part">Rule list</div>
           <!-- rule list -->
           <div class="pb-ui-rule-list">
-            <span class="pb-data-num">4개의 룰 적용</span>
+            <span class="pb-data-num">{{recipeRulesSize}}개의 룰 적용</span>
             <div class="pb-box-rule-list"><span class="pb-txt-type">Header</span> abcd efgh ijkl mlop qwer</div>
             <div class="pb-box-rule-list"><span class="pb-txt-type">Header</span> abcd efgh ijkl mlop qwer</div>
             <div class="pb-box-rule-list"><span class="pb-txt-type">Header</span> abcd efgh ijkl mlop qwer</div>
@@ -177,6 +186,8 @@
           <!-- //rule list -->
         </div>
         <!-- //part -->
+
+
         <!-- part -->
         <div class="pb-ui-part" *ngIf="detailBoxDataset !== null">
           <div class="pb-data-day">
@@ -184,6 +195,18 @@
           </div>
           <div class="pb-data-day">
             Updated on <span class="pb-txt-day">{{detailBoxDataset.modifiedTime | date: 'yyyy-MM-dd HH:mm'}}</span> by {{detailBoxDataset.modifiedBy.fullName}}
+          </div>
+        </div>
+        <!-- //part -->
+
+
+        <!-- part -->
+        <div class="pb-ui-part" *ngIf="detailBoxRecipe !== null">
+          <div class="pb-data-day">
+            Created on <span class="pb-txt-day">{{detailBoxRecipe.createdTime | date: 'yyyy-MM-dd HH:mm'}}</span> by {{detailBoxRecipe.createdBy.fullName}}
+          </div>
+          <div class="pb-data-day">
+            Updated on <span class="pb-txt-day">{{detailBoxRecipe.modifiedTime | date: 'yyyy-MM-dd HH:mm'}}</span> by {{detailBoxRecipe.modifiedBy.fullName}}
           </div>
         </div>
         <!-- //part -->

@@ -68,16 +68,11 @@ public class DatasetService {
 
     public DatasetResponse getDatasetFullInfo(Dataset dataset)  {
         DatasetResponse datasetResponse = new DatasetResponse();
-
-        Resource<UserProjections.DefaultUserProjection> projectedCUser = null;
-        Resource<UserProjections.DefaultUserProjection> projectedMUser = null;
-
         if(dataset.getCreatedBy() != null) {
             User cUser = userRepository.findByUsername(dataset.getCreatedBy());
             if(cUser != null) {
                 UserProjections.DefaultUserProjection projectionC = projectionFactory
                         .createProjection(UserProjections.DefaultUserProjection.class, cUser);
-                projectedCUser = new Resource<>(projectionC);
                 datasetResponse.setCreatedBy(projectionC);
             }
         }
@@ -86,7 +81,6 @@ public class DatasetService {
             if(mUser != null) {
                 UserProjections.DefaultUserProjection projectionM = projectionFactory
                         .createProjection(UserProjections.DefaultUserProjection.class, mUser);
-                projectedMUser = new Resource<>(projectionM);
                 datasetResponse.setModifiedBy(projectionM);
             }
         }

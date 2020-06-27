@@ -19,7 +19,9 @@ import app.metatron.discovery.domain.user.UserRepository;
 import app.metatron.discovery.domain.user.UserProjections;
 import app.metatron.discovery.domain.dataprep.entity.RecipeResponse;
 import app.metatron.discovery.domain.dataprep.entity.Recipe;
+import app.metatron.discovery.domain.dataprep.entity.RecipeRule;
 import app.metatron.discovery.domain.dataprep.repository.RecipeRepository;
+import app.metatron.discovery.domain.dataprep.repository.RecipeRuleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.hateoas.Resource;
@@ -38,17 +40,16 @@ public class RecipeService {
     @Autowired
     ProjectionFactory projectionFactory;
 
+    @Autowired
+    RecipeRuleRepository recipeRuleRepository;
+
     public RecipeResponse getRecipeFullInfo(Recipe recipe)  {
         RecipeResponse recipeResponse = new RecipeResponse();
-        Resource<UserProjections.DefaultUserProjection> projectedCUser = null;
-        Resource<UserProjections.DefaultUserProjection> projectedMUser = null;
-
         if(recipe.getCreatedBy() != null) {
             User cUser = userRepository.findByUsername(recipe.getCreatedBy());
             if(cUser != null) {
                 UserProjections.DefaultUserProjection projectionC = projectionFactory
                         .createProjection(UserProjections.DefaultUserProjection.class, cUser);
-                projectedCUser = new Resource<>(projectionC);
                 recipeResponse.setCreatedBy(projectionC);
             }
         }
@@ -57,10 +58,12 @@ public class RecipeService {
             if(mUser != null) {
                 UserProjections.DefaultUserProjection projectionM = projectionFactory
                         .createProjection(UserProjections.DefaultUserProjection.class, mUser);
-                projectedMUser = new Resource<>(projectionM);
                 recipeResponse.setModifiedBy(projectionM);
             }
         }
+        recipeResponse.setCreatedTime(recipe.getCreatedTime());
+        recipeResponse.setModifiedTime(recipe.getModifiedTime());
+
         recipeResponse.setRecipeId(recipe.getRecipeId());
         recipeResponse.setName(recipe.getName());
         recipeResponse.setDescription(recipe.getDescription());

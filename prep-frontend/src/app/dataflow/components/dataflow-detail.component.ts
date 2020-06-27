@@ -9,6 +9,7 @@ import {LoadingService} from '../../common/services/loading/loading.service';
 import {finalize} from 'rxjs/operators';
 import {Dataflow} from '../domains/dataflow';
 import {Dataset} from '../../dataset/domains/dataset';
+import {Recipe} from '../../recipe/domain/recipe';
 import {NGXLogger} from 'ngx-logger';
 import * as _ from 'lodash';
 import * as $ from 'jquery';
@@ -118,8 +119,9 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
   public detailBoxOpen = false;
   public detailBoxDataset: Dataset.Select = null;
   public detailBoxDatasetName: string = '';
-  public detailBoxRecipe = false;
+  public detailBoxRecipe: Recipe.Select = null;
   public detailBoxRecipeName: string = '';
+  public recipeRulesSize: number = 0;
 
   ngOnInit(): void {
     const dragMoveListener = (event) => {
@@ -666,12 +668,18 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
       .pipe(finalize(() => this.loadingService.hide()))
       .subscribe(recipe => {
         if (!recipe) {return;}
+        this.logger.info('this.recipe', recipe);
+
         this.detailBoxSelectedId = recipeId;
-        // this.detailBoxDataset  = dataset as Dataset.Select;
-        // this.detailBoxDatasetName = this.detailBoxDataset.name;
+        this.detailBoxRecipe  = recipe as Recipe.Select;
+        if (this.detailBoxRecipe.recipeRules !== null) {
+          this.recipeRulesSize  = this.detailBoxRecipe.recipeRules.length;
+        }
+        this.detailBoxRecipeName = this.detailBoxRecipe.name;
         this.detailBoxOpen = true;
       });
   }
+
 
   private detailBoxReset() {
     this.detailBoxOpen = false;
@@ -680,6 +688,7 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
     this.detailBoxRecipe = null;
     this.detailBoxDatasetName  = '';
     this.detailBoxRecipeName  = '';
+    this.recipeRulesSize = 0;
   }
 
   private detailBoxOpenSetting() {
@@ -719,6 +728,10 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
         // 임시
         this.documentLocationReload();
       });
+  }
+
+  public editRules(recipeId: string) {
+    this.router.navigate([RouterUrls.Managements.getRecipeDetailUrl(this.dataflowId, recipeId)]).then();
   }
 
   private documentLocationReload () {

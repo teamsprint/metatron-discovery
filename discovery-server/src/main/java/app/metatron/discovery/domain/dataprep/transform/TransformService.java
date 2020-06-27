@@ -716,7 +716,6 @@ public class TransformService {
                 rules.add(rule);
             }
         }
-        System.out.println("================ :" + rules);
         return rules;
     }
 
