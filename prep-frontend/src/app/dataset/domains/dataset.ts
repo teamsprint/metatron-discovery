@@ -39,6 +39,7 @@ export namespace Dataset {
     url: string;
     connType: Connection.ConnType;
     gridResponse: any;
+    dataflows: any[]
 
   }
 

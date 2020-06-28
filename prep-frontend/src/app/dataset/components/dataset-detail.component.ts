@@ -34,7 +34,6 @@ export class DatasetDetailComponent implements OnInit, OnDestroy{
   public expanded = false;
 
   gridDataset: Array<object> = [];
-
   columnDefinitions: Column[] = [];
   gridOptions: GridOption = {
     autoResize: {
@@ -48,12 +47,7 @@ export class DatasetDetailComponent implements OnInit, OnDestroy{
     enableAutoResize: true,
     enableCellNavigation: true,
     showCustomFooter: true,
-    enableExcelCopyBuffer: true,
-    excelCopyBufferOptions: {
-      onCopyCells: (e, args: { ranges: SelectedRange[] }) => console.log('onCopyCells', args.ranges),
-      onPasteCells: (e, args: { ranges: SelectedRange[] }) => console.log('onPasteCells', args.ranges),
-      onCopyCancelled: (e, args: { ranges: SelectedRange[] }) => console.log('onCopyCancelled', args.ranges),
-    }
+    enableExcelCopyBuffer: true
   };
 
   public informatationList: object[] = [];

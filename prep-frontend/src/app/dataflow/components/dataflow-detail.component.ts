@@ -14,6 +14,7 @@ import {NGXLogger} from 'ngx-logger';
 import * as _ from 'lodash';
 import * as $ from 'jquery';
 import interact from 'interactjs';
+import {AngularGridInstance, Column, FieldType, GridOption, SelectedRange} from 'angular-slickgrid';
 
 @Component({
   templateUrl: './dataflow-detail.component.html',
@@ -123,6 +124,25 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
   public detailBoxRecipe: Recipe.Select = null;
   public detailBoxRecipeName: string = '';
   public recipeRulesSize: number = 0;
+  public gridEnable = false;
+  gridInstance: AngularGridInstance;
+  private gridUseRowId: string = 'dataflow_dataset_grid_id';
+  gridDatasetOrRecipe: Array<object> = [];
+  columnDefinitions: Column[] = [];
+  gridOptions: GridOption = {
+    autoResize: {
+      containerId: 'dataflow-datasetOrrecipe-detail-container',
+      sidePadding: 10
+    },
+    rowSelectionOptions: {
+      selectActiveRow: false
+    },
+    rowHeight: 26,
+    enableAutoResize: true,
+    enableCellNavigation: true,
+    showCustomFooter: true,
+    enableExcelCopyBuffer: true
+  };
 
   ngOnInit(): void {
     const dragMoveListener = (event) => {
@@ -392,7 +412,7 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
   private makeDataSetList() {
     this.dataSetList = this.dataflow.diagramData;
     this.upstreamList = this.dataflow.upstreams;
-    this.logger.info('this.upstreamList', this.upstreamList);
+    // this.logger.info('this.upstreamList', this.upstreamList);
 
     if (this.dataSetList && 1 < this.dataSetList.length) {
       this.dataSetList.sort(function(left, right) {
@@ -652,10 +672,16 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
       .getDataset(dsId)
       .pipe(finalize(() => this.loadingService.hide()))
       .subscribe(dataset => {
-        if (!dataset) {return;}
+        if (!dataset) {
+          this.detailBoxReset();
+          return;
+        }
         this.detailBoxSelectedId = dsId;
         this.detailBoxDataset  = dataset as Dataset.Select;
         this.detailBoxDatasetName = this.detailBoxDataset.name;
+        if (this.detailBoxDataset.gridResponse !== null ) {
+          this.makeDatagrid(this.detailBoxDataset.gridResponse);
+        }
         this.detailBoxOpen = true;
       });
   }
@@ -668,9 +694,10 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
       .getRecipe(recipeId)
       .pipe(finalize(() => this.loadingService.hide()))
       .subscribe(recipe => {
-        if (!recipe) {return;}
-        this.logger.info('this.recipe', recipe);
-
+        if (!recipe) {
+          this.detailBoxReset();
+          return;
+        }
         this.detailBoxSelectedId = recipeId;
         this.detailBoxRecipe  = recipe as Recipe.Select;
         if (this.detailBoxRecipe.recipeRules !== null) {
@@ -678,10 +705,12 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
           this._setRuleList(this.detailBoxRecipe.recipeRules);
         }
         this.detailBoxRecipeName = this.detailBoxRecipe.name;
+        if (this.detailBoxRecipe.gridResponse !== null ) {
+          this.makeDatagrid(this.detailBoxRecipe.gridResponse);
+        }
         this.detailBoxOpen = true;
       });
   }
-
 
   private detailBoxReset() {
     this.detailBoxOpen = false;
@@ -692,6 +721,8 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
     this.detailBoxRecipeName  = '';
     this.recipeRulesSize = 0;
     this.ruleList = [];
+    this.gridDatasetOrRecipe = [];
+    this.gridEnable = false;
   }
 
   private detailBoxOpenSetting() {
@@ -751,6 +782,43 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
     });
   }
 
+  private makeDatagrid(gridData: any) {
+    this.columnDefinitions = [];
+    const filedArr: string[] = [];
+
+    if (gridData !== null) {
+      if (gridData['colNames'] !== null) {
+        gridData['colNames'].forEach((item) => {
+          const columnValue = {};
+          columnValue['id'] = item;
+          columnValue['name'] = item;
+          columnValue['field'] = item;
+          columnValue['sortable'] = false;
+          columnValue['type'] = FieldType.string;
+          columnValue['minWidth'] = 100;
+          this.columnDefinitions.push(columnValue as Column);
+          filedArr.push(item);
+        });
+      }
+
+      if (gridData['rows']) {
+        let idnum = 0;
+        gridData['rows'].forEach((rowsitem) => {
+          const ritemArr = {};
+          ritemArr['dataflow_dataset_grid_id'] = this.gridUseRowId + '_' + idnum;
+          rowsitem['objCols'].forEach((ritem, idx) => {
+            ritemArr[filedArr[idx]] = ritem;
+          });
+          idnum++;
+          this.gridDatasetOrRecipe.push(ritemArr);
+        });
+      }
+      if(this.columnDefinitions.length > 0 && this.gridDatasetOrRecipe.length > 0) {
+        this.gridEnable = true;
+        this.gridInstance.dataView.setItems(this.gridDatasetOrRecipe, this.gridUseRowId);
+      }
+    }
+  }
 
   public generateNewDataset(dsId: string) {
     this.loadingService.show();
@@ -765,6 +833,13 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
         this.documentLocationReload();
       });
   }
+
+  angularGridReady(gridInstance: AngularGridInstance) {
+    this.gridInstance = gridInstance;
+    this.gridInstance.dataView.setItems(this.gridDatasetOrRecipe, this.gridUseRowId);
+  }
+
+
 
   public editRules(recipeId: string) {
     this.router.navigate([RouterUrls.Managements.getRecipeDetailUrl(this.dataflowId, recipeId)]).then();

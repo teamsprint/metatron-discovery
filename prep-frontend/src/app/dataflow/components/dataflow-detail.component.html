@@ -124,32 +124,42 @@
           <div class="pb-label-part">DATA PREVIEW</div>
           <!-- box table -->
           <div class="pb-box-table">
-            <table class="pb-table-grid">
-              <thead>
-              <tr>
-                <th>
-                  <span class="pb-data-txt">ab text</span>
-                  <span class="pb-data-txt2">sale02</span>
-                  <span class="pb-data-name">Category</span>
-                </th>
-                <th>
-                  <span class="pb-data-txt">ab text</span>
-                  <span class="pb-data-txt2">sale02</span>
-                  <span class="pb-data-name">Category</span>
-                </th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr>
-                <td>Office Supplies</td>
-                <td>Office Supplies</td>
-              </tr>
-              </tbody>
-            </table>
+            <!-- grid area -->
+            <div class="pb-ui-grid" [hidden]="gridEnable == false">
+              <angular-slickgrid
+                [gridId]="'dataflow-datasetOrrecipe-detail-container'"
+                [columnDefinitions]="columnDefinitions"
+                [gridOptions]="gridOptions"
+                (onAngularGridCreated)="angularGridReady($event)">
+              </angular-slickgrid>
+            </div>
+            <!-- //grid area -->
+            <!--<table class="pb-table-grid">-->
+              <!--<thead>-->
+              <!--<tr>-->
+                <!--<th>-->
+                  <!--<span class="pb-data-txt">ab text</span>-->
+                  <!--<span class="pb-data-txt2">sale02</span>-->
+                  <!--<span class="pb-data-name">Category</span>-->
+                <!--</th>-->
+                <!--<th>-->
+                  <!--<span class="pb-data-txt">ab text</span>-->
+                  <!--<span class="pb-data-txt2">sale02</span>-->
+                  <!--<span class="pb-data-name">Category</span>-->
+                <!--</th>-->
+              <!--</tr>-->
+              <!--</thead>-->
+              <!--<tbody>-->
+              <!--<tr>-->
+                <!--<td>Office Supplies</td>-->
+                <!--<td>Office Supplies</td>-->
+              <!--</tr>-->
+              <!--</tbody>-->
+            <!--</table>-->
           </div>
           <!-- //box table -->
 
-          <table class="pb-table-data">
+          <table class="pb-table-data" *ngIf="detailBoxDataset !== null">
             <colgroup>
               <col width="30%">
               <col width="*">
@@ -157,23 +167,43 @@
             <tbody>
             <tr>
               <th>Type</th>
-              <td>WRANGLED</td>
+              <td>DATASET</td>
             </tr>
             <tr>
               <th>Summary</th>
-              <td>27 row(s) / 3 column(s)</td>
+              <td *ngIf="detailBoxDataset.manualColumnCount !== null && detailBoxDataset.manualColumnCount !== undefined">{{detailBoxDataset.totalLines}} row(s) / {{detailBoxDataset.manualColumnCount}} column(s)</td>
+              <td *ngIf="detailBoxDataset.manualColumnCount === null || detailBoxDataset.manualColumnCount === undefined">{{detailBoxDataset.totalLines}} row(s)</td>
             </tr>
             <tr>
               <th>Used in</th>
-              <td>1 dataflow</td>
+              <td>{{detailBoxDataset.dataflows.length}} dataflow</td>
             </tr>
             </tbody>
           </table>
         </div>
+
+        <div>
+          <table class="pb-table-data" *ngIf="detailBoxRecipe !== null">
+            <colgroup>
+              <col width="30%">
+              <col width="*">
+            </colgroup>
+            <tbody>
+            <tr>
+              <th>Type</th>
+              <td>RECIPE</td>
+            </tr>
+            <!--<tr>-->
+              <!--<th>Used in</th>-->
+              <!--<td>1 dataflow</td>-->
+            <!--</tr>-->
+            </tbody>
+          </table>
+        </div>
         <!-- //part -->
+
+
         <!-- part -->
-
-
         <div class="pb-ui-part" *ngIf="detailBoxRecipe !== null">
           <div class="pb-label-part">Rule list</div>
           <!-- rule list -->
