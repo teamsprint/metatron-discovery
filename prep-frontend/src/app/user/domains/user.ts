@@ -19,9 +19,10 @@ export class User extends AbstractHistory.Entity {
 
 export class UserDetail {
   email: string;
+  username: string;
   fullName: string;
   type: string;
-  username: string;
+  id: string;
 }
 
 export class UserProfile {

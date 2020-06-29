@@ -7,6 +7,12 @@ import {CommonUtil} from '../../common/utils/common-util';
 import * as _ from 'lodash';
 import {SlickgridRuleEditSupportService} from '../services/slickgrid-rule-edit-support-service';
 import {IconClass, Item, SlickGridCustomContextMenu} from '../domain/slickgrid-custom-context-menu';
+import {RecipeService} from '../services/recipe.service';
+import {NGXLogger} from 'ngx-logger';
+import {LoadingService} from '../../common/services/loading/loading.service';
+import {finalize} from 'rxjs/operators';
+import {RouterUrls} from '../../common/constants/router.constant';
+import {ActivatedRoute} from '@angular/router';
 
 declare const Slick;
 
@@ -105,11 +111,41 @@ export class RecipeDetailComponent implements OnInit {
 
   public dataset: Array<object> = [];
 
+  private recipeId: string;
+
   constructor(public readonly location: Location,
-              public readonly localStorageService: LocalStorageService) {
+              public readonly localStorageService: LocalStorageService,
+              private readonly logger: NGXLogger,
+              private readonly loadingService: LoadingService,
+              private readonly activatedRoute: ActivatedRoute,
+              private readonly recipeService: RecipeService) {
   }
 
   ngOnInit(): void {
+
+    this.activatedRoute
+      .paramMap
+      .subscribe((params) => {
+        const recipeId = params.get(RouterUrls.Managements.getRecipeDetailPathVariableKey());
+        if (recipeId) {
+          this.recipeId = recipeId;
+        }
+      });
+
+    this.loadingService.show();
+
+    this.recipeService
+      .getRecipe(this.recipeId)
+      .pipe(finalize(() => this.loadingService.hide()))
+      .subscribe(
+        r => {
+          this.logger.info('[GET] recipe', r);
+        },
+        e => {
+          this.logger.error('[GET] recipe', e);
+        }
+      );
+
 
     this.columnDefinitions = [
       {

@@ -70,7 +70,7 @@ const GUARDS = [
                 ]
               },
               {
-                path: ':id',
+                path: `:${RouterUrls.Managements.getSetDetailPathVariableKey()}`,
                 component: DatasetDetailComponent,
                 canActivate: [
                   UserVerifyGuard
@@ -96,7 +96,7 @@ const GUARDS = [
                 ]
               },
               {
-                path: `:id/${RouterUrls.Managements.RECIPES}/:id`,
+                path: `:${RouterUrls.Managements.getFlowDetailPathVariableKey()}/${RouterUrls.Managements.RECIPES}/:${RouterUrls.Managements.getRecipeDetailPathVariableKey()}`,
                 component: RecipeDetailComponent,
                 canActivate: [
                   UserVerifyGuard

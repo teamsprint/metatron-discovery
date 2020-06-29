@@ -1,5 +1,5 @@
 /* tslint:disable */
-import {Component, OnDestroy, OnInit, ChangeDetectorRef, Injector, ViewChild, ElementRef} from '@angular/core';
+import {ChangeDetectorRef, Component, ElementRef, Injector, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {RouterUrls} from '../../common/constants/router.constant';
 import {DataflowService} from '../services/dataflow.service';
@@ -14,7 +14,7 @@ import {NGXLogger} from 'ngx-logger';
 import * as _ from 'lodash';
 import * as $ from 'jquery';
 import interact from 'interactjs';
-import {AngularGridInstance, Column, FieldType, GridOption, SelectedRange} from 'angular-slickgrid';
+import {AngularGridInstance, Column, FieldType, GridOption} from 'angular-slickgrid';
 
 @Component({
   templateUrl: './dataflow-detail.component.html',
@@ -22,7 +22,7 @@ import {AngularGridInstance, Column, FieldType, GridOption, SelectedRange} from 
 })
 export class DataflowDetailComponent implements OnInit, OnDestroy {
 
-  @ViewChild('nameInput', {static: false})
+  @ViewChild('nameInput', { static: false })
   private nameInput: ElementRef;
 
   public readonly ROUTER_URLS = RouterUrls;
@@ -58,7 +58,7 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
   // 룰 리스트에서 필요한 변수
   public ruleList: Command[];
   public commandList: any[];
-  public nameTextInputEnable =false;
+  public nameTextInputEnable = false;
   public dataflowName: string = '';
   // Change Detect
   public changeDetect: ChangeDetectorRef;
@@ -116,12 +116,12 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
     this.changeDetect = injector.get(ChangeDetectorRef);
   }
 
-  private LAYER_POPUP_POS = {x:0, y:0};
+  private LAYER_POPUP_POS = { x: 0, y: 0 };
   private detailBoxSelectedId: string;
   public detailBoxOpen = false;
   public detailBoxDataset: Dataset.Select = null;
   public detailBoxDatasetName: string = '';
-  public detailBoxRecipe: Recipe.Select = null;
+  public detailBoxRecipe: Recipe.Entity = null;
   public detailBoxRecipeName: string = '';
   public recipeRulesSize: number = 0;
   public gridEnable = false;
@@ -248,9 +248,9 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
   }
 
   public dataflowNameChange() {
-    if(this.dataflowName !== this.dataflow.name) {
+    if (this.dataflowName !== this.dataflow.name) {
       this.updateDataflow();
-    }else{
+    } else {
       this.nameTextInputEnable = false;
     }
   }
@@ -268,7 +268,7 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
         if (!dataflow) {
           return;
         }
-        this.dataflow.name = dataflow['name'];
+        this.dataflow.name = dataflow[ 'name' ];
       });
   }
 
@@ -429,7 +429,7 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
 
     // this.logger.info('this.dataSetList A', this.dataSetList);
 
-    if (this.dataSetList !== null && this.dataSetList.length > 0 ) {
+    if (this.dataSetList !== null && this.dataSetList.length > 0) {
       for (let ds of this.dataSetList) {
         ds.upstreamIds = [];
         for (let upstream of this.upstreamList) {
@@ -480,29 +480,29 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
     // 하위 노드 위치 조정 ( 최상위 노드에 맞춰 정렬되도록 변경 )
     this.chartNodes.forEach(item1 => {
       if (item1.rootValue) {
-        const rootDsNode = this.chartNodes.filter(item2 => item2.objId === item1.rootDataset.objId)[0];
-        if (item1.value[1] < rootDsNode.value[1]) {
+        const rootDsNode = this.chartNodes.filter(item2 => item2.objId === item1.rootDataset.objId)[ 0 ];
+        if (item1.value[ 1 ] < rootDsNode.value[ 1 ]) {
           const itemIdx = this.chartNodes
             .filter(item2 => item2.rootDataset && item2.rootDataset.objId === item1.rootDataset.objId)
             .findIndex(item2 => item2.objId === item1.objId);
-          item1.value[1] = rootDsNode.value[1] + itemIdx;
+          item1.value[ 1 ] = rootDsNode.value[ 1 ] + itemIdx;
         }
       }
     });
 
     this.options.xAxis.max = this.depthCount > 5 ? 5 + (this.depthCount - 5) : 5;
     this.options.yAxis.max = this.rootCount > 5 ? 5 + (this.rootCount - 5) : 5;
-    this.options.series[0].nodes = this.chartNodes;
-    this.options.series[0].links = this.chartLinks;
+    this.options.series[ 0 ].nodes = this.chartNodes;
+    this.options.series[ 0 ].links = this.chartLinks;
     // this.changeDetect.detectChanges();
   }
 
   private chartSpacing(chartNodes, chartLinks) {
     // this.logger.info('chartSpacing', chartNodes);
     for (let idx in chartNodes) {
-      let node = chartNodes[idx];
+      let node = chartNodes[ idx ];
 
-      let upstreams = chartLinks.filter(function (l) {
+      let upstreams = chartLinks.filter(function(l) {
         if (l.target === node.objId) {
           return true;
         }
@@ -510,30 +510,29 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
 
       if (0 < upstreams.length) {
         let maxDepth = 0;
-        upstreams.forEach(function (l) {
-          let n = chartNodes.find(function (n) {
+        upstreams.forEach(function(l) {
+          let n = chartNodes.find(function(n) {
             if (n.objId === l.source) {
               return true;
             }
           });
-          if (maxDepth < n.value[0]) {
-            maxDepth = n.value[0];
+          if (maxDepth < n.value[ 0 ]) {
+            maxDepth = n.value[ 0 ];
           }
         });
-        let diffDepth = maxDepth - node.value[0] + 1;
+        let diffDepth = maxDepth - node.value[ 0 ] + 1;
         if (0 < diffDepth) {
-          let depth = node.value[0];
-          let position = node.value[1];
-          chartNodes.forEach(function (n) {
-            if (position == n.value[1] && depth <= n.value[0]) {
-              n.value[0] += diffDepth;
+          let depth = node.value[ 0 ];
+          let position = node.value[ 1 ];
+          chartNodes.forEach(function(n) {
+            if (position == n.value[ 1 ] && depth <= n.value[ 0 ]) {
+              n.value[ 0 ] += diffDepth;
             }
           });
         }
       }
     }
   } // function - chartSpacing
-
 
 
   private findRootDataset(node: any, nodeList: any[]) {
@@ -572,7 +571,6 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
   } // function - createNodeTree
 
 
-
   private createNode(diagram: Dataflow.DataflowDiagram.Diagram, depth: number, position: number, rootNode?: any) {
     let importType: Dataset.IMPORT_TYPE = null;
     let detailType = null;
@@ -582,7 +580,7 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
     importType = Dataset.IMPORT_TYPE.DATABASE;
     detailType = 'DEFAULT';
 
-    const nodeSymbol = Dataflow.DataflowDiagram.ObjectType.DATASET === diagram.objType ? this.symbolInfo[diagram.objType][importType][detailType] : this.symbolInfo[diagram.objType][detailType];
+    const nodeSymbol = Dataflow.DataflowDiagram.ObjectType.DATASET === diagram.objType ? this.symbolInfo[ diagram.objType ][ importType ][ detailType ] : this.symbolInfo[ diagram.objType ][ detailType ];
 
     const node = {
       objId: diagram.objId,
@@ -600,8 +598,8 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
       label: this.label
     };
     if (rootNode) {
-      node['rootDataset'] = diagram.rootDataset;
-      node['rootValue'] = rootNode['value'];
+      node[ 'rootDataset' ] = diagram.rootDataset;
+      node[ 'rootValue' ] = rootNode[ 'value' ];
     }
 
     // 차트 정보에 들어갈 노드 추가
@@ -622,8 +620,8 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
       return node.upstreamIds.indexOf(parent.objId) > -1 && _.eq(node.creatorDfId, this.dataflow.dfId);
     });
     childNodeList.map((child, idx) => {
-      const depth = parent.value[0] + 1;
-      const position = parent.value[1] + idx;
+      const depth = parent.value[ 0 ] + 1;
+      const position = parent.value[ 1 ] + idx;
       this.rootCount = this.rootCount <= position ? position + 1 : this.rootCount;
 
       // 차트 정보에 들어갈 노드 추가
@@ -634,8 +632,8 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
         source: parent.objId,
         target: childData.objId
       };
-      if (parent.value[1] !== position) {
-        link['lineStyle'] = {
+      if (parent.value[ 1 ] !== position) {
+        link[ 'lineStyle' ] = {
           normal: {
             curveness: -0.2
           }
@@ -649,17 +647,23 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
 
   public chartClickEvent($event) {
     const graphData = $event;
-    if (graphData['data'] === null || graphData['data'] === undefined) return;
-    if (graphData['data']['objId'] === null || graphData['data']['objId'] === undefined) return;
-    this.logger.info('this.chartClickEvent', $event);
-    if (this.detailBoxSelectedId === graphData['data']['objId']) return;
-
-    if (graphData['data']['dsType'] === Dataflow.DataflowDiagram.ObjectType.DATASET) {
-      this.getDatasetInfomation(graphData['data']['objId']);
+    if (graphData[ 'data' ] === null || graphData[ 'data' ] === undefined) {
       return;
     }
-    if (graphData['data']['dsType'] === Dataflow.DataflowDiagram.ObjectType.RECIPE) {
-      this.getRecipeInfomation(graphData['data']['objId']);
+    if (graphData[ 'data' ][ 'objId' ] === null || graphData[ 'data' ][ 'objId' ] === undefined) {
+      return;
+    }
+    this.logger.info('this.chartClickEvent', $event);
+    if (this.detailBoxSelectedId === graphData[ 'data' ][ 'objId' ]) {
+      return;
+    }
+
+    if (graphData[ 'data' ][ 'dsType' ] === Dataflow.DataflowDiagram.ObjectType.DATASET) {
+      this.getDatasetInfomation(graphData[ 'data' ][ 'objId' ]);
+      return;
+    }
+    if (graphData[ 'data' ][ 'dsType' ] === Dataflow.DataflowDiagram.ObjectType.RECIPE) {
+      this.getRecipeInfomation(graphData[ 'data' ][ 'objId' ]);
       return;
     }
   }
@@ -677,9 +681,9 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
           return;
         }
         this.detailBoxSelectedId = dsId;
-        this.detailBoxDataset  = dataset as Dataset.Select;
+        this.detailBoxDataset = dataset as Dataset.Select;
         this.detailBoxDatasetName = this.detailBoxDataset.name;
-        if (this.detailBoxDataset.gridResponse !== null ) {
+        if (this.detailBoxDataset.gridResponse !== null) {
           this.makeDatagrid(this.detailBoxDataset.gridResponse);
         }
         this.detailBoxOpen = true;
@@ -693,32 +697,38 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
     this.recipeService
       .getRecipe(recipeId)
       .pipe(finalize(() => this.loadingService.hide()))
-      .subscribe(recipe => {
-        if (!recipe) {
-          this.detailBoxReset();
-          return;
+      .subscribe(
+        (r: Recipe.Entity) => {
+
+          if (!r) {
+            this.detailBoxReset();
+            return;
+          }
+          this.detailBoxSelectedId = recipeId;
+          this.detailBoxRecipe = r;
+          if (this.detailBoxRecipe.recipeRules !== null) {
+            this.recipeRulesSize = this.detailBoxRecipe.recipeRules.length;
+            this._setRuleList(this.detailBoxRecipe.recipeRules);
+          }
+          this.detailBoxRecipeName = this.detailBoxRecipe.name;
+          if (this.detailBoxRecipe.gridResponse !== null) {
+            this.makeDatagrid(this.detailBoxRecipe.gridResponse);
+          }
+          this.detailBoxOpen = true;
+        },
+        e => {
+          this.logger.error('[GET] recipe', e);
         }
-        this.detailBoxSelectedId = recipeId;
-        this.detailBoxRecipe  = recipe as Recipe.Select;
-        if (this.detailBoxRecipe.recipeRules !== null) {
-          this.recipeRulesSize  = this.detailBoxRecipe.recipeRules.length;
-          this._setRuleList(this.detailBoxRecipe.recipeRules);
-        }
-        this.detailBoxRecipeName = this.detailBoxRecipe.name;
-        if (this.detailBoxRecipe.gridResponse !== null ) {
-          this.makeDatagrid(this.detailBoxRecipe.gridResponse);
-        }
-        this.detailBoxOpen = true;
-      });
+      );
   }
 
   private detailBoxReset() {
     this.detailBoxOpen = false;
     this.detailBoxSelectedId = null;
-    this.detailBoxDataset  = null;
+    this.detailBoxDataset = null;
     this.detailBoxRecipe = null;
-    this.detailBoxDatasetName  = '';
-    this.detailBoxRecipeName  = '';
+    this.detailBoxDatasetName = '';
+    this.detailBoxRecipeName = '';
     this.recipeRulesSize = 0;
     this.ruleList = [];
     this.gridDatasetOrRecipe = [];
@@ -730,7 +740,7 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
     this.logger.info('this.LAYER_POPUP_POS', this.LAYER_POPUP_POS);
     const xpos: number = this.LAYER_POPUP_POS.x;
     const ypos: number = this.LAYER_POPUP_POS.y;
-    const parantWidth = $( window ).width();
+    const parantWidth = $(window).width();
     const lnbWidth = $('.pb-layout-lnb').width();
     const paddindGap: number = 54;
     const boxflowWidth = Math.floor($('.pb-box-dataflow').width());
@@ -738,15 +748,15 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
     let targetPosX: number = xpos;
     let targetPosY: number = ypos;
     const minValue = 50;
-    if(targetPosX < minValue) {
+    if (targetPosX < minValue) {
       targetPosX = parantWidth - (lnbWidth + paddindGap + boxflowWidth);
     }
-    if(targetPosY < 0) {
+    if (targetPosY < 0) {
       targetPosY = 0;
     }
     this.LAYER_POPUP_POS.x = targetPosX;
     this.LAYER_POPUP_POS.y = targetPosY;
-    $('.pb-box-dataflow').css('left', targetPosX+'px');
+    $('.pb-box-dataflow').css('left', targetPosX + 'px');
 
   }
 
@@ -761,14 +771,14 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
     rules.forEach((rule) => {
 
       let ruleInfo: Command = new Command();
-      let ruleVO = JSON.parse(rule['uiContext']);
-      ruleInfo.command = ruleVO['name'];
+      let ruleVO = JSON.parse(rule[ 'uiContext' ]);
+      ruleInfo.command = ruleVO[ 'name' ];
 
       const idx = commandNames.indexOf(ruleInfo.command);
 
       if (idx > -1) {
-        ruleInfo.alias = this.commandList[idx].alias;
-        ruleInfo.shortRuleString = rule.shortRuleString || rule.ruleString
+        ruleInfo.alias = this.commandList[ idx ].alias;
+        ruleInfo.shortRuleString = rule.shortRuleString || rule.ruleString;
         ruleInfo.ruleString = rule.ruleString;
 
       } else {
@@ -787,33 +797,33 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
     const filedArr: string[] = [];
 
     if (gridData !== null) {
-      if (gridData['colNames'] !== null) {
-        gridData['colNames'].forEach((item) => {
+      if (gridData[ 'colNames' ] !== null) {
+        gridData[ 'colNames' ].forEach((item) => {
           const columnValue = {};
-          columnValue['id'] = item;
-          columnValue['name'] = item;
-          columnValue['field'] = item;
-          columnValue['sortable'] = false;
-          columnValue['type'] = FieldType.string;
-          columnValue['minWidth'] = 100;
+          columnValue[ 'id' ] = item;
+          columnValue[ 'name' ] = item;
+          columnValue[ 'field' ] = item;
+          columnValue[ 'sortable' ] = false;
+          columnValue[ 'type' ] = FieldType.string;
+          columnValue[ 'minWidth' ] = 100;
           this.columnDefinitions.push(columnValue as Column);
           filedArr.push(item);
         });
       }
 
-      if (gridData['rows']) {
+      if (gridData[ 'rows' ]) {
         let idnum = 0;
-        gridData['rows'].forEach((rowsitem) => {
+        gridData[ 'rows' ].forEach((rowsitem) => {
           const ritemArr = {};
-          ritemArr['dataflow_dataset_grid_id'] = this.gridUseRowId + '_' + idnum;
-          rowsitem['objCols'].forEach((ritem, idx) => {
-            ritemArr[filedArr[idx]] = ritem;
+          ritemArr[ 'dataflow_dataset_grid_id' ] = this.gridUseRowId + '_' + idnum;
+          rowsitem[ 'objCols' ].forEach((ritem, idx) => {
+            ritemArr[ filedArr[ idx ] ] = ritem;
           });
           idnum++;
           this.gridDatasetOrRecipe.push(ritemArr);
         });
       }
-      if(this.columnDefinitions.length > 0 && this.gridDatasetOrRecipe.length > 0) {
+      if (this.columnDefinitions.length > 0 && this.gridDatasetOrRecipe.length > 0) {
         this.gridEnable = true;
         this.gridInstance.dataView.setItems(this.gridDatasetOrRecipe, this.gridUseRowId);
       }
@@ -840,21 +850,18 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
   }
 
 
-
   public editRules(recipeId: string) {
     this.router.navigate([RouterUrls.Managements.getRecipeDetailUrl(this.dataflowId, recipeId)]).then();
   }
 
-  private documentLocationReload () {
+  private documentLocationReload() {
     location.reload();
   }
-
 
 
   public detailBoxClose() {
     this.detailBoxReset();
   }
-
 
 
   ngOnDestroy(): void {
@@ -871,9 +878,10 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
 
   }
 }
+
 class Command {
-  command : string;
-  alias : string;
+  command: string;
+  alias: string;
   shortRuleString?: string;
   ruleString?: string;
 }
