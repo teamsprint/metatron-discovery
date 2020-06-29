@@ -10,6 +10,15 @@ export class HttpRequestInterceptor implements HttpInterceptor {
   constructor(private readonly cookieService: CookieService) {
   }
 
+  /**
+   * 요청 보내기 전 인터셉터
+   * 1. 컨텐츠 타입이 없으면 application/json을 추가
+   * 2. Authorization이 없는 경우
+   *    - e.g) Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1OTM0Mzc1MjIsInVzZXJfbmFtZSI6ImFkbWluIiwiYXV0aG9yaX ...
+   *
+   * @param req HttpRequest<object>
+   * @param next HttpHandler
+   */
   intercept(req: HttpRequest<object>, next: HttpHandler) {
 
     let header = {};
