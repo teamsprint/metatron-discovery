@@ -1,4 +1,5 @@
 import {AbstractHistory} from '../../common/domain/abstract-history-entity';
+import * as _ from 'lodash';
 
 export namespace Recipe {
 
@@ -29,6 +30,35 @@ export namespace Recipe {
     ruleString: string;
     jsonRuleString: string;
     valid: boolean;
+
+    static getColNamesCount(gridResponse: GridResponse) {
+      if (!gridResponse) {
+        return 0;
+      }
+
+      if (!gridResponse.colNames) {
+        return 0;
+      }
+
+      return gridResponse.colNames.length;
+    }
+
+    static getColDescsDistinctCount(gridResponse: GridResponse) {
+
+      if (!gridResponse) {
+        return 0;
+      }
+
+      if (!gridResponse.colDescs) {
+        return 0;
+      }
+
+      return _.uniq(
+        gridResponse.colDescs
+          .filter(v => v.type)
+          .map(v => v.type)
+      ).length;
+    }
   }
 
   export class Select extends Entity {

@@ -1,14 +1,11 @@
 import * as _ from 'lodash';
 import {HeaderButtonOnCommandArgs} from 'angular-slickgrid/app/modules/angular-slickgrid/models/headerButtonOnCommandArgs.interface';
 
-export class SlickgridRuleEditSupportService {
+export class CustomColSelectionExtension {
 
   public columnsWithHighlightingById = {};
   public readonly unSelectionCssClass = 'svg-sample';
   public readonly selectionCssClass = `${this.unSelectionCssClass}-action`;
-
-  constructor() {
-  }
 
   private _colSelectionHeader = {
     cssClass: _.cloneDeep(this.unSelectionCssClass),
@@ -19,27 +16,16 @@ export class SlickgridRuleEditSupportService {
     return _.cloneDeep(this._colSelectionHeader);
   }
 
-  private _customContextMenu = {
-    cssClass: _.cloneDeep(this.unSelectionCssClass) + _.cloneDeep(' ' + this.unSelectionCssClass) + '-context',
-    command: 'custom-context-menu',
-  };
-
-  get customContextMenu(): { cssClass: string; command: string } {
-    return _.cloneDeep(this._customContextMenu);
-  }
-
   public readonly colSelectionFormatter = (row, cell, value, columnDef, dataContext) => {
     if (this.columnsWithHighlightingById && this.columnsWithHighlightingById[ columnDef.id ]) {
       return `<div class="type-column type-column-selected">${value}</div>`;
     } else {
       return `<div class="type-column">${value}</div>`;
     }
-    // tslint:disable-next-line:semicolon
   };
 
   public readonly commandRegister = (e: Event, args: HeaderButtonOnCommandArgs, gridObj, functions) => {
     _.forEach(_.filter(functions, f => _.negate(_.isNil)(f)), f => f(e, args, gridObj));
-    // tslint:disable-next-line:semicolon
   };
 
   public readonly colSelectionCommand = (e: Event, args: HeaderButtonOnCommandArgs, gridObj) => {
@@ -67,22 +53,6 @@ export class SlickgridRuleEditSupportService {
       }
       gridObj.invalidate();
     }
-    // tslint:disable-next-line:semicolon
-  };
-
-  public readonly customContextCommand = (e: Event, args: HeaderButtonOnCommandArgs, gridObj) => {
-
-    // const column = args.column;
-    // const button = args.button;
-    const command = args.command;
-
-    if (command !== this.customContextMenu.command) {
-      return;
-    }
-
-    console.log('customContextCommand', e);
-
-    // tslint:disable-next-line:semicolon
   };
 }
 

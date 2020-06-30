@@ -70,7 +70,7 @@ const GUARDS = [
                 ]
               },
               {
-                path: `:${RouterUrls.Managements.getSetDetailPathVariableKey()}`,
+                path: `:${RouterUrls.Managements.getDataSetDetailPathVariableKey()}`,
                 component: DatasetDetailComponent,
                 canActivate: [
                   UserVerifyGuard

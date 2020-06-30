@@ -2,91 +2,250 @@
 <div lnb></div>
 <!-- //lnb -->
 
-<div class="pb-wrap-contents">
-  <div class="pb-contents-top">
-    <!-- button -->
-    <div class="pb-ui-buttons">
-      <!-- icon button -->
-      <div class="pb-btn-icons">
-        <a href="javascript:" class="pb-icon-top-undo"></a>
-        <a href="javascript:" class="pb-icon-top-redo"></a>
-      </div>
-      <!-- //icon button -->
-      <div class="pb-ui-part">
-        <a href="javascript:" class="pb-component-btn type-line">CANCEL</a>
-        <a href="javascript:" class="pb-component-btn type-bg">DONE</a>
-      </div>
-    </div>
-    <!-- //button -->
-    <!-- txt navi -->
-    <div class="pb-txt-navi">
-      <a href="javascript:" class="pb-btn-back" (click)="location.back()"></a> Data Flow 01 > Dataset 01
-    </div>
-    <!-- //txt navi -->
-  </div>
-  <div class="pb-wrap-box-rule">
-    <div class="pb-box-rule type-rule">
-      <!-- top -->
-      <div class="pb-box-top">
-        <div class="pb-fleft">
-          <span class="pb-top-label">적용항목</span>
-          <span class="pb-box-data-analysis">Derive A Column</span>
-          <span class="pb-box-data-analysis">Substring A Column and B Column</span>
-          <span class="pb-box-data-analysis">Derive A Column</span>
+<div class="wrap-splitter">
+  <!-- wrap contents -->
+  <div class="pb-wrap-contents" id="left-slider">
+    <div class="pb-contents-top">
+      <!-- button -->
+      <div class="pb-ui-buttons">
+        <!-- icon button -->
+        <div class="pb-btn-icons">
+          <a href="javascript:" class="pb-icon-top-undo"></a>
+          <a href="javascript:" class="pb-icon-top-redo"></a>
         </div>
-        <a href="javascript:" class="pb-icon-top-edit2"></a>
+        <!-- //icon button -->
+        <div class="pb-ui-part">
+          <a href="javascript:" class="pb-component-btn type-line">CANCEL</a>
+          <a href="javascript:" class="pb-component-btn type-bg">DONE</a>
+        </div>
       </div>
-      <!-- //top -->
-      <div class="pb-ui-graph2">
-        <!-- setting -->
-        <div class="pb-ui-setting pb-clear">
-          <!-- left -->
+      <!-- //button -->
+      <!-- txt navi -->
+      <div class="pb-txt-navi">
+        <a href="javascript:" class="pb-btn-back" (click)="location.back()"></a>
+        <div class="pb-data-navi">
+          <span class="pb-data-name">
+           {{ dataflow?.name }}
+          </span>
+          <span class="pb-data-name2">
+            {{ recipe?.name }}
+          </span>
+        </div>
+      </div>
+      <!-- //txt navi -->
+    </div>
+    <div class="pb-wrap-box-rule">
+      <div class="pb-box-rule type-rule">
+        <!-- top -->
+        <div class="pb-box-top">
           <div class="pb-fleft">
+            <span class="pb-top-label">적용항목</span>
+            <span class="pb-box-data-analysis">Derive A Column</span>
+            <span class="pb-box-data-analysis">Substring A Column and B Column</span>
+            <span class="pb-box-data-analysis">Derive A Column</span>
+          </div>
+          <a href="javascript:" class="pb-icon-top-edit2"></a>
+        </div>
+        <!-- //top -->
+        <div class="pb-ui-graph2">
+          <!-- setting -->
+          <div class="pb-ui-setting pb-clear">
+            <!-- left -->
+            <div class="pb-fleft">
 
-            <!--
-                  focus 일때 type-focus 추가
-              -->
-            <div class="pb-component-search type-focus ">
-              <input type="text" placeholder="Search for values">
-              <a href="javascript:" class="pb-btn-delete"></a>
+              <!--
+                   focus 일때 type-focus 추가
+               -->
+              <div class="pb-component-search type-focus ">
+                <input type="text" placeholder="Search for values">
+                <a href="javascript:" class="pb-btn-delete"></a>
+              </div>
+            </div>
+            <!-- //left -->
+            <!-- right -->
+            <div class="pb-fright">
+
+              <div class="pb-data-set-num">
+                <span class="pb-data-txt"><strong>{{ getGridResponseColNamesCount(recipe?.gridResponse) | number: '1.0-0' }}</strong> Columns</span>
+                <span class="pb-data-txt"><strong>{{ getGridResponseColDescsDistinctCount(recipe?.gridResponse) | number: '1.0-0' }}</strong> Types</span>
+              </div>
+              <!-- tab button -->
+              <ul class="pb-component-tab-btn pb-clear">
+                <li [class.is-selected]="localStorageService.currentViewMode() === VIEW_MODE.CARD">
+                  <a href="javascript:" class="pb-icon-grid"
+                     (click)="localStorageService.saveViewMode(VIEW_MODE.CARD)">
+                  </a>
+                </li>
+                <li [class.is-selected]="localStorageService.currentViewMode() === VIEW_MODE.LIST">
+                  <a href="javascript:" class="pb-icon-list"
+                     (click)="localStorageService.saveViewMode(VIEW_MODE.LIST)">
+                  </a>
+                </li>
+              </ul>
+              <!-- //tab button -->
+            </div>
+            <!-- //right -->
+          </div>
+          <!-- //setting -->
+          <div class="pb-ui-grid">
+            <angular-slickgrid
+              [gridId]="UUID"
+              [columnDefinitions]="columnDefinitions"
+              [dataset]="dataset"
+              [gridOptions]="GRID_OPTIONS"
+              (onGridCreated)="gridCreated($event)"
+              (onAngularGridCreated)="gridInstanceReady($event)">
+            </angular-slickgrid>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- //wrap contents -->
+
+  <!-- rnb -->
+  <!--
+      펼칠때 is-selected 추가
+  -->
+  <div class="pb-rnb-menu is-selected " id="right-slider">
+    <a href="javascript:" class="pb-btn-menu-close"></a>
+    <ul class="pb-list-rnb type-list">
+      <li [class.is-selected]="isSelectedMenu === RULE_EDIT_MENUS.RULES"
+          (click)="isSelectedMenu = RULE_EDIT_MENUS.RULES">
+
+        <a href="javascript:">
+          <span class="pb-txt-rnb">Rule list</span>
+        </a>
+        <!-- sub -->
+        <div class="pb-rnb-sub type-rule-list">
+          <!-- box rule -->
+          <!--
+              focus 일때 is-focus 추가
+          -->
+          <div class="pb-box-rule-list">
+            <div class="pb-txt-rule-list">
+              <span class="pb-txt-type">Header</span> abcd efgh ijkl mlop qwer
+            </div>
+            <div class="pb-area-buttons type-hover">
+              <a href="javascript:" class="pb-btn-icons-type type-edit"></a>
+              <a href="javascript:" class="pb-btn-icons-type type-del"></a>
+            </div>
+            <div class="pb-area-buttons type-focus">
+              <a href="javascript:" class="pb-component-btn-s">
+                Edit
+              </a>
             </div>
           </div>
-          <!-- //left -->
-          <!-- right -->
-          <div class="pb-fright">
-
-            <div class="pb-data-set-num">
-              <span class="pb-data-txt"><strong>23</strong> Columns</span>
-              <span class="pb-data-txt"><strong>23</strong> Types</span>
+          <!-- //box rule -->
+          <!-- box rule -->
+          <!--
+             focus 일때 is-focus 추가
+         -->
+          <div class="pb-box-rule-list">
+            <div class="pb-txt-rule-list">
+              <span class="pb-txt-type">Header</span> abcd efgh ijkl mlop qwer
             </div>
-            <!-- tab button -->
-            <ul class="pb-component-tab-btn pb-clear">
-              <li [class.is-selected]="localStorageService.currentViewMode() === VIEW_MODE.CARD">
-                <a href="javascript:" class="pb-icon-grid"
-                   (click)="localStorageService.saveViewMode(VIEW_MODE.CARD)">
-                </a>
+            <div class="pb-area-buttons type-hover">
+              <a href="javascript:" class="pb-btn-icons-type type-edit"></a>
+              <a href="javascript:" class="pb-btn-icons-type type-del"></a>
+            </div>
+
+            <div class="pb-area-buttons type-focus">
+              <a href="javascript:" class="pb-component-btn-s">
+                Edit
+              </a>
+            </div>
+          </div>
+          <!-- //box rule -->
+          <!-- box rule -->
+          <!--
+             focus 일때 is-focus 추가
+         -->
+          <div class="jqtree-dragging">
+            <span class="pb-txt-type">Header</span> drag 일때
+          </div>
+          <div class="pb-box-rule-list is-focus">
+            <!-- guide line -->
+            <div class="jqtree-ghost"></div>
+            <!-- //guide line -->
+            <div class="pb-txt-rule-list">
+              <span class="pb-txt-type">Header</span> abcd efgh ijkl mlop qwer
+            </div>
+            <div class="pb-area-buttons type-hover">
+              <a href="javascript:" class="pb-btn-icons-type type-edit"></a>
+              <a href="javascript:" class="pb-btn-icons-type type-del"></a>
+            </div>
+            <div class="pb-area-buttons type-focus">
+              <a href="javascript:" class="pb-component-btn-s">
+                Edit
+              </a>
+            </div>
+          </div>
+          <!-- //box rule -->
+          <div class="pb-ui-buttons">
+            <a href="javascript:" class="pb-component-btn type-dark2"><em class="pb-icon-add-r"></em>Insert step</a>
+          </div>
+
+        </div>
+        <!-- //sub -->
+      </li>
+      <li [class.is-selected]="isSelectedMenu === RULE_EDIT_MENUS.JOB_RESULT"
+          (click)="isSelectedMenu = RULE_EDIT_MENUS.JOB_RESULT">
+        <a href="javascript:">
+          <span class="pb-txt-rnb">RECOMMENDATION</span>
+        </a>
+        <!-- sub -->
+        <div class="pb-rnb-sub type-recommendation">
+
+          <!-- box -->
+          <div class="pb-box-recommendation">
+            <div class="pb-txt-title">Replace</div>
+            <!-- list -->
+            <ul class="pb-list-recommendation">
+              <li>
+                <span class="pb-txt-type">‘\%’</span> with ‘ ‘ in discount
+                <!-- button -->
+                <div class="pb-ui-hover-buttons">
+                  <a href="javascript:" class="pb-component-btn-s">
+                    Edit
+                  </a>
+                  <a href="javascript:" class="pb-component-btn-s type-bg">
+                    Add
+                  </a>
+                </div>
+                <!-- //button -->
               </li>
-              <li [class.is-selected]="localStorageService.currentViewMode() === VIEW_MODE.LIST">
-                <a href="javascript:" class="pb-icon-list"
-                   (click)="localStorageService.saveViewMode(VIEW_MODE.LIST)">
-                </a>
+              <li>
+                <span class="pb-txt-type">‘\%’</span> with ‘ ‘ in discount
+                <!-- button -->
+                <div class="pb-ui-hover-buttons">
+                  <a href="javascript:" class="pb-component-btn-s">
+                    Edit
+                  </a>
+                  <a href="javascript:" class="pb-component-btn-s type-bg">
+                    Add
+                  </a>
+                </div>
+                <!-- //button -->
               </li>
             </ul>
-            <!-- //tab button -->
+            <!-- //list -->
+
+
           </div>
-          <!-- //right -->
+          <!-- //box -->
         </div>
-        <!-- //setting -->
-        <div class="pb-ui-grid">
-          <angular-slickgrid
-            [gridId]="UUID"
-            [columnDefinitions]="columnDefinitions"
-            [gridOptions]="GRID_OPTIONS"
-            (onGridCreated)="gridCreated($event)"
-            (onAngularGridCreated)="gridInstanceReady($event)">
-          </angular-slickgrid>
-        </div>
-      </div>
+        <!-- //sub -->
+      </li>
+    </ul>
+    <!-- bottom -->
+    <div class="pb-btn-bottom">
+      <a href="javascript:" class="pb-component-btn type-dark">
+        <em class="pb-icon-dictionary"></em>Rule Dictionary
+      </a>
     </div>
+    <!-- //bottom -->
   </div>
+  <!-- //rnb -->
 </div>
+

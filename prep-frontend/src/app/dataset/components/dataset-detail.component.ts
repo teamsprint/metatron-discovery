@@ -72,7 +72,7 @@ export class DatasetDetailComponent implements OnInit, OnDestroy{
     this.activatedRoute
       .paramMap
       .subscribe((params) => {
-        const dsId = params.get(RouterUrls.Managements.getSetDetailPathVariableKey());
+        const dsId = params.get(RouterUrls.Managements.getDataSetDetailPathVariableKey());
         if (dsId) {
           this.datasetId = dsId;
         }
