@@ -43,7 +43,7 @@ export class DataflowService {
       }));
     }
 
-    return this.http.get(url, {
+    return this.http.get<Dataflow.ValueObjects.Select | HttpErrorResponse>(url, {
       params: CommonUtil.Http.makeQueryString(params)
     });
   }

@@ -1,5 +1,5 @@
 /* tslint:disable */
-import {Component, EventEmitter, Output, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Dataset} from '../domains/dataset';
 import {DatasetsService} from '../services/datasets.service';
 import {LoadingService} from '../../common/services/loading/loading.service';
@@ -7,6 +7,7 @@ import {Dataflow} from '../../dataflow/domains/dataflow';
 import {DataflowService} from '../../dataflow/services/dataflow.service';
 import {finalize} from 'rxjs/operators';
 import * as _ from 'lodash';
+import {NGXLogger} from 'ngx-logger';
 
 @Component({
   selector: 'create-dataset-name',
@@ -45,7 +46,8 @@ export class CreateDatasetNameComponent implements OnInit{
 
   constructor(private readonly datasetService: DatasetsService,
               private readonly dataflowService: DataflowService,
-              private readonly loadingService: LoadingService) {
+              private readonly loadingService: LoadingService,
+              private readonly logger: NGXLogger) {
   }
 
 
@@ -238,33 +240,34 @@ export class CreateDatasetNameComponent implements OnInit{
     this.dataflowService
       .getDataflow(dfId)
       .pipe(finalize(() => this.loadingService.hide()))
-      .subscribe(dataflows => {
-        if (!dataflows) {
-          return;
-        }
-        const newDataflow: Dataflow.ValueObjects.Select = dataflows as Dataflow.ValueObjects.Select;
-        if (newDataflow.diagramData !== null && newDataflow.diagramData.length > 1) {
-          for (let i = 0; i < newDataflow.diagramData.length; i = i + 1) {
-            if (newDataflow.diagramData[i].objType === Dataflow.DataflowDiagram.ObjectType.RECIPE) {
-              recipeId = newDataflow.diagramData[i].objId;
-              break;
+      .subscribe(
+        (r: Dataflow.ValueObjects.Select) => {
+          if (!r) {
+            return;
+          }
+          const newDataflow: Dataflow.ValueObjects.Select = r;
+          if (newDataflow.diagramData !== null && newDataflow.diagramData.length > 1) {
+            for (let i = 0; i < newDataflow.diagramData.length; i = i + 1) {
+              if (newDataflow.diagramData[ i ].objType === Dataflow.DataflowDiagram.ObjectType.RECIPE) {
+                recipeId = newDataflow.diagramData[ i ].objId;
+                break;
+              }
             }
           }
+          if (recipeId !== null) {
+            const param = {};
+            param[ 'dfId' ] = dfId;
+            param[ 'recipeId' ] = recipeId;
+            this.onGotoDataflow.emit(param);
+          } else {
+            this.onDone.emit();
+          }
+        },
+        e => {
+          this.logger.error('[GET] dataflow', e);
         }
-        if (recipeId !== null) {
-          const param = {};
-          param['dfId'] = dfId;
-          param['recipeId'] = recipeId;
-          this.onGotoDataflow.emit(param);
-        }else{
-          this.onDone.emit();
-        }
-
-      });
+      );
   }
-
-
-
 
   private getFileItemIconName(filenameBeforeUpload: string ): string {
     const className: string = this._getFileFormatForIcon(filenameBeforeUpload).toString();
