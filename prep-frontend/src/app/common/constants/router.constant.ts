@@ -41,16 +41,16 @@ export namespace RouterUrls {
       return `/${Managements.ROOT}/${Managements.PREP_BOT}/${Managements.FLOWS}/${dfId}/${Managements.RECIPES}/${recipeId}`;
     }
 
-    public static getSetDetailPathVariableKey() {
-      return 'id';
+    public static getDataSetDetailPathVariableKey() {
+      return 'dataSetId';
     }
 
     public static getFlowDetailPathVariableKey() {
-      return 'id';
+      return 'dataflowId';
     }
 
     public static getRecipeDetailPathVariableKey() {
-      return 'id';
+      return 'recipeId';
     }
   }
 }
