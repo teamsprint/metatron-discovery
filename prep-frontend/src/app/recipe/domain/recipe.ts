@@ -31,6 +31,13 @@ export namespace Recipe {
     valid: boolean;
   }
 
+  export class Select extends Entity {
+    gridResponse: GridResponse;
+    manualColumnCount: number;
+    totalLines: number;
+    totalBytes: number;
+  }
+
   export class ColDesc {
     type: Type;
   }
