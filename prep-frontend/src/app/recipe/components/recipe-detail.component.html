@@ -4,7 +4,7 @@
 
 <div class="wrap-splitter">
   <!-- wrap contents -->
-  <div class="pb-wrap-contents" id="left-slider">
+  <div class="pb-wrap-contents" #leftSlider>
     <div class="pb-contents-top">
       <!-- button -->
       <div class="pb-ui-buttons">
@@ -71,12 +71,12 @@
               </div>
               <!-- tab button -->
               <ul class="pb-component-tab-btn pb-clear">
-                <li [class.is-selected]="localStorageService.currentViewMode() === VIEW_MODE.CARD">
+                <li [class.is-selected]="localStorageService.getCurrentViewMode() === VIEW_MODE.CARD">
                   <a href="javascript:" class="pb-icon-grid"
                      (click)="localStorageService.saveViewMode(VIEW_MODE.CARD)">
                   </a>
                 </li>
-                <li [class.is-selected]="localStorageService.currentViewMode() === VIEW_MODE.LIST">
+                <li [class.is-selected]="localStorageService.getCurrentViewMode() === VIEW_MODE.LIST">
                   <a href="javascript:" class="pb-icon-list"
                      (click)="localStorageService.saveViewMode(VIEW_MODE.LIST)">
                   </a>
@@ -107,7 +107,7 @@
   <!--
       펼칠때 is-selected 추가
   -->
-  <div class="pb-rnb-menu is-selected " id="right-slider">
+  <div class="pb-rnb-menu is-selected " #rightSlider>
     <a href="javascript:" class="pb-btn-menu-close"></a>
     <ul class="pb-list-rnb type-list">
       <li [class.is-selected]="isSelectedMenu === RULE_EDIT_MENUS.RULES"

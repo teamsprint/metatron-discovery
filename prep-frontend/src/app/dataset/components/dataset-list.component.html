@@ -21,12 +21,12 @@
       <div class="pb-fright">
         <!-- tab -->
         <ul class="pb-component-tab-btn pb-clear">
-          <li [class.is-selected]="localStorageService.currentViewMode() === VIEW_MODE.CARD">
+          <li [class.is-selected]="localStorageService.getCurrentViewMode() === VIEW_MODE.CARD">
             <a href="javascript:" class="pb-icon-grid"
                (click)="localStorageService.saveViewMode(VIEW_MODE.CARD)">
             </a>
           </li>
-          <li [class.is-selected]="localStorageService.currentViewMode() === VIEW_MODE.LIST">
+          <li [class.is-selected]="localStorageService.getCurrentViewMode() === VIEW_MODE.LIST">
             <a href="javascript:" class="pb-icon-list"
                (click)="localStorageService.saveViewMode(VIEW_MODE.LIST)">
             </a>

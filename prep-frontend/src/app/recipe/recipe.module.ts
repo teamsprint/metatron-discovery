@@ -3,6 +3,7 @@ import {SharedModule} from '../common/shared/shared.module';
 import {RecipeDetailComponent} from './components/recipe-detail.component';
 import {RouterModule} from '@angular/router';
 import {LnbModule} from '../lnb/lnb.module';
+import {PreRecipeDetailGuard} from './services/pre-recipe-detail.guard';
 
 const COMPONENTS = [
   RecipeDetailComponent
@@ -16,6 +17,9 @@ const COMPONENTS = [
   ],
   declarations: [
     ...COMPONENTS
+  ],
+  providers: [
+    PreRecipeDetailGuard
   ],
   exports: [
     ...COMPONENTS
