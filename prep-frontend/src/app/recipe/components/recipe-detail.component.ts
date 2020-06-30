@@ -254,7 +254,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
         cssClass: 'type-column',
         sortable: true,
         formatter: this.customColSelectionExtension.colSelectionFormatter,
-        header: _.cloneDeep(this.header),
+        header: this.header,
         seq: idx
       });
     }
