@@ -4,6 +4,7 @@ import {Router} from '@angular/router';
 import {CreateConnectionComponent} from '../../connection/components/create-connection.component';
 import {UpdateConnectionComponent} from '../../connection/components/update-connection.component';
 import {CreateDataflowComponent} from '../../dataflow/components/create-dataflow.component';
+import {DataflowDatasetPopComponent} from '../../dataflow/components/dataflow-dataset-pop.component';
 import {CreateDatasetComponent} from '../../dataset/components/create-dataset.component';
 
 @Component({
@@ -63,7 +64,6 @@ export class LnbComponent {
       // 현재 페이지가 connection list 화면인 경우 리스트 갱신 필요
       this.updateConnectionAfterCheck();
     });
-
   }
   private updateConnectionAfterCheck() {
     const url = this.router.url;
@@ -78,7 +78,6 @@ export class LnbComponent {
    * Dataflow Pop
    */
   public openCreateDataflowPopup() {
-    const url = this.router.url;
     const createDataflowComponentRef = this.viewContainerRef
       .createComponent(this.componentFactoryResolver.resolveComponentFactory(CreateDataflowComponent));
     createDataflowComponentRef.instance.createDataflowInfo();
@@ -104,11 +103,11 @@ export class LnbComponent {
     }
   }
 
+
   /**
    * Dataset Pop
    */
   public openCreateDatasetPopup() {
-    const url = this.router.url;
     const createDatasetComponentRef = this.viewContainerRef
       .createComponent(this.componentFactoryResolver.resolveComponentFactory(CreateDatasetComponent));
     createDatasetComponentRef.instance.createDatasetInfo();
@@ -127,6 +126,16 @@ export class LnbComponent {
       const dfId: string = $event['dfId'];
       const recipeId: string = $event['recipeId'];
       this.router.navigate([RouterUrls.Managements.getRecipeDetailUrl(dfId, recipeId)]).then();
+    });
+  }
+
+  public openAddDatasetPopup(openType: string, selectedDatasetIds: string[]) {
+    const addDatasetComponentRef = this.viewContainerRef
+      .createComponent(this.componentFactoryResolver.resolveComponentFactory(DataflowDatasetPopComponent));
+    addDatasetComponentRef.instance.openType = openType;
+    addDatasetComponentRef.instance.selectedDatasetIds = selectedDatasetIds;
+    addDatasetComponentRef.instance.onClose.subscribe(() => {
+      addDatasetComponentRef.destroy();
     });
   }
 

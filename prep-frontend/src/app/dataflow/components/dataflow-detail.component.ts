@@ -1,5 +1,5 @@
 /* tslint:disable */
-import {ChangeDetectorRef, Component, ElementRef, Injector, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit, ChangeDetectorRef, Injector, ViewChild, ElementRef} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {RouterUrls} from '../../common/constants/router.constant';
 import {DataflowService} from '../services/dataflow.service';
@@ -10,11 +10,12 @@ import {finalize} from 'rxjs/operators';
 import {Dataflow} from '../domains/dataflow';
 import {Dataset} from '../../dataset/domains/dataset';
 import {Recipe} from '../../recipe/domain/recipe';
+import {LnbComponent} from '../../lnb/components/lnb.component';
 import {NGXLogger} from 'ngx-logger';
 import * as _ from 'lodash';
 import * as $ from 'jquery';
 import interact from 'interactjs';
-import {AngularGridInstance, Column, FieldType, GridOption} from 'angular-slickgrid';
+import {AngularGridInstance, Column, FieldType, GridOption, SelectedRange} from 'angular-slickgrid';
 import {Alert} from '../../common/utils/alert.util';
 
 declare let echarts: any;
@@ -24,9 +25,12 @@ declare let echarts: any;
   styleUrls: ['./dataflow-detail.component.css']
 })
 export class DataflowDetailComponent implements OnInit, OnDestroy {
-
   @ViewChild('nameInput', {static: false})
   private nameInput: ElementRef;
+
+  @ViewChild(LnbComponent)
+  public lnbComponent: LnbComponent;
+
 
   // echart ins
   public chart: any;
@@ -391,7 +395,6 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
         }
       }
     };
-
     this.chartOptions = {
       backgroundColor: '#ffffff',
       tooltip: { show: false },
@@ -548,15 +551,8 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
 
     this.options.xAxis.max = this.depthCount > 5 ? 5 + (this.depthCount - 5) : 5;
     this.options.yAxis.max = this.rootCount > 5 ? 5 + (this.rootCount - 5) : 5;
-
-
-
-
     this.options.series[0].nodes = this.chartNodes;
     this.options.series[0].links = this.chartLinks;
-
-
-
     if(this.echartsIntance !== null && this.echartsIntance !== undefined) {
       this.echartsIntance.setOption(this.options);
       this.echartsIntance.resize();
@@ -572,7 +568,7 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
   }
 
   private dataflowChartAreaResize(): void {
-    const itemMinSize: number = 105;
+    const itemMinSize: number = 98;
     let minHeightSize: number = 600;
     let fixHeight: number = 600;
 
@@ -733,12 +729,7 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
   } // function - createNode
 
 
-  // /**
   //  * 하위 노드 설정
-  //  * @param nodeList
-  //  * @param parent
-  //  * @param rootNode
-  //  */
   private setChildNode(nodeList, parent, rootNode) {
     const childNodeList = nodeList.filter((node) => {
       return node.upstreamIds.indexOf(parent.objId) > -1 && _.eq(node.creatorDfId, this.dataflow.dfId);
@@ -773,13 +764,6 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
     const graphData = $event;
     const symbolInfo = this.symbolInfo
     const option = this.echartsIntance.getOption();
-    // const clearSelectedNodeEffect = (() => {
-    //   option.series[0].nodes.map((node) => {
-    //     node.symbol = _.cloneDeep(node.originSymbol);
-    //   });
-    // });
-
-
 
     if (graphData['data'] === null || graphData['data'] === undefined) return;
     if (graphData['data']['objId'] === null || graphData['data']['objId'] === undefined) return;
@@ -831,6 +815,7 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
       );
   }
 
+
   private getRecipeInfomation(recipeId: string) {
     this.detailBoxReset();
     this.detailBoxOpenSetting();
@@ -877,7 +862,7 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
 
   private detailBoxOpenSetting() {
     // 좌표 정보가 있다면 그 정보 로 연다.
-    this.logger.info('this.LAYER_POPUP_POS', this.LAYER_POPUP_POS);
+    // this.logger.info('this.LAYER_POPUP_POS', this.LAYER_POPUP_POS);
     const xpos: number = this.LAYER_POPUP_POS.x;
     const ypos: number = this.LAYER_POPUP_POS.y;
     const parantWidth = $( window ).width();
@@ -997,41 +982,41 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
     this.router.navigate([RouterUrls.Managements.getRecipeDetailUrl(this.dataflowId, recipeId)]).then();
   }
 
-  private documentLocationReload () {
-    location.reload();
-  }
-
-
-
   public detailBoxClose() {
     this.detailBoxReset();
-    const symbolInfo = this.symbolInfo
-    const option = this.echartsIntance.getOption();
-    const clearSelectedNodeEffect = (() => {
-      option.series[0].nodes.map((node) => {
-        node.symbol = _.cloneDeep(node.originSymbol);
-      });
-    });
-    clearSelectedNodeEffect();
-    this.echartsIntance.setOption(option);
-
+    this.chartStyleReset();
   }
 
+  private chartStyleReset() {
+    if (this.echartsIntance !== null && this.echartsIntance !== undefined) {
+      const option = this.echartsIntance.getOption();
+      const clearSelectedNodeEffect = (() => {
+        option.series[0].nodes.map((node) => {
+          node.symbol = _.cloneDeep(node.originSymbol);
+        });
+      });
+      clearSelectedNodeEffect();
+      this.echartsIntance.setOption(option);
+    }
+  }
 
+  public openAddDatasetPopup() {
+    const selectedDatasetIds: string[] = [];
+    if (this.dataSetList !== null && this.dataSetList !== undefined) {
+      this.dataSetList.forEach(item => {
+        if (item.objType === Dataflow.DataflowDiagram.ObjectType.DATASET) {
+          selectedDatasetIds.push(item.objId);
+        }
+      });
+    }
+    this.lnbComponent.openAddDatasetPopup('ADD', selectedDatasetIds);
+  }
 
   ngOnDestroy(): void {
     // this.LAYER_POPUP.unset();
   }
 
-  public expandedClose(event) {
-    event.preventDefault();
-    this.expanded = false;
-  }
 
-  public expandedStatus() {
-    return this.expanded;
-
-  }
 }
 class Command {
   command : string;

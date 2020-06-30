@@ -1,4 +1,4 @@
-<create-dataflow-list *ngIf="step === 'create-dataflow-list'"
+<create-dataflow-list *ngIf="step === 'create-dataflow-list'" [openType]="'CREATE'"
                       (onNext)="createDataflowName()" (onClose)="onClose.emit()"></create-dataflow-list>
 <create-dataflow-name *ngIf="step === 'create-dataflow-name'" [selectedDatasets]="selectedDatasets" [dataflow]="dataflow"
                       (onPrev)="createDataflowInfo()" (onClose)="onClose.emit()" (onDone)="onDone.emit()"></create-dataflow-name>

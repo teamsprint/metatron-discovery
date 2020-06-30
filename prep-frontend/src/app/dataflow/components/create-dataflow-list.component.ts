@@ -20,9 +20,14 @@ export class CreateDataflowListComponent implements OnInit {
   @Output()
   public readonly onNext = new EventEmitter();
   @Input()
+  public openType: string; // CREATE, ADD, REPLACE
+  @Input()
   public dataflow: Dataflow.ValueObjects.Create;
   @Input()
   public selectedDatasetId: string; // 미리보기를 위해 화면에 선택된 데이터셋
+  @Input()
+  public selectedDatasetIds: string[]; // 선택된 데이터셋 리스트_ID
+
 
   public selectedDatasets: Dataset.SimpleListEntity[] = []; // 선택된 데이터셋 리스트
   public datasets: Dataset.SimpleListEntity[] = []; // 화면에 보여지는 리스트
@@ -112,7 +117,16 @@ export class CreateDataflowListComponent implements OnInit {
           return;
         }
         this.datasets = datasets._embedded.datasets;
-
+        if (this.selectedDatasetIds !== null && this.selectedDatasetIds !== undefined) {
+          this.datasets.forEach(item => {
+            item.origin = false;
+            this.selectedDatasetIds.forEach(ids => {
+              if (ids === item.dsId) {
+                item.origin = true;
+              }
+            });
+          });
+        }
       });
   }
 
@@ -144,7 +158,9 @@ export class CreateDataflowListComponent implements OnInit {
     this.datasets.forEach((item) => {
       item.selected = true;
       if (-1 === _.findIndex(this.selectedDatasets, { dsId: item.dsId })) {
-        this._addSelectedItem(item);
+        if (item.origin !== true) {
+          this._addSelectedItem(item);
+        }
       }
     });
   }
@@ -153,7 +169,20 @@ export class CreateDataflowListComponent implements OnInit {
    * Add selected item
    */
   private _addSelectedItem(ds: Dataset.SimpleListEntity) {
+    if (ds.origin) {
+      return;
+    }
     this.selectedDatasets.push(ds);
+
+    let originCount = 0;
+    if (this.selectedDatasetIds !== null && this.selectedDatasetIds !== undefined) {
+      originCount = this.selectedDatasetIds.length;
+    }
+    if (this.selectedDatasets.length + originCount === this.datasets.length) {
+      this.isAllCheckedStatus = true;
+    } else {
+      this.isAllCheckedStatus = false;
+    }
   }
 
   /**
@@ -173,6 +202,7 @@ export class CreateDataflowListComponent implements OnInit {
     const index = _.findIndex(this.selectedDatasets, { dsId: ds.dsId });
     if (-1 !== index) {
       this.selectedDatasets.splice(index, 1);
+      this.isAllCheckedStatus = false;
     }
   }
 
@@ -199,6 +229,9 @@ export class CreateDataflowListComponent implements OnInit {
 
   public nextClick(): void {
     this.onNext.emit();
+  }
+  public addDoneClick() {
+    // console.info('this.selectedDatasets', this.selectedDatasets);
   }
 }
 

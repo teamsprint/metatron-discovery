@@ -8,7 +8,7 @@
   <div class="pb-contents-top">
     <!-- right -->
     <div class="pb-ui-buttons">
-      <a href="javascript:" class="pb-component-btn type-bg"><em class="pb-icon-add-r"></em> ADD DATASET</a>
+      <a href="javascript:" class="pb-component-btn type-bg" (click)="openAddDatasetPopup()"><em class="pb-icon-add-r"></em> ADD DATASET</a>
       <!-- more -->
       <div class="pb-ui-more" aria-expanded="true" (click)="$event.stopPropagation(); expanded = false" *ngIf="expanded == true">
         <a href="javascript:" class="pb-box-more"></a>
@@ -62,7 +62,7 @@
         <div class="pb-txt-det">
           Add dataset to your flow from your local file, database like Mysql
         </div>
-        <a href="javascript:" class="pb-component-btn type-bg tpye-normal"><em class="pb-icon-add-r"></em>ADD DATASET</a>
+        <a href="javascript:;" class="pb-component-btn type-bg tpye-normal" (click)="openAddDatasetPopup()"><em class="pb-icon-add-r"></em>ADD DATASET</a>
 
       </div>
 
@@ -74,7 +74,7 @@
     <!--*ngIf="this.dataSetList !== null || this.dataSetList.length > 0"-->
     <div class="pb-box-contents">
 
-      <div class="pb-box-dataflow" style="position: absolute; z-index: 1001;" [hidden]="detailBoxOpen === false">
+      <div class="pb-box-dataflow" style="position: absolute; z-index: 999;" [hidden]="detailBoxOpen === false">
         <div class="pb-dataflow-top" *ngIf="detailBoxDataset !== null">
           <div class="pb-label-title">{{detailBoxDatasetName}}</div>
           <div class="pb-ui-buttons">
