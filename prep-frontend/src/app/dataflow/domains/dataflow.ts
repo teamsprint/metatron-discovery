@@ -58,6 +58,7 @@ export namespace Dataflow {
     objName: string;
     objType: DataflowDiagram.ObjectType;
     createdTime: Date;
+    parentId: string;
   }
 
   export class Upstream {

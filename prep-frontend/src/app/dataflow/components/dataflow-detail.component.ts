@@ -334,15 +334,12 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
           return;
         }
         this.dataflow = dataflows as Dataflow.ValueObjects.Select;
-        this.dataflowChartAreaResize();
         this.dataflowName = this.dataflow.name;
         this.dataSetList = [];
         this.upstreamList = [];
-
         if (this.dataflow.diagramData !== null && this.dataflow.upstreams) { // if dataflow has diagramData
           this.makeDataSetList();
         }
-
       });
   }
 
@@ -466,6 +463,8 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
   private makeDataSetList() {
     this.dataSetList = this.dataflow.diagramData;
     this.upstreamList = this.dataflow.upstreams;
+    this.dataflowChartAreaResize();
+
     // this.logger.info('this.upstreamList', this.upstreamList);
 
     if (this.dataSetList && 1 < this.dataSetList.length) {
@@ -571,35 +570,55 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
   }
 
   private dataflowChartAreaResize(): void {
-    const itemMinSize: number = 90;
-    const topMargin: number = 102;
+    const itemMinSize: number = 105;
     let minHeightSize: number = 600;
-    let fixHeight: number = minHeightSize;
-    if(this.dataflow!=null && this.dataflow.hasOwnProperty('datasetCount') && this.dataflow.hasOwnProperty('recipeCount')){
-      let imported: number = this.dataflow.datasetCount;
-      let wrangled: number = this.dataflow.recipeCount;
-      if(imported == undefined) imported = 0;
-      if(wrangled == undefined) wrangled = 0;
-      const lImported: number = (imported * itemMinSize) + Math.floor(wrangled * itemMinSize/2);
-      const lWrangled: number = (wrangled * itemMinSize) + Math.floor(imported * itemMinSize/2);
-      if(lImported > minHeightSize || lWrangled > minHeightSize)
-      {if(lImported>lWrangled) {fixHeight = lImported;}else{fixHeight = lWrangled;}}
+    let fixHeight: number = 600;
+
+    const sizeArray: any[] = [];
+    this.dataSetList.forEach(item => {
+      if (item.objType === Dataflow.DataflowDiagram.ObjectType.DATASET) {
+        const ditem = {};
+        ditem['dsId'] = item.objId;
+        ditem['recipes'] = [];
+        sizeArray.push(ditem);
+      }
+    });
+    this.dataSetList.forEach(item => {
+      if (item.objType === Dataflow.DataflowDiagram.ObjectType.RECIPE) {
+        sizeArray.forEach(item1 => {
+          if (item.dsId === item1.parentId) {item1.recipes.push(item.objId);}
+        });
+      }
+    });
+
+    let itemcount = 0;
+    sizeArray.forEach(item => {
+      if (item.recipes.length === 0) {
+        itemcount++;
+      }else{
+        itemcount = itemcount + item.recipes.length;
+      }
+    });
+    this.logger.info('itemcount', itemcount);
+    fixHeight = itemcount * itemMinSize;
+    if (fixHeight < minHeightSize) {
+      fixHeight = minHeightSize;
     }
 
-    // fixHeight = 1000;
-    $('.pb-ui-graph').css('height', fixHeight+'px').css('overflow', 'hidden');
-    // if($('.demo-chart').children()!=null && $('.demo-chart').children()!=undefined){
-    //   $('.demo-chart').children().css('height', fixHeight+'px');}
-    // if($('.demo-chart').children().children()!=null && $('.demo-chart').children().children()!=undefined) {
-    //   $('.demo-chart').children().children().css('height', fixHeight+'px');}
-
-
+    if ($('.pb-ui-graph-p') !== null && $('.pb-ui-graph-p') !== undefined) {
+      if ($('.pb-ui-graph-p').height() < fixHeight) {
+        $('.pb-ui-graph-p').css('overflow', 'auto');
+      } else {
+        $('.pb-ui-graph-p').css('overflow', 'hidden');
+      }
+    }
+    this.logger.info('pb-ui-graph-c', $('.pb-ui-graph-p').height());
+    $('.pb-ui-graph-c').css('height', fixHeight+'px').css('overflow', 'hidden');
   }
 
 
 
   private chartSpacing(chartNodes, chartLinks) {
-    // this.logger.info('chartSpacing', chartNodes);
     for (let idx in chartNodes) {
       let node = chartNodes[idx];
 
@@ -750,18 +769,13 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
 
   public chartClickEvent($event) {
     const graphData = $event;
-
-
-
     const symbolInfo = this.symbolInfo
     const option = this.echartsIntance.getOption();
-    const clearSelectedNodeEffect = (() => {
-      option.series[0].nodes.map((node) => {
-        node.symbol = _.cloneDeep(node.originSymbol);
-      });
-    });
-
-
+    // const clearSelectedNodeEffect = (() => {
+    //   option.series[0].nodes.map((node) => {
+    //     node.symbol = _.cloneDeep(node.originSymbol);
+    //   });
+    // });
 
 
 
@@ -770,8 +784,6 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
     this.logger.info('this.chartClickEvent', $event);
     if (this.detailBoxSelectedId === graphData['data']['objId']) return;
 
-
-
     option.series[graphData.seriesIndex].nodes.map((node, idx) => {
       if (_.eq(idx, graphData.dataIndex) && graphData.data.detailType) {
         node.symbol = symbolInfo.SELECTED[graphData.data.dsType];
@@ -779,9 +791,7 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
         node.symbol = _.cloneDeep(node.originSymbol);
       }
     });
-
     this.echartsIntance.setOption(option);
-
     if (graphData['data']['dsType'] === Dataflow.DataflowDiagram.ObjectType.DATASET) {
       this.getDatasetInfomation(graphData['data']['objId']);
       return;
@@ -983,6 +993,16 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
 
   public detailBoxClose() {
     this.detailBoxReset();
+    const symbolInfo = this.symbolInfo
+    const option = this.echartsIntance.getOption();
+    const clearSelectedNodeEffect = (() => {
+      option.series[0].nodes.map((node) => {
+        node.symbol = _.cloneDeep(node.originSymbol);
+      });
+    });
+    clearSelectedNodeEffect();
+    this.echartsIntance.setOption(option);
+
   }
 
 

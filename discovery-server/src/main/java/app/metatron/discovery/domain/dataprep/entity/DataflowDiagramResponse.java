@@ -10,6 +10,7 @@ public class DataflowDiagramResponse {
     private String objName;
     private Long orderNo;
     private DataflowDiagram.ObjectType objType;
+    private String parentId;
     private DateTime createdTime;
 
     public String getCreatorDfId() {
@@ -58,6 +59,14 @@ public class DataflowDiagramResponse {
 
     public void setObjType(DataflowDiagram.ObjectType objType) {
         this.objType = objType;
+    }
+
+    public String getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(String parentId) {
+        this.parentId = parentId;
     }
 
     public DateTime getCreatedTime() {

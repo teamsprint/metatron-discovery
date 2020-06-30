@@ -149,11 +149,14 @@ public class Dataflow extends AbstractHistoryEntity {
                 if(diagram.getObjType() == DataflowDiagram.ObjectType.DATASET) {
                     diagramResponse.setObjId(diagram.getDataset().getDsId());
                     diagramResponse.setObjName(diagram.getDataset().getName());
+                    diagramResponse.setParentId(this.dfId);
                     diagramResponse.setCreatedTime(diagram.getDataset().getCreatedTime());
                 }else if(diagram.getObjType() == DataflowDiagram.ObjectType.RECIPE) {
                     diagramResponse.setObjId(diagram.getRecipe().getRecipeId());
                     diagramResponse.setObjName(diagram.getRecipe().getName());
+                    diagramResponse.setParentId(diagram.getDataset().getDsId());
                     diagramResponse.setCreatedTime(diagram.getRecipe().getCreatedTime());
+
                 }
                 diagramResponseList.add(diagramResponse);
             }
