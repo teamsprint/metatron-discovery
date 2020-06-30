@@ -4,11 +4,9 @@
 /***********************************************************************
      Page : Rule split
  *************************************************************************/
-.wrap-splitter {width:100% !important; height:100% !important;}
+.wrap-splitter {display:flex; width:100% !important; height:100% !important;}
 .wrap-splitter .pb-wrap-box-rule {padding-right:0;}
-.wrap-splitter .pb-contents-top .pb-ui-buttons {padding-right:0;}
-.wrap-splitter .pb-wrap-contents {margin-left:0;}
-.splitter_panel .vsplitter {width:8px; background-color:#cfcec7; opacity:0.9;}
+.wrap-splitter .gutter-horizontal {width:8px !important; background-color:#cfcec7; opacity:0.9;}
 
 /***********************************************************************
      Page : Rule
@@ -936,6 +934,7 @@ ul.pb-list-type-data li a .pb-icon-type-sharp {
      Page : Rule
  *************************************************************************/
 .split-edit {
+  display:flex;
   position:absolute;
   left:0;
   right:0;
@@ -945,10 +944,12 @@ ul.pb-list-type-data li a .pb-icon-type-sharp {
   overflow:hidden;
 }
 .split-edit .pb-box-ruleedit {
-  top:0;
+  top:51px;
 }
-.split-edit.splitter_panel .vsplitter {
+.split-edit .gutter-horizontal{
+  position:relative;
   width:1px;
+  z-index:10;
 }
 .pb-box-ruleedit {
   display:flex;
