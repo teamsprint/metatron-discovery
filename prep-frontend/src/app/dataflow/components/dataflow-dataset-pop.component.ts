@@ -10,6 +10,8 @@ export class DataflowDatasetPopComponent implements OnInit{
   public readonly pbLayoutPopupClass = true;
   @Output()
   public readonly onClose = new EventEmitter();
+  @Output()
+  public readonly addDataset = new EventEmitter();
   @Input()
   public openType;
   @Input()
@@ -20,4 +22,10 @@ export class DataflowDatasetPopComponent implements OnInit{
   ngOnInit(): void {
     this.pageReady = true;
   }
+
+  public addDatasetEvent(event) {
+    this.addDataset.emit(event);
+
+  }
+
 }

@@ -20,6 +20,9 @@ export class LnbComponent {
   @Output()
   public readonly onPageRefresh = new EventEmitter();
 
+  @Output()
+  public readonly addDataset = new EventEmitter();
+
   @Input()
   public readonly is2DepthEnable: boolean;
 
@@ -122,7 +125,6 @@ export class LnbComponent {
 
     createDatasetComponentRef.instance.onGotoDataflow.subscribe($event => {
       createDatasetComponentRef.destroy();
-      // gotoDataflow
       const dfId: string = $event['dfId'];
       const recipeId: string = $event['recipeId'];
       this.router.navigate([RouterUrls.Managements.getRecipeDetailUrl(dfId, recipeId)]).then();
@@ -136,6 +138,10 @@ export class LnbComponent {
     addDatasetComponentRef.instance.selectedDatasetIds = selectedDatasetIds;
     addDatasetComponentRef.instance.onClose.subscribe(() => {
       addDatasetComponentRef.destroy();
+    });
+    addDatasetComponentRef.instance.addDataset.subscribe($event => {
+      addDatasetComponentRef.destroy();
+      this.addDataset.emit($event);
     });
   }
 

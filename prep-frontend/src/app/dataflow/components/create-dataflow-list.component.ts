@@ -19,6 +19,8 @@ export class CreateDataflowListComponent implements OnInit {
   public readonly onClose = new EventEmitter();
   @Output()
   public readonly onNext = new EventEmitter();
+  @Output()
+  public readonly addDataset = new EventEmitter();
   @Input()
   public openType: string; // CREATE, ADD, REPLACE
   @Input()
@@ -230,8 +232,24 @@ export class CreateDataflowListComponent implements OnInit {
   public nextClick(): void {
     this.onNext.emit();
   }
+
   public addDoneClick() {
-    // console.info('this.selectedDatasets', this.selectedDatasets);
+    const addDoneData: string[] = [];
+    this.selectedDatasets.forEach(item => {
+      let origin = false;
+      this.selectedDatasetIds.forEach(ids => {
+        if (ids === item.dsId) {
+          origin = true;
+        }
+      });
+      if (origin === false) {
+        addDoneData.push(item.dsId);
+      }
+    });
+    if (addDoneData.length === 0) {
+      return;
+    }
+    this.addDataset.emit(addDoneData);
   }
 }
 

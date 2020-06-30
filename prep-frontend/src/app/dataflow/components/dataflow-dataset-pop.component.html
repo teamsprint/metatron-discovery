@@ -1,1 +1,1 @@
-<create-dataflow-list *ngIf="pageReady" [openType]="openType" [selectedDatasetIds]="selectedDatasetIds" (onClose)="onClose.emit()"></create-dataflow-list>
+<create-dataflow-list *ngIf="pageReady" [openType]="openType" [selectedDatasetIds]="selectedDatasetIds" (addDataset)="addDatasetEvent($event)" (onClose)="onClose.emit()"></create-dataflow-list>

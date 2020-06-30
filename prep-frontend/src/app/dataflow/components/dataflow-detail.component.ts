@@ -1012,6 +1012,10 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
     this.lnbComponent.openAddDatasetPopup('ADD', selectedDatasetIds);
   }
 
+  public addDatasetEvent(event) : void {
+
+  }
+
   ngOnDestroy(): void {
     // this.LAYER_POPUP.unset();
   }
