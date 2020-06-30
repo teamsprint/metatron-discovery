@@ -544,7 +544,6 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
       }
     });
 
-    console.info('this.rootCount', this.rootCount);
 
     this.options.xAxis.max = this.depthCount > 5 ? 5 + (this.depthCount - 5) : 5;
     this.options.yAxis.max = this.rootCount > 5 ? 5 + (this.rootCount - 5) : 5;
@@ -555,7 +554,7 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
     this.options.series[0].nodes = this.chartNodes;
     this.options.series[0].links = this.chartLinks;
 
-    console.info( '================== :' + $('#chartCanvas').height());
+
 
     if(this.echartsIntance !== null && this.echartsIntance !== undefined) {
       this.echartsIntance.setOption(this.options);
@@ -563,7 +562,6 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
     }
   }
   public onChartInit($event) {
-    console.info('$event', $event);
     // this.dataflowChartAreaResize();
     this.echartsIntance  = $event;
     if(this.echartsIntance !== null && this.echartsIntance !== undefined) {
@@ -586,12 +584,9 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
       const lWrangled: number = (wrangled * itemMinSize) + Math.floor(imported * itemMinSize/2);
       if(lImported > minHeightSize || lWrangled > minHeightSize)
       {if(lImported>lWrangled) {fixHeight = lImported;}else{fixHeight = lWrangled;}}
-      console.info('imported', imported);
-      console.info('lWrangled', lWrangled);
     }
 
     // fixHeight = 1000;
-    console.info('fixHeight', fixHeight);
     $('.pb-ui-graph').css('height', fixHeight+'px').css('overflow', 'hidden');
     // if($('.demo-chart').children()!=null && $('.demo-chart').children()!=undefined){
     //   $('.demo-chart').children().css('height', fixHeight+'px');}
@@ -756,7 +751,7 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
   public chartClickEvent($event) {
     const graphData = $event;
 
-    // console.info('graphData', graphData);
+
 
     const symbolInfo = this.symbolInfo
     const option = this.echartsIntance.getOption();
@@ -775,7 +770,7 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
     this.logger.info('this.chartClickEvent', $event);
     if (this.detailBoxSelectedId === graphData['data']['objId']) return;
 
-    console.info('option', option);
+
 
     option.series[graphData.seriesIndex].nodes.map((node, idx) => {
       if (_.eq(idx, graphData.dataIndex) && graphData.data.detailType) {
