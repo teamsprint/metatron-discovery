@@ -1,5 +1,5 @@
 /* tslint:disable */
-import {Component, OnDestroy, OnInit, ChangeDetectorRef, Injector, ViewChild, ElementRef} from '@angular/core';
+import {ChangeDetectorRef, Component, ElementRef, Injector, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {RouterUrls} from '../../common/constants/router.constant';
 import {DataflowService} from '../services/dataflow.service';
@@ -14,7 +14,9 @@ import {NGXLogger} from 'ngx-logger';
 import * as _ from 'lodash';
 import * as $ from 'jquery';
 import interact from 'interactjs';
-import {AngularGridInstance, Column, FieldType, GridOption, SelectedRange} from 'angular-slickgrid';
+import {AngularGridInstance, Column, FieldType, GridOption} from 'angular-slickgrid';
+import {Alert} from '../../common/utils/alert.util';
+
 declare let echarts: any;
 
 @Component({
@@ -809,19 +811,24 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
     this.datasetService
       .getDataset(dsId)
       .pipe(finalize(() => this.loadingService.hide()))
-      .subscribe(dataset => {
-        if (!dataset) {
-          this.detailBoxReset();
-          return;
+      .subscribe(
+        dataset => {
+          if (!dataset) {
+            this.detailBoxReset();
+            return;
+          }
+          this.detailBoxSelectedId = dsId;
+          this.detailBoxDataset = dataset as Dataset.Select;
+          this.detailBoxDatasetName = this.detailBoxDataset.name;
+          if (this.detailBoxDataset.gridResponse !== null) {
+            this.makeDatagrid(this.detailBoxDataset.gridResponse);
+          }
+          this.detailBoxOpen = true;
+        },
+        error => {
+          Alert.error(error?.message);
         }
-        this.detailBoxSelectedId = dsId;
-        this.detailBoxDataset  = dataset as Dataset.Select;
-        this.detailBoxDatasetName = this.detailBoxDataset.name;
-        if (this.detailBoxDataset.gridResponse !== null ) {
-          this.makeDatagrid(this.detailBoxDataset.gridResponse);
-        }
-        this.detailBoxOpen = true;
-      });
+      );
   }
 
   private getRecipeInfomation(recipeId: string) {
@@ -831,23 +838,28 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
     this.recipeService
       .getRecipe(recipeId)
       .pipe(finalize(() => this.loadingService.hide()))
-      .subscribe(recipe => {
-        if (!recipe) {
-          this.detailBoxReset();
-          return;
+      .subscribe(
+        recipe => {
+          if (!recipe) {
+            this.detailBoxReset();
+            return;
+          }
+          this.detailBoxSelectedId = recipeId;
+          this.detailBoxRecipe = recipe as Recipe.Select;
+          if (this.detailBoxRecipe.recipeRules !== null) {
+            this.recipeRulesSize = this.detailBoxRecipe.recipeRules.length;
+            this._setRuleList(this.detailBoxRecipe.recipeRules);
+          }
+          this.detailBoxRecipeName = this.detailBoxRecipe.name;
+          if (this.detailBoxRecipe.gridResponse !== null) {
+            this.makeDatagrid(this.detailBoxRecipe.gridResponse);
+          }
+          this.detailBoxOpen = true;
+        },
+        error => {
+          Alert.error(error?.message);
         }
-        this.detailBoxSelectedId = recipeId;
-        this.detailBoxRecipe  = recipe as Recipe.Select;
-        if (this.detailBoxRecipe.recipeRules !== null) {
-          this.recipeRulesSize  = this.detailBoxRecipe.recipeRules.length;
-          this._setRuleList(this.detailBoxRecipe.recipeRules);
-        }
-        this.detailBoxRecipeName = this.detailBoxRecipe.name;
-        if (this.detailBoxRecipe.gridResponse !== null ) {
-          this.makeDatagrid(this.detailBoxRecipe.gridResponse);
-        }
-        this.detailBoxOpen = true;
-      });
+      );
   }
 
   private detailBoxReset() {
