@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Location} from '@angular/common';
 import {ViewMode} from '../../main/value-objects/view-mode';
 import {LocalStorageService} from '../../common/services/local-storage/local-storage.service';
@@ -18,6 +18,7 @@ import {Dataflow} from '../../dataflow/domains/dataflow';
 // @ts-ignore
 import Split from 'split.js';
 import {CustomColSelectionExtension} from '../../common/services/slickgrid/custom-col-selection-extension';
+import {RecipeLocalStorageService} from '../../common/services/local-storage/recipe-local-storage.service';
 import GridResponse = Recipe.GridResponse;
 
 declare const Slick;
@@ -33,49 +34,23 @@ enum RuleEditMenus {
 })
 export class RecipeDetailComponent implements OnInit, OnDestroy {
 
-  public readonly VIEW_MODE = ViewMode;
   public readonly COMMON_UTIL = CommonUtil;
   public readonly UUID = this.COMMON_UTIL.Generate.makeUUID();
+  public readonly VIEW_MODE = ViewMode;
   public readonly RULE_EDIT_MENUS = RuleEditMenus;
 
-  public readonly GRID_OPTIONS: GridOption = {
-    autoResize: {
-      containerId: `${this.UUID}-recipe-detail-component-container`,
-      sidePadding: 10
-    },
-    rowSelectionOptions: {
-      selectActiveRow: false
-    },
-    rowHeight: 26,
-    enableAutoResize: true,
-    enableCellNavigation: true,
-    showCustomFooter: true,
-    enableExcelCopyBuffer: true,
-    enableHeaderButton: true,
-    enableHeaderMenu: false,
-    enableFiltering: false,
-    datasetIdPropertyName: `${this.UUID}`,
+  @ViewChild('leftSlider', { static: true })
+  private readonly leftSlider: ElementRef;
 
-    // enableAutoResize: true,
-    // enableCellNavigation: true,
-    // showCustomFooter: true,
-    // enableExcelCopyBuffer: true,
-    excelCopyBufferOptions: {
-      onCopyCells: (e, args: { ranges: SelectedRange[] }) => console.log('onCopyCells', args.ranges),
-      onPasteCells: (e, args: { ranges: SelectedRange[] }) => console.log('onPasteCells', args.ranges),
-      onCopyCancelled: (e, args: { ranges: SelectedRange[] }) => console.log('onCopyCancelled', args.ranges),
-    },
+  @ViewChild('rightSlider', { static: true })
+  private readonly rightSlider: ElementRef;
 
-    headerButton: {
-      onCommand: (e, args) => {
-        this.customColSelectionExtension
-          .commandRegister(e, args, this.gridObj, [
-              this.customColSelectionExtension.colSelectionCommand
-            ]
-          );
-      }
-    }
-  };
+  private readonly RECIPE_DETAIL_SPLIT_RATE = this.recipeLocalStorageService.getRecipeDetailSplitRate();
+  public readonly LEFT_SLIDER_ELEMENT_ID = 'left-slider';
+  public readonly RIGHT_SLIDER_ELEMENT_ID = 'right-slider';
+  private readonly LEFT_SLIDER_MIN_SIZE = 750;
+  private readonly RIGHT_SLIDER_MIN_SIZE = 300;
+  private split;
 
   private readonly SLICK_GRID_CUSTOM_CONTEXT_MENU = new SlickGridCustomContextMenu([
     Item.of('Drop', false, null, null, []),
@@ -122,32 +97,52 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
     ]),
     Item.of('Clean', true, null, null, [])
   ]);
-
-  private readonly customColSelectionExtension = new CustomColSelectionExtension();
-
-  private readonly _header = {
-    buttons: [
-      _.cloneDeep(this.customColSelectionExtension.colSelectionHeader)
-    ]
+  public readonly GRID_OPTIONS: GridOption = {
+    autoResize: {
+      containerId: `${this.UUID}-recipe-detail-component-container`,
+      sidePadding: 10
+    },
+    rowSelectionOptions: {
+      selectActiveRow: false
+    },
+    rowHeight: 26,
+    enableAutoResize: true,
+    enableCellNavigation: true,
+    showCustomFooter: true,
+    enableExcelCopyBuffer: true,
+    enableHeaderButton: true,
+    enableHeaderMenu: false,
+    enableFiltering: false,
+    datasetIdPropertyName: `${this.UUID}`,
+    // enableAutoResize: true,
+    // enableCellNavigation: true,
+    // showCustomFooter: true,
+    // enableExcelCopyBuffer: true,
+    excelCopyBufferOptions: {
+      onCopyCells: (e, args: { ranges: SelectedRange[] }) => console.log('onCopyCells', args.ranges),
+      onPasteCells: (e, args: { ranges: SelectedRange[] }) => console.log('onPasteCells', args.ranges),
+      onCopyCancelled: (e, args: { ranges: SelectedRange[] }) => console.log('onCopyCancelled', args.ranges),
+    },
+    headerButton: {
+      onCommand: (e, args) => {
+        this.customColSelectionExtension
+          .commandRegister(e, args, this.gridObj, [
+              this.customColSelectionExtension.colSelectionCommand
+            ]
+          );
+      }
+    }
   };
-
-  get header() {
-    return _.cloneDeep(this._header);
-  }
-
+  private readonly customColSelectionExtension = new CustomColSelectionExtension();
+  private gridInstance: AngularGridInstance;
+  private gridObj;
   public columnDefinitions: Column[] = [];
   public dataset: Array<object> = [];
 
-  private gridInstance: AngularGridInstance;
-  private gridObj;
-
   private dataflowId: string;
   public dataflow: Dataflow.ValueObjects.Select;
-
   private recipeId: string;
   public recipe: Recipe.Entity;
-
-  private mainSplit: Split.Instance;
 
   public isSelectedMenu = this.RULE_EDIT_MENUS.RULES;
 
@@ -157,21 +152,21 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
               private readonly loadingService: LoadingService,
               private readonly activatedRoute: ActivatedRoute,
               private readonly dataflowService: DataflowService,
-              private readonly recipeService: RecipeService) {
+              private readonly recipeService: RecipeService,
+              private readonly recipeLocalStorageService: RecipeLocalStorageService) {
   }
 
   ngOnInit(): void {
 
-    this.mainSplit = Split(['#left-slider', '#right-slider'], {
-      sizes: [75, 25],
-      minSize: [750, 300],
-      onDragStart: () => {
-        console.log('onDragStart', this.mainSplit);
-      },
-      onDragEnd: () => {
-        console.log('onDragEnd', this.mainSplit);
+    this.split = Split([this.leftSlider.nativeElement, this.rightSlider.nativeElement], {
+        sizes: [this.RECIPE_DETAIL_SPLIT_RATE.left, this.RECIPE_DETAIL_SPLIT_RATE.right],
+        minSize: [this.LEFT_SLIDER_MIN_SIZE, this.RIGHT_SLIDER_MIN_SIZE],
+        onDragEnd: () => {
+          this.gridInstance.resizerService.resizeGrid().then();
+          this.recipeLocalStorageService.saveRecipeDetailSplitRate(Math.round((this.split.getSizes())[ 0 ]));
+        }
       }
-    });
+    );
 
     this.activatedRoute
       .paramMap
@@ -219,8 +214,8 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.mainSplit) {
-      this.mainSplit.destroy();
+    if (this.split) {
+      this.split.destroy();
     }
   }
 
@@ -254,7 +249,11 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
         cssClass: 'type-column',
         sortable: true,
         formatter: this.customColSelectionExtension.colSelectionFormatter,
-        header: this.header,
+        header: _.cloneDeep({
+          buttons: [
+            _.cloneDeep(this.customColSelectionExtension.colSelectionHeader)
+          ]
+        }),
         seq: idx
       });
     }
@@ -287,9 +286,6 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
 
         rows.push(obj);
       });
-
-
-    this.logger.info('Grid datas', rows);
 
     return rows;
   }

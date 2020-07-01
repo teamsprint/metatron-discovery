@@ -1,5 +1,5 @@
 /* tslint:disable */
-import {Component, OnDestroy, OnInit, ChangeDetectorRef, Injector, ViewChild, ElementRef} from '@angular/core';
+import {ChangeDetectorRef, Component, ElementRef, Injector, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {RouterUrls} from '../../common/constants/router.constant';
 import {DataflowService} from '../services/dataflow.service';
@@ -15,10 +15,10 @@ import {NGXLogger} from 'ngx-logger';
 import * as _ from 'lodash';
 import * as $ from 'jquery';
 import interact from 'interactjs';
-import {AngularGridInstance, Column, FieldType, GridOption, SelectedRange} from 'angular-slickgrid';
+import {AngularGridInstance, Column, FieldType, GridOption} from 'angular-slickgrid';
 import {Alert} from '../../common/utils/alert.util';
-
-declare let echarts: any;
+import {RecipeRule} from '../../recipe/domain/recipe-rule';
+import * as echarts from 'echarts';
 
 @Component({
   templateUrl: './dataflow-detail.component.html',
@@ -46,8 +46,7 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
   public dataSetList: any[] = [];
   private upstreamList: Dataflow.Upstream[] = [];
 
-  echartsIntance : any;
-
+  echartsInstance;
 
   // 루트 데이터셋 개수
   private rootCount: number = 0;
@@ -72,7 +71,6 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
 
   // 룰 리스트에서 필요한 변수
   public ruleList: Command[];
-  public commandList: any[];
   public nameTextInputEnable =false;
   public dataflowName: string = '';
   // Change Detect
@@ -436,33 +434,6 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
         }
       ], animation: false
     };
-
-    this.commandList = [
-      { command: 'create', alias: 'Cr' },
-      { command: 'header', alias: 'He' },
-      { command: 'keep', alias: 'Ke' },
-      { command: 'replace', alias: 'Rp' },
-      { command: 'rename', alias: 'Rm' },
-      { command: 'set', alias: 'Se' },
-      { command: 'settype', alias: 'St' },
-      { command: 'countpattern', alias: 'Co' },
-      { command: 'split', alias: 'Sp' },
-      { command: 'derive', alias: 'Dr' },
-      { command: 'delete', alias: 'De' },
-      { command: 'drop', alias: 'Dp' },
-      { command: 'pivot', alias: 'Pv' },
-      { command: 'unpivot', alias: 'Up' },
-      { command: 'join', alias: 'Jo' },
-      { command: 'extract', alias: 'Ex' },
-      { command: 'flatten', alias: 'Fl' },
-      { command: 'merge', alias: 'Me' },
-      { command: 'nest', alias: 'Ne' },
-      { command: 'unnest', alias: 'Un' },
-      { command: 'aggregate', alias: 'Ag' },
-      { command: 'sort', alias: 'So' },
-      { command: 'move', alias: 'Mv' },
-      { command: 'union', alias: 'Ui' }
-    ];
   }
 
   private makeDataSetList() {
@@ -548,21 +519,20 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
       }
     });
 
-
     this.options.xAxis.max = this.depthCount > 5 ? 5 + (this.depthCount - 5) : 5;
     this.options.yAxis.max = this.rootCount > 5 ? 5 + (this.rootCount - 5) : 5;
     this.options.series[0].nodes = this.chartNodes;
     this.options.series[0].links = this.chartLinks;
-    if(this.echartsIntance !== null && this.echartsIntance !== undefined) {
-      this.echartsIntance.setOption(this.options);
-      this.echartsIntance.resize();
+    if(this.echartsInstance !== null && this.echartsInstance !== undefined) {
+      this.echartsInstance.setOption(this.options);
+      this.echartsInstance.resize();
     }
   }
   public onChartInit($event) {
     // this.dataflowChartAreaResize();
-    this.echartsIntance  = $event;
-    if(this.echartsIntance !== null && this.echartsIntance !== undefined) {
-      this.echartsIntance.setOption(this.options);
+    this.echartsInstance  = $event;
+    if(this.echartsInstance !== null && this.echartsInstance !== undefined) {
+      this.echartsInstance.setOption(this.options);
       // this.echartsIntance.resize();
     }
   }
@@ -763,7 +733,7 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
   public chartClickEvent($event) {
     const graphData = $event;
     const symbolInfo = this.symbolInfo
-    const option = this.echartsIntance.getOption();
+    const option = this.echartsInstance.getOption();
 
     if (graphData['data'] === null || graphData['data'] === undefined) return;
     if (graphData['data']['objId'] === null || graphData['data']['objId'] === undefined) return;
@@ -777,7 +747,7 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
         node.symbol = _.cloneDeep(node.originSymbol);
       }
     });
-    this.echartsIntance.setOption(option);
+    this.echartsInstance.setOption(option);
     if (graphData['data']['dsType'] === Dataflow.DataflowDiagram.ObjectType.DATASET) {
       this.getDatasetInfomation(graphData['data']['objId']);
       return;
@@ -888,10 +858,6 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
 
   private _setRuleList(rules: any) {
     this.ruleList = [];
-    const commandNames = this.commandList.map((command) => {
-      return command.command;
-    });
-
     // ruleStringInfos
     rules.forEach((rule) => {
 
@@ -899,13 +865,10 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
       let ruleVO = JSON.parse(rule['uiContext']);
       ruleInfo.command = ruleVO['name'];
 
-      const idx = commandNames.indexOf(ruleInfo.command);
-
-      if (idx > -1) {
-        ruleInfo.alias = this.commandList[idx].alias;
+      if (RecipeRule.hasCommandByName(ruleInfo.command)) {
+        ruleInfo.alias = RecipeRule.ofCommandByName(ruleInfo.command).alias;
         ruleInfo.shortRuleString = rule.shortRuleString || rule.ruleString
         ruleInfo.ruleString = rule.ruleString;
-
       } else {
         ruleInfo.shortRuleString = rule.shortRuleString ? rule.shortRuleString : rule.ruleString;
         ruleInfo.command = 'Create';
@@ -988,15 +951,15 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
   }
 
   private chartStyleReset() {
-    if (this.echartsIntance !== null && this.echartsIntance !== undefined) {
-      const option = this.echartsIntance.getOption();
+    if (this.echartsInstance !== null && this.echartsInstance !== undefined) {
+      const option = this.echartsInstance.getOption();
       const clearSelectedNodeEffect = (() => {
         option.series[0].nodes.map((node) => {
           node.symbol = _.cloneDeep(node.originSymbol);
         });
       });
       clearSelectedNodeEffect();
-      this.echartsIntance.setOption(option);
+      this.echartsInstance.setOption(option);
     }
   }
 

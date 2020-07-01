@@ -1,24 +1,24 @@
 import {Injectable} from '@angular/core';
-import {MainLocalStorageService} from './main-local-storage/main-local-storage.service';
 import {ViewMode} from '../../../main/value-objects/view-mode';
+import {LocalStorageConstant} from '../../constants/local-storage.constant';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LocalStorageService {
 
-  constructor(private readonly mainLocalStorageService: MainLocalStorageService) {
+  private readonly VIEW_MODE = ViewMode;
+  private readonly DEFAULT_VIEW_MODE = this.VIEW_MODE.CARD;
+
+  setDefaultViewMode() {
+    localStorage.setItem(LocalStorageConstant.KEY.MAIN_VIEW_MODE, this.DEFAULT_VIEW_MODE);
   }
 
   saveViewMode(viewMode: ViewMode) {
-    this.mainLocalStorageService.saveViewMode(viewMode);
+    localStorage.setItem(LocalStorageConstant.KEY.MAIN_VIEW_MODE, viewMode);
   }
 
-  currentViewMode() {
-    return this.mainLocalStorageService.currentViewMode();
-  }
-
-  setDefaultViewMode() {
-    this.mainLocalStorageService.setDefaultViewMode();
+  getCurrentViewMode() {
+    return localStorage.getItem(LocalStorageConstant.KEY.MAIN_VIEW_MODE);
   }
 }

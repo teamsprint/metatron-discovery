@@ -20,6 +20,7 @@ import {LnbModule} from '../lnb/lnb.module';
 import {DataflowService} from '../dataflow/services/dataflow.service';
 import {RecipeDetailComponent} from '../recipe/components/recipe-detail.component';
 import {RecipeModule} from '../recipe/recipe.module';
+import {PreRecipeDetailGuard} from '../recipe/services/pre-recipe-detail.guard';
 
 const GUARDS = [
   PreMainGuard,
@@ -99,7 +100,8 @@ const GUARDS = [
                 path: `:${RouterUrls.Managements.getFlowDetailPathVariableKey()}/${RouterUrls.Managements.RECIPES}/:${RouterUrls.Managements.getRecipeDetailPathVariableKey()}`,
                 component: RecipeDetailComponent,
                 canActivate: [
-                  UserVerifyGuard
+                  UserVerifyGuard,
+                  PreRecipeDetailGuard
                 ]
               }
             ]
