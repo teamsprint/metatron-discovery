@@ -41,13 +41,9 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
 
   @ViewChild('leftSlider', { static: true })
   private readonly leftSlider: ElementRef;
-
   @ViewChild('rightSlider', { static: true })
   private readonly rightSlider: ElementRef;
-
   private readonly RECIPE_DETAIL_SPLIT_RATE = this.recipeLocalStorageService.getRecipeDetailSplitRate();
-  public readonly LEFT_SLIDER_ELEMENT_ID = 'left-slider';
-  public readonly RIGHT_SLIDER_ELEMENT_ID = 'right-slider';
   private readonly LEFT_SLIDER_MIN_SIZE = 750;
   private readonly RIGHT_SLIDER_MIN_SIZE = 300;
   private split;
@@ -145,6 +141,9 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
   public recipe: Recipe.Entity;
 
   public isSelectedMenu = this.RULE_EDIT_MENUS.RULES;
+
+  private readonly UNSELECT_RULE = -1;
+  public isSelectedRule = this.UNSELECT_RULE;
 
   constructor(public readonly location: Location,
               public readonly localStorageService: LocalStorageService,
@@ -288,5 +287,29 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
       });
 
     return rows;
+  }
+
+  public getRecipeRuleUiContext(uiContext: string) {
+    return Recipe.RecipeRule.getUiContext(uiContext);
+  }
+
+  public selectEditMenu(ruleEditMenu: RuleEditMenus) {
+
+    if (this.isSelectedMenu) {
+      this.isSelectedMenu = undefined;
+      return;
+    }
+
+    this.isSelectedMenu = ruleEditMenu;
+  }
+
+  public selectRule(recipeRule: Recipe.RecipeRule) {
+
+    if (this.isSelectedRule > this.UNSELECT_RULE) {
+      this.isSelectedRule = this.UNSELECT_RULE;
+      return;
+    }
+
+    this.isSelectedRule = recipeRule.ruleNo;
   }
 }

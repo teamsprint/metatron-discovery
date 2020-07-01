@@ -1,5 +1,6 @@
 import {AbstractHistory} from '../../common/domain/abstract-history-entity';
 import * as _ from 'lodash';
+import {CommonUtil} from '../../common/utils/common-util';
 
 export namespace Recipe {
 
@@ -102,5 +103,9 @@ export namespace Recipe {
     uiContext: string;
     shortRuleString: string;
     valid: boolean;
+
+    public static getUiContext(uiContext: string) {
+      return CommonUtil.Json.parse<{ 'with': string, 'name': string }>(uiContext);
+    }
   }
 }

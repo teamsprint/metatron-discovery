@@ -107,13 +107,12 @@
   <!--
       펼칠때 is-selected 추가
   -->
-  <div class="pb-rnb-menu is-selected " #rightSlider>
+  <div class="pb-rnb-menu is-selected" #rightSlider>
     <a href="javascript:" class="pb-btn-menu-close"></a>
     <ul class="pb-list-rnb type-list">
-      <li [class.is-selected]="isSelectedMenu === RULE_EDIT_MENUS.RULES"
-          (click)="isSelectedMenu = RULE_EDIT_MENUS.RULES">
+      <li [class.is-selected]="isSelectedMenu === RULE_EDIT_MENUS.RULES">
 
-        <a href="javascript:">
+        <a href="javascript:" (click)="selectEditMenu(RULE_EDIT_MENUS.RULES)">
           <span class="pb-txt-rnb">Rule list</span>
         </a>
         <!-- sub -->
@@ -122,74 +121,32 @@
           <!--
               focus 일때 is-focus 추가
           -->
-          <div class="pb-box-rule-list">
-            <div class="pb-txt-rule-list">
-              <span class="pb-txt-type">Header</span> abcd efgh ijkl mlop qwer
+          <ng-container *ngIf="recipe">
+            <div class="pb-box-rule-list" *ngFor="let recipeRule of recipe?.recipeRules" [class.is-focus]="recipeRule.ruleNo === isSelectedRule" (click)="selectRule(recipeRule)">
+              <div class="pb-txt-rule-list">
+                <span class="pb-txt-type">{{ getRecipeRuleUiContext(recipeRule?.uiContext)?.name }}</span> {{ recipeRule?.shortRuleString }}
+              </div>
+              <div class="pb-area-buttons type-hover">
+                <a href="javascript:" class="pb-btn-icons-type type-edit" (click)="$event.stopPropagation()"></a>
+                <a href="javascript:" class="pb-btn-icons-type type-del" (click)="$event.stopPropagation()"></a>
+              </div>
+              <div class="pb-area-buttons type-focus">
+                <a href="javascript:" class="pb-component-btn-s">
+                  Edit
+                </a>
+              </div>
             </div>
-            <div class="pb-area-buttons type-hover">
-              <a href="javascript:" class="pb-btn-icons-type type-edit"></a>
-              <a href="javascript:" class="pb-btn-icons-type type-del"></a>
-            </div>
-            <div class="pb-area-buttons type-focus">
-              <a href="javascript:" class="pb-component-btn-s">
-                Edit
-              </a>
-            </div>
-          </div>
+          </ng-container>
           <!-- //box rule -->
-          <!-- box rule -->
-          <!--
-             focus 일때 is-focus 추가
-         -->
-          <div class="pb-box-rule-list">
-            <div class="pb-txt-rule-list">
-              <span class="pb-txt-type">Header</span> abcd efgh ijkl mlop qwer
-            </div>
-            <div class="pb-area-buttons type-hover">
-              <a href="javascript:" class="pb-btn-icons-type type-edit"></a>
-              <a href="javascript:" class="pb-btn-icons-type type-del"></a>
-            </div>
-
-            <div class="pb-area-buttons type-focus">
-              <a href="javascript:" class="pb-component-btn-s">
-                Edit
-              </a>
-            </div>
-          </div>
-          <!-- //box rule -->
-          <!-- box rule -->
-          <!--
-             focus 일때 is-focus 추가
-         -->
-          <div class="pb-box-rule-list is-focus">
-            <!-- guide line -->
-            <div class="jqtree-ghost"></div>
-            <!-- //guide line -->
-            <div class="pb-txt-rule-list">
-              <span class="pb-txt-type">Header</span> abcd efgh ijkl mlop qwer
-            </div>
-            <div class="pb-area-buttons type-hover">
-              <a href="javascript:" class="pb-btn-icons-type type-edit"></a>
-              <a href="javascript:" class="pb-btn-icons-type type-del"></a>
-            </div>
-            <div class="pb-area-buttons type-focus">
-              <a href="javascript:" class="pb-component-btn-s">
-                Edit
-              </a>
-            </div>
-          </div>
-          <!-- //box rule -->
-          <div class="pb-ui-buttons">
-            <a href="javascript:" class="pb-component-btn type-dark2"><em class="pb-icon-add-r"></em>Insert step</a>
-          </div>
-
+          <!-- <div class="pb-ui-buttons">-->
+          <!--   <a href="javascript:" class="pb-component-btn type-dark2"><em class="pb-icon-add-r"></em>Insert step</a>-->
+          <!-- </div>-->
         </div>
         <!-- //sub -->
       </li>
-      <li [class.is-selected]="isSelectedMenu === RULE_EDIT_MENUS.JOB_RESULT"
-          (click)="isSelectedMenu = RULE_EDIT_MENUS.JOB_RESULT">
+      <li [class.is-selected]="isSelectedMenu === RULE_EDIT_MENUS.JOB_RESULT">
         <a href="javascript:">
-          <span class="pb-txt-rnb">RECOMMENDATION</span>
+          <span class="pb-txt-rnb">JOB RESULT</span>
         </a>
         <!-- sub -->
         <div class="pb-rnb-sub type-recommendation">
@@ -227,8 +184,6 @@
               </li>
             </ul>
             <!-- //list -->
-
-
           </div>
           <!-- //box -->
         </div>
@@ -236,11 +191,11 @@
       </li>
     </ul>
     <!-- bottom -->
-    <div class="pb-btn-bottom">
-      <a href="javascript:" class="pb-component-btn type-dark">
-        <em class="pb-icon-dictionary"></em>Rule Dictionary
-      </a>
-    </div>
+    <!-- <div class="pb-btn-bottom">-->
+    <!--   <a href="javascript:" class="pb-component-btn type-dark">-->
+    <!--     <em class="pb-icon-dictionary"></em>Rule Dictionary-->
+    <!--   </a>-->
+    <!-- </div>-->
     <!-- //bottom -->
   </div>
   <!-- //rnb -->
