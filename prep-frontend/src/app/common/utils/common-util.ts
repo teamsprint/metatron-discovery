@@ -38,4 +38,11 @@ export namespace CommonUtil {
       });
     }
   }
+
+  export class Json {
+    public static parse<T = object>(jsonString: string): T | {} {
+      const value = _.attempt(JSON.parse.bind(null, jsonString));
+      return _.isError(value) ? {} : value;
+    }
+  }
 }
