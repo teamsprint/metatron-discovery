@@ -1,0 +1,58 @@
+<div class="pb-edit-scroll">
+  <div class="pb-ruleedit-top">
+    <div class="pb-label-title">Edit Rule</div>
+    <div class="pb-ui-buttons">
+      <a href="javascript:" class="pb-component-btn type-basic"><em class="pb-icon-switch"></em>switch to editer</a>
+      <a href="javascript:" class="pb-btn-icons-type type-close" (click)="onClose.emit()"></a>
+    </div>
+  </div>
+  <div class="pb-ui-part">
+    <div class="pb-label-part">Command</div>
+    <!-- select box -->
+    <!--
+      클릭시 is-selected 추가 (popup show, input show)
+      값 선택시 type-value 추가
+    -->
+    <div class="pb-form-selectbox type-value is-selected">
+      <input type="text" class="pb-input-selectbox" placeholder="Select data">
+      <span class="pb-txt-selectbox">Select data</span>
+      <!-- popup -->
+      <!--      <div class="pb-select-popup">-->
+      <!--        <ul class="pb-list-selectbox pb-list-command">-->
+      <!--          <li>-->
+      <!--            <a href="javascript:">-->
+      <!--              <span class="pb-ui-type">-->
+      <!--                  REPLACE-->
+      <!--              </span>-->
+      <!--              <span class="pb-ui-code">-->
+      <!--                Command Description can be longer 설명-->
+      <!--                은 길어질 수 있습니다-->
+      <!--              </span>-->
+      <!--            </a>-->
+      <!--          </li>-->
+      <!--          <li>-->
+      <!--            <a href="javascript:">-->
+      <!--              <span class="pb-ui-type">-->
+      <!--                  Keep-->
+      <!--              </span>-->
+      <!--              <span class="pb-ui-code">-->
+      <!--                Command Description can be longer 설명-->
+      <!--                은 길어질 수 있습니다-->
+      <!--              </span>-->
+      <!--            </a>-->
+      <!--          </li>-->
+      <!--        </ul>-->
+      <!--      </div>-->
+      <!-- //popup -->
+    </div>
+    <!-- //box select -->
+  </div>
+  <!--  <div class="pb-ui-part">-->
+  <!--    <div class="pb-label-part">Command</div>-->
+  <!--    <textarea class="pb-component-textarea-resize" placeholder="Please insert command"></textarea>-->
+  <!--  </div>-->
+  <div recipe-header-rule></div>
+</div>
+<div class="pb-ruleedit-bottom">
+  <a href="javascript:" class="pb-component-btn type-dark">SAVE</a>
+</div>
