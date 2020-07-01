@@ -18,8 +18,7 @@ import interact from 'interactjs';
 import {AngularGridInstance, Column, FieldType, GridOption} from 'angular-slickgrid';
 import {Alert} from '../../common/utils/alert.util';
 import {RecipeRule} from '../../recipe/domain/recipe-rule';
-
-declare let echarts: any;
+import * as echarts from 'echarts';
 
 @Component({
   templateUrl: './dataflow-detail.component.html',
@@ -47,8 +46,7 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
   public dataSetList: any[] = [];
   private upstreamList: Dataflow.Upstream[] = [];
 
-  echartsIntance : any;
-
+  echartsInstance;
 
   // 루트 데이터셋 개수
   private rootCount: number = 0;
@@ -521,21 +519,20 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
       }
     });
 
-
     this.options.xAxis.max = this.depthCount > 5 ? 5 + (this.depthCount - 5) : 5;
     this.options.yAxis.max = this.rootCount > 5 ? 5 + (this.rootCount - 5) : 5;
     this.options.series[0].nodes = this.chartNodes;
     this.options.series[0].links = this.chartLinks;
-    if(this.echartsIntance !== null && this.echartsIntance !== undefined) {
-      this.echartsIntance.setOption(this.options);
-      this.echartsIntance.resize();
+    if(this.echartsInstance !== null && this.echartsInstance !== undefined) {
+      this.echartsInstance.setOption(this.options);
+      this.echartsInstance.resize();
     }
   }
   public onChartInit($event) {
     // this.dataflowChartAreaResize();
-    this.echartsIntance  = $event;
-    if(this.echartsIntance !== null && this.echartsIntance !== undefined) {
-      this.echartsIntance.setOption(this.options);
+    this.echartsInstance  = $event;
+    if(this.echartsInstance !== null && this.echartsInstance !== undefined) {
+      this.echartsInstance.setOption(this.options);
       // this.echartsIntance.resize();
     }
   }
@@ -736,7 +733,7 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
   public chartClickEvent($event) {
     const graphData = $event;
     const symbolInfo = this.symbolInfo
-    const option = this.echartsIntance.getOption();
+    const option = this.echartsInstance.getOption();
 
     if (graphData['data'] === null || graphData['data'] === undefined) return;
     if (graphData['data']['objId'] === null || graphData['data']['objId'] === undefined) return;
@@ -750,7 +747,7 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
         node.symbol = _.cloneDeep(node.originSymbol);
       }
     });
-    this.echartsIntance.setOption(option);
+    this.echartsInstance.setOption(option);
     if (graphData['data']['dsType'] === Dataflow.DataflowDiagram.ObjectType.DATASET) {
       this.getDatasetInfomation(graphData['data']['objId']);
       return;
@@ -954,15 +951,15 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
   }
 
   private chartStyleReset() {
-    if (this.echartsIntance !== null && this.echartsIntance !== undefined) {
-      const option = this.echartsIntance.getOption();
+    if (this.echartsInstance !== null && this.echartsInstance !== undefined) {
+      const option = this.echartsInstance.getOption();
       const clearSelectedNodeEffect = (() => {
         option.series[0].nodes.map((node) => {
           node.symbol = _.cloneDeep(node.originSymbol);
         });
       });
       clearSelectedNodeEffect();
-      this.echartsIntance.setOption(option);
+      this.echartsInstance.setOption(option);
     }
   }
 
