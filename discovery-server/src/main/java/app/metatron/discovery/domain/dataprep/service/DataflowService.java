@@ -235,20 +235,20 @@ public class DataflowService {
         }
 
         List<DataflowDiagram> diagrams = dataflow.getDiagrams();
-        if(objectType!=null && objectType.equals(DataflowDiagram.ObjectType.DATASET)) {
+        if(objectType!=null && objectType == DataflowDiagram.ObjectType.DATASET) {
             for(DataflowDiagram diagram : diagrams) {
                 if(objId.equals(diagram.getDataset().getDsId())) {
                     deleteDiagrams.add(diagram);
-                    if(diagram.getRecipe()!= null && diagram.getObjType().equals(DataflowDiagram.ObjectType.RECIPE)) {
+                    if(diagram.getRecipe()!= null && diagram.getObjType() == DataflowDiagram.ObjectType.RECIPE) {
                         deleteRecipeIds.add(diagram.getRecipe().getRecipeId());
                         deleteDsIds.add(diagram.getRecipe().getRecipeId());
                     }
-                    if(diagram.getRecipe()== null && diagram.getObjType().equals(DataflowDiagram.ObjectType.DATASET)) {
+                    if(diagram.getRecipe()== null && diagram.getObjType() == DataflowDiagram.ObjectType.DATASET) {
                         deleteDsIds.add(diagram.getDataset().getDsId());
                     }
                 }
             }
-        }else if(objectType!=null && objectType.equals(DataflowDiagram.ObjectType.RECIPE)) {
+        }else if(objectType!=null && objectType == DataflowDiagram.ObjectType.RECIPE) {
             for(DataflowDiagram diagram : diagrams) {
                 if(diagram.getRecipe()!=null && objId.equals(diagram.getRecipe().getRecipeId())) {
                     deleteDiagrams.add(diagram);

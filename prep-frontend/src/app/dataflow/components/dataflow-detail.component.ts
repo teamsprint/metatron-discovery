@@ -568,7 +568,7 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
   }
 
   private dataflowChartAreaResize(): void {
-    const itemMinSize: number = 98;
+    const itemMinSize: number = 100;
     let minHeightSize: number = 600;
     let fixHeight: number = 600;
 
@@ -1012,6 +1012,7 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
     this.lnbComponent.openAddDatasetPopup('ADD', selectedDatasetIds);
   }
 
+  // ADD DATASET
   public addDatasetEvent(event) : void {
     this.loadingService.show();
     this.dataflowService
@@ -1022,6 +1023,22 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
           if (!dataflow) {
             return;
           }
+          this.refreshDataflowData();
+        },
+        error => {
+          Alert.error(error?.message);
+        }
+      );
+  }
+
+  // DELETE CHAIN
+  public deleteChain(objId: string) {
+    this.loadingService.show();
+    this.dataflowService
+      .deleteChain(this.dataflowId, objId)
+      .pipe(finalize(() => this.loadingService.hide()))
+      .subscribe(
+        () => {
           this.refreshDataflowData();
         },
         error => {

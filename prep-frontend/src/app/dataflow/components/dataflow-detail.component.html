@@ -78,7 +78,7 @@
         <div class="pb-dataflow-top" *ngIf="detailBoxDataset !== null">
           <div class="pb-label-title">{{detailBoxDatasetName}}</div>
           <div class="pb-ui-buttons">
-            <a href="javascript:" class="pb-btn-icons-type type-del"></a>
+            <a href="javascript:" class="pb-btn-icons-type type-del" (click)="deleteChain(detailBoxDataset.dsId)"></a>
             <a href="javascript:" class="pb-btn-icons-type type-close-b" (click)="detailBoxClose()"></a>
           </div>
           <!-- 설명 -->
@@ -91,7 +91,7 @@
         <div class="pb-dataflow-top" *ngIf="detailBoxRecipe !== null">
           <div class="pb-label-title">{{detailBoxRecipeName}}</div>
           <div class="pb-ui-buttons">
-            <a href="javascript:" class="pb-btn-icons-type type-del"></a>
+            <a href="javascript:" class="pb-btn-icons-type type-del" (click)="deleteChain(detailBoxRecipe.recipeId)"></a>
             <a href="javascript:" class="pb-btn-icons-type type-close-b" (click)="detailBoxClose()"></a>
           </div>
           <!-- 설명 -->

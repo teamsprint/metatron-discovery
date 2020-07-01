@@ -98,6 +98,11 @@ export class DataflowService {
     return this.http.put(url, params);
   }
 
+  deleteChain(dfId: string, objId: string) {
+    const url = `${CommonConstant.API_CONSTANT.API_URL}/dataflows/delete_chain/${dfId}/${objId}`;
+    return this.http.delete(url);
+  }
+
   deleteDataflow() {
     return this.http.delete(``);
   }
