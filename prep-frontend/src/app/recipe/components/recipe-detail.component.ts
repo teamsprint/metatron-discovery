@@ -29,8 +29,7 @@ enum RuleEditMenus {
 }
 
 @Component({
-  templateUrl: './recipe-detail.component.html',
-  styleUrls: ['./recipe-detail.component.css']
+  templateUrl: './recipe-detail.component.html'
 })
 export class RecipeDetailComponent implements OnInit, OnDestroy {
 
@@ -44,7 +43,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
   @ViewChild('rightSlider', { static: true })
   private readonly rightSlider: ElementRef;
   private readonly RECIPE_DETAIL_SPLIT_RATE = this.recipeLocalStorageService.getRecipeDetailSplitRate();
-  private readonly LEFT_SLIDER_MIN_SIZE = 750;
+  private readonly LEFT_SLIDER_MIN_SIZE = 650;
   private readonly RIGHT_SLIDER_MIN_SIZE = 300;
   private split;
 
@@ -144,6 +143,8 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
 
   private readonly UNSELECT_RULE = -1;
   public isSelectedRule = this.UNSELECT_RULE;
+
+  public isRuleEditMode = false;
 
   constructor(public readonly location: Location,
               public readonly localStorageService: LocalStorageService,

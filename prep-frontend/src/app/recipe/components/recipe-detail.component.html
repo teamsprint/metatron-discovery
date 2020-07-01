@@ -103,101 +103,110 @@
   </div>
   <!-- //wrap contents -->
 
-  <!-- rnb -->
-  <!--
-      펼칠때 is-selected 추가
-  -->
-  <div class="pb-rnb-menu is-selected" #rightSlider>
-    <a href="javascript:" class="pb-btn-menu-close"></a>
-    <ul class="pb-list-rnb type-list">
-      <li [class.is-selected]="isSelectedMenu === RULE_EDIT_MENUS.RULES">
+  <div class="pb-wrap-edit-rule type-open" #rightSlider>
+    <!-- rnb -->
+    <!--
+        펼칠때 is-selected 추가
+    -->
+    <div class="pb-rnb-menu is-selected">
+      <a href="javascript:" class="pb-btn-menu-close"></a>
+      <ul class="pb-list-rnb type-list">
+        <li [class.is-selected]="isSelectedMenu === RULE_EDIT_MENUS.RULES">
 
-        <a href="javascript:" (click)="selectEditMenu(RULE_EDIT_MENUS.RULES)">
-          <span class="pb-txt-rnb">Rule list</span>
-        </a>
-        <!-- sub -->
-        <div class="pb-rnb-sub type-rule-list">
-          <!-- box rule -->
-          <!--
-              focus 일때 is-focus 추가
-          -->
-          <ng-container *ngIf="recipe">
-            <div class="pb-box-rule-list" *ngFor="let recipeRule of recipe?.recipeRules" [class.is-focus]="recipeRule.ruleNo === isSelectedRule" (click)="selectRule(recipeRule)">
-              <div class="pb-txt-rule-list">
-                <span class="pb-txt-type">{{ getRecipeRuleUiContext(recipeRule?.uiContext)?.name }}</span> {{ recipeRule?.shortRuleString }}
-              </div>
-              <div class="pb-area-buttons type-hover">
-                <a href="javascript:" class="pb-btn-icons-type type-edit" (click)="$event.stopPropagation()"></a>
-                <a href="javascript:" class="pb-btn-icons-type type-del" (click)="$event.stopPropagation()"></a>
-              </div>
-              <div class="pb-area-buttons type-focus">
-                <a href="javascript:" class="pb-component-btn-s">
-                  Edit
-                </a>
-              </div>
-            </div>
-          </ng-container>
-          <!-- //box rule -->
-          <!-- <div class="pb-ui-buttons">-->
-          <!--   <a href="javascript:" class="pb-component-btn type-dark2"><em class="pb-icon-add-r"></em>Insert step</a>-->
-          <!-- </div>-->
-        </div>
-        <!-- //sub -->
-      </li>
-      <li [class.is-selected]="isSelectedMenu === RULE_EDIT_MENUS.JOB_RESULT">
-        <a href="javascript:">
-          <span class="pb-txt-rnb">JOB RESULT</span>
-        </a>
-        <!-- sub -->
-        <div class="pb-rnb-sub type-recommendation">
-
-          <!-- box -->
-          <div class="pb-box-recommendation">
-            <div class="pb-txt-title">Replace</div>
-            <!-- list -->
-            <ul class="pb-list-recommendation">
-              <li>
-                <span class="pb-txt-type">‘\%’</span> with ‘ ‘ in discount
-                <!-- button -->
-                <div class="pb-ui-hover-buttons">
-                  <a href="javascript:" class="pb-component-btn-s">
+          <a href="javascript:" (click)="selectEditMenu(RULE_EDIT_MENUS.RULES)">
+            <span class="pb-txt-rnb">Rule list</span>
+          </a>
+          <!-- sub -->
+          <div class="pb-rnb-sub type-rule-list">
+            <!-- box rule -->
+            <!--
+                focus 일때 is-focus 추가
+            -->
+            <ng-container *ngIf="recipe">
+              <div class="pb-box-rule-list" *ngFor="let recipeRule of recipe?.recipeRules" [class.is-focus]="recipeRule.ruleNo === isSelectedRule" (click)="selectRule(recipeRule)">
+                <div class="pb-txt-rule-list">
+                  <span class="pb-txt-type">{{ getRecipeRuleUiContext(recipeRule?.uiContext)?.name }}</span> {{ recipeRule?.shortRuleString }}
+                </div>
+                <div class="pb-area-buttons type-hover">
+                  <a href="javascript:" class="pb-btn-icons-type type-edit" (click)="$event.stopPropagation()"></a>
+                  <a href="javascript:" class="pb-btn-icons-type type-del" (click)="$event.stopPropagation()"></a>
+                </div>
+                <div class="pb-area-buttons type-focus">
+                  <a href="javascript:" class="pb-component-btn-s" (click)="$event.stopPropagation(); isRuleEditMode = true">
                     Edit
                   </a>
-                  <a href="javascript:" class="pb-component-btn-s type-bg">
-                    Add
-                  </a>
                 </div>
-                <!-- //button -->
-              </li>
-              <li>
-                <span class="pb-txt-type">‘\%’</span> with ‘ ‘ in discount
-                <!-- button -->
-                <div class="pb-ui-hover-buttons">
-                  <a href="javascript:" class="pb-component-btn-s">
-                    Edit
-                  </a>
-                  <a href="javascript:" class="pb-component-btn-s type-bg">
-                    Add
-                  </a>
-                </div>
-                <!-- //button -->
-              </li>
-            </ul>
-            <!-- //list -->
+              </div>
+            </ng-container>
+            <!-- //box rule -->
+            <!-- <div class="pb-ui-buttons">-->
+            <!--   <a href="javascript:" class="pb-component-btn type-dark2"><em class="pb-icon-add-r"></em>Insert step</a>-->
+            <!-- </div>-->
           </div>
-          <!-- //box -->
-        </div>
-        <!-- //sub -->
-      </li>
-    </ul>
-    <!-- bottom -->
-    <!-- <div class="pb-btn-bottom">-->
-    <!--   <a href="javascript:" class="pb-component-btn type-dark">-->
-    <!--     <em class="pb-icon-dictionary"></em>Rule Dictionary-->
-    <!--   </a>-->
-    <!-- </div>-->
-    <!-- //bottom -->
+          <!-- //sub -->
+        </li>
+        <li [class.is-selected]="isSelectedMenu === RULE_EDIT_MENUS.JOB_RESULT">
+          <a href="javascript:">
+            <span class="pb-txt-rnb">JOB RESULT</span>
+          </a>
+          <!-- sub -->
+          <div class="pb-rnb-sub type-recommendation">
+
+            <!-- box -->
+            <div class="pb-box-recommendation">
+              <div class="pb-txt-title">Replace</div>
+              <!-- list -->
+              <ul class="pb-list-recommendation">
+                <li>
+                  <span class="pb-txt-type">‘\%’</span> with ‘ ‘ in discount
+                  <!-- button -->
+                  <div class="pb-ui-hover-buttons">
+                    <a href="javascript:" class="pb-component-btn-s">
+                      Edit
+                    </a>
+                    <a href="javascript:" class="pb-component-btn-s type-bg">
+                      Add
+                    </a>
+                  </div>
+                  <!-- //button -->
+                </li>
+                <li>
+                  <span class="pb-txt-type">‘\%’</span> with ‘ ‘ in discount
+                  <!-- button -->
+                  <div class="pb-ui-hover-buttons">
+                    <a href="javascript:" class="pb-component-btn-s">
+                      Edit
+                    </a>
+                    <a href="javascript:" class="pb-component-btn-s type-bg">
+                      Add
+                    </a>
+                  </div>
+                  <!-- //button -->
+                </li>
+              </ul>
+              <!-- //list -->
+            </div>
+            <!-- //box -->
+          </div>
+          <!-- //sub -->
+        </li>
+      </ul>
+      <!-- bottom -->
+      <!-- <div class="pb-btn-bottom">-->
+      <!--   <a href="javascript:" class="pb-component-btn type-dark">-->
+      <!--     <em class="pb-icon-dictionary"></em>Rule Dictionary-->
+      <!--   </a>-->
+      <!-- </div>-->
+      <!-- //bottom -->
+    </div>
+    <!-- //rnb -->
+    <!-- rule edit popup -->
+    <div recipe-rule-edit
+         *ngIf="isRuleEditMode"
+         (onClose)="isRuleEditMode = false">
+    </div>
+    <!-- //rule edit popup -->
   </div>
-  <!-- //rnb -->
+
 </div>
 

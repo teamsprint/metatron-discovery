@@ -4,9 +4,11 @@ import {RecipeDetailComponent} from './components/recipe-detail.component';
 import {RouterModule} from '@angular/router';
 import {LnbModule} from '../lnb/lnb.module';
 import {PreRecipeDetailGuard} from './services/pre-recipe-detail.guard';
+import {RecipeRuleEditComponent} from './components/rule-edit/recipe-rule-edit.component';
 
 const COMPONENTS = [
-  RecipeDetailComponent
+  RecipeDetailComponent,
+  RecipeRuleEditComponent
 ];
 
 @NgModule({

@@ -951,12 +951,22 @@ ul.pb-list-type-data li a .pb-icon-type-sharp {
   width:1px;
   z-index:10;
 }
-.pb-box-ruleedit {
+.pb-wrap-edit-rule {
+  position:relative;
+}
+.pb-wrap-edit-rule .pb-rnb-menu {
+  width:100%;
+  min-width:100%;
+}
+.pb-wrap-edit-rule.type-open .pb-box-ruleedit {
   display:flex;
+}
+.pb-box-ruleedit {
+  display:none;
   flex-direction: column;
-  position: fixed;
-  width: 300px;
-  top: 40px;
+  position: absolute;
+  left:0;
+  top: 0;
   right:0;
   /*left:100% !important;*/
   bottom: 0;
@@ -970,11 +980,7 @@ ul.pb-list-type-data li a .pb-icon-type-sharp {
   overflow:auto;
 }
 .pb-box-ruleedit .pb-edit-scroll {flex:auto; overflow:auto;}
-.pb-box-ruleedit.type-open {
-  /*left:50% !important;*/
-  /*transition:left 1s ease;*/
 
-}
 .pb-box-ruleedit .pb-label-title {
   float:left;
   padding: 14px 0 16px 0;

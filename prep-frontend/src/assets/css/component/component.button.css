@@ -230,7 +230,8 @@
 .pb-btn-icons-type.type-edit:hover:before {
   background-position-x: -13px;
 }
-
+.pb-btn-icons-type.type-info:before {width:14px; height:14px; margin:-7px 0 0 -7px; background-position:left -51px;}
+.pb-btn-icons-type.type-info:hover:before {background-position-x:-15px;}
 .pb-component-btn-pop {
   display: inline-block;
   min-width: 130px;
@@ -436,6 +437,16 @@
 .pb-component-btn-more:after {display:inline-block; width:7px; height:12px; margin-left:6px; background:url(../../images/icon_arrow.png) no-repeat; background-position:left -28px; content:''; vertical-align: middle;}
 .pb-component-btn-more:hover {color:#737373; text-decoration: underline;}
 .pb-component-btn-more:hover:after {background-position-x:-8px;}
+
+/***********************************************************************
+     Compontent : txt button
+ *************************************************************************/
+.pb-component-txt-btn {color:#484847; font-size:13px;}
+.pb-component-txt-btn:hover {text-decoration:underline;}
+.pb-component-txt-btn .pb-icon-download {display:inline-block; position:relative; top:-1px; width:10px; height:12px; margin-right:5px;background:url(../../images/icon_buttons.png) no-repeat; background-position:left -145px; vertical-align:middle;}
+
+
+
   /***********************************************************************
        sample
    *************************************************************************/

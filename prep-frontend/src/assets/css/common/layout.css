@@ -915,4 +915,6 @@ ul.pb-list-tab-button li a em.pb-icon-listgrid {
 .pb-box-popup2 .pb-popup-top .pb-buttons {float:right; padding-right:40px;}
 .pb-box-popup2 .pb-popup-top .pb-buttons .pb-component-btn {margin:26px 0 0 0; float:left; margin-left:6px;}
 .pb-box-popup2 .pb-popup-top .pb-buttons .txt-info {float:left; margin:34px 4px 0 0; color:#a3a3a3; font-size:14px;}
+.pb-box-popup2 .pb-popup-top .pb-buttons .txt-info.type-warning-info {color:#ff4d23;}
+.pb-box-popup2 .pb-popup-top .pb-buttons .txt-info.type-warning-info:before {display:inline-block; position:relative; top:-2px; width:14px; height:14px; margin-right:6px;background:url(../../images/icon_info.png) no-repeat; background-position:-42px top; content:''; vertical-align:middle;}
 .pb-box-popup2 .pb-popup-contents {display:flex; flex-direction:column;flex:auto; height:100%; overflow:auto;}
