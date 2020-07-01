@@ -584,7 +584,7 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
     this.dataSetList.forEach(item => {
       if (item.objType === Dataflow.DataflowDiagram.ObjectType.RECIPE) {
         sizeArray.forEach(item1 => {
-          if (item.dsId === item1.parentId) {item1.recipes.push(item.objId);}
+          if (item1.dsId === item.parentId) {item1.recipes.push(item.objId);}
         });
       }
     });
@@ -1013,7 +1013,21 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
   }
 
   public addDatasetEvent(event) : void {
-
+    this.loadingService.show();
+    this.dataflowService
+      .addDatasetDataflow(this.dataflowId, event)
+      .pipe(finalize(() => this.loadingService.hide()))
+      .subscribe(
+        dataflow => {
+          if (!dataflow) {
+            return;
+          }
+          this.refreshDataflowData();
+        },
+        error => {
+          Alert.error(error?.message);
+        }
+      );
   }
 
   ngOnDestroy(): void {

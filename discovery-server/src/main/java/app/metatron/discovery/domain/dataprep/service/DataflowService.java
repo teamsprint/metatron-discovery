@@ -103,6 +103,7 @@ public class DataflowService {
         if(newDataset==null || newDataset.size()==0) return;
         int subCount = 0;
         for(Dataset dataset:newDataset) {
+
             DataflowDiagram dataflowDiagram = new DataflowDiagram();
             dataflowDiagram.setDataflow(dataflow);
             dataflowDiagram.setDataset(dataset);
@@ -184,21 +185,26 @@ public class DataflowService {
             List<Dataset> newDataset = Lists.newArrayList();
             if (diagrams != null) {
                 for (DataflowDiagram diagram : diagrams) {
-                    if(diagram.getObjType().equals(DataflowDiagram.ObjectType.DATASET)) {
+                    if(diagram.getObjType() == DataflowDiagram.ObjectType.DATASET) {
                         oldIds.add(diagram.getDataset().getDsId());
-                        if (false == dsIds.getDsIds().contains(diagram.getDataset().getDsId())) {
+                        if (true == dsIds.getDsIds().contains(diagram.getDataset().getDsId())) {
                             removeList.add(diagram);
                         }
                     }
                 }
             }
-            if(removeList.size()>0) { for (DataflowDiagram diagram : removeList) { this.dataflowDiagramRepository.delete(diagram); } }
+            if(removeList.size()>0) {
+                for (DataflowDiagram diagram : removeList) {
+                    this.dataflowDiagramRepository.delete(diagram);
+                }
+            }
 
             for (String dsId : dsIds.getDsIds()) {
                 Dataset dataset = datasetRepository.findOne(dsId);
                 if (dataset != null) {
                     if (false == oldIds.contains(dsId)) {
-                        newIds.add(dsId);newDataset.add(dataset);
+                        newIds.add(dsId);
+                        newDataset.add(dataset);
                     }
                 }
             }
@@ -227,8 +233,6 @@ public class DataflowService {
         }else if(recipe != null) {
             objectType = DataflowDiagram.ObjectType.RECIPE;
         }
-
-        LOGGER.info("deleteChain objectType :" + objectType);
 
         List<DataflowDiagram> diagrams = dataflow.getDiagrams();
         if(objectType!=null && objectType.equals(DataflowDiagram.ObjectType.DATASET)) {

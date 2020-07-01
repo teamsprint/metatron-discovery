@@ -87,6 +87,17 @@ export class DataflowService {
     return this.http.patch(url, params);
   }
 
+  addDatasetDataflow(dfId: string, datasetIds: string[]) {
+    const url = `${CommonConstant.API_CONSTANT.API_URL}/dataflows/${dfId}/update_datasets`;
+    const params = {};
+    params['forSwap'] = false;
+    params['dsIds'] = datasetIds;
+    // if (datasetIds) {
+    //   params = _.merge(datasetIds, params);
+    // }
+    return this.http.put(url, params);
+  }
+
   deleteDataflow() {
     return this.http.delete(``);
   }

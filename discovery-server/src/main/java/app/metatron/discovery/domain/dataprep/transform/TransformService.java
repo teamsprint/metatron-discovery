@@ -244,6 +244,8 @@ public class TransformService {
         Recipe recipe = new Recipe();
 
         String newDsName = getNewDsName(importedDataset, dataflow, dfId, cloningDsName);
+
+        System.out.println("================== newDsName :" + newDsName);
         recipe.setName(newDsName);
         recipe.setCreatorDfId(dfId);
         recipe.setCreatorDsId(importedDataset.getDsId());

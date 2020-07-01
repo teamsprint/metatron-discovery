@@ -1,3 +1,4 @@
+/* tslint:disable */
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Dataflow} from '../../dataflow/domains/dataflow';
 import {LoadingService} from '../../common/services/loading/loading.service';
@@ -236,13 +237,8 @@ export class CreateDataflowListComponent implements OnInit {
   public addDoneClick() {
     const addDoneData: string[] = [];
     this.selectedDatasets.forEach(item => {
-      let origin = false;
-      this.selectedDatasetIds.forEach(ids => {
-        if (ids === item.dsId) {
-          origin = true;
-        }
-      });
-      if (origin === false) {
+      const overlap = this.selectedDatasetIds.findIndex(dsIds => dsIds ===  item.dsId);
+      if(overlap === -1) {
         addDoneData.push(item.dsId);
       }
     });
