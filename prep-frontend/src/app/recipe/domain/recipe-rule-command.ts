@@ -1,4 +1,4 @@
-export class RecipeRule {
+export class RecipeRuleCommand {
 
   static readonly CREATE = { command: 'create', alias: 'Cr' };
   static readonly HEADER = { command: 'header', alias: 'He' };
@@ -27,46 +27,46 @@ export class RecipeRule {
 
   public static of() {
     return [
-      RecipeRule.CREATE,
-      RecipeRule.HEADER,
-      RecipeRule.KEEP,
-      RecipeRule.REPLACE,
-      RecipeRule.RENAME,
-      RecipeRule.SET,
-      RecipeRule.SETTYPE,
-      RecipeRule.COUNTPATTERN,
-      RecipeRule.SPLIT,
-      RecipeRule.DERIVE,
-      RecipeRule.DELETE,
-      RecipeRule.DROP,
-      RecipeRule.PIVOT,
-      RecipeRule.UNPIVOT,
-      RecipeRule.JOIN,
-      RecipeRule.EXTRACT,
-      RecipeRule.FLATTEN,
-      RecipeRule.MERGE,
-      RecipeRule.NEST,
-      RecipeRule.UNNEST,
-      RecipeRule.AGGREGATE,
-      RecipeRule.SORT,
-      RecipeRule.MOVE,
-      RecipeRule.UNION
+      RecipeRuleCommand.CREATE,
+      RecipeRuleCommand.HEADER,
+      RecipeRuleCommand.KEEP,
+      RecipeRuleCommand.REPLACE,
+      RecipeRuleCommand.RENAME,
+      RecipeRuleCommand.SET,
+      RecipeRuleCommand.SETTYPE,
+      RecipeRuleCommand.COUNTPATTERN,
+      RecipeRuleCommand.SPLIT,
+      RecipeRuleCommand.DERIVE,
+      RecipeRuleCommand.DELETE,
+      RecipeRuleCommand.DROP,
+      RecipeRuleCommand.PIVOT,
+      RecipeRuleCommand.UNPIVOT,
+      RecipeRuleCommand.JOIN,
+      RecipeRuleCommand.EXTRACT,
+      RecipeRuleCommand.FLATTEN,
+      RecipeRuleCommand.MERGE,
+      RecipeRuleCommand.NEST,
+      RecipeRuleCommand.UNNEST,
+      RecipeRuleCommand.AGGREGATE,
+      RecipeRuleCommand.SORT,
+      RecipeRuleCommand.MOVE,
+      RecipeRuleCommand.UNION
     ];
   }
 
   public static ofCommandByName(name: string) {
-    const rules = RecipeRule.of();
+    const rules = RecipeRuleCommand.of();
     return rules[ rules.map(command => command.command).indexOf(name) ];
   }
 
   public static ofNames() {
-    return RecipeRule
+    return RecipeRuleCommand
       .of()
       .map(command => command.command);
   }
 
   public static hasCommandByName(name: string) {
-    return RecipeRule
+    return RecipeRuleCommand
       .ofNames()
       .indexOf(name) > -1;
   }

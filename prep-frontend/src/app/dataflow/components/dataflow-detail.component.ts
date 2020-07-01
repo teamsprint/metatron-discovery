@@ -17,7 +17,7 @@ import * as $ from 'jquery';
 import interact from 'interactjs';
 import {AngularGridInstance, Column, FieldType, GridOption} from 'angular-slickgrid';
 import {Alert} from '../../common/utils/alert.util';
-import {RecipeRule} from '../../recipe/domain/recipe-rule';
+import {RecipeRuleCommand} from '../../recipe/domain/recipe-rule-command';
 import * as echarts from 'echarts';
 
 @Component({
@@ -865,8 +865,8 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
       let ruleVO = JSON.parse(rule['uiContext']);
       ruleInfo.command = ruleVO['name'];
 
-      if (RecipeRule.hasCommandByName(ruleInfo.command)) {
-        ruleInfo.alias = RecipeRule.ofCommandByName(ruleInfo.command).alias;
+      if (RecipeRuleCommand.hasCommandByName(ruleInfo.command)) {
+        ruleInfo.alias = RecipeRuleCommand.ofCommandByName(ruleInfo.command).alias;
         ruleInfo.shortRuleString = rule.shortRuleString || rule.ruleString
         ruleInfo.ruleString = rule.ruleString;
       } else {
