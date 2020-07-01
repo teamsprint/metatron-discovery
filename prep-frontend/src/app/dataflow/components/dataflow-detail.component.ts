@@ -1,5 +1,5 @@
 /* tslint:disable */
-import {Component, OnDestroy, OnInit, ChangeDetectorRef, Injector, ViewChild, ElementRef} from '@angular/core';
+import {ChangeDetectorRef, Component, ElementRef, Injector, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {RouterUrls} from '../../common/constants/router.constant';
 import {DataflowService} from '../services/dataflow.service';
@@ -15,8 +15,9 @@ import {NGXLogger} from 'ngx-logger';
 import * as _ from 'lodash';
 import * as $ from 'jquery';
 import interact from 'interactjs';
-import {AngularGridInstance, Column, FieldType, GridOption, SelectedRange} from 'angular-slickgrid';
+import {AngularGridInstance, Column, FieldType, GridOption} from 'angular-slickgrid';
 import {Alert} from '../../common/utils/alert.util';
+import {RecipeRule} from '../../recipe/domain/recipe-rule';
 
 declare let echarts: any;
 
@@ -72,7 +73,6 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
 
   // 룰 리스트에서 필요한 변수
   public ruleList: Command[];
-  public commandList: any[];
   public nameTextInputEnable =false;
   public dataflowName: string = '';
   // Change Detect
@@ -436,33 +436,6 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
         }
       ], animation: false
     };
-
-    this.commandList = [
-      { command: 'create', alias: 'Cr' },
-      { command: 'header', alias: 'He' },
-      { command: 'keep', alias: 'Ke' },
-      { command: 'replace', alias: 'Rp' },
-      { command: 'rename', alias: 'Rm' },
-      { command: 'set', alias: 'Se' },
-      { command: 'settype', alias: 'St' },
-      { command: 'countpattern', alias: 'Co' },
-      { command: 'split', alias: 'Sp' },
-      { command: 'derive', alias: 'Dr' },
-      { command: 'delete', alias: 'De' },
-      { command: 'drop', alias: 'Dp' },
-      { command: 'pivot', alias: 'Pv' },
-      { command: 'unpivot', alias: 'Up' },
-      { command: 'join', alias: 'Jo' },
-      { command: 'extract', alias: 'Ex' },
-      { command: 'flatten', alias: 'Fl' },
-      { command: 'merge', alias: 'Me' },
-      { command: 'nest', alias: 'Ne' },
-      { command: 'unnest', alias: 'Un' },
-      { command: 'aggregate', alias: 'Ag' },
-      { command: 'sort', alias: 'So' },
-      { command: 'move', alias: 'Mv' },
-      { command: 'union', alias: 'Ui' }
-    ];
   }
 
   private makeDataSetList() {
@@ -888,10 +861,6 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
 
   private _setRuleList(rules: any) {
     this.ruleList = [];
-    const commandNames = this.commandList.map((command) => {
-      return command.command;
-    });
-
     // ruleStringInfos
     rules.forEach((rule) => {
 
@@ -899,13 +868,10 @@ export class DataflowDetailComponent implements OnInit, OnDestroy {
       let ruleVO = JSON.parse(rule['uiContext']);
       ruleInfo.command = ruleVO['name'];
 
-      const idx = commandNames.indexOf(ruleInfo.command);
-
-      if (idx > -1) {
-        ruleInfo.alias = this.commandList[idx].alias;
+      if (RecipeRule.hasCommandByName(ruleInfo.command)) {
+        ruleInfo.alias = RecipeRule.ofCommandByName(ruleInfo.command).alias;
         ruleInfo.shortRuleString = rule.shortRuleString || rule.ruleString
         ruleInfo.ruleString = rule.ruleString;
-
       } else {
         ruleInfo.shortRuleString = rule.shortRuleString ? rule.shortRuleString : rule.ruleString;
         ruleInfo.command = 'Create';
